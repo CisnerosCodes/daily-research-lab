@@ -1,0 +1,18 @@
+# data & large artifacts — keep the repo tiny
+data/
+**/data/
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.npy
+*.pkl
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+.ipynb_checkpoints/
+# keep figures (they are small and are the deliverable)
+!**/*.png
+!**/*.svg

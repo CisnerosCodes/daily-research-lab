@@ -1,0 +1,13 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "DATE_SLUG"
+title: "TITLE"
+hypothesis: "One sentence. What do you expect and why?"
+seed: 0
+dataset:
+  name: ""
+  source: ""
+  license: ""
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  epochs: 1
+  lr: 0.001

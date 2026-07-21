@@ -1,0 +1,10 @@
+# shared base environment for the lab (CPU-only)
+numpy
+matplotlib
+torch          # install CPU build: pip install torch --index-url https://download.pytorch.org/whl/cpu
+scikit-learn
+pyyaml
+requests
+# optional but handy:
+# duckdb        # SQL over registry.jsonl
+# huggingface_hub

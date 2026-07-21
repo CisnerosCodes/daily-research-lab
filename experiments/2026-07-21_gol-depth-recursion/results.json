@@ -1,0 +1,116 @@
+{
+  "id": "2026-07-21_gol-depth-recursion",
+  "git_commit": "nogit",
+  "seed": 0,
+  "duration_sec": 168.99,
+  "metrics": {
+    "by_hidden": {
+      "1": {
+        "tied_acc_per_step": [
+          0.5567,
+          0.6488,
+          0.6204,
+          0.6538,
+          0.6339,
+          0.6488
+        ],
+        "untied_acc_per_step": [
+          0.5567,
+          0.6488,
+          0.6204,
+          0.6538,
+          0.6339,
+          0.6488
+        ],
+        "tied_params": 14,
+        "untied_params": 42,
+        "tied_minus_untied_step6": 0.0
+      },
+      "2": {
+        "tied_acc_per_step": [
+          0.8782,
+          0.5554,
+          0.4671,
+          0.456,
+          0.4473,
+          0.4466
+        ],
+        "untied_acc_per_step": [
+          0.9204,
+          0.6386,
+          0.6204,
+          0.6538,
+          0.6339,
+          0.6488
+        ],
+        "tied_params": 29,
+        "untied_params": 87,
+        "tied_minus_untied_step6": -0.2022
+      },
+      "4": {
+        "tied_acc_per_step": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "untied_acc_per_step": [
+          0.7184,
+          0.7745,
+          0.6667,
+          0.6405,
+          0.5878,
+          0.6112
+        ],
+        "tied_params": 65,
+        "untied_params": 195,
+        "tied_minus_untied_step6": 0.3888
+      },
+      "24": {
+        "tied_acc_per_step": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "untied_acc_per_step": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tied_params": 865,
+        "untied_params": 2595,
+        "tied_minus_untied_step6": 0.0
+      }
+    },
+    "always_dead_baseline_per_step": [
+      0.5567,
+      0.6488,
+      0.6204,
+      0.6538,
+      0.6339,
+      0.6488
+    ],
+    "k_train": 3,
+    "k_eval": 6,
+    "hidden_sweep": [
+      1,
+      2,
+      4,
+      24
+    ]
+  },
+  "env": {
+    "python": "3.11.15",
+    "torch": "2.13.0+cu130",
+    "numpy": "2.4.4"
+  },
+  "status": "done"
+}

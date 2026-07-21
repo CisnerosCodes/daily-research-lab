@@ -1,0 +1,22 @@
+id: "2026-07-21_gol-depth-recursion"
+title: "Game of Life: does test-time recursion generalize to more steps?"
+hypothesis: >
+  A weight-tied recurrent cell trained to roll out Conway's Game of Life for up to K=3 steps
+  will keep predicting accurately when iterated MORE times at test time (4-6 steps), and will
+  extrapolate better than an untied stack of separate per-step cells with a comparable budget.
+seed: 0
+dataset:
+  name: "Conway's Game of Life (synthetic, 16x16 toroidal)"
+  source: "generated in run.py"
+  license: "n/a (generated)"
+params:
+  grid: 16
+  density: 0.35
+  n_train: 2500
+  n_test: 1000
+  hidden_sweep: [1, 2, 4, 24]   # capacity sweep: when does recursion stop generalizing?
+  k_train: 3          # supervised rollout depth during training
+  k_eval: 6           # rollout depth at test time (4-6 = extrapolation)
+  steps: 700
+  batch: 256
+  lr: 0.003
