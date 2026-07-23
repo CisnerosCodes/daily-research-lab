@@ -75,6 +75,20 @@ Legend: ⭐ = strong first picks · 🟢 trains on CPU as-is · 🟡 CPU-OK if y
 
 ---
 
+## Track E — Shadow (ledger-built tiny model → ARC Prize 2026)
+
+Shadow is the lab's first flagship: a tiny model whose every architecture choice is earned through a forge ablation and recorded in a one-page **architecture ledger** citing the registry experiment id that justified it. Primary target: **ARC Prize 2026** (Kaggle, deadline 2026-11-02, offline, compute-limited — the board where a 7M recursive model already proved tiny can compete). The talking-LM version (TinyStories/BabyLM-style) is the longer arc, deliberately unanchored for now. Research day 2026-07-23: novelty verdict **partial-prior-art** — the looped/recursive mechanism is colonized at ≥1.4B (Ouro 2510.25741, MoR 2507.10524, recurrent-depth 2502.05171, TRM 2510.04871) but the ≤1–50M iso-FLOP territory on natural data is open, and the TRM critique (2512.11847: 94% of performance at recursion step 1; gains from augmentation ensembling + puzzle-id conditioning) is precisely the claim this track exists to test honestly. New-architecture status is **earned, not asserted**: if E1 falsifies the loop, Shadow ships as the ledger-assembled model and the novelty lives in the method plus component-level firsts.
+
+| id | hypothesis | setup | ~CPU | novel angle | closest prior art | diff |
+|---|---|---|---|---|---|---|
+| shadow-loop-vs-depth-isoflop ⭐ | at iso-FLOPs on TinyStories-1M, a weight-tied looped block does NOT beat plain depth (falsification target — if the loop loses, Shadow's core mechanism dies here, cheaply) | nanoGPT-char ~1M, k∈{1,2,4} loops vs matched-depth baselines, 3 seeds | 20–40 min | first iso-FLOP loop-vs-depth control at ≤1M params on natural-language data; Ouro/recurrent-depth only tested ≥1.4B | [2510.25741](https://arxiv.org/abs/2510.25741), [2502.05171](https://arxiv.org/pdf/2502.05171v1) | 3 |
+| shadow-recursion-capacity-window | the GoL capacity-window result transfers to LM: tied recursion beats untied only in a narrow width band | tiny looped LM, width sweep d∈{32,64,128,256}, tied vs untied, TinyStories-1M | 30–60 min | direct transfer test of registry 2026-07-21_gol-depth-recursion to language; no published capacity-window sweep for looped LMs | own registry + [looped-tf](https://github.com/UW-Madison-Lee-Lab/looped-tf) | 3 |
+| shadow-halt-entropy-tiny | entropy-based adaptive exit (Ouro-style) at ≤1M params saves compute without hurting loss — or collapses to fixed depth (honest either way) | looped 1M char-LM + per-token halt head, compare fixed k vs adaptive | 30–60 min | adaptive-depth halting has never been ablated below 1B; the TRM critique ([2512.11847](https://arxiv.org/abs/2512.11847)) predicts collapse to shallow | [2507.10524](https://arxiv.org/abs/2507.10524) | 4 |
+
+**Track E bridge to ARC:** the ARC-facing complement is already in Track A — `trm-nano-sudoku`, `coconut-toy-graph`, `looped-halt-nrasp` are the solver-side ablations. Winners from E and A merge into the Shadow ARC entry. Ledger rule: no knob enters the ARC submission without a registry id behind it.
+
+---
+
 ### Notes
 - Several 2026-dated arXiv IDs surfaced in research were abstract-only; verify before leaning on their exact numbers.
 - The **spectral-entropy progress measure** is high-leverage: build it once, reuse across grokking / induction / group-grokking / emergence experiments.
