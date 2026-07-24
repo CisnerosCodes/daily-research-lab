@@ -43,7 +43,8 @@ Legend: ⭐ = strong first picks · 🟢 trains on CPU as-is · 🟡 CPU-OK if y
 
 | id | idea | arch | tiny task | ~CPU | novel angle | closest prior art | diff |
 |---|---|---|---|---|---|---|---|
-| tsetlin-logic ⭐🟢 | learn human-readable logic clauses, no gradients | Tsetlin Machine | binarized MNIST / synthetic boolean | sec–2 min | exact-rule recovery + interpretability tradeoff | [pyTsetlinMachine](https://github.com/cair/pyTsetlinMachine) | 2 |
+| ~~tsetlin-logic~~ ✅ 2026-07-24 | DONE as `tsetlin-dnf-recovery`: noise buries rules (precision 0.49 at eps=0.2), it does not erase them (recall 1.0) | pure-numpy TM (pyTsetlinMachine C ext does not build here) | planted 3-clause DNF | ~4 min | exact-rule recovery + interpretability tradeoff | [pyTsetlinMachine](https://github.com/cair/pyTsetlinMachine) | 2 |
+| tsetlin-clause-pruning | validation-based clause pruning/weighting restores precision 1.0 on the noise-buried rule set from tsetlin-dnf-recovery | pure-numpy TM + prune step | planted 3-clause DNF, eps 0.2-0.3 | minutes | follow-up: recover a CLEAN rule set from a cluttered TM | own registry 2026-07-24 | 2 |
 | zoology-mqar-recall ⭐🟡 | why sub-quadratic models fail at recall | swap mixers | MQAR synthetic | minutes | add your own pure-PyTorch mixer to the harness | [zoology](https://github.com/HazyResearch/zoology) | 3 |
 | kan-feynman-symbolic ⭐🟢 | KAN fits physics eqn, prints the formula | KAN, few hundred–few k | one Feynman equation | sec–5 min | sample-efficiency vs MLP + PySR | [pykan](https://github.com/KindXiaoming/pykan) | 2 |
 | minrnn-selcopy 🟢 | "Were RNNs All We Needed?" minGRU/minLSTM | minRNN parallel scan | selective-copy | min–30 min | ablate the paper's central "no hidden-state gate" claim | [minRNNs](https://github.com/BorealisAI/minRNNs) | 2 |
