@@ -1,0 +1,27 @@
+tiny-shakespeare: 1115394 chars, vocab=65, train=1003854 val=111540 | val tokens per eval = 51200
+flops/token: block=106496 head=8320 (head = 7.8% of a loop)
+  fixed_k1    seed0: params=62272 steps=1800    20s val_bpc(k=1)=2.8517
+  fixed_k1    seed1: params=62272 steps=1800    21s val_bpc(k=1)=2.8595
+  fixed_k2    seed0: params=62272 steps=1800    38s val_bpc(k=2)=2.8869
+  fixed_k2    seed1: params=62272 steps=1800    38s val_bpc(k=2)=2.8956
+  fixed_k4    seed0: params=62272 steps=1800    73s val_bpc(k=4)=2.9349
+  fixed_k4    seed1: params=62272 steps=1800    70s val_bpc(k=4)=2.9352
+  deepsup_k4  seed0: params=62272 steps=1800    73s val_bpc(k=4)=2.9211
+  deepsup_k4  seed1: params=62272 steps=1800    67s val_bpc(k=4)=2.9196
+  deepsup seed0 fixed-k bpc: k1=2.9499, k2=2.9162, k3=2.9129, k4=2.9211
+  deepsup seed1 fixed-k bpc: k1=2.9476, k2=2.9084, k3=2.9077, k4=2.9196
+{
+  "id": "2026-07-25_shadow-halt-entropy-tiny",
+  "duration_sec": 472.53,
+  "status": "done"
+}
+headline: deep-sup model fixed-k bpc: k1=2.949, k2=2.912, k3=2.910, k4=2.920 | best entropy point tau=0.3 at 3.96 loops/token: 2.920 bpc (+0.0005 vs fixed frontier)
+entropy delta vs fixed frontier: [0.0, 0.0001, 0.0005, 0.0008, 0.0011, 0.0015, 0.0023, 0.0036, 0.0048, 0.0059, 0.0072, 0.015, 0.0212, 0.0188, 0.0]
+random  delta vs fixed frontier: [0.0, 0.0001, 0.0003, 0.0007, 0.0012, 0.0017, 0.0022, 0.0035, 0.0047, 0.0066, 0.0074, 0.0128, 0.0154, 0.0073, 0.0]
+entropy - random (neg = entropy informative): [0.0, 0.0, 0.0002, 0.0001, -0.0001, -0.0002, 0.0002, 0.0001, 0.0001, -0.0007, -0.0002, 0.0022, 0.0058, 0.0116, 0.0]
+exit hist at best tau: [0.0108, 0.0042, 0.0012, 0.9837]
+hypothesis REFUTED: at matched mean loops/token the best entropy operating point is +0.0005 bits/char vs the fixed-k frontier (negative = adaptive wins)
+
+real	7m54.869s
+user	7m45.256s
+sys	0m1.306s

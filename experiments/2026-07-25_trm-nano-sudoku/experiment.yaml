@@ -1,0 +1,33 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_trm-nano-sudoku"
+title: "TRM at nano scale: does the outer refinement loop or the inner latent recursion buy the accuracy? (4x4 Sudoku, ~0.12M params)"
+hypothesis: "At ~0.1M params on 4x4 Sudoku, TRM-style recursion helps mainly through the OUTER refinement loop (repeatedly re-encoding a full candidate solution) rather than through inner latent recursion at matched core-block applications; and, per the TRM critique (arXiv:2512.11847), most of the achievable full-puzzle solve rate is already present at recursion depth 1."
+seed: 0
+dataset:
+  name: "synthetic 4x4 Sudoku (all 288 valid grids enumerated; puzzles = uniquely-solvable maskings)"
+  source: "generated in run.py (seeded backtracking enumeration + rejection sampling for uniqueness)"
+  license: "n/a (synthetic)"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  # --- data ---
+  n_train: 2000
+  n_test_unseen: 800        # puzzles from HELD-OUT solution grids
+  n_test_seen: 800          # puzzles from TRAIN solution grids, unseen masks
+  train_grid_frac: 0.7      # 201 of 288 solution grids for training
+  givens_min: 4             # 4x4 Sudoku needs >=4 givens for a unique solution
+  givens_max: 8
+  # --- model (~0.12M params, identical across all arms and depths) ---
+  d_cell: 16                # per-cell embedding width -> state dim D = 16*d_cell = 256
+  d_hidden: 192             # MLP hidden width (the "2-layer MLP" core)
+  # --- training ---
+  steps: 1200
+  batch_size: 128
+  lr: 0.003
+  warmup: 40
+  weight_decay: 0.01
+  grad_clip: 1.0
+  # --- experiment grid ---
+  depths: [1, 2, 4, 8]      # T = number of core-block applications (matched across arms)
+  arms: ["outer_deepsup", "outer_finalsup", "inner_latent"]
+  seeds: [0, 1, 2]
+  time_cap_s_per_run: 90    # honest time-box: training stops early if hit

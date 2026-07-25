@@ -1,0 +1,55 @@
+# Shadow E3: entropy-based adaptive exit (Ouro-style) on a tiny looped char LM.
+# run.py reads this. No magic constants in code.
+id: "2026-07-25_shadow-halt-entropy-tiny"
+title: "Shadow E3: does per-token entropy halting beat fixed depth at matched average loops on a 0.07M-param looped char LM?"
+hypothesis: "On a weight-tied looped char LM (max k=4, ~0.07M params) trained with per-loop deep supervision, an inference-time per-token entropy exit traces a better val-bits/char vs mean-loops/token frontier than fixed loop counts, i.e. it saves compute by spending loops only on high-entropy tokens. The competing prediction (TRM critique arXiv:2512.11847) is that it collapses to fixed depth: almost every token exits at loop 1, because loops past the first buy almost nothing at this scale."
+seed: 0
+dataset:
+  name: "tiny-shakespeare (char-level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain (Shakespeare text); char-rnn repo MIT"
+  note: "backlog specified TinyStories; substituted tiny-shakespeare per AGENT_BRIEF data policy"
+  md5: "6fb458f1232090904fb40fe944165e91"
+
+# --- hyperparameters ---
+params:
+  # architecture (shrunk from the backlog's ~1M to fit the 12-minute CPU box)
+  d_model: 64
+  n_heads: 4
+  d_ff: 256
+  block_size: 64          # context length in chars
+  k_max: 4                # max block applications for the looped model
+
+  # training conditions. supervision:
+  #   "final" -> CE only on the readout after loop k  (classic fixed-depth model)
+  #   "deep"  -> CE averaged over readouts after loops 1..k (enables early exit)
+  conditions:
+    - {name: "fixed_k1",   k: 1, supervision: "final"}
+    - {name: "fixed_k2",   k: 2, supervision: "final"}
+    - {name: "fixed_k4",   k: 4, supervision: "final"}
+    - {name: "deepsup_k4", k: 4, supervision: "deep"}
+  seeds: [0, 1]
+
+  # optimisation (identical for every condition - iso-hyperparameter control)
+  steps: 1800
+  batch_size: 16
+  lr: 0.002
+  min_lr_frac: 0.1
+  warmup: 100
+  weight_decay: 0.1
+  grad_clip: 1.0
+  betas: [0.9, 0.95]
+
+  # data split / eval
+  train_frac: 0.9
+  eval_every: 300
+  eval_batches: 50        # fixed val batches, identical for every run and every eval mode
+  time_cap_s_per_run: 220 # safety valve; recorded in results if it fires
+
+  # --- halting sweep (inference time, no extra training) ---
+  # entropy thresholds in BITS. tau=0 -> nobody exits (== fixed k_max);
+  # tau > log2(vocab)=6.02 -> everybody exits at loop 1 (== fixed k=1).
+  entropy_taus: [0.0, 0.15, 0.3, 0.45, 0.6, 0.8, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 4.0, 6.1]
+  # matched-compute control: exit each still-active token with prob p at each loop.
+  # p is solved numerically so mean loops/token matches each entropy operating point.
+  random_exit_seed: 1234

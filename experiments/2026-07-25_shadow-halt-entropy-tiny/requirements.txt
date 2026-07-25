@@ -1,0 +1,8 @@
+# CPU-only. Versions are the ones this result was produced with.
+torch==2.13.0
+numpy==2.4.4
+matplotlib==3.10.9
+PyYAML==6.0.3
+# data: tiny-shakespeare is downloaded by run.py on first use (or vendored in ./data/)
+# https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt
+# md5 6fb458f1232090904fb40fe944165e91
