@@ -1,0 +1,40 @@
+# Shadow E1: weight-tied looped block vs plain depth at iso-FLOPs, char LM.
+# run.py reads this. No magic constants in code.
+id: "2026-07-25_shadow-loop-vs-depth-isoflop"
+title: "Shadow E1: at iso-FLOPs on a 0.2M-param char LM, does a weight-tied looped block beat plain depth?"
+hypothesis: "At matched training FLOPs on tiny natural-language data (~0.06-0.21M params), a weight-tied block looped k times does NOT beat an untied k-layer stack; the loop should tie or lose, because at this scale the extra parameters of untied depth buy more than the extra iterations of a shared block. This is a falsification target for Shadow's core mechanism."
+seed: 0
+dataset:
+  name: "tiny-shakespeare (char-level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain (Shakespeare text); char-rnn repo MIT"
+  note: "backlog specified TinyStories-1M; substituted tiny-shakespeare per AGENT_BRIEF data policy"
+  md5: "6fb458f1232090904fb40fe944165e91"
+
+# --- hyperparameters ---
+params:
+  # architecture (shrunk from the backlog's ~1M to fit the 12-minute CPU box)
+  d_model: 64
+  n_heads: 4
+  d_ff: 256
+  block_size: 64          # context length in chars
+  # conditions: k = number of block applications = forward depth (iso-FLOP axis)
+  ks: [1, 2, 4]
+  modes: ["tied", "untied"]   # tied: 1 block applied k times; untied: k distinct blocks
+  seeds: [0, 1]
+
+  # optimisation (identical for every condition - iso-hyperparameter control)
+  steps: 2200
+  batch_size: 16
+  lr: 0.002
+  min_lr_frac: 0.1
+  warmup: 100
+  weight_decay: 0.1
+  grad_clip: 1.0
+  betas: [0.9, 0.95]
+
+  # data split / eval
+  train_frac: 0.9
+  eval_every: 200
+  eval_batches: 40        # fixed val batches, identical for every run
+  time_cap_s_per_run: 240 # safety valve; recorded in results if it fires

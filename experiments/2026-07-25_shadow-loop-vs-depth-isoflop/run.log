@@ -1,0 +1,22 @@
+tiny-shakespeare: 1115394 chars, vocab=65, train=1003854 val=111540
+  tied    k=1 seed0: params= 62272 (block  49728) steps=2200    25s val_bpc=2.7798 best=2.7798
+  tied    k=1 seed1: params= 62272 (block  49728) steps=2200    25s val_bpc=2.7992 best=2.7992
+  untied  k=1 seed0: params= 62272 (block  49728) steps=2200    25s val_bpc=2.7798 best=2.7798
+  untied  k=1 seed1: params= 62272 (block  49728) steps=2200    25s val_bpc=2.7992 best=2.7992
+  tied    k=2 seed0: params= 62272 (block  49728) steps=2200    44s val_bpc=2.8248 best=2.8248
+  tied    k=2 seed1: params= 62272 (block  49728) steps=2200    44s val_bpc=2.8292 best=2.8292
+  untied  k=2 seed0: params=112000 (block  99456) steps=2200    44s val_bpc=2.7706 best=2.7706
+  untied  k=2 seed1: params=112000 (block  99456) steps=2200    45s val_bpc=2.8080 best=2.8080
+  tied    k=4 seed0: params= 62272 (block  49728) steps=2200    83s val_bpc=2.8786 best=2.8786
+  tied    k=4 seed1: params= 62272 (block  49728) steps=2200    86s val_bpc=2.8662 best=2.8662
+  untied  k=4 seed0: params=211456 (block 198912) steps=2200    89s val_bpc=2.7852 best=2.7852
+  untied  k=4 seed1: params=211456 (block 198912) steps=2200    94s val_bpc=2.8016 best=2.8016
+{
+  "id": "2026-07-25_shadow-loop-vs-depth-isoflop",
+  "duration_sec": 632.34,
+  "status": "done"
+}
+headline: val bits/char (mean of 2 seeds): tied-k1=2.789, untied-k1=2.789, tied-k2=2.827, untied-k2=2.789, tied-k4=2.872, untied-k4=2.793
+deltas (tied - untied, >0 = loop loses): {'k1': 0.0, 'k2': 0.0377, 'k4': 0.079}
+k=1 sanity gap (should be 0.0): 0.0
+hypothesis SUPPORTED: tied loop never beats untied depth at iso-FLOPs

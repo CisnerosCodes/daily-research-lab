@@ -1,0 +1,37 @@
+# Filled config. run.py reads it. No magic constants in code.
+id: "2026-07-25_shadow-recursion-capacity-window"
+title: "Does the Game-of-Life capacity window transfer to language? Tied vs untied recursion across width"
+hypothesis: >-
+  The capacity-window result from registry id 2026-07-21_gol-depth-recursion (a weight-tied recurrent
+  cell beats an untied per-step stack only inside a narrow hidden-width band) transfers to language
+  modelling: at fixed loop count k=4 and fixed compute, a tied looped char-LM block will beat k
+  distinct untied blocks in validation bits/char only at intermediate model width, losing at both the
+  narrow and the wide end.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain (Shakespeare text); karpathy/char-rnn repo MIT"
+  local_file: "tinyshakespeare.txt"
+  md5: "6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters ---
+params:
+  seeds: [0, 1]
+  widths: [16, 32, 64, 128]     # d=256 from the backlog spec dropped to fit the 12-min CPU box;
+                                # d=16 added so the sweep still has 4 points and covers the narrow end
+  loops: 4                      # k: tied = 1 block applied 4x; untied = 4 distinct blocks
+  n_heads_min: 2                # heads = max(n_heads_min, d // 32)
+  ffn_mult: 4
+  block_size: 128               # context length in characters
+  batch_size: 16
+  steps: 400                    # ~0.82M training characters (~0.73 epochs of tiny-shakespeare)
+  warmup_steps: 50
+  lr_base: 0.003                # lr(d) = lr_base * sqrt(64/d), capped at lr_cap  (muP-lite width scaling)
+  lr_cap: 0.0045
+  lr_final_frac: 0.1            # cosine decay to lr_final_frac * lr(d)
+  weight_decay: 0.01
+  grad_clip: 1.0
+  val_batches_final: 40         # fixed deterministic val batches for the headline number
+  val_batches_curve: 10         # cheaper eval for the training curve
+  eval_every: 100
+  val_frac: 0.1                 # last 10% of the corpus is validation

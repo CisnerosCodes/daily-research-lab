@@ -1,0 +1,1038 @@
+{
+  "id": "2026-07-25_shadow-loop-vs-depth-isoflop",
+  "git_commit": "e9520d1b1a92a61614b89589013a106e65573e6b",
+  "seed": 0,
+  "duration_sec": 632.34,
+  "metrics": {
+    "per_run": [
+      {
+        "mode": "tied",
+        "k": 1,
+        "seed": 0,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 25.4,
+        "fwd_flops_per_token": 106496.0,
+        "total_train_flops": 719742566400.0,
+        "final_train_loss_nats": 1.8341,
+        "val_bpc": 2.7798,
+        "best_val_bpc": 2.7798,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0221,
+            "train_flops": 327155712.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5856,
+            "train_flops": 65431142400.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4144,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2328,
+            "train_flops": 196293427200.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1064,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0035,
+            "train_flops": 327155712000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9453,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9066,
+            "train_flops": 458017996800.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8557,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8204,
+            "train_flops": 588880281600.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.7924,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.7798,
+            "train_flops": 719742566400.0
+          }
+        ]
+      },
+      {
+        "mode": "tied",
+        "k": 1,
+        "seed": 1,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 25.1,
+        "fwd_flops_per_token": 106496.0,
+        "total_train_flops": 719742566400.0,
+        "final_train_loss_nats": 1.82,
+        "val_bpc": 2.7992,
+        "best_val_bpc": 2.7992,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0604,
+            "train_flops": 327155712.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5839,
+            "train_flops": 65431142400.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.3827,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2288,
+            "train_flops": 196293427200.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.0876,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0302,
+            "train_flops": 327155712000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9647,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9068,
+            "train_flops": 458017996800.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8547,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8306,
+            "train_flops": 588880281600.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8149,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.7992,
+            "train_flops": 719742566400.0
+          }
+        ]
+      },
+      {
+        "mode": "untied",
+        "k": 1,
+        "seed": 0,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 25.0,
+        "fwd_flops_per_token": 106496.0,
+        "total_train_flops": 719742566400.0,
+        "final_train_loss_nats": 1.8341,
+        "val_bpc": 2.7798,
+        "best_val_bpc": 2.7798,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0221,
+            "train_flops": 327155712.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5856,
+            "train_flops": 65431142400.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4144,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2328,
+            "train_flops": 196293427200.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1064,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0035,
+            "train_flops": 327155712000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9453,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9066,
+            "train_flops": 458017996800.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8557,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8204,
+            "train_flops": 588880281600.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.7924,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.7798,
+            "train_flops": 719742566400.0
+          }
+        ]
+      },
+      {
+        "mode": "untied",
+        "k": 1,
+        "seed": 1,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 25.1,
+        "fwd_flops_per_token": 106496.0,
+        "total_train_flops": 719742566400.0,
+        "final_train_loss_nats": 1.82,
+        "val_bpc": 2.7992,
+        "best_val_bpc": 2.7992,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0604,
+            "train_flops": 327155712.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5839,
+            "train_flops": 65431142400.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.3827,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2288,
+            "train_flops": 196293427200.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.0876,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0302,
+            "train_flops": 327155712000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9647,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9068,
+            "train_flops": 458017996800.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8547,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8306,
+            "train_flops": 588880281600.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8149,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.7992,
+            "train_flops": 719742566400.0
+          }
+        ]
+      },
+      {
+        "mode": "tied",
+        "k": 2,
+        "seed": 0,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 43.6,
+        "fwd_flops_per_token": 212992.0,
+        "total_train_flops": 1439485132800.0,
+        "final_train_loss_nats": 1.8399,
+        "val_bpc": 2.8248,
+        "best_val_bpc": 2.8248,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0174,
+            "train_flops": 654311424.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5964,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4289,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2858,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.16,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0635,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9927,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9509,
+            "train_flops": 916035993600.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8869,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8642,
+            "train_flops": 1177760563200.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8316,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.8248,
+            "train_flops": 1439485132800.0
+          }
+        ]
+      },
+      {
+        "mode": "tied",
+        "k": 2,
+        "seed": 1,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 44.3,
+        "fwd_flops_per_token": 212992.0,
+        "total_train_flops": 1439485132800.0,
+        "final_train_loss_nats": 1.8418,
+        "val_bpc": 2.8292,
+        "best_val_bpc": 2.8292,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0532,
+            "train_flops": 654311424.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.6011,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4213,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2705,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1388,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.064,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9891,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9546,
+            "train_flops": 916035993600.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8807,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8657,
+            "train_flops": 1177760563200.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8433,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.8292,
+            "train_flops": 1439485132800.0
+          }
+        ]
+      },
+      {
+        "mode": "untied",
+        "k": 2,
+        "seed": 0,
+        "n_params": 112000,
+        "n_block_params": 99456,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 44.1,
+        "fwd_flops_per_token": 212992.0,
+        "total_train_flops": 1439485132800.0,
+        "final_train_loss_nats": 1.8162,
+        "val_bpc": 2.7706,
+        "best_val_bpc": 2.7706,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.069,
+            "train_flops": 654311424.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.592,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.3852,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2464,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1113,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0108,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9734,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9006,
+            "train_flops": 916035993600.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.844,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8096,
+            "train_flops": 1177760563200.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.7837,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.7706,
+            "train_flops": 1439485132800.0
+          }
+        ]
+      },
+      {
+        "mode": "untied",
+        "k": 2,
+        "seed": 1,
+        "n_params": 112000,
+        "n_block_params": 99456,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 45.4,
+        "fwd_flops_per_token": 212992.0,
+        "total_train_flops": 1439485132800.0,
+        "final_train_loss_nats": 1.837,
+        "val_bpc": 2.808,
+        "best_val_bpc": 2.808,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0586,
+            "train_flops": 654311424.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5923,
+            "train_flops": 130862284800.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4261,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2941,
+            "train_flops": 392586854400.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1384,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.037,
+            "train_flops": 654311424000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9755,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9275,
+            "train_flops": 916035993600.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8669,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8444,
+            "train_flops": 1177760563200.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8233,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.808,
+            "train_flops": 1439485132800.0
+          }
+        ]
+      },
+      {
+        "mode": "tied",
+        "k": 4,
+        "seed": 0,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 83.1,
+        "fwd_flops_per_token": 425984.0,
+        "total_train_flops": 2878970265600.0,
+        "final_train_loss_nats": 1.8992,
+        "val_bpc": 2.8786,
+        "best_val_bpc": 2.8786,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0258,
+            "train_flops": 1308622848.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.6022,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4635,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.3677,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1992,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0972,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 3.0351,
+            "train_flops": 1570347417600.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 3.0012,
+            "train_flops": 1832071987200.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.9451,
+            "train_flops": 2093796556800.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.9111,
+            "train_flops": 2355521126400.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8838,
+            "train_flops": 2617245696000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.8786,
+            "train_flops": 2878970265600.0
+          }
+        ]
+      },
+      {
+        "mode": "tied",
+        "k": 4,
+        "seed": 1,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 86.1,
+        "fwd_flops_per_token": 425984.0,
+        "total_train_flops": 2878970265600.0,
+        "final_train_loss_nats": 1.9021,
+        "val_bpc": 2.8662,
+        "best_val_bpc": 2.8662,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0413,
+            "train_flops": 1308622848.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5907,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.478,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.3138,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1868,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0802,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 3.031,
+            "train_flops": 1570347417600.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9787,
+            "train_flops": 1832071987200.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.9357,
+            "train_flops": 2093796556800.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.9021,
+            "train_flops": 2355521126400.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8882,
+            "train_flops": 2617245696000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.8662,
+            "train_flops": 2878970265600.0
+          }
+        ]
+      },
+      {
+        "mode": "untied",
+        "k": 4,
+        "seed": 0,
+        "n_params": 211456,
+        "n_block_params": 198912,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 89.1,
+        "fwd_flops_per_token": 425984.0,
+        "total_train_flops": 2878970265600.0,
+        "final_train_loss_nats": 1.8247,
+        "val_bpc": 2.7852,
+        "best_val_bpc": 2.7852,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0209,
+            "train_flops": 1308622848.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.575,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4071,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2902,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.1811,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0437,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9812,
+            "train_flops": 1570347417600.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9257,
+            "train_flops": 1832071987200.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8713,
+            "train_flops": 2093796556800.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8371,
+            "train_flops": 2355521126400.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.7933,
+            "train_flops": 2617245696000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.7852,
+            "train_flops": 2878970265600.0
+          }
+        ]
+      },
+      {
+        "mode": "untied",
+        "k": 4,
+        "seed": 1,
+        "n_params": 211456,
+        "n_block_params": 198912,
+        "steps_run": 2200,
+        "time_capped": false,
+        "train_seconds": 94.2,
+        "fwd_flops_per_token": 425984.0,
+        "total_train_flops": 2878970265600.0,
+        "final_train_loss_nats": 1.8428,
+        "val_bpc": 2.8016,
+        "best_val_bpc": 2.8016,
+        "curve": [
+          {
+            "step": 1,
+            "val_bpc": 6.0276,
+            "train_flops": 1308622848.0
+          },
+          {
+            "step": 200,
+            "val_bpc": 3.5709,
+            "train_flops": 261724569600.0
+          },
+          {
+            "step": 400,
+            "val_bpc": 3.4093,
+            "train_flops": 523449139200.0
+          },
+          {
+            "step": 600,
+            "val_bpc": 3.2965,
+            "train_flops": 785173708800.0
+          },
+          {
+            "step": 800,
+            "val_bpc": 3.162,
+            "train_flops": 1046898278400.0
+          },
+          {
+            "step": 1000,
+            "val_bpc": 3.0634,
+            "train_flops": 1308622848000.0
+          },
+          {
+            "step": 1200,
+            "val_bpc": 2.9906,
+            "train_flops": 1570347417600.0
+          },
+          {
+            "step": 1400,
+            "val_bpc": 2.9184,
+            "train_flops": 1832071987200.0
+          },
+          {
+            "step": 1600,
+            "val_bpc": 2.8703,
+            "train_flops": 2093796556800.0
+          },
+          {
+            "step": 1800,
+            "val_bpc": 2.8429,
+            "train_flops": 2355521126400.0
+          },
+          {
+            "step": 2000,
+            "val_bpc": 2.8197,
+            "train_flops": 2617245696000.0
+          },
+          {
+            "step": 2200,
+            "val_bpc": 2.8016,
+            "train_flops": 2878970265600.0
+          }
+        ]
+      }
+    ],
+    "table": {
+      "tied_k1": {
+        "val_bpc_mean": 2.7895,
+        "val_bpc_per_seed": [
+          2.7798,
+          2.7992
+        ],
+        "val_bpc_std": 0.0097,
+        "best_val_bpc_mean": 2.7895,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "fwd_flops_per_token": 106496.0,
+        "total_train_flops": 719742566400.0
+      },
+      "untied_k1": {
+        "val_bpc_mean": 2.7895,
+        "val_bpc_per_seed": [
+          2.7798,
+          2.7992
+        ],
+        "val_bpc_std": 0.0097,
+        "best_val_bpc_mean": 2.7895,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "fwd_flops_per_token": 106496.0,
+        "total_train_flops": 719742566400.0
+      },
+      "tied_k2": {
+        "val_bpc_mean": 2.827,
+        "val_bpc_per_seed": [
+          2.8248,
+          2.8292
+        ],
+        "val_bpc_std": 0.0022,
+        "best_val_bpc_mean": 2.827,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "fwd_flops_per_token": 212992.0,
+        "total_train_flops": 1439485132800.0
+      },
+      "untied_k2": {
+        "val_bpc_mean": 2.7893,
+        "val_bpc_per_seed": [
+          2.7706,
+          2.808
+        ],
+        "val_bpc_std": 0.0187,
+        "best_val_bpc_mean": 2.7893,
+        "n_params": 112000,
+        "n_block_params": 99456,
+        "fwd_flops_per_token": 212992.0,
+        "total_train_flops": 1439485132800.0
+      },
+      "tied_k4": {
+        "val_bpc_mean": 2.8724,
+        "val_bpc_per_seed": [
+          2.8786,
+          2.8662
+        ],
+        "val_bpc_std": 0.0062,
+        "best_val_bpc_mean": 2.8724,
+        "n_params": 62272,
+        "n_block_params": 49728,
+        "fwd_flops_per_token": 425984.0,
+        "total_train_flops": 2878970265600.0
+      },
+      "untied_k4": {
+        "val_bpc_mean": 2.7934,
+        "val_bpc_per_seed": [
+          2.7852,
+          2.8016
+        ],
+        "val_bpc_std": 0.0082,
+        "best_val_bpc_mean": 2.7934,
+        "n_params": 211456,
+        "n_block_params": 198912,
+        "fwd_flops_per_token": 425984.0,
+        "total_train_flops": 2878970265600.0
+      }
+    },
+    "tied_minus_untied_bpc": {
+      "k1": 0.0,
+      "k2": 0.0377,
+      "k4": 0.079
+    },
+    "loop_gain_over_k1_bpc": {
+      "k1": 0.0,
+      "k2": -0.0375,
+      "k4": -0.0829
+    },
+    "depth_gain_over_k1_bpc": {
+      "k1": 0.0,
+      "k2": 0.0002,
+      "k4": -0.0039
+    },
+    "k1_sanity_gap_bpc": 0.0,
+    "verdict": "hypothesis SUPPORTED: tied loop never beats untied depth at iso-FLOPs",
+    "headline": "val bits/char (mean of 2 seeds): tied-k1=2.789, untied-k1=2.789, tied-k2=2.827, untied-k2=2.789, tied-k4=2.872, untied-k4=2.793"
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130"
+  },
+  "status": "done"
+}

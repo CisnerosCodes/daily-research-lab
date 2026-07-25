@@ -1,0 +1,24 @@
+d=  16 tied   seed=0 params=   7376 val=3.5728 bpc  (9.1s)
+d=  16 tied   seed=1 params=   7376 val=3.5673 bpc  (9.9s)
+d=  16 untied seed=0 params=  17024 val=3.5534 bpc  (9.8s)
+d=  16 untied seed=1 params=  17024 val=3.5403 bpc  (9.4s)
+d=  32 tied   seed=0 params=  20896 val=3.4904 bpc  (12.2s)
+d=  32 tied   seed=1 params=  20896 val=3.4860 bpc  (12.3s)
+d=  32 untied seed=0 params=  58624 val=3.3898 bpc  (12.9s)
+d=  32 untied seed=1 params=  58624 val=3.4478 bpc  (12.8s)
+d=  64 tied   seed=0 params=  66368 val=3.3999 bpc  (24.8s)
+d=  64 tied   seed=1 params=  66368 val=3.4072 bpc  (25.8s)
+d=  64 untied seed=0 params= 215552 val=3.3497 bpc  (27.2s)
+d=  64 untied seed=1 params= 215552 val=3.3848 bpc  (26.0s)
+d= 128 tied   seed=0 params= 231040 val=3.2477 bpc  (66.5s)
+d= 128 tied   seed=1 params= 231040 val=3.2807 bpc  (64.6s)
+d= 128 untied seed=0 params= 824320 val=3.2689 bpc  (69.2s)
+d= 128 untied seed=1 params= 824320 val=3.2696 bpc  (67.7s)
+
+--- summary ---
+d=  16  tied 3.5700  untied 3.5468  delta +0.0232  sign-consistent=True
+d=  32  tied 3.4882  untied 3.4188  delta +0.0694  sign-consistent=True
+d=  64  tied 3.4036  untied 3.3673  delta +0.0363  sign-consistent=True
+d= 128  tied 3.2642  untied 3.2692  delta -0.0050  sign-consistent=False
+capacity_window_found: False
+total seconds: 463.5
