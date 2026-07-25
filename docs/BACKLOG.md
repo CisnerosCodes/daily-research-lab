@@ -63,7 +63,7 @@ Legend: ⭐ = strong first picks · 🟢 trains on CPU as-is · 🟡 CPU-OK if y
 
 | id | hypothesis | setup | ~CPU | novel angle | closest prior art | diff |
 |---|---|---|---|---|---|---|
-| nope-vs-rope-vs-alibi ⭐ | NoPE ≥ ALiBi > RoPE for length-extrapolation at tiny scale | 1-layer decoder, copy/add, train≤20 test≤40 | 2–3 hr (4 PEs) | first tiny-CPU replication of the 107M result | [2305.19466](https://arxiv.org/pdf/2305.19466v2) | 2 |
+| ~~nope-vs-rope-vs-alibi~~ ✅ 2026-07-25 | DONE as `pe-length-gen-tiny`: ranking INVERTS at 0.1M/iso-compute — ALiBi 0.82 > RoPE 0.56 > NoPE 0.19 > APE 0.08 (OOD token acc); follow-up idea: give NoPE 10-20x steps to separate slow-learning from cannot-extrapolate | 2-layer decoder, copy, train≤16 test≤32 | ~11 min (4 PEs × 2 seeds) | first tiny-CPU replication of the 107M result | [2305.19466](https://arxiv.org/pdf/2305.19466v2) | 2 |
 | grokking-weight-decay-phase ⭐ | weight decay controls the memorize→grok delay | 1–2 layer tf, mod-97, WD sweep | 2–3 hr | steps-to-grok vs weight-decay curve | [teddykoker/grokking](https://github.com/teddykoker/grokking) | 2 |
 | loop-test-time-compute ⭐ | looped block trades test-time compute for accuracy | shared block, parity/add, train K≤3 test K≤8 | ~1.5 hr | CPU parity demo of recurrent-depth extrapolation | [2502.05171](https://arxiv.org/pdf/2502.05171v1) | 3 |
 | muon-vs-adamw-vs-soap | Muon's win survives per-step but shrinks per-wall-clock on CPU | nanoGPT-char, 3 optimizers | 1–3 hr | "seconds not steps" normalization | [Muon](https://github.com/KellerJordan/Muon) | 3 |

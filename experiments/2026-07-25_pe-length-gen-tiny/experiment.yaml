@@ -1,0 +1,29 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_pe-length-gen-tiny"
+title: "NoPE vs RoPE vs ALiBi vs APE: does the length-generalization ranking survive at 0.1M params?"
+hypothesis: "At ~0.1M params on an autoregressive copy task, the Kazemnejad et al. (NeurIPS 2023, 107M) ranking NoPE >= ALiBi > RoPE >= APE for length generalization still holds - the ranking is a property of the positional mechanism, not of scale."
+seed: 0
+dataset:
+  name: "synthetic copy task (BOS x1..xL SEP x1..xL EOS), 16-symbol vocab"
+  source: "generated"
+  license: "n/a"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  n_layers: 2
+  d_model: 64
+  n_heads: 4
+  d_ff: 256
+  vocab_data: 16          # data symbols 0..15; plus BOS, SEP, EOS, PAD
+  train_len_min: 4
+  train_len_max: 16
+  test_lengths: [4, 8, 12, 16, 18, 20, 24, 28, 32]
+  max_positions: 80       # APE table size; covers 2*32+3=67 test tokens
+  steps: 4000
+  warmup: 100
+  batch_size: 64
+  lr: 0.002
+  weight_decay: 0.01
+  eval_n_per_len: 200
+  seeds: [0, 1]
+  pes: ["nope", "ape", "rope", "alibi"]
+  time_cap_s_per_run: 200   # honest time-box: training stops early if hit
