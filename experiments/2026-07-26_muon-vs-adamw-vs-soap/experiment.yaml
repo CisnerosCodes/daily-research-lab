@@ -1,0 +1,58 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_muon-vs-adamw-vs-soap"
+title: "Muon vs AdamW at 0.42M params on CPU: seconds, not steps"
+hypothesis: >
+  Muon's per-step advantage over AdamW survives at tiny scale, but shrinks or reverses when the
+  budget is WALL-CLOCK SECONDS on CPU, because the 5-iteration Newton-Schulz orthogonalization is a
+  fixed per-parameter cost that does not shrink with the (tiny) token count per step. Keller Jordan's
+  own overhead rule, T*d_model/tokens_per_step, predicts ~0.7% at nanoGPT-speedrun scale but ~63% in
+  this regime -- a 100x larger tax -- so this is the setting where "seconds not steps" should bite.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "MIT (karpathy/char-rnn)"
+  sha256_prefix: "86c4e6aa9db7c042"
+# --- hyperparameters ---
+params:
+  # ---- model (nanoGPT-style char LM, ~0.42M params) ----
+  d_model: 128
+  n_layer: 2
+  n_head: 4
+  d_ff: 512
+  block_size: 64
+  char_vocab_size: 65
+  train_frac: 0.9
+
+  # ---- training, IDENTICAL for every arm ----
+  steps: 600
+  batch_size: 16
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.01
+  grad_clip: 1.0
+  seeds: [0, 1]
+
+  # ---- optimizer sweeps (3 lrs each, best-per-optimizer; neither is handicapped) ----
+  adamw_lrs: [0.001, 0.003, 0.01]
+  adamw_betas: [0.9, 0.95]
+  muon_lrs: [0.01, 0.03, 0.09]
+  # if the best lr lands on an endpoint the grid is extended one point further (x3 or /3)
+  lr_grid_edge_extensions: 1
+  muon_momentum: 0.95
+  muon_nesterov: true
+  ns_steps: 5
+
+  # ---- eval ----
+  eval_every: 50
+  eval_blocks_interim: 200
+  eval_blocks_final: 800
+  eval_batch: 50
+
+  # ---- timing micro-benchmark (interleaved A/B to cancel machine-load drift) ----
+  bench_batch_sizes: [8, 16, 32, 64]
+  bench_warmup: 3
+  bench_reps: 6
+
+  # SOAP is deliberately SKIPPED -- see README. The backlog sanctions the shrink.
+  soap_included: false

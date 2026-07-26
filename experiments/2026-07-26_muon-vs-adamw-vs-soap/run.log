@@ -1,0 +1,48 @@
+data: 1,003,854 train chars, 111,540 val chars, vocab 65
+model: 419,328 params (393,216 on Muon, 26,112 on AdamW), 1024 tokens/step
+predicted NS FLOP overhead: 47.5%  |  Keller rule T*d/B = 62.5%
+
+--- timing micro-benchmark (interleaved A/B) ---
+  bench bs=  8 (  512 tok/step): adamw   27.0 ms | muon   43.9 ms | x1.627
+  bench bs= 16 ( 1024 tok/step): adamw   47.2 ms | muon   65.4 ms | x1.384
+  bench bs= 32 ( 2048 tok/step): adamw   86.5 ms | muon  106.1 ms | x1.226
+  bench bs= 64 ( 4096 tok/step): adamw  213.1 ms | muon  240.4 ms | x1.128
+  NS precision probe: {'float32': 0.008745, 'bfloat16': 0.0299, 'bf16_speedup_vs_fp32': 0.292, 'note': "seconds for one layer's worth of Muon matrices; multiply by n_layer (2) for a full optimizer step"}
+
+--- phase A: AdamW lr sweep (seed 0) ---
+  [sweep_adamw_lr0.001 lr=0.001  seed=0 steps= 600] bpc=3.1773  28.6s (47.7 ms/step, opt 4.0 ms)
+  [sweep_adamw_lr0.003 lr=0.003  seed=0 steps= 600] bpc=2.9318  28.2s (47.1 ms/step, opt 3.9 ms)
+  [sweep_adamw_lr0.01 lr=0.01   seed=0 steps= 600] bpc=2.9305  31.9s (53.1 ms/step, opt 3.8 ms)
+  ! best lr 0.01 is the TOP of the grid -> extending to 0.03
+  [sweep_adamw_lr0.03 lr=0.03   seed=0 steps= 600] bpc=3.5542  42.0s (69.9 ms/step, opt 4.0 ms)
+  best adamw lr = 0.01  (grid [0.001, 0.003, 0.01, 0.03], still at edge: False)
+
+--- phase B: Muon lr sweep (seed 0), aux AdamW lr fixed at 0.01 ---
+  [sweep_muon_lr0.01 lr=0.01   seed=0 steps= 600] bpc=2.6445  40.4s (67.3 ms/step, opt 22.6 ms)
+  [sweep_muon_lr0.03 lr=0.03   seed=0 steps= 600] bpc=2.5681  39.9s (66.5 ms/step, opt 22.3 ms)
+  [sweep_muon_lr0.09 lr=0.09   seed=0 steps= 600] bpc=2.9451  56.3s (93.9 ms/step, opt 23.5 ms)
+  best muon lr = 0.03  (grid [0.01, 0.03, 0.09], still at edge: False)
+
+--- phase C: headline arms at best lr, all seeds ---
+  [adamw         lr=0.01   seed=0 steps= 600] bpc=2.9305  35.9s (59.8 ms/step, opt 4.4 ms)
+  [adamw         lr=0.01   seed=1 steps= 600] bpc=2.9631  36.0s (59.9 ms/step, opt 4.2 ms)
+  [muon          lr=0.03   seed=0 steps= 600] bpc=2.5681  48.4s (80.7 ms/step, opt 27.2 ms)
+  [muon          lr=0.03   seed=1 steps= 600] bpc=2.5586  43.3s (72.2 ms/step, opt 23.9 ms)
+
+  measured in-training overhead factor: x1.2771  -> iso-time Muon gets 470 steps for the same ~35.9s
+
+--- phase D: muon_isotime (matched wall clock, own cosine schedule) ---
+  [muon_isotime  lr=0.03   seed=0 steps= 470] bpc=2.6786  33.0s (70.1 ms/step, opt 23.5 ms)
+  [muon_isotime  lr=0.03   seed=1 steps= 470] bpc=2.6674  34.0s (72.2 ms/step, opt 23.8 ms)
+
+=== summary ===
+best lr: adamw 0.01  muon 0.03
+  adamw         steps= 600    35.9s  bpc=2.9468  per-seed [2.93047, 2.96309]
+  muon          steps= 600    45.9s  bpc=2.5633  per-seed [2.56806, 2.5586]
+  muon_isotime  steps= 470    33.5s  bpc=2.6730  per-seed [2.67858, 2.66742]
+mean seed spread: 0.0177 bpc
+MATCHED STEPS   muon - adamw = -0.3835  -> Muon wins
+MATCHED SECONDS iso  - adamw = -0.2738  -> Muon wins
+overhead factor in training: x1.277 (27.7%);  Keller rule predicts 62.5%
+step-domain speedup 1.8537  |  wall-clock speedup 1.4944
+total 549s

@@ -1,0 +1,6 @@
+# actual deps of run.py (versions this row was produced with)
+numpy==2.4.4
+torch==2.13.0        # CPU only; run.py calls torch.set_num_threads(1)
+matplotlib==3.10.9
+PyYAML==6.0.3
+# deliberately NOT used: ncps / raminmh's CfC repo. The CfC cell is hand-rolled in run.py.

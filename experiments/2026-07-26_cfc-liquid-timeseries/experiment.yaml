@@ -1,0 +1,53 @@
+# Filled. run.py reads it. No magic constants in code.
+id: "2026-07-26_cfc-liquid-timeseries"
+title: "Closed-form continuous-time (CfC / liquid) cell vs dt-blind, dt-as-input and decay GRUs under UNSEEN sampling irregularity"
+hypothesis: "A hand-rolled CfC cell (Hasani et al. 2106.13898 Eq. 10), whose state-mixing coefficient is a closed-form sigmoid of the elapsed time dt, degrades gracefully when the test sampling irregularity is 2-4x more variable than training while a dt-blind GRU collapses -- but the honest question under test is whether simply appending dt as an input feature to a matched-parameter GRU already closes that gap."
+seed: 0
+dataset:
+  name: "synthetic irregularly-sampled continuous-time signals: (a) random 2-component sine mixtures, (b) Mackey-Glass tau=17"
+  source: "generated in run.py (analytic sines; RK4 Mackey-Glass on a dense dt=0.05 grid, linearly interpolated at the irregular sample times). MG generator reused from experiments/2026-07-25_esn-reservoir/run.py"
+  license: "n/a (synthetic)"
+
+# --- hyperparameters ---
+params:
+  # --- arms ---
+  arms: ["cfc", "gru_dt", "decay_gru", "gru_blind", "cfc_fixed_dt"]
+  target_params: 20000        # every arm's hidden width is fitted to this total budget
+  datasets: ["sine", "mg"]
+  seeds: [0, 1]
+
+  # --- task ---
+  seq_len: 48                 # observations per sequence (shrunk from 64 for the time-box)
+  burn_in: 8                  # predictions before this index are excluded from loss and metrics
+  mean_interval: 1.0          # mean sampling interval mu, IDENTICAL in every regime
+  train_cv: 0.6               # coefficient of variation of the training interval distribution
+  eval_cvs: [0.0, 0.3, 0.6, 0.8485, 1.2]   # 0 = regular; 0.6 = train; 0.8485 = 2x var; 1.2 = 4x var
+  eval_n: 512
+
+  # sine mixture
+  sine_k: 2
+  sine_f_min: 0.03
+  sine_f_max: 0.20
+  sine_a_min: 0.5
+  sine_a_max: 1.5
+
+  # Mackey-Glass tau=17
+  mg_tau: 17.0
+  mg_dt: 0.05                 # dense integration/grid step
+  mg_beta: 0.2
+  mg_gamma: 0.1
+  mg_power: 10.0
+  mg_x0: 1.2
+  mg_discard: 300.0           # time units of transient discarded
+  mg_span: 3300.0             # time units of usable dense series
+  mg_max_window: 200.0        # max span a single sequence may cover
+
+  # --- optimisation ---
+  steps: 700                  # shrunk to fit the ~12 min CPU time-box (see README)
+  batch_size: 48
+  lr: 0.003                   # default; overridden per-arm by the documented pre-sweep
+  lr_sweep: [0.001, 0.003, 0.01]
+  lr_sweep_steps: 150
+  weight_decay: 0.01
+  warmup_frac: 0.1
+  grad_clip: 1.0

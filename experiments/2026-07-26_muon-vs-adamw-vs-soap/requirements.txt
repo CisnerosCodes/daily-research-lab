@@ -1,0 +1,5 @@
+# CPU-only. Muon is hand-rolled in run.py -- no optimizer package is required.
+numpy          # 2.4.4
+torch          # 2.13.0 (CPU, single thread)
+matplotlib     # 3.10.9
+pyyaml         # 6.0.3

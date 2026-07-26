@@ -1,0 +1,111 @@
+[data] MG dense n=70100 raw[0.417,1.319] (0.3s)
+[data] baselines: {"sine": {"persistence": {"0.0000": 0.5748963356018066, "0.3000": 0.6039276123046875, "0.6000": 0.6542346477508545, "0.8485": 0.6745887994766235, "1.2000": 0.6379347443580627}, "target_variance": {"0.0000": 0.9992222785949707, "0.3000": 0.9948036074638367, "0.6000": 0.995873749256134, "0.8485": 1.0085068941116333, "1.2000": 1.0128698348999023}}, "mg": {"persistence": {"0.0000": 0.020872017368674278, "0.3000": 0.02271212451159954, "0.6000": 0.02791561558842659, "0.8485": 0.03568320348858833, "1.2000": 0.048108093440532684}, "target_variance": {"0.0000": 0.9812696576118469, "0.3000": 0.9783604741096497, "0.6000": 0.9872352480888367, "0.8485": 0.9680357575416565, "1.2000": 0.9859325885772705}}}
+[lr pre-sweep]
+  [sine cfc seed0 lr0.001] h=63 params=20287 train_loss=0.2741 mse@train_cv=0.2898 (10s)
+  [sine cfc seed0 lr0.003] h=63 params=20287 train_loss=0.1673 mse@train_cv=0.1878 (8s)
+  [sine cfc seed0 lr0.01] h=63 params=20287 train_loss=0.0935 mse@train_cv=0.1065 (8s)
+  [sine gru_dt seed0 lr0.001] h=80 params=20241 train_loss=0.3932 mse@train_cv=0.4097 (4s)
+  [sine gru_dt seed0 lr0.003] h=80 params=20241 train_loss=0.2847 mse@train_cv=0.3021 (5s)
+  [sine gru_dt seed0 lr0.01] h=80 params=20241 train_loss=0.1233 mse@train_cv=0.1243 (5s)
+  [sine decay_gru seed0 lr0.001] h=80 params=20081 train_loss=0.4454 mse@train_cv=0.4583 (7s)
+  [sine decay_gru seed0 lr0.003] h=80 params=20081 train_loss=0.3162 mse@train_cv=0.3354 (7s)
+  [sine decay_gru seed0 lr0.01] h=80 params=20081 train_loss=0.1733 mse@train_cv=0.1818 (7s)
+  [sine gru_blind seed0 lr0.001] h=80 params=20001 train_loss=0.4126 mse@train_cv=0.4293 (4s)
+  [sine gru_blind seed0 lr0.003] h=80 params=20001 train_loss=0.3718 mse@train_cv=0.3893 (4s)
+  [sine gru_blind seed0 lr0.01] h=80 params=20001 train_loss=0.3513 mse@train_cv=0.3679 (4s)
+  [sine cfc_fixed_dt seed0 lr0.001] h=63 params=20287 train_loss=0.3801 mse@train_cv=0.3962 (9s)
+  [sine cfc_fixed_dt seed0 lr0.003] h=63 params=20287 train_loss=0.3647 mse@train_cv=0.3829 (8s)
+  [sine cfc_fixed_dt seed0 lr0.01] h=63 params=20287 train_loss=0.3413 mse@train_cv=0.3570 (8s)
+[lr pre-sweep] best per arm: {'cfc': 0.01, 'gru_dt': 0.01, 'decay_gru': 0.01, 'gru_blind': 0.01, 'cfc_fixed_dt': 0.01} (98s)
+  [sine cfc seed0 lr0.01] h=63 params=20287 train_loss=0.0169 mse@train_cv=0.0214 (42s)
+  [sine cfc seed1 lr0.01] h=63 params=20287 train_loss=0.0188 mse@train_cv=0.0209 (40s)
+  [sine gru_dt seed0 lr0.01] h=80 params=20241 train_loss=0.0177 mse@train_cv=0.0222 (20s)
+  [sine gru_dt seed1 lr0.01] h=80 params=20241 train_loss=0.0192 mse@train_cv=0.0206 (20s)
+  [sine decay_gru seed0 lr0.01] h=80 params=20081 train_loss=0.0278 mse@train_cv=0.0326 (31s)
+  [sine decay_gru seed1 lr0.01] h=80 params=20081 train_loss=0.0330 mse@train_cv=0.0340 (29s)
+  [sine gru_blind seed0 lr0.01] h=80 params=20001 train_loss=0.2713 mse@train_cv=0.2845 (19s)
+  [sine gru_blind seed1 lr0.01] h=80 params=20001 train_loss=0.2520 mse@train_cv=0.2797 (20s)
+  [sine cfc_fixed_dt seed0 lr0.01] h=63 params=20287 train_loss=0.2808 mse@train_cv=0.2909 (36s)
+  [sine cfc_fixed_dt seed1 lr0.01] h=63 params=20287 train_loss=0.2584 mse@train_cv=0.2838 (36s)
+  [mg cfc seed0 lr0.01] h=63 params=20287 train_loss=0.0008 mse@train_cv=0.0009 (37s)
+  [mg cfc seed1 lr0.01] h=63 params=20287 train_loss=0.0007 mse@train_cv=0.0008 (35s)
+  [mg gru_dt seed0 lr0.01] h=80 params=20241 train_loss=0.0011 mse@train_cv=0.0012 (21s)
+  [mg gru_dt seed1 lr0.01] h=80 params=20241 train_loss=0.0010 mse@train_cv=0.0010 (22s)
+  [mg decay_gru seed0 lr0.01] h=80 params=20081 train_loss=0.0024 mse@train_cv=0.0027 (30s)
+  [mg decay_gru seed1 lr0.01] h=80 params=20081 train_loss=0.0021 mse@train_cv=0.0022 (28s)
+  [mg gru_blind seed0 lr0.01] h=80 params=20001 train_loss=0.0090 mse@train_cv=0.0097 (18s)
+  [mg gru_blind seed1 lr0.01] h=80 params=20001 train_loss=0.0092 mse@train_cv=0.0097 (18s)
+  [mg cfc_fixed_dt seed0 lr0.01] h=63 params=20287 train_loss=0.0087 mse@train_cv=0.0094 (37s)
+  [mg cfc_fixed_dt seed1 lr0.01] h=63 params=20287 train_loss=0.0090 mse@train_cv=0.0095 (36s)
+[runs] 20 done (675s)
+/home/claude/daily-research-lab/experiments/2026-07-26_cfc-liquid-timeseries/run.py:409: UserWarning: linestyle is redundantly defined by the 'linestyle' keyword argument and the fmt string "-o" (-> linestyle='-'). The keyword argument will take precedence.
+  ax.plot(cvs, ys, "-o", ms=4, color=COLORS[k], label=LABEL[k],
+{
+  "id": "2026-07-26_cfc-liquid-timeseries",
+  "duration_sec": 674.95,
+  "status": "done"
+}
+headline (sine): {
+  "cfc": {
+    "regular_cv0.0": 0.003,
+    "trained_cv0.6": 0.02116,
+    "var2x_cv0.8485": 0.06475,
+    "var4x_cv1.2": 0.15685
+  },
+  "gru_dt": {
+    "regular_cv0.0": 0.0032,
+    "trained_cv0.6": 0.0214,
+    "var2x_cv0.8485": 0.07093,
+    "var4x_cv1.2": 0.15933
+  },
+  "decay_gru": {
+    "regular_cv0.0": 0.00597,
+    "trained_cv0.6": 0.03333,
+    "var2x_cv0.8485": 0.08954,
+    "var4x_cv1.2": 0.17444
+  },
+  "gru_blind": {
+    "regular_cv0.0": 0.06327,
+    "trained_cv0.6": 0.2821,
+    "var2x_cv0.8485": 0.4163,
+    "var4x_cv1.2": 0.50073
+  },
+  "cfc_fixed_dt": {
+    "regular_cv0.0": 0.08082,
+    "trained_cv0.6": 0.28735,
+    "var2x_cv0.8485": 0.41755,
+    "var4x_cv1.2": 0.49888
+  }
+}
+headline (mg): {
+  "cfc": {
+    "regular_cv0.0": 0.00024,
+    "trained_cv0.6": 0.00088,
+    "var2x_cv0.8485": 0.00282,
+    "var4x_cv1.2": 0.01059
+  },
+  "gru_dt": {
+    "regular_cv0.0": 0.00027,
+    "trained_cv0.6": 0.00108,
+    "var2x_cv0.8485": 0.00283,
+    "var4x_cv1.2": 0.00799
+  },
+  "decay_gru": {
+    "regular_cv0.0": 0.00074,
+    "trained_cv0.6": 0.00245,
+    "var2x_cv0.8485": 0.00575,
+    "var4x_cv1.2": 0.0145
+  },
+  "gru_blind": {
+    "regular_cv0.0": 0.00094,
+    "trained_cv0.6": 0.00974,
+    "var2x_cv0.8485": 0.01897,
+    "var4x_cv1.2": 0.03426
+  },
+  "cfc_fixed_dt": {
+    "regular_cv0.0": 0.00094,
+    "trained_cv0.6": 0.00944,
+    "var2x_cv0.8485": 0.01865,
+    "var4x_cv1.2": 0.0336
+  }
+}
