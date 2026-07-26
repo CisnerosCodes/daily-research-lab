@@ -1,0 +1,29 @@
+corpus: 1115394 bytes | train 1003854 bytes | val 111540 bytes
+tokens: char train=1003854 val=111540 | bpe train=452223 val=51792 (compression 2.220 bytes/token, fit 0.1s)
+iso-FLOP: char/bpe flops-per-token ratio 0.8337 -> steps char=960 bpe=800; budget 2.115e+12 vs 2.114e+12 (mismatch 0.045%)
+lr probe (short runs, seed 0):
+  [lrprobe-char          ] arm=char V=  65 lr=0.0015 seed=0 steps= 240 P=175040 bpb=3.5876 (18.1s)
+  [lrprobe-char          ] arm=char V=  65 lr=0.0030 seed=0 steps= 240 P=175040 bpb=3.5466 (15.4s)
+  [lrprobe-char          ] arm=char V=  65 lr=0.0060 seed=0 steps= 240 P=175040 bpb=3.5408 (16.1s)
+  [lrprobe-char          ] arm=char V=  65 lr=0.0120 seed=0 steps= 240 P=175040 bpb=3.5352 (15.1s)
+  -> char: best lr 0.012 (grid [0.0015, 0.003, 0.006, 0.012], extended=True, still at edge=True)
+  [lrprobe-bpe           ] arm=bpe  V= 512 lr=0.0015 seed=0 steps= 200 P=246560 bpb=2.9949 (15.6s)
+  [lrprobe-bpe           ] arm=bpe  V= 512 lr=0.0030 seed=0 steps= 200 P=246560 bpb=2.8727 (14.6s)
+  [lrprobe-bpe           ] arm=bpe  V= 512 lr=0.0060 seed=0 steps= 200 P=246560 bpb=2.8257 (13.5s)
+  [lrprobe-bpe           ] arm=bpe  V= 512 lr=0.0120 seed=0 steps= 200 P=246560 bpb=2.8159 (13.4s)
+  -> bpe: best lr 0.012 (grid [0.0015, 0.003, 0.006, 0.012], extended=True, still at edge=True)
+main iso-FLOP runs:
+  [main-char-s0          ] arm=char V=  65 lr=0.0120 seed=0 steps= 960 P=175040 bpb=2.7752 (62.4s)
+  [main-char-s1          ] arm=char V=  65 lr=0.0120 seed=1 steps= 960 P=175040 bpb=2.7530 (60.8s)
+  [main-char-s2          ] arm=char V=  65 lr=0.0120 seed=2 steps= 960 P=175040 bpb=2.7925 (64.6s)
+  [main-bpe-s0           ] arm=bpe  V= 512 lr=0.0120 seed=0 steps= 800 P=246560 bpb=2.6173 (66.9s)
+  [main-bpe-s1           ] arm=bpe  V= 512 lr=0.0120 seed=1 steps= 800 P=246560 bpb=2.8191 (76.1s)
+  [main-bpe-s2           ] arm=bpe  V= 512 lr=0.0120 seed=2 steps= 800 P=246560 bpb=2.6457 (72.2s)
+spelling / character-composition probe:
+  char: acc=0.903 (rare 0.833 / common 0.972) word_bpb=3.376
+  bpe : acc=0.887 (rare 0.815 / common 0.958) word_bpb=3.405
+
+=== SUMMARY ===
+val bits/byte @ iso-FLOPs: char 2.7736 | bpe 2.6941 | delta(bpe-char) -0.0795 -> inconclusive (per-seed signs disagree)
+spelling probe: char 0.903 | bpe 0.887 | chance 0.25 | McNemar p=0.401062
+wall clock 564.3s

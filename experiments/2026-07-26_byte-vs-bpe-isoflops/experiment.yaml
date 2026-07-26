@@ -1,0 +1,57 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_byte-vs-bpe-isoflops"
+title: "Byte/char vs BPE at iso-FLOPs: bits-per-byte and a spelling probe"
+hypothesis: "At equal training FLOPs, BPE wins validation bits-per-BYTE because each forward pass packs ~3x more text, but the character-level arm wins a character-composition (spelling) probe because it is forced to model orthography explicitly."
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level, 65-symbol ASCII vocab; 1 char == 1 byte)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "MIT (karpathy/char-rnn)"
+  substitution_note: "backlog said enwik8-1M; AGENT_BRIEF says substitute tiny-shakespeare and note it"
+# --- hyperparameters ---
+params:
+  # architecture (identical trunk in both arms; only the vocab-facing matrices differ)
+  n_layer: 2
+  d_model: 80
+  n_head: 4
+  d_ff: 320
+  block_size: 128          # context in TOKENS (so the BPE arm sees ~3x more BYTES of context)
+
+  # tokenizers
+  char_vocab_size: 65      # asserted against the corpus
+  bpe_vocab_size: 512      # greedy merge loop fitted on the TRAIN split only
+  train_frac: 0.9
+
+  # optimisation
+  batch_size: 16
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.01
+  grad_clip: 1.0
+  betas: [0.9, 0.95]
+
+  # iso-FLOP budget: the BPE arm's step count is the anchor; the char arm's step
+  # count is derived so that total training FLOPs match (char arm gets MORE steps
+  # because its vocab-facing matrices are smaller).
+  steps_bpe_anchor: 800
+  seeds: [0, 1, 2]   # a 2-seed pilot showed a 0.20 bpb spread in the BPE arm; 3 seeds minimum
+
+  # cheap per-arm lr probe so neither arm is handicapped by a shared lr
+  lr_grid: [0.0015, 0.003, 0.006]
+  lr_probe_steps_bpe: 200
+  lr_probe_seed: 0
+  lr_probe_edge_extend: true
+
+  # evaluation
+  eval_batch: 32
+  n_checkpoints: 12
+  curve_eval_chars: 20000   # curve evals score the same leading slice of val in BOTH arms
+
+  # spelling / character-composition probe
+  probe_context_chars: 96
+  probe_min_word_len: 6
+  probe_n_distractors: 3
+  probe_words_per_pool: 72
+  probe_rare_max_train_count: 3
+  probe_common_min_train_count: 30   # tiny-shakespeare has few LONG high-frequency words;
+                                     # >=100 leaves only 19 eligible, >=30 leaves 130

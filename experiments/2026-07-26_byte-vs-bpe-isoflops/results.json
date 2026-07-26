@@ -1,0 +1,2106 @@
+{
+  "id": "2026-07-26_byte-vs-bpe-isoflops",
+  "git_commit": "be77409d72ffcb7c41e12c432c2305c6d39a463f",
+  "seed": 0,
+  "duration_sec": 564.3,
+  "metrics": {
+    "headline": "validation BITS PER BYTE at matched training FLOPs, char(65) vs BPE(512), plus a transposition spelling probe",
+    "substitution_note": "backlog said enwik8-1M; AGENT_BRIEF says substitute tiny-shakespeare and note it",
+    "n_params": {
+      "char": 175040,
+      "bpe": 246560
+    },
+    "vocab": {
+      "char": 65,
+      "bpe": 512
+    },
+    "corpus_bytes": 1115394,
+    "train_bytes": 1003854,
+    "val_bytes": 111540,
+    "train_tokens": {
+      "char": 1003854,
+      "bpe": 452223
+    },
+    "val_tokens": {
+      "char": 111540,
+      "bpe": 51792
+    },
+    "bytes_per_token": {
+      "char": 1.0,
+      "bpe": 2.2198
+    },
+    "bpe_compression_ratio": 2.2198,
+    "bpe_fit_seconds": 0.1,
+    "context_bytes_effective": {
+      "char": 128.0,
+      "bpe": 284.1
+    },
+    "ISO_FLOP_ACCOUNTING": {
+      "formula": "fwd_flops_per_token = 2*[n_layer*(4*d^2 + 2*d*d_ff) + d*V] + n_layer*2*ctx*d ; train_flops = 3 * fwd_flops_per_token * tokens_processed",
+      "flop_model": {
+        "char": {
+          "matmul_params_per_token": 158800,
+          "attn_flops_per_token": 40960,
+          "fwd_flops_per_token": 358560,
+          "train_flops_per_token": 1075680
+        },
+        "bpe": {
+          "matmul_params_per_token": 194560,
+          "attn_flops_per_token": 40960,
+          "fwd_flops_per_token": 430080,
+          "train_flops_per_token": 1290240
+        }
+      },
+      "tokens_per_step": 2048,
+      "steps": {
+        "bpe": 800,
+        "char": 960
+      },
+      "step_ratio_char_over_bpe": 1.2,
+      "total_train_flops": {
+        "char": 2114872934400.0,
+        "bpe": 2113929216000.0
+      },
+      "flop_mismatch_frac": 0.000446,
+      "tokens_processed": {
+        "char": 1966080,
+        "bpe": 1638400
+      },
+      "bytes_processed": {
+        "char": 1966080.0,
+        "bpe": 3636954.3
+      },
+      "bytes_advantage_bpe_over_char": 1.8499,
+      "epochs_over_corpus": {
+        "char": 1.959,
+        "bpe": 3.623
+      },
+      "note": "the char arm gets MORE steps because its output head is 80x65 not 80x512; the BPE arm still sees ~2.4x more BYTES of text -- that IS the mechanism under test, not a confound"
+    },
+    "lr_probe": {
+      "grid_run": {
+        "char": [
+          0.0015,
+          0.003,
+          0.006,
+          0.012
+        ],
+        "bpe": [
+          0.0015,
+          0.003,
+          0.006,
+          0.012
+        ]
+      },
+      "val_bpb": {
+        "char": {
+          "0.0015": 3.58759,
+          "0.003": 3.54659,
+          "0.006": 3.54083,
+          "0.012": 3.53518
+        },
+        "bpe": {
+          "0.0015": 2.99489,
+          "0.003": 2.87268,
+          "0.006": 2.82571,
+          "0.012": 2.81586
+        }
+      },
+      "best_lr": {
+        "char": 0.012,
+        "bpe": 0.012
+      },
+      "edge_extended": {
+        "char": true,
+        "bpe": true
+      },
+      "probe_steps": {
+        "bpe": 200,
+        "char": 240
+      },
+      "probe_seed": 0,
+      "caveat": "lr chosen at 25% of the final budget; may not be optimal at full length"
+    },
+    "PRIMARY_val_bits_per_byte": {
+      "char": 2.77357,
+      "bpe": 2.69405
+    },
+    "PRIMARY_per_seed": {
+      "char": [
+        2.77521,
+        2.75297,
+        2.79252
+      ],
+      "bpe": [
+        2.61732,
+        2.81912,
+        2.64572
+      ]
+    },
+    "PRIMARY_delta_bpe_minus_char": -0.07951,
+    "PRIMARY_winner_on_mean": "bpe",
+    "PRIMARY_per_seed_delta": [
+      -0.15789,
+      0.06615,
+      -0.1468
+    ],
+    "PRIMARY_all_seeds_same_sign": false,
+    "seed_spread_bpb": {
+      "char": 0.03955,
+      "bpe": 0.2018
+    },
+    "seed_sd_bpb": {
+      "char": 0.01983,
+      "bpe": 0.10924
+    },
+    "delta_in_seed_spreads": 0.66,
+    "val_bits_per_token": {
+      "char": 2.77357,
+      "bpe": 5.80198
+    },
+    "val_eval_bytes": {
+      "char": 111488,
+      "bpe": 111506
+    },
+    "val_eval_byte_coverage": {
+      "char": 0.9995,
+      "bpe": 0.9997
+    },
+    "SECONDARY_iso_bytes": {
+      "at_train_bytes": 1966080.0,
+      "bits_per_byte_subsampled_val": {
+        "char": 2.74729,
+        "bpe": 2.83472
+      },
+      "delta_bpe_minus_char": 0.08742,
+      "note": "read off the training curves at equal TRAINING BYTES, not equal FLOPs; the BPE arm reaches this point with ~2.4x fewer FLOPs, so this is a per-byte data-efficiency reading, not a compute-matched one. Uses the subsampled curve eval, so it is not directly comparable to the headline number."
+    },
+    "SPELLING_PROBE": {
+      "design": "144 words from the VAL split (72 rare: train count <= 3; 72 common: train count >= 100), each >= 6 chars. 3 distractors per word made by transposing an adjacent INTERIOR character pair (first/last char fixed), so every distractor has the identical character multiset and length. Each model scores the COMPLETE string context(96 bytes)+candidate under its own canonical tokenisation and must rank the true spelling first. 4-way choice, chance = 0.25.",
+      "chance": 0.25,
+      "n_items": 144,
+      "n_rare": 72,
+      "n_common": 72,
+      "bpe_tokens_per_word_hist": {
+        "2": 10,
+        "3": 35,
+        "4": 46,
+        "5": 36,
+        "6": 12,
+        "7": 3,
+        "8": 2
+      },
+      "results": {
+        "char": {
+          "overall": {
+            "n": 432,
+            "accuracy": 0.9028,
+            "mean_margin_bits": 6.6651,
+            "word_bits_per_byte": 3.3758,
+            "wilson95": [
+              0.8712,
+              0.9273
+            ]
+          },
+          "rare": {
+            "n": 216,
+            "accuracy": 0.8333,
+            "mean_margin_bits": 4.3292,
+            "word_bits_per_byte": 3.9738
+          },
+          "common": {
+            "n": 216,
+            "accuracy": 0.9722,
+            "mean_margin_bits": 9.001,
+            "word_bits_per_byte": 2.7777
+          },
+          "bpe_tok_1": null,
+          "bpe_tok_2_3": {
+            "n": 135,
+            "accuracy": 0.9926,
+            "mean_margin_bits": 9.9831,
+            "word_bits_per_byte": 2.7952
+          },
+          "bpe_tok_4plus": {
+            "n": 297,
+            "accuracy": 0.862,
+            "mean_margin_bits": 5.1569,
+            "word_bits_per_byte": 3.6397
+          },
+          "per_seed_accuracy": [
+            0.9028,
+            0.9167,
+            0.8889
+          ]
+        },
+        "bpe": {
+          "overall": {
+            "n": 432,
+            "accuracy": 0.8866,
+            "mean_margin_bits": 8.9111,
+            "word_bits_per_byte": 3.4045,
+            "wilson95": [
+              0.8532,
+              0.9131
+            ]
+          },
+          "rare": {
+            "n": 216,
+            "accuracy": 0.8148,
+            "mean_margin_bits": 4.9054,
+            "word_bits_per_byte": 4.0973
+          },
+          "common": {
+            "n": 216,
+            "accuracy": 0.9583,
+            "mean_margin_bits": 12.9167,
+            "word_bits_per_byte": 2.7117
+          },
+          "bpe_tok_1": null,
+          "bpe_tok_2_3": {
+            "n": 135,
+            "accuracy": 0.9926,
+            "mean_margin_bits": 14.4427,
+            "word_bits_per_byte": 2.5353
+          },
+          "bpe_tok_4plus": {
+            "n": 297,
+            "accuracy": 0.8384,
+            "mean_margin_bits": 6.3967,
+            "word_bits_per_byte": 3.7996
+          },
+          "per_seed_accuracy": [
+            0.9028,
+            0.8472,
+            0.9097
+          ]
+        }
+      },
+      "delta_accuracy_char_minus_bpe": 0.0162,
+      "delta_accuracy_char_minus_bpe_by_bin": {
+        "rare": 0.0185,
+        "common": 0.0139,
+        "bpe_tok_1": null,
+        "bpe_tok_2_3": 0.0,
+        "bpe_tok_4plus": 0.0236
+      },
+      "paired_mcnemar": {
+        "char_only_correct": 29,
+        "bpe_only_correct": 22,
+        "n_discordant": 51,
+        "two_sided_p": 0.401062
+      },
+      "paired_mcnemar_words_of_4plus_bpe_tokens": {
+        "char_only_correct": 28,
+        "bpe_only_correct": 21,
+        "n_discordant": 49,
+        "two_sided_p": 0.391603
+      },
+      "paired_mcnemar_words_of_le3_bpe_tokens": {
+        "char_only_correct": 1,
+        "bpe_only_correct": 1,
+        "n_discordant": 2,
+        "two_sided_p": 1.0
+      },
+      "item_table": [
+        {
+          "word": "orderly",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "affability",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 8,
+          "char_correct": 0,
+          "bpe_correct": 0
+        },
+        {
+          "word": "bashful",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "qualities",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 6,
+          "char_correct": 2,
+          "bpe_correct": 0
+        },
+        {
+          "word": "mathematics",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "sciences",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Antonio",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "throughout",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Saving",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "petitioners",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Baccare",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "grateful",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "scholar",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "studying",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Rheims",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 0,
+          "bpe_correct": 0
+        },
+        {
+          "word": "languages",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Cambio",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 1,
+          "bpe_correct": 1
+        },
+        {
+          "word": "preferment",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 6,
+          "char_correct": 2,
+          "bpe_correct": 2
+        },
+        {
+          "word": "parentage",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "mongst",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "education",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 1,
+          "bpe_correct": 3
+        },
+        {
+          "word": "packet",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "pupils",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 0,
+          "bpe_correct": 1
+        },
+        {
+          "word": "tutors",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "orchard",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "asketh",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "solely",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 4,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "decreased",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 1
+        },
+        {
+          "word": "widowhood",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 6,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "survive",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "leases",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "specialties",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 7,
+          "char_correct": 3,
+          "bpe_correct": 0
+        },
+        {
+          "word": "covenants",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "obtain",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 4,
+          "char_correct": 0,
+          "bpe_correct": 3
+        },
+        {
+          "word": "peremptory",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "raging",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "consume",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "mountains",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "perpetually",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 6,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "mistook",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "fingering",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "impatient",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "pillory",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 2
+        },
+        {
+          "word": "fiddler",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 1
+        },
+        {
+          "word": "twangling",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "studied",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 1,
+          "bpe_correct": 3
+        },
+        {
+          "word": "misuse",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 2,
+          "bpe_correct": 0
+        },
+        {
+          "word": "discomfited",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "nightingale",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 2
+        },
+        {
+          "word": "volubility",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 8,
+          "char_correct": 0,
+          "bpe_correct": 0
+        },
+        {
+          "word": "uttereth",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "eloquence",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Christendom",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 2
+        },
+        {
+          "word": "dainty",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 2,
+          "bpe_correct": 2
+        },
+        {
+          "word": "dainties",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 1
+        },
+        {
+          "word": "consolation",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "praised",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "belongs",
+          "pool": "rare",
+          "train_count": 2,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "moveable",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 1
+        },
+        {
+          "word": "buzzard",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "turtle",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 4,
+          "char_correct": 0,
+          "bpe_correct": 2
+        },
+        {
+          "word": "waspish",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 2
+        },
+        {
+          "word": "beware",
+          "pool": "rare",
+          "train_count": 3,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "coxcomb",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "combless",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "craven",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "gamesome",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "askance",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "affable",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "slender",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "kernels",
+          "pool": "rare",
+          "train_count": 0,
+          "n_bpe_tokens": 5,
+          "char_correct": 1,
+          "bpe_correct": 0
+        },
+        {
+          "word": "sportful",
+          "pool": "rare",
+          "train_count": 1,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "gentlemen",
+          "pool": "common",
+          "train_count": 37,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "PETRUCHIO",
+          "pool": "common",
+          "train_count": 32,
+          "n_bpe_tokens": 7,
+          "char_correct": 1,
+          "bpe_correct": 3
+        },
+        {
+          "word": "daughter",
+          "pool": "common",
+          "train_count": 97,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "GREMIO",
+          "pool": "common",
+          "train_count": 32,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 1
+        },
+        {
+          "word": "gentleman",
+          "pool": "common",
+          "train_count": 113,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "beauty",
+          "pool": "common",
+          "train_count": 37,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "myself",
+          "pool": "common",
+          "train_count": 148,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Within",
+          "pool": "common",
+          "train_count": 68,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "report",
+          "pool": "common",
+          "train_count": 39,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 2
+        },
+        {
+          "word": "present",
+          "pool": "common",
+          "train_count": 54,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "welcome",
+          "pool": "common",
+          "train_count": 75,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "pardon",
+          "pool": "common",
+          "train_count": 98,
+          "n_bpe_tokens": 3,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "service",
+          "pool": "common",
+          "train_count": 41,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "thousand",
+          "pool": "common",
+          "train_count": 71,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "thanks",
+          "pool": "common",
+          "train_count": 41,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "gentle",
+          "pool": "common",
+          "train_count": 95,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "methinks",
+          "pool": "common",
+          "train_count": 31,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "TRANIO",
+          "pool": "common",
+          "train_count": 49,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "sister",
+          "pool": "common",
+          "train_count": 48,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Vincentio",
+          "pool": "common",
+          "train_count": 194,
+          "n_bpe_tokens": 6,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "business",
+          "pool": "common",
+          "train_count": 53,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "father",
+          "pool": "common",
+          "train_count": 270,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "rather",
+          "pool": "common",
+          "train_count": 69,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "twenty",
+          "pool": "common",
+          "train_count": 40,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "therefore",
+          "pool": "common",
+          "train_count": 142,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "between",
+          "pool": "common",
+          "train_count": 32,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "either",
+          "pool": "common",
+          "train_count": 51,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "nothing",
+          "pool": "common",
+          "train_count": 123,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "together",
+          "pool": "common",
+          "train_count": 48,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Though",
+          "pool": "common",
+          "train_count": 142,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "friend",
+          "pool": "common",
+          "train_count": 81,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "HORTENSIO",
+          "pool": "common",
+          "train_count": 41,
+          "n_bpe_tokens": 7,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "soldier",
+          "pool": "common",
+          "train_count": 34,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "spirit",
+          "pool": "common",
+          "train_count": 37,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 2
+        },
+        {
+          "word": "through",
+          "pool": "common",
+          "train_count": 48,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "morning",
+          "pool": "common",
+          "train_count": 31,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "married",
+          "pool": "common",
+          "train_count": 36,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "something",
+          "pool": "common",
+          "train_count": 36,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "hither",
+          "pool": "common",
+          "train_count": 69,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "should",
+          "pool": "common",
+          "train_count": 331,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "tongue",
+          "pool": "common",
+          "train_count": 101,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "farewell",
+          "pool": "common",
+          "train_count": 95,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "strike",
+          "pool": "common",
+          "train_count": 41,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "George",
+          "pool": "common",
+          "train_count": 34,
+          "n_bpe_tokens": 5,
+          "char_correct": 2,
+          "bpe_correct": 0
+        },
+        {
+          "word": "pleasure",
+          "pool": "common",
+          "train_count": 34,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "straight",
+          "pool": "common",
+          "train_count": 40,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "command",
+          "pool": "common",
+          "train_count": 33,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "become",
+          "pool": "common",
+          "train_count": 36,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "mother",
+          "pool": "common",
+          "train_count": 135,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "husband",
+          "pool": "common",
+          "train_count": 87,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "tender",
+          "pool": "common",
+          "train_count": 44,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "yourself",
+          "pool": "common",
+          "train_count": 54,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "patience",
+          "pool": "common",
+          "train_count": 37,
+          "n_bpe_tokens": 4,
+          "char_correct": 2,
+          "bpe_correct": 3
+        },
+        {
+          "word": "second",
+          "pool": "common",
+          "train_count": 167,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "believe",
+          "pool": "common",
+          "train_count": 53,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 1
+        },
+        {
+          "word": "things",
+          "pool": "common",
+          "train_count": 56,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "thoughts",
+          "pool": "common",
+          "train_count": 43,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Content",
+          "pool": "common",
+          "train_count": 41,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "whilst",
+          "pool": "common",
+          "train_count": 30,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "before",
+          "pool": "common",
+          "train_count": 175,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "master",
+          "pool": "common",
+          "train_count": 88,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "reason",
+          "pool": "common",
+          "train_count": 44,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "children",
+          "pool": "common",
+          "train_count": 56,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "withal",
+          "pool": "common",
+          "train_count": 31,
+          "n_bpe_tokens": 2,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "please",
+          "pool": "common",
+          "train_count": 77,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Servant",
+          "pool": "common",
+          "train_count": 76,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "Mistress",
+          "pool": "common",
+          "train_count": 61,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "against",
+          "pool": "common",
+          "train_count": 153,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "marriage",
+          "pool": "common",
+          "train_count": 31,
+          "n_bpe_tokens": 5,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "friends",
+          "pool": "common",
+          "train_count": 130,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "fortune",
+          "pool": "common",
+          "train_count": 73,
+          "n_bpe_tokens": 4,
+          "char_correct": 3,
+          "bpe_correct": 3
+        },
+        {
+          "word": "honest",
+          "pool": "common",
+          "train_count": 35,
+          "n_bpe_tokens": 3,
+          "char_correct": 3,
+          "bpe_correct": 3
+        }
+      ],
+      "caveat": "a BPE model assigns probability only to its canonical tokenisation, which is a LOWER bound on the true string probability and is looser for the odd distractor strings -- this biases the probe slightly IN FAVOUR of the BPE arm",
+      "verdict": "char (byte-level) wins on the point estimate, NOT significant (paired McNemar p=0.401062)"
+    },
+    "runs": [
+      {
+        "tag": "main-char-s0",
+        "arm": "char",
+        "vocab": 65,
+        "seed": 0,
+        "lr": 0.012,
+        "steps": 960,
+        "n_params": 175040,
+        "train_seconds": 62.4,
+        "tokens_processed": 1966080,
+        "bytes_processed": 1966080.0,
+        "train_flops": 2114872934400,
+        "epochs_over_corpus": 1.9585318183719944,
+        "final_train_loss_ma50": 1.8128,
+        "val_bits_per_byte": 2.77521,
+        "val_bits_per_token": 2.77521,
+        "val_eval_bytes": 111488,
+        "val_eval_tokens": 111488
+      },
+      {
+        "tag": "main-char-s1",
+        "arm": "char",
+        "vocab": 65,
+        "seed": 1,
+        "lr": 0.012,
+        "steps": 960,
+        "n_params": 175040,
+        "train_seconds": 60.8,
+        "tokens_processed": 1966080,
+        "bytes_processed": 1966080.0,
+        "train_flops": 2114872934400,
+        "epochs_over_corpus": 1.9585318183719944,
+        "final_train_loss_ma50": 1.7827,
+        "val_bits_per_byte": 2.75297,
+        "val_bits_per_token": 2.75297,
+        "val_eval_bytes": 111488,
+        "val_eval_tokens": 111488
+      },
+      {
+        "tag": "main-char-s2",
+        "arm": "char",
+        "vocab": 65,
+        "seed": 2,
+        "lr": 0.012,
+        "steps": 960,
+        "n_params": 175040,
+        "train_seconds": 64.6,
+        "tokens_processed": 1966080,
+        "bytes_processed": 1966080.0,
+        "train_flops": 2114872934400,
+        "epochs_over_corpus": 1.9585318183719944,
+        "final_train_loss_ma50": 1.8208,
+        "val_bits_per_byte": 2.79252,
+        "val_bits_per_token": 2.79252,
+        "val_eval_bytes": 111488,
+        "val_eval_tokens": 111488
+      },
+      {
+        "tag": "main-bpe-s0",
+        "arm": "bpe",
+        "vocab": 512,
+        "seed": 0,
+        "lr": 0.012,
+        "steps": 800,
+        "n_params": 246560,
+        "train_seconds": 66.9,
+        "tokens_processed": 1638400,
+        "bytes_processed": 3636954.3203242645,
+        "train_flops": 2113929216000,
+        "epochs_over_corpus": 3.6229913118085544,
+        "final_train_loss_ma50": 3.621,
+        "val_bits_per_byte": 2.61732,
+        "val_bits_per_token": 5.63672,
+        "val_eval_bytes": 111506,
+        "val_eval_tokens": 51776
+      },
+      {
+        "tag": "main-bpe-s1",
+        "arm": "bpe",
+        "vocab": 512,
+        "seed": 1,
+        "lr": 0.012,
+        "steps": 800,
+        "n_params": 246560,
+        "train_seconds": 76.1,
+        "tokens_processed": 1638400,
+        "bytes_processed": 3636954.3203242645,
+        "train_flops": 2113929216000,
+        "epochs_over_corpus": 3.6229913118085544,
+        "final_train_loss_ma50": 3.9798,
+        "val_bits_per_byte": 2.81912,
+        "val_bits_per_token": 6.07133,
+        "val_eval_bytes": 111506,
+        "val_eval_tokens": 51776
+      },
+      {
+        "tag": "main-bpe-s2",
+        "arm": "bpe",
+        "vocab": 512,
+        "seed": 2,
+        "lr": 0.012,
+        "steps": 800,
+        "n_params": 246560,
+        "train_seconds": 72.2,
+        "tokens_processed": 1638400,
+        "bytes_processed": 3636954.3203242645,
+        "train_flops": 2113929216000,
+        "epochs_over_corpus": 3.6229913118085544,
+        "final_train_loss_ma50": 3.6833,
+        "val_bits_per_byte": 2.64572,
+        "val_bits_per_token": 5.69789,
+        "val_eval_bytes": 111506,
+        "val_eval_tokens": 51776
+      }
+    ],
+    "curves": {
+      "main-char-s0": [
+        {
+          "step": 80,
+          "tokens_seen": 163840,
+          "bytes_seen": 163840.0,
+          "train_flops": 176239411200,
+          "sub_bits_per_byte": 3.71613
+        },
+        {
+          "step": 160,
+          "tokens_seen": 327680,
+          "bytes_seen": 327680.0,
+          "train_flops": 352478822400,
+          "sub_bits_per_byte": 3.66071
+        },
+        {
+          "step": 240,
+          "tokens_seen": 491520,
+          "bytes_seen": 491520.0,
+          "train_flops": 528718233600,
+          "sub_bits_per_byte": 3.63606
+        },
+        {
+          "step": 320,
+          "tokens_seen": 655360,
+          "bytes_seen": 655360.0,
+          "train_flops": 704957644800,
+          "sub_bits_per_byte": 3.46893
+        },
+        {
+          "step": 400,
+          "tokens_seen": 819200,
+          "bytes_seen": 819200.0,
+          "train_flops": 881197056000,
+          "sub_bits_per_byte": 3.36244
+        },
+        {
+          "step": 480,
+          "tokens_seen": 983040,
+          "bytes_seen": 983040.0,
+          "train_flops": 1057436467200,
+          "sub_bits_per_byte": 3.17684
+        },
+        {
+          "step": 560,
+          "tokens_seen": 1146880,
+          "bytes_seen": 1146880.0,
+          "train_flops": 1233675878400,
+          "sub_bits_per_byte": 3.09402
+        },
+        {
+          "step": 640,
+          "tokens_seen": 1310720,
+          "bytes_seen": 1310720.0,
+          "train_flops": 1409915289600,
+          "sub_bits_per_byte": 2.99558
+        },
+        {
+          "step": 720,
+          "tokens_seen": 1474560,
+          "bytes_seen": 1474560.0,
+          "train_flops": 1586154700800,
+          "sub_bits_per_byte": 2.91693
+        },
+        {
+          "step": 800,
+          "tokens_seen": 1638400,
+          "bytes_seen": 1638400.0,
+          "train_flops": 1762394112000,
+          "sub_bits_per_byte": 2.81717
+        },
+        {
+          "step": 880,
+          "tokens_seen": 1802240,
+          "bytes_seen": 1802240.0,
+          "train_flops": 1938633523200,
+          "sub_bits_per_byte": 2.79986
+        },
+        {
+          "step": 960,
+          "tokens_seen": 1966080,
+          "bytes_seen": 1966080.0,
+          "train_flops": 2114872934400,
+          "sub_bits_per_byte": 2.74386
+        }
+      ],
+      "main-char-s1": [
+        {
+          "step": 80,
+          "tokens_seen": 163840,
+          "bytes_seen": 163840.0,
+          "train_flops": 176239411200,
+          "sub_bits_per_byte": 3.71644
+        },
+        {
+          "step": 160,
+          "tokens_seen": 327680,
+          "bytes_seen": 327680.0,
+          "train_flops": 352478822400,
+          "sub_bits_per_byte": 3.63996
+        },
+        {
+          "step": 240,
+          "tokens_seen": 491520,
+          "bytes_seen": 491520.0,
+          "train_flops": 528718233600,
+          "sub_bits_per_byte": 3.53166
+        },
+        {
+          "step": 320,
+          "tokens_seen": 655360,
+          "bytes_seen": 655360.0,
+          "train_flops": 704957644800,
+          "sub_bits_per_byte": 3.39793
+        },
+        {
+          "step": 400,
+          "tokens_seen": 819200,
+          "bytes_seen": 819200.0,
+          "train_flops": 881197056000,
+          "sub_bits_per_byte": 3.19433
+        },
+        {
+          "step": 480,
+          "tokens_seen": 983040,
+          "bytes_seen": 983040.0,
+          "train_flops": 1057436467200,
+          "sub_bits_per_byte": 3.09194
+        },
+        {
+          "step": 560,
+          "tokens_seen": 1146880,
+          "bytes_seen": 1146880.0,
+          "train_flops": 1233675878400,
+          "sub_bits_per_byte": 3.00418
+        },
+        {
+          "step": 640,
+          "tokens_seen": 1310720,
+          "bytes_seen": 1310720.0,
+          "train_flops": 1409915289600,
+          "sub_bits_per_byte": 2.88177
+        },
+        {
+          "step": 720,
+          "tokens_seen": 1474560,
+          "bytes_seen": 1474560.0,
+          "train_flops": 1586154700800,
+          "sub_bits_per_byte": 2.82692
+        },
+        {
+          "step": 800,
+          "tokens_seen": 1638400,
+          "bytes_seen": 1638400.0,
+          "train_flops": 1762394112000,
+          "sub_bits_per_byte": 2.80065
+        },
+        {
+          "step": 880,
+          "tokens_seen": 1802240,
+          "bytes_seen": 1802240.0,
+          "train_flops": 1938633523200,
+          "sub_bits_per_byte": 2.75191
+        },
+        {
+          "step": 960,
+          "tokens_seen": 1966080,
+          "bytes_seen": 1966080.0,
+          "train_flops": 2114872934400,
+          "sub_bits_per_byte": 2.73355
+        }
+      ],
+      "main-char-s2": [
+        {
+          "step": 80,
+          "tokens_seen": 163840,
+          "bytes_seen": 163840.0,
+          "train_flops": 176239411200,
+          "sub_bits_per_byte": 3.69721
+        },
+        {
+          "step": 160,
+          "tokens_seen": 327680,
+          "bytes_seen": 327680.0,
+          "train_flops": 352478822400,
+          "sub_bits_per_byte": 3.63668
+        },
+        {
+          "step": 240,
+          "tokens_seen": 491520,
+          "bytes_seen": 491520.0,
+          "train_flops": 528718233600,
+          "sub_bits_per_byte": 3.64093
+        },
+        {
+          "step": 320,
+          "tokens_seen": 655360,
+          "bytes_seen": 655360.0,
+          "train_flops": 704957644800,
+          "sub_bits_per_byte": 3.44339
+        },
+        {
+          "step": 400,
+          "tokens_seen": 819200,
+          "bytes_seen": 819200.0,
+          "train_flops": 881197056000,
+          "sub_bits_per_byte": 3.31016
+        },
+        {
+          "step": 480,
+          "tokens_seen": 983040,
+          "bytes_seen": 983040.0,
+          "train_flops": 1057436467200,
+          "sub_bits_per_byte": 3.17647
+        },
+        {
+          "step": 560,
+          "tokens_seen": 1146880,
+          "bytes_seen": 1146880.0,
+          "train_flops": 1233675878400,
+          "sub_bits_per_byte": 3.07957
+        },
+        {
+          "step": 640,
+          "tokens_seen": 1310720,
+          "bytes_seen": 1310720.0,
+          "train_flops": 1409915289600,
+          "sub_bits_per_byte": 2.99642
+        },
+        {
+          "step": 720,
+          "tokens_seen": 1474560,
+          "bytes_seen": 1474560.0,
+          "train_flops": 1586154700800,
+          "sub_bits_per_byte": 2.91783
+        },
+        {
+          "step": 800,
+          "tokens_seen": 1638400,
+          "bytes_seen": 1638400.0,
+          "train_flops": 1762394112000,
+          "sub_bits_per_byte": 2.88212
+        },
+        {
+          "step": 880,
+          "tokens_seen": 1802240,
+          "bytes_seen": 1802240.0,
+          "train_flops": 1938633523200,
+          "sub_bits_per_byte": 2.80095
+        },
+        {
+          "step": 960,
+          "tokens_seen": 1966080,
+          "bytes_seen": 1966080.0,
+          "train_flops": 2114872934400,
+          "sub_bits_per_byte": 2.76447
+        }
+      ],
+      "main-bpe-s0": [
+        {
+          "step": 67,
+          "tokens_seen": 137216,
+          "bytes_seen": 304594.92432715715,
+          "train_flops": 177041571840,
+          "sub_bits_per_byte": 3.08536
+        },
+        {
+          "step": 133,
+          "tokens_seen": 272384,
+          "bytes_seen": 604643.655753909,
+          "train_flops": 351440732160,
+          "sub_bits_per_byte": 2.96625
+        },
+        {
+          "step": 200,
+          "tokens_seen": 409600,
+          "bytes_seen": 909238.5800810661,
+          "train_flops": 528482304000,
+          "sub_bits_per_byte": 2.90056
+        },
+        {
+          "step": 267,
+          "tokens_seen": 546816,
+          "bytes_seen": 1213833.5044082233,
+          "train_flops": 705523875840,
+          "sub_bits_per_byte": 2.86447
+        },
+        {
+          "step": 333,
+          "tokens_seen": 681984,
+          "bytes_seen": 1513882.2358349753,
+          "train_flops": 879923036160,
+          "sub_bits_per_byte": 2.8312
+        },
+        {
+          "step": 400,
+          "tokens_seen": 819200,
+          "bytes_seen": 1818477.1601621322,
+          "train_flops": 1056964608000,
+          "sub_bits_per_byte": 2.80554
+        },
+        {
+          "step": 467,
+          "tokens_seen": 956416,
+          "bytes_seen": 2123072.0844892897,
+          "train_flops": 1234006179840,
+          "sub_bits_per_byte": 2.76036
+        },
+        {
+          "step": 533,
+          "tokens_seen": 1091584,
+          "bytes_seen": 2423120.8159160414,
+          "train_flops": 1408405340160,
+          "sub_bits_per_byte": 2.71647
+        },
+        {
+          "step": 600,
+          "tokens_seen": 1228800,
+          "bytes_seen": 2727715.7402431984,
+          "train_flops": 1585446912000,
+          "sub_bits_per_byte": 2.70088
+        },
+        {
+          "step": 667,
+          "tokens_seen": 1366016,
+          "bytes_seen": 3032310.664570356,
+          "train_flops": 1762488483840,
+          "sub_bits_per_byte": 2.64528
+        },
+        {
+          "step": 733,
+          "tokens_seen": 1501184,
+          "bytes_seen": 3332359.3959971075,
+          "train_flops": 1936887644160,
+          "sub_bits_per_byte": 2.61665
+        },
+        {
+          "step": 800,
+          "tokens_seen": 1638400,
+          "bytes_seen": 3636954.3203242645,
+          "train_flops": 2113929216000,
+          "sub_bits_per_byte": 2.59134
+        }
+      ],
+      "main-bpe-s1": [
+        {
+          "step": 67,
+          "tokens_seen": 137216,
+          "bytes_seen": 304594.92432715715,
+          "train_flops": 177041571840,
+          "sub_bits_per_byte": 3.54861
+        },
+        {
+          "step": 133,
+          "tokens_seen": 272384,
+          "bytes_seen": 604643.655753909,
+          "train_flops": 351440732160,
+          "sub_bits_per_byte": 3.29759
+        },
+        {
+          "step": 200,
+          "tokens_seen": 409600,
+          "bytes_seen": 909238.5800810661,
+          "train_flops": 528482304000,
+          "sub_bits_per_byte": 3.15434
+        },
+        {
+          "step": 267,
+          "tokens_seen": 546816,
+          "bytes_seen": 1213833.5044082233,
+          "train_flops": 705523875840,
+          "sub_bits_per_byte": 3.081
+        },
+        {
+          "step": 333,
+          "tokens_seen": 681984,
+          "bytes_seen": 1513882.2358349753,
+          "train_flops": 879923036160,
+          "sub_bits_per_byte": 3.01363
+        },
+        {
+          "step": 400,
+          "tokens_seen": 819200,
+          "bytes_seen": 1818477.1601621322,
+          "train_flops": 1056964608000,
+          "sub_bits_per_byte": 2.96078
+        },
+        {
+          "step": 467,
+          "tokens_seen": 956416,
+          "bytes_seen": 2123072.0844892897,
+          "train_flops": 1234006179840,
+          "sub_bits_per_byte": 2.9168
+        },
+        {
+          "step": 533,
+          "tokens_seen": 1091584,
+          "bytes_seen": 2423120.8159160414,
+          "train_flops": 1408405340160,
+          "sub_bits_per_byte": 2.88863
+        },
+        {
+          "step": 600,
+          "tokens_seen": 1228800,
+          "bytes_seen": 2727715.7402431984,
+          "train_flops": 1585446912000,
+          "sub_bits_per_byte": 2.87212
+        },
+        {
+          "step": 667,
+          "tokens_seen": 1366016,
+          "bytes_seen": 3032310.664570356,
+          "train_flops": 1762488483840,
+          "sub_bits_per_byte": 2.82436
+        },
+        {
+          "step": 733,
+          "tokens_seen": 1501184,
+          "bytes_seen": 3332359.3959971075,
+          "train_flops": 1936887644160,
+          "sub_bits_per_byte": 2.81124
+        },
+        {
+          "step": 800,
+          "tokens_seen": 1638400,
+          "bytes_seen": 3636954.3203242645,
+          "train_flops": 2113929216000,
+          "sub_bits_per_byte": 2.8128
+        }
+      ],
+      "main-bpe-s2": [
+        {
+          "step": 67,
+          "tokens_seen": 137216,
+          "bytes_seen": 304594.92432715715,
+          "train_flops": 177041571840,
+          "sub_bits_per_byte": 3.23578
+        },
+        {
+          "step": 133,
+          "tokens_seen": 272384,
+          "bytes_seen": 604643.655753909,
+          "train_flops": 351440732160,
+          "sub_bits_per_byte": 3.01247
+        },
+        {
+          "step": 200,
+          "tokens_seen": 409600,
+          "bytes_seen": 909238.5800810661,
+          "train_flops": 528482304000,
+          "sub_bits_per_byte": 2.93253
+        },
+        {
+          "step": 267,
+          "tokens_seen": 546816,
+          "bytes_seen": 1213833.5044082233,
+          "train_flops": 705523875840,
+          "sub_bits_per_byte": 2.90928
+        },
+        {
+          "step": 333,
+          "tokens_seen": 681984,
+          "bytes_seen": 1513882.2358349753,
+          "train_flops": 879923036160,
+          "sub_bits_per_byte": 2.86007
+        },
+        {
+          "step": 400,
+          "tokens_seen": 819200,
+          "bytes_seen": 1818477.1601621322,
+          "train_flops": 1056964608000,
+          "sub_bits_per_byte": 2.78293
+        },
+        {
+          "step": 467,
+          "tokens_seen": 956416,
+          "bytes_seen": 2123072.0844892897,
+          "train_flops": 1234006179840,
+          "sub_bits_per_byte": 2.77903
+        },
+        {
+          "step": 533,
+          "tokens_seen": 1091584,
+          "bytes_seen": 2423120.8159160414,
+          "train_flops": 1408405340160,
+          "sub_bits_per_byte": 2.72441
+        },
+        {
+          "step": 600,
+          "tokens_seen": 1228800,
+          "bytes_seen": 2727715.7402431984,
+          "train_flops": 1585446912000,
+          "sub_bits_per_byte": 2.69162
+        },
+        {
+          "step": 667,
+          "tokens_seen": 1366016,
+          "bytes_seen": 3032310.664570356,
+          "train_flops": 1762488483840,
+          "sub_bits_per_byte": 2.67891
+        },
+        {
+          "step": 733,
+          "tokens_seen": 1501184,
+          "bytes_seen": 3332359.3959971075,
+          "train_flops": 1936887644160,
+          "sub_bits_per_byte": 2.64409
+        },
+        {
+          "step": 800,
+          "tokens_seen": 1638400,
+          "bytes_seen": 3636954.3203242645,
+          "train_flops": 2113929216000,
+          "sub_bits_per_byte": 2.63447
+        }
+      ]
+    },
+    "wall_clock_s": 564.3,
+    "PRIMARY_verdict": "inconclusive (per-seed signs disagree)"
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130",
+    "matplotlib": "3.10.9"
+  },
+  "status": "done"
+}

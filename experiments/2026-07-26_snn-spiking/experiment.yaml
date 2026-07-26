@@ -1,0 +1,46 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_snn-spiking"
+title: "Rate vs latency coding in a hand-rolled surrogate-gradient SNN: the time-step/accuracy/energy frontier"
+hypothesis: "On sklearn digits with a matched-parameter 2-hidden-layer LIF network trained by surrogate gradients, LATENCY (time-to-first-spike) coding dominates RATE coding at small simulation depth T (folk claim: rate coding needs many time steps to average out Bernoulli noise, latency needs only enough steps to resolve an ordering), and latency reaches the non-spiking ReLU MLP reference at a smaller T and at far fewer spikes per classification."
+seed: 0
+dataset:
+  name: "sklearn digits (8x8 handwritten digits, 1797 samples, 10 classes, integer pixels 0-16)"
+  source: "sklearn.datasets.load_digits (bundled with scikit-learn; UCI Optical Recognition of Handwritten Digits)"
+  license: "CC BY 4.0 (UCI ML repository)"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  # --- architecture (identical for every arm, including the ReLU reference) ---
+  n_in: 64
+  n_hidden: 256
+  n_hidden_layers: 2
+  n_classes: 10
+  # --- LIF neuron ---
+  beta: 0.9              # membrane decay per time step
+  threshold: 1.0
+  reset: "subtract"      # u <- u - threshold*s (detached)
+  surrogate: "fast_sigmoid"
+  surrogate_slope: 25.0
+  # --- encodings under test ---
+  codings: ["rate", "latency", "constant"]
+  readout: "mean_current"        # logits = mean_t fc_out(s_hidden2[t])
+  extra_control_arm: "latency_leaky"   # same as latency but leaky-integrator readout
+  readout_leaky_beta: 0.9
+  # --- sweep ---
+  time_steps: [1, 2, 4, 8, 16, 32]     # backlog asks for {2,4,8,16,32}; T=1 added, it is nearly free
+  # --- data split (FIXED across all arms and seeds) ---
+  split_train: 0.60
+  split_val: 0.15
+  split_test: 0.25
+  split_seed: 12345
+  # --- optimisation ---
+  batch_size: 32
+  steps: 500
+  lr_grid: [0.001, 0.003, 0.01]
+  lr_sweep_steps: 250          # lr chosen on the val split at seed 0, at a reduced budget
+  lr_sweep_time_steps: [2, 8, 32]   # sweep only these T (cost); each T uses the largest swept T <= it
+  weight_decay: 0.0
+  grad_clip: 1.0
+  seeds: [0, 1, 2]
+  seeds_control_arm: [0, 1]    # latency_leaky readout control gets 2 seeds (budget)
+  eval_batch: 512
+  time_budget_s: 900       # honest time-box; run.py prints a warning if exceeded
