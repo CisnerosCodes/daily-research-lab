@@ -1,0 +1,52 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_grokking-weight-decay-phase"
+title: "Weight decay and the grokking delay: is steps-to-grok monotone decreasing in weight decay, or is there a phase boundary?"
+hypothesis: "Weight decay controls the memorize->generalize (grokking) delay: steps-to-grok decreases monotonically as weight decay increases, until a weight decay so high that it destabilizes training (the model can no longer even fit the training set), at which point generalization is lost entirely."
+seed: 0
+dataset:
+  name: "all 59^2 = 3481 (a, b) pairs for (a+b) mod 59; one deterministic random 50/50 split per seed"
+  source: "generated in run.py from the seed"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # --- task / architecture: identical to the sibling run 2026-07-25_grokking-modular-addition
+  #     so the weight-decay curve can be read against its measured WD=1.0 baseline (delay 642 steps).
+  p: 59                     # modulus (prime). SHRUNK from the backlog's 97 for the CPU time-box.
+  d_model: 64               # SHRUNK from the Nanda-et-al 128
+  n_heads: 4
+  d_mlp: 256                # SHRUNK from 512
+  n_ctx: 3                  # [a, b, "="]
+  init_std_scale: 0.8       # weight std = init_std_scale / sqrt(d_model)
+  train_frac: 0.5           # 1740 train / 1741 test. Chosen because the sibling run showed
+                            # frac 0.5 groks at ~900 steps while 0.4 needs ~11k and 0.3 never does,
+                            # so most WD arms can finish inside a few-thousand-step cap.
+  lr: 0.001
+  beta1: 0.9
+  beta2: 0.98
+
+  # --- the swept variable ---
+  # AdamW DECOUPLED weight decay. 0.03 -> 30 spans three orders of magnitude around the
+  # WD = 1.0 used by Nanda et al. and by our sibling run.
+  weight_decays: [0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0]
+  seeds: [0, 1]             # seed 1 is a partial replication: only the arms that fit the budget
+  # order in which seed-1 arms are attempted (most informative first)
+  seed1_priority: [1.0, 3.0, 0.3, 10.0, 0.1, 30.0, 0.03]
+
+  # --- stopping rules (every arm gets the SAME step cap; censoring is reported honestly) ---
+  max_steps: 3000           # the step cap. Arms that never reach test acc 0.95 are CENSORED at 3000.
+  min_steps: 1200           # no arm may stop before this, so test acc at a common step is comparable
+  eval_every: 25
+  confirm_steps: 200        # after the first test acc >= grok_threshold, run this many more steps
+  common_compare_step: 1200 # step at which all arms are compared head-to-head
+  # "cannot fit" abort: saves budget on arms destroyed by weight decay
+  abort_train_acc_below: 0.5
+  abort_no_improve_window: 500
+  abort_no_improve_delta: 0.02
+
+  # --- metric definitions ---
+  grok_threshold: 0.95      # steps-to-grok = first step with test acc >= this
+  memorize_threshold: 0.99  # memorization step = first step with train acc >= this
+  chance_acc: 0.016949      # 1/59
+
+  # --- time box ---
+  total_train_budget_s: 720 # 12 minutes of training+eval across ALL arms, hard budget

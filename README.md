@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**13 experiments logged.**
+**15 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -42,6 +42,8 @@ experiments/                one dated folder per experiment
 | 2026-07-25 | [Grokking (a+b) mod 59: spectral-entropy collapse LAGS the test-accuracy jump; only restricted loss leads](experiments/2026-07-25_grokking-modular-addition) | ✅ done | Hypothesis refuted, with a mechanism for why the opposite is reported. The classic grokkin |
 | 2026-07-25 | [The probe can lie: at matched 99%+ linear-probe accuracy, top-of-stack type costs 5.31 excess nats to erase and depth parity costs less than a random direction](experiments/2026-07-25_dyck-probe-can-lie) | ✅ done | Hypothesis confirmed for the headline feature, with two honest misses. The 27k-param model |
 | 2026-07-25 | [KAN on Feynman I.12.2: Coulomb's law recovered EXACTLY (exponent error 0.006), but the sample-efficiency claim is refuted - the KAN is 2.8x worse than an iso-param MLP at n=25 and its relative standing IMPROVES with data](experiments/2026-07-25_kan-feynman-symbolic) | ✅ done | The two halves of the KAN pitch come apart on the same equation. Symbolic recovery is EXAC |
+| 2026-07-25 | [MQAR at ~0.1M params: attention holds 1.00 recall at every KV load to 24 while a decay-gated linear-attention mixer and a routing-free gated conv both sit ON the no-recall guessing baseline - the 'graceful capacity slide' is chance, not capacity](experiments/2026-07-25_zoology-mqar-recall) | ✅ done | The zoology ranking reproduces at nano scale and the fresh question dissolves. Under a str |
+| 2026-07-25 | [Weight decay and the grokking delay on (a+b) mod 59: monotone where it groks (1825 -> 750 steps for WD 1 -> 3) but the window is only ~1 decade wide, and WD never touches memorization speed](experiments/2026-07-25_grokking-weight-decay-phase) | ✅ done | A 7-point weight-decay sweep spanning three orders of magnitude (0.03 to 30) on a 57k-para |
 | 2026-07-24 | [Tsetlin Machine: does exact rule recovery break before accuracy under label noise?](experiments/2026-07-24_tsetlin-dnf-recovery) | ✅ done | Hypothesis partially refuted: exact recall of the planted clauses survives to 20% label no |
 | 2026-07-23 | [Superposition phase diagram: does feature correlation resist or reshape superposition?](experiments/2026-07-23_superposition-correlation-phase) | ✅ done | Hypothesis refuted: across the grid, raising within-pair correlation makes the model colla |
 | 2026-07-21 | [Game of Life: when does test-time recursion still generalize?](experiments/2026-07-21_gol-depth-recursion) | ✅ done | Capacity window: at H=4 tied recursion learns the exact reusable rule and extrapolates to  |

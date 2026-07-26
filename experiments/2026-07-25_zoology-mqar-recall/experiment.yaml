@@ -1,0 +1,35 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_zoology-mqar-recall"
+title: "MQAR at nano scale: does a decay-gated linear-attention mixer fall off a capacity cliff, or degrade gracefully?"
+hypothesis: "On hand-rolled MQAR at ~0.1M params, softmax attention holds >=90% recall at every KV load while a decay-gated linear-attention mixer degrades as load grows and a gated long-convolution (no content-based routing) fails hardest; the fresh question is the SHAPE of the linear mixer's failure - a sharp capacity cliff at a load threshold, or a graceful slide."
+seed: 0
+dataset:
+  name: "MQAR (multi-query associative recall) synthetic, hand-rolled after zoology (arXiv:2312.04927)"
+  source: "generated in run.py (numpy default_rng); zoology repo NOT cloned (its extras want CUDA)"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # ---- task ----
+  n_keys: 32              # key tokens are ids 0..31
+  n_values: 32            # value tokens are ids 32..63; PAD = 64 -> vocab 65
+  seq_len: 52             # fixed context for every load (2*24 + 4 = 52 fits the largest load)
+  n_queries: 4            # queries per sequence, held FIXED so only memory load varies
+  max_kv_train: 24        # training loads are drawn uniformly from 1..max_kv_train
+  eval_loads: [1, 2, 4, 8, 12, 16, 20, 24]
+  # ---- model (shared skeleton, only the mixer changes) ----
+  mixers: ["attn", "gla", "gconv"]
+  n_layers: 2
+  d_model: 64
+  n_heads: 4
+  emb_std: 1.0            # std for BOTH token and position embedding tables (pilot: load-bearing)
+  target_params: 100000   # d_ff is binary-searched per mixer to hit this (iso-param control)
+  # ---- optimization (identical for every mixer and load) ----
+  steps: 3000
+  warmup: 100
+  batch_size: 64          # pilot-critical: at batch 16 NO mixer leaves chance in 10k steps
+  lr: 0.003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  eval_n: 256             # held-out sequences per load, identical across mixers
+  eval_every: 250
+  time_cap_s_per_run: 420 # honest time-box; a capped run is flagged in results.json
