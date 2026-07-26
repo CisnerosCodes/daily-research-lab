@@ -1,0 +1,215 @@
+{
+  "id": "2026-07-25_kan-feynman-symbolic",
+  "date": "2026-07-25",
+  "title": "KAN on Feynman I.12.2: Coulomb's law recovered EXACTLY (exponent error 0.006), but the sample-efficiency claim is refuted - the KAN is 2.8x worse than an iso-param MLP at n=25 and its relative standing IMPROVES with data",
+  "slug": "kan-feynman-symbolic",
+  "hypothesis": "At ~200 parameters on the Feynman I.12.2 Coulomb law F = q1*q2/(4*pi*eps*r^2), a KAN is more sample-efficient than iso-parameter MLPs - lower test RMSE at every training-set size, with the gap WIDENING as n shrinks - and its learned edge functions can be snapped back to the true multiplicative formula.",
+  "question": "Does the KAN's advertised sample efficiency actually hold on the one task family (symbolic formula representation) where KAN is uncontested, once you sweep training-set size and sweep the MLP baseline's shape - and is the true formula genuinely recovered or only approximately fit?",
+  "method": "Two arms on synthetic seeded data from Feynman I.12.2 (q1,q2,eps,r ~ U[1,5], AI-Feynman benchmark ranges; fixed 2000-point test set, seed 999, std(y_test)=0.0854). (1) SAMPLE-EFFICIENCY SWEEP: real pykan 0.2.8 KAN [4,4,1] grid=5 k=3 (200 trainable spline params) trained with full-batch LBFGS (60 steps, grid updates stopped at step 20, lamb=0) against iso-parameter tanh MLPs 4-11-11-1 and 4-33-1 (199 params each), EACH trained with both full-batch LBFGS (60 steps) and Adam (2000 steps, lr 3e-3). n in {25,50,100,250,500,1000} x 3 data seeds; X and y z-scored with TRAIN statistics only, RMSE reported in original units. The headline MLP baseline is the ORACLE best-of-4 MLP arms per n, deliberately giving the baseline a model-selection advantage the KAN does not get, so the test is conservative w.r.t. the KAN hypothesis. (2) SYMBOLIC ARM: a separate KAN [4,1,1] (the shape the true formula needs: sum of logs into one exp) on RAW un-standardized data at n=1000, grid 5 refined to grid 10, best of 4 init seeds selected on TRAINING loss only; then pykan auto_symbolic over {x,x^2,x^3,1/x,1/x^2,sqrt,exp,log,tanh,sin,abs}, affine refit, symbolic_formula(). Fidelity is scored objectively rather than by eye: OLS of log(F_pred) on (log q1, log q2, log eps, log r) over the test set, which returns (1,1,-1,-2) with R^2=1 for a true monomial; verdict thresholds declared in experiment.yaml. Each layer-0 edge is additionally regressed against a primitive library (log, x, x^2, 1/x, 1/x^2, sqrt, and an exp family scanned over an inner scale, since exp(b*x) is not an affine reparametrization of exp(x)).",
+  "architecture": "pykan 0.2.8 KAN [4,4,1] grid 5 k 3 (200 spline params) for the sweep; KAN [4,1,1] grid 5->10 for symbolic extraction; iso-param tanh MLPs 4-11-11-1 and 4-33-1 (199 params)",
+  "dataset": {
+    "name": "Feynman I.12.2 (Coulomb's law) synthetic, 25-1000 train / 2000 test",
+    "source": "generated in run.py from the closed-form equation with AI-Feynman benchmark ranges U[1,5]",
+    "license": "n/a (synthetic)"
+  },
+  "task": "regression / symbolic formula representation and recovery",
+  "framework": "pykan 0.2.8 + torch 2.13 (CPU, 1 thread)",
+  "seed": 0,
+  "compute": "CPU single-threaded, 496s total (sweep 353s over 90 fits, symbolic arm 141s)",
+  "metrics": {
+    "equation": "F = q1*q2/(4*pi*eps*r^2)",
+    "feynman_id": "I.12.2",
+    "n_params_kan": 200,
+    "n_params_mlp_deep": 199,
+    "n_params_mlp_wide": 199,
+    "y_test_std": 0.085376,
+    "n_test": 2000,
+    "data_seeds": 3,
+    "train_sizes": [
+      25,
+      50,
+      100,
+      250,
+      500,
+      1000
+    ],
+    "kan_test_rmse": {
+      "25": 0.105245,
+      "50": 0.037159,
+      "100": 0.019416,
+      "250": 0.006261,
+      "500": 0.003264,
+      "1000": 0.002684
+    },
+    "mlp_deep_lbfgs_test_rmse": {
+      "25": 0.037303,
+      "50": 0.02766,
+      "100": 0.021522,
+      "250": 0.010211,
+      "500": 0.00424,
+      "1000": 0.003167
+    },
+    "mlp_wide_lbfgs_test_rmse": {
+      "25": 0.056489,
+      "50": 0.036705,
+      "100": 0.018442,
+      "250": 0.006655,
+      "500": 0.001868,
+      "1000": 0.001772
+    },
+    "best_mlp_test_rmse": {
+      "25": 0.037303,
+      "50": 0.02766,
+      "100": 0.018442,
+      "250": 0.006655,
+      "500": 0.001868,
+      "1000": 0.001772
+    },
+    "best_mlp_arm_per_n": {
+      "25": "mlp_deep_lbfgs",
+      "50": "mlp_deep_lbfgs",
+      "100": "mlp_wide_lbfgs",
+      "250": "mlp_wide_lbfgs",
+      "500": "mlp_wide_lbfgs",
+      "1000": "mlp_wide_lbfgs"
+    },
+    "rmse_ratio_kan_over_best_mlp": {
+      "25": 2.8213,
+      "50": 1.3434,
+      "100": 1.0528,
+      "250": 0.9408,
+      "500": 1.7474,
+      "1000": 1.515
+    },
+    "rmse_ratio_kan_over_single_fixed_mlp": {
+      "25": 2.8213,
+      "50": 1.3434,
+      "100": 0.9022,
+      "250": 0.6131,
+      "500": 0.7698,
+      "1000": 0.8475
+    },
+    "kan_wins_vs_best_mlp": 1,
+    "kan_wins_at_n": [
+      250
+    ],
+    "n_train_sizes": 6,
+    "smallest_n_where_kan_wins": 250,
+    "ratio_trend_smallest_over_largest_n": 1.8623,
+    "kan_advantage_grows_with_data": true,
+    "kan_better_at_smallest_n": false,
+    "sample_efficiency_claim_supported": false,
+    "kan_rmse_at_n25_vs_predict_the_mean": 1.233,
+    "symbolic_arch": "[4,1,1]",
+    "symbolic_spline_test_rmse": 0.005489,
+    "symbolic_spline_test_nrmse": 0.06429,
+    "symbolic_formula_test_rmse": 0.000174,
+    "symbolic_formula_test_nrmse": 0.002033,
+    "symbolic_snapping_rmse_improvement_x": 31.5,
+    "true_log_exponents": [
+      1.0,
+      1.0,
+      -1.0,
+      -2.0
+    ],
+    "recovered_log_exponents": [
+      0.994,
+      0.996,
+      -0.996,
+      -2.002
+    ],
+    "max_abs_exponent_error": 0.006,
+    "loglog_r2": 0.99999,
+    "edge_best_primitive": {
+      "q1": "log(x)",
+      "q2": "log(x)",
+      "eps": "log(x)",
+      "r": "log(x)",
+      "hidden->out": "exp(2.33*x)"
+    },
+    "edge_best_r2": {
+      "q1": 0.9998,
+      "q2": 0.9997,
+      "eps": 1.0,
+      "r": 0.9999,
+      "hidden->out": 1.0
+    },
+    "recovered_formula": "144.0942*(9.1843*x_1 + 0.3772)**1.0153*(0.0566*x_2 + 0.0004)**1.0031/((9.844*x_3 - 0.108)**0.9949*(9.7921*x_4 + 0.1607)**2.0215) + 0.0001",
+    "formula_fidelity": "exact (monomial recovered up to a constant factor)",
+    "sweep_sec": 353.4,
+    "symbolic_sec": 141.3,
+    "headline": "Split verdict. SYMBOLIC: exact - pykan's auto_symbolic prints 144.09*(9.18*q1+0.377)^1.0153*(0.0566*q2+0.0004)^1.0031 / ((9.844*eps-0.108)^0.9949*(9.792*r+0.161)^2.0215), i.e. Coulomb's law up to a constant; log-log exponent recovery [0.994, 0.996, -0.996, -2.002] vs true [1,1,-1,-2] (max error 0.006, R^2 0.99999), all four layer-0 edges are log(x) at R^2 0.9997-1.0000 and the output edge is exp at R^2 1.0000, and symbolic snapping cuts test RMSE 32x (0.00549 -> 0.000174, 10x better than the best MLP anywhere in the sweep). SAMPLE EFFICIENCY: refuted - the 200-param KAN beats the oracle best-of-4 iso-param MLP at only 1 of 6 training sizes (n=250, by 6%), is 2.82x WORSE at n=25 (RMSE 0.105 vs 0.037, i.e. at the predict-the-mean floor of 0.085), and ratio(n=25)/ratio(n=1000)=1.86, so its relative standing IMPROVES with data - the opposite of a sample-efficiency advantage. Against a single fixed MLP shape (4-11-11-1 LBFGS) the KAN does win from n=100 up (0.90/0.61/0.77/0.85), so the familiar KAN-beats-MLP plot reproduces only if the baseline's width is never swept."
+  },
+  "result_summary": "The two halves of the KAN pitch come apart on the same equation. Symbolic recovery is EXACT and better than advertised: a 4-input, 1-hidden-node pykan model trained on 1000 raw points learns log on all four input edges (R^2 0.9997-1.0000; note that scoring the output edge against a*exp(x)+b without an inner scale gives only R^2 0.55 and would have been a false negative - allowing exp(b*x) gives R^2 1.0000 at b=2.33), auto_symbolic prints 144.09*(9.18*q1+0.377)^1.0153*(0.0566*q2+0.0004)^1.0031/((9.844*eps-0.108)^0.9949*(9.792*r+0.161)^2.0215), and an objective log-log regression recovers exponents [0.994, 0.996, -0.996, -2.002] against the true [1, 1, -1, -2] (max error 0.006, R^2 0.99999). Snapping to symbols is also a huge regularizer we did not set out to test: it cuts the same model's test RMSE from 0.00549 to 0.000174 (32x), 10x better than the best MLP at any n. Sample efficiency is REFUTED, and refuted in the worst place for the claim. Against an oracle best-of-4 iso-param MLP baseline (two shapes x two optimizers, per-n oracle selection - an advantage the KAN is not given), the 200-param KAN wins at 1 of 6 training sizes (n=250, by 6%). At n=25 it is 2.82x worse (0.1052 vs 0.0373) and sits at the predict-the-mean floor (std(y_test)=0.0854), i.e. it has learned essentially nothing while a 199-param MLP is already at 0.0373. ratio(n=25)/ratio(n=1000) = 1.86: the KAN's relative position improves with more data. The mechanism is in the method - a B-spline edge is a LOCAL basis, so with 25 points spread over [1,5]^4 most knots see almost no data, whereas an MLP's global tanh features are constrained everywhere by every point; splines need samples per knot, which is a sample-efficiency tax at small n repaid only once the grid is populated. Two reproduction warnings fall out: (1) sweep the MLP's shape - against a single fixed 4-11-11-1 MLP the KAN wins from n=100 up (ratios 0.90/0.61/0.77/0.85), so the familiar plot reproduces if you never vary the baseline's width, but the wide 4-33-1 MLP is the best model overall at n>=500; (2) sweep KAN inits - in pre-run probes the four [4,1,1] init seeds spanned test RMSE 0.0014-0.0126 (9x) at n=1000 and one init at n=400 landed at train MSE 0.70, no better than the mean, so run.py selects over 4 inits by TRAINING loss. Caveats: one equation (a pure monomial, which is the best case for the log/exp decomposition a KAN can express in two layers), 4 variables rather than the backlog's suggested 2-3, ~200 params, 3 data seeds, one KAN init seed in the sweep arm, iso-parameter (not iso-FLOP) matching, and a fixed 60-step LBFGS budget for both families. MLP numbers are bit-identical across runs; the pykan arm is not - two runs of the script differed by <6% in KAN RMSE (KAN won 2/6 vs 1/6 sizes) with no conclusion changed.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "partial-prior-art",
+    "sources": [
+      {
+        "name": "novelty_check.py",
+        "query": "KAN Kolmogorov-Arnold network sample efficiency Feynman symbolic recovery vs MLP",
+        "hits": 0,
+        "note": "returned verdict 'unchecked' - arXiv/OpenAlex 403 from this environment, as documented in the brief"
+      },
+      {
+        "name": "web",
+        "query": "KAN Kolmogorov-Arnold Network sample efficiency vs MLP Feynman equation symbolic regression comparison",
+        "hits": 10
+      },
+      {
+        "name": "web",
+        "query": "KAN vs MLP small training set size sweep test RMSE sample efficiency ablation critique",
+        "hits": 9
+      },
+      {
+        "name": "web",
+        "query": "pykan auto_symbolic Feynman equation exact formula recovery I.12.2 Coulomb law reproduction",
+        "hits": 9
+      },
+      {
+        "name": "web",
+        "query": "'KAN or MLP: A Fairer Comparison' findings symbolic formula representation KAN advantage",
+        "hits": 9
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/html/2407.16674v1 - what is controlled, which domains, does it sweep training-set size, does it score symbolic RECOVERY?",
+        "hits": 1
+      }
+    ],
+    "conclusion": "Symbolic recovery of Feynman monomials via pykan's auto_symbolic is the KAN paper's own result (arXiv:2404.19756, Feynman section), so arm 2 is a replication - a useful one, confirming pykan 0.2.8 still does it on one CPU thread in ~2.4 minutes, plus a new objective fidelity metric (log-log exponent recovery instead of eyeballing the printed expression). The closest critique, 'KAN or MLP: A Fairer Comparison' (arXiv:2407.16674), was fetched and read: it controls parameters/FLOPs across 5 domains and concludes KAN outperforms MLP ONLY on symbolic formula representation - but it does not sweep training-set size at all, and it scores fitting accuracy only, never symbolic recovery. To our search no prior work puts a training-set-size sweep underneath the one task family where KAN is uncontested. That is the gap filled here, and the answer is that KAN's single uncontested win is not a small-data win: it is a large-data win that a width-swept iso-param MLP takes back at n>=500, while at n=25 the KAN is 2.8x worse and at the predict-the-mean floor."
+  },
+  "prior_art": [
+    "https://arxiv.org/abs/2404.19756",
+    "https://github.com/KindXiaoming/pykan",
+    "https://arxiv.org/abs/2407.16674",
+    "https://www.science.org/doi/10.1126/sciadv.aay2631",
+    "https://github.com/MilesCranmer/PySR"
+  ],
+  "related_ids": [
+    "2026-07-24_tsetlin-dnf-recovery"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-25_kan-feynman-symbolic",
+    "results_json": "experiments/2026-07-25_kan-feynman-symbolic/results.json",
+    "chart": "experiments/2026-07-25_kan-feynman-symbolic/chart.png"
+  },
+  "tags": [
+    "track-c",
+    "non-transformer",
+    "kan",
+    "kolmogorov-arnold",
+    "pykan",
+    "symbolic-regression",
+    "feynman-benchmark",
+    "sample-efficiency",
+    "iso-param",
+    "mlp-baseline",
+    "interpretability",
+    "negative-result",
+    "split-result",
+    "baseline-strength",
+    "cpu-only"
+  ]
+}

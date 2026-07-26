@@ -1,0 +1,143 @@
+{
+  "id": "2026-07-25_dyck-probe-can-lie",
+  "date": "2026-07-25",
+  "title": "The probe can lie: at matched 99%+ linear-probe accuracy, top-of-stack type costs 5.31 excess nats to erase and depth parity costs less than a random direction",
+  "slug": "dyck-probe-can-lie",
+  "hypothesis": "In a 27k-param 2-layer 1-head transformer trained to next-token-predict Dyck-2 bracket sequences, several stack state variables (exact nesting depth, depth parity, second-from-top bracket type, top-of-stack recency) will be linearly decodable at well-above-chance accuracy while carrying near-zero CAUSAL effect on the model's predictions, whereas the variables the next-token decision provably requires (top-of-stack bracket type, the depth>0 indicator, current-token identity) will be both decodable AND causally load-bearing - i.e. probe accuracy is not evidence of use.",
+  "question": "Per candidate feature, how far apart are linear decodability and causal use in a model whose ground-truth algorithm is known exactly - and does a null causal effect survive an erasure that is CERTIFIED to have removed the feature?",
+  "method": "2-layer 1-head pre-norm decoder (d_model 32, d_ff 128, learned absolute positions, 27,200 params) trained 2000 steps (AdamW lr 3e-3, batch 96, wd 0.01, 100-step warmup) on next-token prediction over seeded Dyck-2 strings (2 bracket types, 10-20 pairs = 22-42 tokens, max depth 10, p_open 0.6, mean depth 3.51). Whole pipeline repeated for seeds 0 and 1. Behaviour measured on a fixed 1200-sequence / 37,074-position eval set with four metrics: next-token CE (all positions, depth-0 positions, closer-target positions), close-type accuracy (is the correct closer scored above the wrong one - provably a function of top-of-stack type), and illegal-close probability mass at depth-0 positions (provably a function of depth>0). Seven candidate features per position (top_type, depth_gt0, depth_exact 11-way, depth_parity, second_type, top_recency restricted to closer positions, cur_tok_is_open) are probed with linear probes at two residual-stream sites (resid_mid after block 1, resid_final after block 2), split BY SEQUENCE, 20k train / 8k test positions, each paired with a shuffled-label probe. Causal use is measured by closed-form LEACE erasure (Belrose et al. 2306.03819) fitted at the site, h -> mu + (h-mu)A^T, which guarantees linear guardedness; guardedness is VERIFIED by refitting a fresh probe on the erased activations. Controls: 12 random rank-matched erasers of identical form per (site, rank) - variance-matched by construction because LEACE works in whitened space - plus a same-rank shuffled-label eraser; every causal effect is reported as excess over the random-eraser mean, in sd units. Pre-registered verdict rule: decodable = probe beats majority by >=0.05; causally used = >=0.05 excess nats AND z>=2 on at least one CE slice. Entanglement diagnostics: pairwise Cramer's V between feature labels and cosine of the smallest principal angle between erased subspaces.",
+  "architecture": "2-layer, 1-head pre-norm decoder-only transformer, d_model 32, d_ff 128, learned absolute PE, 27,200 params",
+  "dataset": {
+    "name": "synthetic Dyck-2 bracket sequences (2 types, max depth 10, 10-20 pairs), 30000 train / 1200 eval / 2000 probe sequences per seed",
+    "source": "generated in run.py from the seed",
+    "license": "n/a (synthetic)"
+  },
+  "task": "next-token prediction on Dyck-2 (BOS <dyck string> EOS)",
+  "framework": "torch 2.13",
+  "seed": 0,
+  "compute": "CPU single-threaded, 2 seeds, 360.8s total (206s training + probes/erasures/charts)",
+  "metrics": {
+    "n_params": 27200,
+    "n_seeds": 2,
+    "steps_trained": 2000,
+    "clean_ce_nats": 0.8738,
+    "clean_close_type_acc": 0.9994,
+    "clean_illegal_close_mass_depth0": 0.001,
+    "clean_tok_acc": 0.553,
+    "n_eval_positions": 37074,
+    "mean_depth": 3.508,
+    "n_features": 7,
+    "n_sites": 2,
+    "n_features_linearly_guarded_final_all_seeds": 7,
+    "headline_decodable_but_unused": "depth_parity",
+    "decodable_but_unused": [
+      "depth_parity",
+      "cur_tok_is_open",
+      "second_type"
+    ],
+    "decodable_and_used": [
+      "top_type",
+      "depth_gt0",
+      "top_recency"
+    ],
+    "predictions_matched": false,
+    "mismatched_features": [
+      "top_recency",
+      "cur_tok_is_open"
+    ],
+    "top_type_probe_acc": 0.9992,
+    "top_type_causal_excess_nats": 5.3137,
+    "top_type_causal_z": 13.58,
+    "top_type_close_type_acc_drop": 0.6636,
+    "top_type_var_frac_of_resid_final": 0.7643,
+    "depth_parity_probe_acc": 0.9951,
+    "depth_parity_majority": 0.5188,
+    "depth_parity_shuffled_label_probe_acc": 0.5152,
+    "depth_parity_refit_acc_after_erasure": 0.5188,
+    "depth_parity_causal_excess_nats": -0.1605,
+    "depth_parity_causal_z": -0.82,
+    "depth_parity_causal_excess_nats_by_seed": [
+      -0.1565,
+      -0.1645
+    ],
+    "depth_exact_probe_acc": 0.8963,
+    "depth_exact_majority": 0.1597,
+    "depth_exact_causal_ce_excess_all_positions": -0.5239,
+    "depth_gt0_probe_acc": 0.9999,
+    "depth_gt0_causal_excess_nats_depth0_slice": 1.4753,
+    "depth_gt0_causal_ce_excess_all_positions": 0.0281,
+    "second_type_probe_acc": 0.6282,
+    "second_type_causal_excess_nats": 0.0146,
+    "top_recency_probe_acc": 0.848,
+    "top_recency_causal_excess_nats": 1.1675,
+    "top_recency_subspace_overlap_with_cur_tok_is_open": 0.619,
+    "cur_tok_is_open_probe_acc": 0.9989,
+    "cur_tok_is_open_causal_excess_nats": 0.3576,
+    "resid_mid_depth_parity_probe_acc": 1.0,
+    "resid_mid_depth_parity_causal_excess_nats": -0.1012,
+    "resid_mid_top_type_probe_acc": 0.8971,
+    "resid_mid_top_type_causal_excess_nats": 3.1098,
+    "headline": "depth_parity probes at 0.995 (majority 0.519, shuffled-label control 0.515) at resid_final and is linearly guarded after rank-1 LEACE erasure (refit probe 0.519 vs majority 0.519), yet the best-case erasure damage over rank-matched random erasers is only -0.161 nats (z=-0.8) and -0.023 close-type accuracy - versus +5.314 nats for top_type."
+  },
+  "result_summary": "Hypothesis confirmed for the headline feature, with two honest misses. The 27k-param model learns the task cleanly (close-type accuracy 0.9994, illegal-close mass at depth 0 0.0010 down from 0.26 at init, next-token CE 0.874 nats; the residual CE is irreducible because the generator's open/close choice is stochastic). At the final residual stream, two features are read out at essentially identical linear-probe accuracy and behave completely differently under a certified erasure: top-of-stack TYPE probes at 0.999 and its rank-1 LEACE erasure costs +5.31 excess nats on closer targets (z=+13.6), dropping close-type accuracy by 0.640 (0.999 -> 0.359, below chance) - it is a single direction holding 76% of the residual variance; depth PARITY probes at 0.995 against a 0.519 majority (shuffled-label probe 0.515) and its rank-1 erasure - verified linearly guarded, refit probe 0.5188 vs majority 0.5188 - costs -0.16 nats, i.e. LESS damage than a random rank-matched direction, in both seeds (-0.156, -0.165), with close-type accuracy and illegal-close mass unmoved. That null is structural and pre-statable: in any Dyck prefix depth(t) = t (mod 2), so parity is decodable for free from the positional embedding while carrying zero information about the answer. depth_exact tells the same story at higher selectivity (probe 0.896 vs 0.160 majority, Pearson r 0.962) but its rank-10 erasure necessarily deletes the depth>0 predicate too (Cramer's V = 1.0), so its positive is inherited; on all-position CE it scores -0.52 excess nats and it IMPROVES close-type accuracy by 0.12 over a random rank-10 eraser. second_type (probe 0.628) is also decodable-but-unused (+0.01 nats). Role specialisation is clean: top_type's erasure damages only the closer-target CE slice, depth_gt0's only the depth-0 slice (+1.48 nats, z=+3.2) - and depth_gt0 looks inert (+0.03 nats) if you average over all positions, so averaging over the wrong positions would have falsely declared a genuinely-used feature unused. All 7 features at resid_final were certified linearly guarded in both seeds (refit probe exactly at the majority baseline), so the nulls are not weak-ablation artifacts. Two misses against the pre-registered expectations: top_recency was predicted unused but scores +1.17 nats (z=+3.2) in both seeds - its labels are near-independent of every other feature (Cramer's V <= 0.13) but its erased direction overlaps the cur_tok_is_open subspace at cos 0.62, i.e. collateral damage rather than use; and cur_tok_is_open was predicted used but comes in at +0.36 nats, z=+0.8, under-powered rather than clearly null. Net: at matched probe accuracy, decodability and causal use are unrelated (+5.31 vs -0.16 excess nats), erasure evidence is asymmetric (a null is strong, a positive can be entanglement), and the shuffled-label probe control - which every feature here passes - certifies only that the probe is not memorising and says nothing about use. Caveats: 2 seeds, one architecture, one depth regime; this is a replication of arXiv:2604.22128 with a certified-erasure and ground-truth-null methodology added, not a new finding.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "replication",
+    "sources": [
+      {
+        "name": "web",
+        "query": "probe accuracy vs causal effect Dyck transformer decodable but not used directional ablation",
+        "hits": 8
+      },
+      {
+        "name": "web",
+        "query": "amnesic probing probing vs causal intervention decodable feature not causally used transformer stack depth",
+        "hits": 9
+      },
+      {
+        "name": "web",
+        "query": "linear guardedness INLP verify ablation erased feature refit probe control null causal effect interpretability",
+        "hits": 9
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/html/2604.22128v1 - architecture, probed features, intervention method, headline numbers, controls",
+        "hits": 1
+      }
+    ],
+    "conclusion": "The backlog's listed prior art, arXiv:2604.22128 (Dissociating Decodability and Causal Use in Bracket-Sequence Transformers), is a direct match: 2-layer 1-head Dyck transformers at d in {16,32,64} / 15k-137k params, next-token prediction, probes for depth / tree-distance / top-of-stack, causal tests by residual rank-r ablation plus attention knockout and activation patching, random rank-matched subspace controls, and the same headline (depth and distance decodable but causally inert; top-of-stack decodable AND necessary, knockout -0.967 +/- 0.009 vs random edge -0.014 +/- 0.002). This run is therefore a REPLICATION at 27k params, and the contribution is methodological: (1) the erasure is CERTIFIED rather than assumed - closed-form LEACE plus a refit probe on the erased activations shows 7/7 features at resid_final hit the majority baseline in both seeds, which prior rank-r projection work does not verify; (2) depth_parity is a provably-zero-information decodable target, since depth(t) = t (mod 2) in any Dyck prefix makes it derivable from the positional embedding alone - a ground-truth-null probe control we did not find in the Dyck-probing literature; (3) a shuffled-label probe control AND a shuffled-label eraser control, a decision-relevant CE decomposition that catches a false negative on depth_gt0, and an erased-subspace overlap matrix that explains a false positive on top_recency. arXiv/OpenAlex APIs 403 from this environment; verified via web search plus page fetch."
+  },
+  "prior_art": [
+    "https://arxiv.org/abs/2604.22128",
+    "https://arxiv.org/abs/2306.03819",
+    "https://arxiv.org/abs/2006.00995",
+    "https://arxiv.org/abs/2510.09794",
+    "https://arxiv.org/abs/2311.04354"
+  ],
+  "related_ids": [
+    "2026-07-25_coconut-toy-graph",
+    "2026-07-25_grokking-modular-addition"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-25_dyck-probe-can-lie",
+    "results_json": "experiments/2026-07-25_dyck-probe-can-lie/results.json",
+    "chart": "experiments/2026-07-25_dyck-probe-can-lie/chart.png"
+  },
+  "tags": [
+    "track-b",
+    "interpretability",
+    "probing",
+    "causal-intervention",
+    "concept-erasure",
+    "leace",
+    "amnesic-probing",
+    "dyck",
+    "formal-languages",
+    "linear-guardedness",
+    "shuffled-label-control",
+    "measurement-validity",
+    "replication",
+    "cpu-only"
+  ]
+}

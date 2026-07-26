@@ -1,0 +1,3619 @@
+{
+  "id": "2026-07-25_dyck-probe-can-lie",
+  "git_commit": "4c3b926797d59a2bc181c4f0626ca0683747bb49",
+  "seed": 0,
+  "duration_sec": 360.75,
+  "metrics": {
+    "n_seeds": 2,
+    "seeds": [
+      0,
+      1
+    ],
+    "n_params": 27200,
+    "steps_trained": [
+      2000,
+      2000
+    ],
+    "train_sec": [
+      115.8,
+      90.0
+    ],
+    "mean_depth": 3.508,
+    "n_eval_positions": 37074,
+    "clean_ce": 0.8738,
+    "clean_close_type_acc": 0.9994,
+    "clean_tok_acc": 0.553,
+    "clean_illegal_close_mass": 0.001,
+    "clean_by_seed": [
+      {
+        "ce": 0.87354,
+        "tok_acc": 0.55219,
+        "close_type_acc": 0.9995,
+        "illegal_close_mass": 0.00141,
+        "ce_d0": 0.60203,
+        "ce_close": 0.56634
+      },
+      {
+        "ce": 0.87399,
+        "tok_acc": 0.55383,
+        "close_type_acc": 0.99928,
+        "illegal_close_mass": 0.00058,
+        "ce_d0": 0.5977,
+        "ce_close": 0.56786
+      }
+    ],
+    "headline_decodable_but_unused": "depth_parity",
+    "decodable_but_unused": [
+      "depth_parity",
+      "cur_tok_is_open",
+      "second_type"
+    ],
+    "decodable_and_used": [
+      "top_type",
+      "depth_gt0",
+      "top_recency"
+    ],
+    "predictions_matched": false,
+    "mismatched_features": [
+      "top_recency",
+      "cur_tok_is_open"
+    ],
+    "n_features_linearly_guarded_final_all_seeds": 7,
+    "label_association_cramers_v": {
+      "top_type|depth_gt0": 0.0,
+      "top_type|depth_exact": 0.021,
+      "top_type|depth_parity": 0.007,
+      "top_type|second_type": 0.008,
+      "top_type|top_recency": 0.009,
+      "top_type|cur_tok_is_open": 0.001,
+      "depth_gt0|depth_exact": 1.0,
+      "depth_gt0|depth_parity": 0.349,
+      "depth_gt0|second_type": 0.0,
+      "depth_gt0|top_recency": 0.0,
+      "depth_gt0|cur_tok_is_open": 0.306,
+      "depth_exact|depth_parity": 1.0,
+      "depth_exact|second_type": 0.025,
+      "depth_exact|top_recency": 0.131,
+      "depth_exact|cur_tok_is_open": 0.331,
+      "depth_parity|second_type": 0.009,
+      "depth_parity|top_recency": 0.024,
+      "depth_parity|cur_tok_is_open": 0.069,
+      "second_type|top_recency": 0.001,
+      "second_type|cur_tok_is_open": 0.001,
+      "top_recency|cur_tok_is_open": 0.0
+    },
+    "erased_subspace_overlap_resid_final": {
+      "top_type|depth_gt0": 0.059,
+      "top_type|depth_exact": 0.208,
+      "top_type|depth_parity": 0.034,
+      "top_type|second_type": 0.129,
+      "top_type|top_recency": 0.039,
+      "top_type|cur_tok_is_open": 0.009,
+      "depth_gt0|depth_exact": 1.0,
+      "depth_gt0|depth_parity": 0.373,
+      "depth_gt0|second_type": 0.221,
+      "depth_gt0|top_recency": 0.182,
+      "depth_gt0|cur_tok_is_open": 0.284,
+      "depth_exact|depth_parity": 1.0,
+      "depth_exact|second_type": 0.505,
+      "depth_exact|top_recency": 0.329,
+      "depth_exact|cur_tok_is_open": 0.342,
+      "depth_parity|second_type": 0.037,
+      "depth_parity|top_recency": 0.095,
+      "depth_parity|cur_tok_is_open": 0.087,
+      "second_type|top_recency": 0.006,
+      "second_type|cur_tok_is_open": 0.001,
+      "top_recency|cur_tok_is_open": 0.619
+    },
+    "training_curve": [
+      {
+        "step": 1,
+        "ce": 1.9681,
+        "tok_acc": 0.19043,
+        "close_type_acc": 0.56503,
+        "illegal_close_mass": 0.26269,
+        "ce_d0": 2.00147,
+        "ce_close": 1.90985
+      },
+      {
+        "step": 100,
+        "ce": 1.12469,
+        "tok_acc": 0.44605,
+        "close_type_acc": 0.83303,
+        "illegal_close_mass": 0.22468,
+        "ce_d0": 0.95623,
+        "ce_close": 0.93802
+      },
+      {
+        "step": 200,
+        "ce": 1.01765,
+        "tok_acc": 0.49514,
+        "close_type_acc": 0.88365,
+        "illegal_close_mass": 0.0244,
+        "ce_d0": 0.6486,
+        "ce_close": 0.83779
+      },
+      {
+        "step": 300,
+        "ce": 0.97868,
+        "tok_acc": 0.51548,
+        "close_type_acc": 0.92011,
+        "illegal_close_mass": 0.01625,
+        "ce_d0": 0.63998,
+        "ce_close": 0.72925
+      },
+      {
+        "step": 400,
+        "ce": 0.96251,
+        "tok_acc": 0.51748,
+        "close_type_acc": 0.93433,
+        "illegal_close_mass": 0.01701,
+        "ce_d0": 0.63469,
+        "ce_close": 0.72689
+      },
+      {
+        "step": 500,
+        "ce": 0.94635,
+        "tok_acc": 0.52482,
+        "close_type_acc": 0.94815,
+        "illegal_close_mass": 0.00304,
+        "ce_d0": 0.61908,
+        "ce_close": 0.68019
+      },
+      {
+        "step": 600,
+        "ce": 0.9361,
+        "tok_acc": 0.53194,
+        "close_type_acc": 0.95518,
+        "illegal_close_mass": 0.00373,
+        "ce_d0": 0.61722,
+        "ce_close": 0.66896
+      },
+      {
+        "step": 700,
+        "ce": 0.91588,
+        "tok_acc": 0.54167,
+        "close_type_acc": 0.97363,
+        "illegal_close_mass": 0.00191,
+        "ce_d0": 0.61528,
+        "ce_close": 0.61851
+      },
+      {
+        "step": 800,
+        "ce": 0.92,
+        "tok_acc": 0.53757,
+        "close_type_acc": 0.97179,
+        "illegal_close_mass": 0.00234,
+        "ce_d0": 0.63161,
+        "ce_close": 0.63306
+      },
+      {
+        "step": 900,
+        "ce": 0.89502,
+        "tok_acc": 0.54685,
+        "close_type_acc": 0.99114,
+        "illegal_close_mass": 0.00728,
+        "ce_d0": 0.61745,
+        "ce_close": 0.6158
+      },
+      {
+        "step": 1000,
+        "ce": 0.89678,
+        "tok_acc": 0.54955,
+        "close_type_acc": 0.98801,
+        "illegal_close_mass": 0.00127,
+        "ce_d0": 0.61234,
+        "ce_close": 0.55641
+      },
+      {
+        "step": 1100,
+        "ce": 0.88274,
+        "tok_acc": 0.55098,
+        "close_type_acc": 0.99738,
+        "illegal_close_mass": 0.00214,
+        "ce_d0": 0.61138,
+        "ce_close": 0.55954
+      },
+      {
+        "step": 1200,
+        "ce": 0.88613,
+        "tok_acc": 0.54941,
+        "close_type_acc": 0.99303,
+        "illegal_close_mass": 0.00353,
+        "ce_d0": 0.61005,
+        "ce_close": 0.55989
+      },
+      {
+        "step": 1300,
+        "ce": 0.87851,
+        "tok_acc": 0.555,
+        "close_type_acc": 0.99849,
+        "illegal_close_mass": 0.00699,
+        "ce_d0": 0.60612,
+        "ce_close": 0.53596
+      },
+      {
+        "step": 1400,
+        "ce": 0.87954,
+        "tok_acc": 0.55036,
+        "close_type_acc": 0.99744,
+        "illegal_close_mass": 0.00313,
+        "ce_d0": 0.61021,
+        "ce_close": 0.54942
+      },
+      {
+        "step": 1500,
+        "ce": 0.88586,
+        "tok_acc": 0.5492,
+        "close_type_acc": 0.99314,
+        "illegal_close_mass": 0.00368,
+        "ce_d0": 0.60479,
+        "ce_close": 0.63334
+      },
+      {
+        "step": 1600,
+        "ce": 0.87578,
+        "tok_acc": 0.55246,
+        "close_type_acc": 0.99838,
+        "illegal_close_mass": 0.00084,
+        "ce_d0": 0.60578,
+        "ce_close": 0.52573
+      },
+      {
+        "step": 1700,
+        "ce": 0.87676,
+        "tok_acc": 0.55513,
+        "close_type_acc": 0.99877,
+        "illegal_close_mass": 0.00092,
+        "ce_d0": 0.60348,
+        "ce_close": 0.54126
+      },
+      {
+        "step": 1800,
+        "ce": 0.8775,
+        "tok_acc": 0.55257,
+        "close_type_acc": 0.99799,
+        "illegal_close_mass": 0.00058,
+        "ce_d0": 0.60991,
+        "ce_close": 0.60788
+      },
+      {
+        "step": 1900,
+        "ce": 0.87669,
+        "tok_acc": 0.55295,
+        "close_type_acc": 0.99916,
+        "illegal_close_mass": 0.00066,
+        "ce_d0": 0.60107,
+        "ce_close": 0.48553
+      },
+      {
+        "step": 2000,
+        "ce": 0.87354,
+        "tok_acc": 0.55219,
+        "close_type_acc": 0.9995,
+        "illegal_close_mass": 0.00141,
+        "ce_d0": 0.60203,
+        "ce_close": 0.56634
+      }
+    ],
+    "per_feature": [
+      {
+        "site": "resid_mid",
+        "feature": "top_type",
+        "n_classes": 2,
+        "expected_causal": true,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": true,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.8971,
+        "probe_acc_by_seed": [
+          0.8945,
+          0.8997
+        ],
+        "probe_selectivity": 0.3926,
+        "probe_selectivity_by_seed": [
+          0.387,
+          0.3982
+        ],
+        "shuffled_probe_acc": 0.4929,
+        "shuffled_probe_acc_by_seed": [
+          0.4905,
+          0.4954
+        ],
+        "majority_baseline": 0.5045,
+        "majority_baseline_by_seed": [
+          0.5075,
+          0.5015
+        ],
+        "refit_probe_acc_after_erasure": 0.503,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.5075,
+          0.4985
+        ],
+        "var_frac_removed": 0.1941,
+        "var_frac_removed_by_seed": [
+          0.1938,
+          0.1943
+        ],
+        "var_frac_removed_random": 0.0287,
+        "var_frac_removed_random_by_seed": [
+          0.0297,
+          0.0277
+        ],
+        "delta_ce": 1.7418,
+        "delta_ce_by_seed": [
+          1.7607,
+          1.723
+        ],
+        "rand_delta_ce_mean": 0.2211,
+        "rand_delta_ce_mean_by_seed": [
+          0.3068,
+          0.1353
+        ],
+        "rand_delta_ce_std": 0.1966,
+        "rand_delta_ce_std_by_seed": [
+          0.2057,
+          0.1875
+        ],
+        "causal_effect_nats": 3.1098,
+        "causal_effect_nats_by_seed": [
+          2.893,
+          3.3267
+        ],
+        "causal_effect_z": 8.38,
+        "causal_effect_z_by_seed": [
+          8.11,
+          8.65
+        ],
+        "causal_ce_excess": 1.5208,
+        "causal_ce_excess_by_seed": [
+          1.4539,
+          1.5877
+        ],
+        "causal_ce_z": 7.77,
+        "causal_ce_z_by_seed": [
+          7.07,
+          8.47
+        ],
+        "causal_ce_d0_excess": 0.685,
+        "causal_ce_d0_excess_by_seed": [
+          0.9229,
+          0.447
+        ],
+        "causal_ce_d0_z": 4.52,
+        "causal_ce_d0_z_by_seed": [
+          4.08,
+          4.96
+        ],
+        "causal_ce_close_excess": 3.1098,
+        "causal_ce_close_excess_by_seed": [
+          2.893,
+          3.3267
+        ],
+        "causal_ce_close_z": 8.38,
+        "causal_ce_close_z_by_seed": [
+          8.11,
+          8.65
+        ],
+        "shuf_ce_excess": 0.1914,
+        "shuf_ce_excess_by_seed": [
+          0.2797,
+          0.1031
+        ],
+        "causal_close_excess": 0.4362,
+        "causal_close_excess_by_seed": [
+          0.4126,
+          0.4597
+        ],
+        "causal_illegal_excess": 0.1232,
+        "causal_illegal_excess_by_seed": [
+          0.18372,
+          0.06273
+        ],
+        "delta_close_type_acc": -0.5016,
+        "delta_close_type_acc_by_seed": [
+          -0.4981,
+          -0.5051
+        ],
+        "rand_delta_close_mean": -0.0655,
+        "rand_delta_close_mean_by_seed": [
+          -0.0855,
+          -0.0454
+        ],
+        "rand_delta_close_std": 0.05,
+        "rand_delta_close_std_by_seed": [
+          0.047,
+          0.0529
+        ],
+        "shuf_delta_close": -0.1151,
+        "shuf_delta_close_by_seed": [
+          -0.1455,
+          -0.0847
+        ]
+      },
+      {
+        "site": "resid_mid",
+        "feature": "depth_gt0",
+        "n_classes": 2,
+        "expected_causal": true,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": true,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.9953,
+        "probe_acc_by_seed": [
+          0.9927,
+          0.998
+        ],
+        "probe_selectivity": 0.1103,
+        "probe_selectivity_by_seed": [
+          0.1079,
+          0.1126
+        ],
+        "shuffled_probe_acc": 0.8851,
+        "shuffled_probe_acc_by_seed": [
+          0.8849,
+          0.8854
+        ],
+        "majority_baseline": 0.8851,
+        "majority_baseline_by_seed": [
+          0.8849,
+          0.8854
+        ],
+        "refit_probe_acc_after_erasure": 0.8851,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.8849,
+          0.8854
+        ],
+        "var_frac_removed": 0.1245,
+        "var_frac_removed_by_seed": [
+          0.0747,
+          0.1743
+        ],
+        "var_frac_removed_random": 0.0287,
+        "var_frac_removed_random_by_seed": [
+          0.0297,
+          0.0277
+        ],
+        "delta_ce": 0.4511,
+        "delta_ce_by_seed": [
+          0.4462,
+          0.4559
+        ],
+        "rand_delta_ce_mean": 0.2211,
+        "rand_delta_ce_mean_by_seed": [
+          0.3068,
+          0.1353
+        ],
+        "rand_delta_ce_std": 0.1966,
+        "rand_delta_ce_std_by_seed": [
+          0.2057,
+          0.1875
+        ],
+        "causal_effect_nats": 2.0518,
+        "causal_effect_nats_by_seed": [
+          1.9703,
+          2.1334
+        ],
+        "causal_effect_z": 16.185,
+        "causal_effect_z_by_seed": [
+          8.72,
+          23.65
+        ],
+        "causal_ce_excess": 0.23,
+        "causal_ce_excess_by_seed": [
+          0.1394,
+          0.3206
+        ],
+        "causal_ce_z": 1.195,
+        "causal_ce_z_by_seed": [
+          0.68,
+          1.71
+        ],
+        "causal_ce_d0_excess": 2.0518,
+        "causal_ce_d0_excess_by_seed": [
+          1.9703,
+          2.1334
+        ],
+        "causal_ce_d0_z": 16.185,
+        "causal_ce_d0_z_by_seed": [
+          8.72,
+          23.65
+        ],
+        "causal_ce_close_excess": -0.1028,
+        "causal_ce_close_excess_by_seed": [
+          -0.3948,
+          0.1891
+        ],
+        "causal_ce_close_z": -0.31,
+        "causal_ce_close_z_by_seed": [
+          -1.11,
+          0.49
+        ],
+        "shuf_ce_excess": -0.024,
+        "shuf_ce_excess_by_seed": [
+          -0.0858,
+          0.0378
+        ],
+        "causal_close_excess": 0.0004,
+        "causal_close_excess_by_seed": [
+          -0.0357,
+          0.0365
+        ],
+        "causal_illegal_excess": 0.382,
+        "causal_illegal_excess_by_seed": [
+          0.36108,
+          0.40298
+        ],
+        "delta_close_type_acc": -0.0658,
+        "delta_close_type_acc_by_seed": [
+          -0.0498,
+          -0.0819
+        ],
+        "rand_delta_close_mean": -0.0655,
+        "rand_delta_close_mean_by_seed": [
+          -0.0855,
+          -0.0454
+        ],
+        "rand_delta_close_std": 0.05,
+        "rand_delta_close_std_by_seed": [
+          0.047,
+          0.0529
+        ],
+        "shuf_delta_close": -0.0585,
+        "shuf_delta_close_by_seed": [
+          -0.0513,
+          -0.0656
+        ]
+      },
+      {
+        "site": "resid_mid",
+        "feature": "depth_exact",
+        "n_classes": 11,
+        "expected_causal": false,
+        "erasure_rank": 10,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.9559,
+        "probe_acc_by_seed": [
+          0.9377,
+          0.9741
+        ],
+        "probe_selectivity": 0.7977,
+        "probe_selectivity_by_seed": [
+          0.7787,
+          0.8168
+        ],
+        "shuffled_probe_acc": 0.1535,
+        "shuffled_probe_acc_by_seed": [
+          0.1548,
+          0.1521
+        ],
+        "majority_baseline": 0.1582,
+        "majority_baseline_by_seed": [
+          0.159,
+          0.1574
+        ],
+        "refit_probe_acc_after_erasure": 0.1582,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.159,
+          0.1574
+        ],
+        "var_frac_removed": 0.4378,
+        "var_frac_removed_by_seed": [
+          0.4004,
+          0.4752
+        ],
+        "var_frac_removed_random": 0.2968,
+        "var_frac_removed_random_by_seed": [
+          0.3058,
+          0.2878
+        ],
+        "delta_ce": 0.9237,
+        "delta_ce_by_seed": [
+          0.8386,
+          1.0088
+        ],
+        "rand_delta_ce_mean": 1.2241,
+        "rand_delta_ce_mean_by_seed": [
+          1.3759,
+          1.0724
+        ],
+        "rand_delta_ce_std": 0.1932,
+        "rand_delta_ce_std_by_seed": [
+          0.2553,
+          0.1311
+        ],
+        "causal_effect_nats": 0.8776,
+        "causal_effect_nats_by_seed": [
+          1.0155,
+          0.7397
+        ],
+        "causal_effect_z": 1.97,
+        "causal_effect_z_by_seed": [
+          2.33,
+          1.61
+        ],
+        "causal_ce_excess": -0.3005,
+        "causal_ce_excess_by_seed": [
+          -0.5373,
+          -0.0637
+        ],
+        "causal_ce_z": -1.295,
+        "causal_ce_z_by_seed": [
+          -2.1,
+          -0.49
+        ],
+        "causal_ce_d0_excess": 0.8776,
+        "causal_ce_d0_excess_by_seed": [
+          1.0155,
+          0.7397
+        ],
+        "causal_ce_d0_z": 1.97,
+        "causal_ce_d0_z_by_seed": [
+          2.33,
+          1.61
+        ],
+        "causal_ce_close_excess": -0.7903,
+        "causal_ce_close_excess_by_seed": [
+          -1.3107,
+          -0.2698
+        ],
+        "causal_ce_close_z": -1.69,
+        "causal_ce_close_z_by_seed": [
+          -2.38,
+          -1.0
+        ],
+        "shuf_ce_excess": -0.0989,
+        "shuf_ce_excess_by_seed": [
+          -0.2765,
+          0.0788
+        ],
+        "causal_close_excess": -0.0746,
+        "causal_close_excess_by_seed": [
+          -0.1392,
+          -0.01
+        ],
+        "causal_illegal_excess": 0.2151,
+        "causal_illegal_excess_by_seed": [
+          0.15968,
+          0.27051
+        ],
+        "delta_close_type_acc": -0.1976,
+        "delta_close_type_acc_by_seed": [
+          -0.1671,
+          -0.2281
+        ],
+        "rand_delta_close_mean": -0.2722,
+        "rand_delta_close_mean_by_seed": [
+          -0.3063,
+          -0.2381
+        ],
+        "rand_delta_close_std": 0.0478,
+        "rand_delta_close_std_by_seed": [
+          0.0625,
+          0.0331
+        ],
+        "shuf_delta_close": -0.2561,
+        "shuf_delta_close_by_seed": [
+          -0.2675,
+          -0.2447
+        ]
+      },
+      {
+        "site": "resid_mid",
+        "feature": "depth_parity",
+        "n_classes": 2,
+        "expected_causal": false,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": false,
+        "probe_acc": 1.0,
+        "probe_acc_by_seed": [
+          0.9999,
+          1.0
+        ],
+        "probe_selectivity": 0.483,
+        "probe_selectivity_by_seed": [
+          0.481,
+          0.4851
+        ],
+        "shuffled_probe_acc": 0.5135,
+        "shuffled_probe_acc_by_seed": [
+          0.5145,
+          0.5125
+        ],
+        "majority_baseline": 0.5169,
+        "majority_baseline_by_seed": [
+          0.5189,
+          0.5149
+        ],
+        "refit_probe_acc_after_erasure": 0.5169,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.5189,
+          0.5149
+        ],
+        "var_frac_removed": 0.0325,
+        "var_frac_removed_by_seed": [
+          0.0308,
+          0.0342
+        ],
+        "var_frac_removed_random": 0.0287,
+        "var_frac_removed_random_by_seed": [
+          0.0297,
+          0.0277
+        ],
+        "delta_ce": 0.0756,
+        "delta_ce_by_seed": [
+          0.084,
+          0.0671
+        ],
+        "rand_delta_ce_mean": 0.2211,
+        "rand_delta_ce_mean_by_seed": [
+          0.3068,
+          0.1353
+        ],
+        "rand_delta_ce_std": 0.1966,
+        "rand_delta_ce_std_by_seed": [
+          0.2057,
+          0.1875
+        ],
+        "causal_effect_nats": -0.1012,
+        "causal_effect_nats_by_seed": [
+          -0.1561,
+          -0.0464
+        ],
+        "causal_effect_z": -0.6,
+        "causal_effect_z_by_seed": [
+          -0.69,
+          -0.51
+        ],
+        "causal_ce_excess": -0.1454,
+        "causal_ce_excess_by_seed": [
+          -0.2227,
+          -0.0682
+        ],
+        "causal_ce_z": -0.72,
+        "causal_ce_z_by_seed": [
+          -1.08,
+          -0.36
+        ],
+        "causal_ce_d0_excess": -0.1012,
+        "causal_ce_d0_excess_by_seed": [
+          -0.1561,
+          -0.0464
+        ],
+        "causal_ce_d0_z": -0.6,
+        "causal_ce_d0_z_by_seed": [
+          -0.69,
+          -0.51
+        ],
+        "causal_ce_close_excess": -0.251,
+        "causal_ce_close_excess_by_seed": [
+          -0.3868,
+          -0.1151
+        ],
+        "causal_ce_close_z": -0.69,
+        "causal_ce_close_z_by_seed": [
+          -1.08,
+          -0.3
+        ],
+        "shuf_ce_excess": -0.004,
+        "shuf_ce_excess_by_seed": [
+          -0.2633,
+          0.2552
+        ],
+        "causal_close_excess": -0.0278,
+        "causal_close_excess_by_seed": [
+          -0.0437,
+          -0.0119
+        ],
+        "causal_illegal_excess": -0.0279,
+        "causal_illegal_excess_by_seed": [
+          -0.04583,
+          -0.00997
+        ],
+        "delta_close_type_acc": -0.0377,
+        "delta_close_type_acc_by_seed": [
+          -0.0418,
+          -0.0335
+        ],
+        "rand_delta_close_mean": -0.0655,
+        "rand_delta_close_mean_by_seed": [
+          -0.0855,
+          -0.0454
+        ],
+        "rand_delta_close_std": 0.05,
+        "rand_delta_close_std_by_seed": [
+          0.047,
+          0.0529
+        ],
+        "shuf_delta_close": -0.0679,
+        "shuf_delta_close_by_seed": [
+          -0.0241,
+          -0.1117
+        ]
+      },
+      {
+        "site": "resid_mid",
+        "feature": "second_type",
+        "n_classes": 2,
+        "expected_causal": false,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": false,
+        "probe_acc": 0.6507,
+        "probe_acc_by_seed": [
+          0.6186,
+          0.6829
+        ],
+        "probe_selectivity": 0.1441,
+        "probe_selectivity_by_seed": [
+          0.1186,
+          0.1696
+        ],
+        "shuffled_probe_acc": 0.5053,
+        "shuffled_probe_acc_by_seed": [
+          0.5041,
+          0.5065
+        ],
+        "majority_baseline": 0.5066,
+        "majority_baseline_by_seed": [
+          0.5,
+          0.5132
+        ],
+        "refit_probe_acc_after_erasure": 0.5066,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.5,
+          0.5132
+        ],
+        "var_frac_removed": 0.0273,
+        "var_frac_removed_by_seed": [
+          0.0286,
+          0.026
+        ],
+        "var_frac_removed_random": 0.0287,
+        "var_frac_removed_random_by_seed": [
+          0.0297,
+          0.0277
+        ],
+        "delta_ce": 0.094,
+        "delta_ce_by_seed": [
+          0.0844,
+          0.1035
+        ],
+        "rand_delta_ce_mean": 0.2211,
+        "rand_delta_ce_mean_by_seed": [
+          0.3068,
+          0.1353
+        ],
+        "rand_delta_ce_std": 0.1966,
+        "rand_delta_ce_std_by_seed": [
+          0.2057,
+          0.1875
+        ],
+        "causal_effect_nats": -0.0441,
+        "causal_effect_nats_by_seed": [
+          -0.1746,
+          0.0864
+        ],
+        "causal_effect_z": 0.095,
+        "causal_effect_z_by_seed": [
+          -0.77,
+          0.96
+        ],
+        "causal_ce_excess": -0.1271,
+        "causal_ce_excess_by_seed": [
+          -0.2224,
+          -0.0318
+        ],
+        "causal_ce_z": -0.625,
+        "causal_ce_z_by_seed": [
+          -1.08,
+          -0.17
+        ],
+        "causal_ce_d0_excess": -0.0441,
+        "causal_ce_d0_excess_by_seed": [
+          -0.1746,
+          0.0864
+        ],
+        "causal_ce_d0_z": 0.095,
+        "causal_ce_d0_z_by_seed": [
+          -0.77,
+          0.96
+        ],
+        "causal_ce_close_excess": -0.2499,
+        "causal_ce_close_excess_by_seed": [
+          -0.4187,
+          -0.081
+        ],
+        "causal_ce_close_z": -0.69,
+        "causal_ce_close_z_by_seed": [
+          -1.17,
+          -0.21
+        ],
+        "shuf_ce_excess": -0.1462,
+        "shuf_ce_excess_by_seed": [
+          -0.2068,
+          -0.0856
+        ],
+        "causal_close_excess": -0.0295,
+        "causal_close_excess_by_seed": [
+          -0.0549,
+          -0.0042
+        ],
+        "causal_illegal_excess": 0.0146,
+        "causal_illegal_excess_by_seed": [
+          -0.04785,
+          0.07706
+        ],
+        "delta_close_type_acc": -0.0359,
+        "delta_close_type_acc_by_seed": [
+          -0.0306,
+          -0.0412
+        ],
+        "rand_delta_close_mean": -0.0655,
+        "rand_delta_close_mean_by_seed": [
+          -0.0855,
+          -0.0454
+        ],
+        "rand_delta_close_std": 0.05,
+        "rand_delta_close_std_by_seed": [
+          0.047,
+          0.0529
+        ],
+        "shuf_delta_close": -0.0267,
+        "shuf_delta_close_by_seed": [
+          -0.0316,
+          -0.0217
+        ]
+      },
+      {
+        "site": "resid_mid",
+        "feature": "top_recency",
+        "n_classes": 2,
+        "expected_causal": false,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.7694,
+        "probe_acc_by_seed": [
+          0.772,
+          0.7669
+        ],
+        "probe_selectivity": 0.069,
+        "probe_selectivity_by_seed": [
+          0.0733,
+          0.0646
+        ],
+        "shuffled_probe_acc": 0.7006,
+        "shuffled_probe_acc_by_seed": [
+          0.6988,
+          0.7023
+        ],
+        "majority_baseline": 0.7005,
+        "majority_baseline_by_seed": [
+          0.6987,
+          0.7023
+        ],
+        "refit_probe_acc_after_erasure": 0.7006,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.6988,
+          0.7023
+        ],
+        "var_frac_removed": 0.0621,
+        "var_frac_removed_by_seed": [
+          0.0523,
+          0.0719
+        ],
+        "var_frac_removed_random": 0.0287,
+        "var_frac_removed_random_by_seed": [
+          0.0297,
+          0.0277
+        ],
+        "delta_ce": 0.5121,
+        "delta_ce_by_seed": [
+          0.3601,
+          0.664
+        ],
+        "rand_delta_ce_mean": 0.2211,
+        "rand_delta_ce_mean_by_seed": [
+          0.3068,
+          0.1353
+        ],
+        "rand_delta_ce_std": 0.1966,
+        "rand_delta_ce_std_by_seed": [
+          0.2057,
+          0.1875
+        ],
+        "causal_effect_nats": 0.5783,
+        "causal_effect_nats_by_seed": [
+          0.0534,
+          1.1033
+        ],
+        "causal_effect_z": 6.245,
+        "causal_effect_z_by_seed": [
+          0.26,
+          12.23
+        ],
+        "causal_ce_excess": 0.291,
+        "causal_ce_excess_by_seed": [
+          0.0534,
+          0.5287
+        ],
+        "causal_ce_z": 1.54,
+        "causal_ce_z_by_seed": [
+          0.26,
+          2.82
+        ],
+        "causal_ce_d0_excess": 0.5721,
+        "causal_ce_d0_excess_by_seed": [
+          0.0409,
+          1.1033
+        ],
+        "causal_ce_d0_z": 6.205,
+        "causal_ce_d0_z_by_seed": [
+          0.18,
+          12.23
+        ],
+        "causal_ce_close_excess": 0.1303,
+        "causal_ce_close_excess_by_seed": [
+          -0.442,
+          0.7027
+        ],
+        "causal_ce_close_z": 0.295,
+        "causal_ce_close_z_by_seed": [
+          -1.24,
+          1.83
+        ],
+        "shuf_ce_excess": 0.7338,
+        "shuf_ce_excess_by_seed": [
+          0.1169,
+          1.3507
+        ],
+        "causal_close_excess": 0.0008,
+        "causal_close_excess_by_seed": [
+          -0.0416,
+          0.0432
+        ],
+        "causal_illegal_excess": -0.0315,
+        "causal_illegal_excess_by_seed": [
+          -0.04754,
+          -0.01548
+        ],
+        "delta_close_type_acc": -0.0663,
+        "delta_close_type_acc_by_seed": [
+          -0.0439,
+          -0.0886
+        ],
+        "rand_delta_close_mean": -0.0655,
+        "rand_delta_close_mean_by_seed": [
+          -0.0855,
+          -0.0454
+        ],
+        "rand_delta_close_std": 0.05,
+        "rand_delta_close_std_by_seed": [
+          0.047,
+          0.0529
+        ],
+        "shuf_delta_close": -0.2013,
+        "shuf_delta_close_by_seed": [
+          -0.1041,
+          -0.2985
+        ]
+      },
+      {
+        "site": "resid_mid",
+        "feature": "cur_tok_is_open",
+        "n_classes": 2,
+        "expected_causal": true,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": true,
+        "probe_acc": 1.0,
+        "probe_acc_by_seed": [
+          1.0,
+          1.0
+        ],
+        "probe_selectivity": 0.4972,
+        "probe_selectivity_by_seed": [
+          0.4954,
+          0.4991
+        ],
+        "shuffled_probe_acc": 0.5018,
+        "shuffled_probe_acc_by_seed": [
+          0.5096,
+          0.4939
+        ],
+        "majority_baseline": 0.5028,
+        "majority_baseline_by_seed": [
+          0.5046,
+          0.5009
+        ],
+        "refit_probe_acc_after_erasure": 0.5019,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.5046,
+          0.4991
+        ],
+        "var_frac_removed": 0.0912,
+        "var_frac_removed_by_seed": [
+          0.0884,
+          0.0941
+        ],
+        "var_frac_removed_random": 0.0287,
+        "var_frac_removed_random_by_seed": [
+          0.0297,
+          0.0277
+        ],
+        "delta_ce": 0.1074,
+        "delta_ce_by_seed": [
+          0.104,
+          0.1108
+        ],
+        "rand_delta_ce_mean": 0.2211,
+        "rand_delta_ce_mean_by_seed": [
+          0.3068,
+          0.1353
+        ],
+        "rand_delta_ce_std": 0.1966,
+        "rand_delta_ce_std_by_seed": [
+          0.2057,
+          0.1875
+        ],
+        "causal_effect_nats": 0.2358,
+        "causal_effect_nats_by_seed": [
+          0.1438,
+          0.3277
+        ],
+        "causal_effect_z": 2.135,
+        "causal_effect_z_by_seed": [
+          0.64,
+          3.63
+        ],
+        "causal_ce_excess": -0.1137,
+        "causal_ce_excess_by_seed": [
+          -0.2028,
+          -0.0245
+        ],
+        "causal_ce_z": -0.56,
+        "causal_ce_z_by_seed": [
+          -0.99,
+          -0.13
+        ],
+        "causal_ce_d0_excess": 0.2358,
+        "causal_ce_d0_excess_by_seed": [
+          0.1438,
+          0.3277
+        ],
+        "causal_ce_d0_z": 2.135,
+        "causal_ce_d0_z_by_seed": [
+          0.64,
+          3.63
+        ],
+        "causal_ce_close_excess": -0.2895,
+        "causal_ce_close_excess_by_seed": [
+          -0.4593,
+          -0.1197
+        ],
+        "causal_ce_close_z": -0.8,
+        "causal_ce_close_z_by_seed": [
+          -1.29,
+          -0.31
+        ],
+        "shuf_ce_excess": -0.1434,
+        "shuf_ce_excess_by_seed": [
+          -0.2324,
+          -0.0544
+        ],
+        "causal_close_excess": -0.0483,
+        "causal_close_excess_by_seed": [
+          -0.0707,
+          -0.0258
+        ],
+        "causal_illegal_excess": 0.0185,
+        "causal_illegal_excess_by_seed": [
+          0.04169,
+          -0.00474
+        ],
+        "delta_close_type_acc": -0.0172,
+        "delta_close_type_acc_by_seed": [
+          -0.0148,
+          -0.0196
+        ],
+        "rand_delta_close_mean": -0.0655,
+        "rand_delta_close_mean_by_seed": [
+          -0.0855,
+          -0.0454
+        ],
+        "rand_delta_close_std": 0.05,
+        "rand_delta_close_std_by_seed": [
+          0.047,
+          0.0529
+        ],
+        "shuf_delta_close": -0.0309,
+        "shuf_delta_close_by_seed": [
+          -0.0284,
+          -0.0334
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "top_type",
+        "n_classes": 2,
+        "expected_causal": true,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": true,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.9992,
+        "probe_acc_by_seed": [
+          0.9995,
+          0.9989
+        ],
+        "probe_selectivity": 0.4941,
+        "probe_selectivity_by_seed": [
+          0.4906,
+          0.4976
+        ],
+        "shuffled_probe_acc": 0.494,
+        "shuffled_probe_acc_by_seed": [
+          0.4888,
+          0.4991
+        ],
+        "majority_baseline": 0.505,
+        "majority_baseline_by_seed": [
+          0.5089,
+          0.5012
+        ],
+        "refit_probe_acc_after_erasure": 0.4962,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.4911,
+          0.5013
+        ],
+        "var_frac_removed": 0.7643,
+        "var_frac_removed_by_seed": [
+          0.7505,
+          0.7782
+        ],
+        "var_frac_removed_random": 0.0406,
+        "var_frac_removed_random_by_seed": [
+          0.0445,
+          0.0368
+        ],
+        "delta_ce": 2.5006,
+        "delta_ce_by_seed": [
+          2.3795,
+          2.6217
+        ],
+        "rand_delta_ce_mean": 0.1884,
+        "rand_delta_ce_mean_by_seed": [
+          0.2041,
+          0.1726
+        ],
+        "rand_delta_ce_std": 0.2005,
+        "rand_delta_ce_std_by_seed": [
+          0.1688,
+          0.2322
+        ],
+        "causal_effect_nats": 5.3137,
+        "causal_effect_nats_by_seed": [
+          5.0595,
+          5.5679
+        ],
+        "causal_effect_z": 13.58,
+        "causal_effect_z_by_seed": [
+          14.82,
+          12.34
+        ],
+        "causal_ce_excess": 2.3123,
+        "causal_ce_excess_by_seed": [
+          2.1755,
+          2.4491
+        ],
+        "causal_ce_z": 11.72,
+        "causal_ce_z_by_seed": [
+          12.89,
+          10.55
+        ],
+        "causal_ce_d0_excess": -0.3533,
+        "causal_ce_d0_excess_by_seed": [
+          -0.4512,
+          -0.2555
+        ],
+        "causal_ce_d0_z": -0.725,
+        "causal_ce_d0_z_by_seed": [
+          -0.81,
+          -0.64
+        ],
+        "causal_ce_close_excess": 5.3137,
+        "causal_ce_close_excess_by_seed": [
+          5.0595,
+          5.5679
+        ],
+        "causal_ce_close_z": 13.58,
+        "causal_ce_close_z_by_seed": [
+          14.82,
+          12.34
+        ],
+        "shuf_ce_excess": -0.1409,
+        "shuf_ce_excess_by_seed": [
+          -0.128,
+          -0.1538
+        ],
+        "causal_close_excess": 0.6404,
+        "causal_close_excess_by_seed": [
+          0.6328,
+          0.6481
+        ],
+        "causal_illegal_excess": -0.0964,
+        "causal_illegal_excess_by_seed": [
+          -0.14091,
+          -0.0519
+        ],
+        "delta_close_type_acc": -0.6636,
+        "delta_close_type_acc_by_seed": [
+          -0.655,
+          -0.6721
+        ],
+        "rand_delta_close_mean": -0.0231,
+        "rand_delta_close_mean_by_seed": [
+          -0.0222,
+          -0.024
+        ],
+        "rand_delta_close_std": 0.0352,
+        "rand_delta_close_std_by_seed": [
+          0.03,
+          0.0404
+        ],
+        "shuf_delta_close": -0.0069,
+        "shuf_delta_close_by_seed": [
+          -0.0139,
+          0.0001
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "depth_gt0",
+        "n_classes": 2,
+        "expected_causal": true,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": true,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.9999,
+        "probe_acc_by_seed": [
+          0.9998,
+          0.9999
+        ],
+        "probe_selectivity": 0.1124,
+        "probe_selectivity_by_seed": [
+          0.1103,
+          0.1145
+        ],
+        "shuffled_probe_acc": 0.8874,
+        "shuffled_probe_acc_by_seed": [
+          0.8895,
+          0.8854
+        ],
+        "majority_baseline": 0.8874,
+        "majority_baseline_by_seed": [
+          0.8895,
+          0.8854
+        ],
+        "refit_probe_acc_after_erasure": 0.8874,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.8895,
+          0.8854
+        ],
+        "var_frac_removed": 0.0348,
+        "var_frac_removed_by_seed": [
+          0.0364,
+          0.0331
+        ],
+        "var_frac_removed_random": 0.0406,
+        "var_frac_removed_random_by_seed": [
+          0.0445,
+          0.0368
+        ],
+        "delta_ce": 0.2163,
+        "delta_ce_by_seed": [
+          0.2104,
+          0.2223
+        ],
+        "rand_delta_ce_mean": 0.1884,
+        "rand_delta_ce_mean_by_seed": [
+          0.2041,
+          0.1726
+        ],
+        "rand_delta_ce_std": 0.2005,
+        "rand_delta_ce_std_by_seed": [
+          0.1688,
+          0.2322
+        ],
+        "causal_effect_nats": 1.4753,
+        "causal_effect_nats_by_seed": [
+          1.2988,
+          1.6518
+        ],
+        "causal_effect_z": 3.24,
+        "causal_effect_z_by_seed": [
+          2.32,
+          4.16
+        ],
+        "causal_ce_excess": 0.0281,
+        "causal_ce_excess_by_seed": [
+          0.0064,
+          0.0497
+        ],
+        "causal_ce_z": 0.125,
+        "causal_ce_z_by_seed": [
+          0.04,
+          0.21
+        ],
+        "causal_ce_d0_excess": 1.4753,
+        "causal_ce_d0_excess_by_seed": [
+          1.2988,
+          1.6518
+        ],
+        "causal_ce_d0_z": 3.24,
+        "causal_ce_d0_z_by_seed": [
+          2.32,
+          4.16
+        ],
+        "causal_ce_close_excess": -0.2762,
+        "causal_ce_close_excess_by_seed": [
+          -0.2715,
+          -0.2808
+        ],
+        "causal_ce_close_z": -0.71,
+        "causal_ce_close_z_by_seed": [
+          -0.8,
+          -0.62
+        ],
+        "shuf_ce_excess": -0.0879,
+        "shuf_ce_excess_by_seed": [
+          -0.1469,
+          -0.0289
+        ],
+        "causal_close_excess": -0.023,
+        "causal_close_excess_by_seed": [
+          -0.0222,
+          -0.0238
+        ],
+        "causal_illegal_excess": -0.0707,
+        "causal_illegal_excess_by_seed": [
+          -0.11394,
+          -0.02748
+        ],
+        "delta_close_type_acc": -0.0001,
+        "delta_close_type_acc_by_seed": [
+          0.0,
+          -0.0002
+        ],
+        "rand_delta_close_mean": -0.0231,
+        "rand_delta_close_mean_by_seed": [
+          -0.0222,
+          -0.024
+        ],
+        "rand_delta_close_std": 0.0352,
+        "rand_delta_close_std_by_seed": [
+          0.03,
+          0.0404
+        ],
+        "shuf_delta_close": -0.0003,
+        "shuf_delta_close_by_seed": [
+          -0.0001,
+          -0.0004
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "depth_exact",
+        "n_classes": 11,
+        "expected_causal": false,
+        "erasure_rank": 10,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.8963,
+        "probe_acc_by_seed": [
+          0.8755,
+          0.9171
+        ],
+        "probe_selectivity": 0.7367,
+        "probe_selectivity_by_seed": [
+          0.7194,
+          0.7539
+        ],
+        "shuffled_probe_acc": 0.1575,
+        "shuffled_probe_acc_by_seed": [
+          0.1548,
+          0.1602
+        ],
+        "majority_baseline": 0.1597,
+        "majority_baseline_by_seed": [
+          0.1561,
+          0.1633
+        ],
+        "refit_probe_acc_after_erasure": 0.1597,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.1561,
+          0.1632
+        ],
+        "var_frac_removed": 0.12,
+        "var_frac_removed_by_seed": [
+          0.1015,
+          0.1385
+        ],
+        "var_frac_removed_random": 0.3204,
+        "var_frac_removed_random_by_seed": [
+          0.3294,
+          0.3113
+        ],
+        "delta_ce": 0.5384,
+        "delta_ce_by_seed": [
+          0.441,
+          0.6359
+        ],
+        "rand_delta_ce_mean": 1.0624,
+        "rand_delta_ce_mean_by_seed": [
+          1.0825,
+          1.0423
+        ],
+        "rand_delta_ce_std": 0.2461,
+        "rand_delta_ce_std_by_seed": [
+          0.3089,
+          0.1833
+        ],
+        "causal_effect_nats": 1.1594,
+        "causal_effect_nats_by_seed": [
+          1.0804,
+          1.2384
+        ],
+        "causal_effect_z": 1.85,
+        "causal_effect_z_by_seed": [
+          1.7,
+          2.0
+        ],
+        "causal_ce_excess": -0.5239,
+        "causal_ce_excess_by_seed": [
+          -0.6415,
+          -0.4064
+        ],
+        "causal_ce_z": -2.15,
+        "causal_ce_z_by_seed": [
+          -2.08,
+          -2.22
+        ],
+        "causal_ce_d0_excess": 1.1594,
+        "causal_ce_d0_excess_by_seed": [
+          1.0804,
+          1.2384
+        ],
+        "causal_ce_d0_z": 1.85,
+        "causal_ce_d0_z_by_seed": [
+          1.7,
+          2.0
+        ],
+        "causal_ce_close_excess": -1.4735,
+        "causal_ce_close_excess_by_seed": [
+          -1.7135,
+          -1.2334
+        ],
+        "causal_ce_close_z": -2.78,
+        "causal_ce_close_z_by_seed": [
+          -2.45,
+          -3.11
+        ],
+        "shuf_ce_excess": 0.0195,
+        "shuf_ce_excess_by_seed": [
+          -0.4712,
+          0.5102
+        ],
+        "causal_close_excess": -0.1199,
+        "causal_close_excess_by_seed": [
+          -0.1452,
+          -0.0946
+        ],
+        "causal_illegal_excess": -0.0041,
+        "causal_illegal_excess_by_seed": [
+          -0.01827,
+          0.01004
+        ],
+        "delta_close_type_acc": -0.0301,
+        "delta_close_type_acc_by_seed": [
+          -0.0131,
+          -0.0471
+        ],
+        "rand_delta_close_mean": -0.15,
+        "rand_delta_close_mean_by_seed": [
+          -0.1583,
+          -0.1417
+        ],
+        "rand_delta_close_std": 0.0535,
+        "rand_delta_close_std_by_seed": [
+          0.0673,
+          0.0397
+        ],
+        "shuf_delta_close": -0.1398,
+        "shuf_delta_close_by_seed": [
+          -0.0816,
+          -0.198
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "depth_parity",
+        "n_classes": 2,
+        "expected_causal": false,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": false,
+        "probe_acc": 0.9951,
+        "probe_acc_by_seed": [
+          0.9933,
+          0.9969
+        ],
+        "probe_selectivity": 0.4763,
+        "probe_selectivity_by_seed": [
+          0.4738,
+          0.4789
+        ],
+        "shuffled_probe_acc": 0.5152,
+        "shuffled_probe_acc_by_seed": [
+          0.5189,
+          0.5115
+        ],
+        "majority_baseline": 0.5188,
+        "majority_baseline_by_seed": [
+          0.5195,
+          0.518
+        ],
+        "refit_probe_acc_after_erasure": 0.5188,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.5195,
+          0.518
+        ],
+        "var_frac_removed": 0.0114,
+        "var_frac_removed_by_seed": [
+          0.016,
+          0.0067
+        ],
+        "var_frac_removed_random": 0.0406,
+        "var_frac_removed_random_by_seed": [
+          0.0445,
+          0.0368
+        ],
+        "delta_ce": 0.0278,
+        "delta_ce_by_seed": [
+          0.0476,
+          0.0081
+        ],
+        "rand_delta_ce_mean": 0.1884,
+        "rand_delta_ce_mean_by_seed": [
+          0.2041,
+          0.1726
+        ],
+        "rand_delta_ce_std": 0.2005,
+        "rand_delta_ce_std_by_seed": [
+          0.1688,
+          0.2322
+        ],
+        "causal_effect_nats": -0.1605,
+        "causal_effect_nats_by_seed": [
+          -0.1565,
+          -0.1645
+        ],
+        "causal_effect_z": -0.82,
+        "causal_effect_z_by_seed": [
+          -0.93,
+          -0.71
+        ],
+        "causal_ce_excess": -0.1605,
+        "causal_ce_excess_by_seed": [
+          -0.1565,
+          -0.1645
+        ],
+        "causal_ce_z": -0.82,
+        "causal_ce_z_by_seed": [
+          -0.93,
+          -0.71
+        ],
+        "causal_ce_d0_excess": -0.2379,
+        "causal_ce_d0_excess_by_seed": [
+          -0.2689,
+          -0.207
+        ],
+        "causal_ce_d0_z": -0.5,
+        "causal_ce_d0_z_by_seed": [
+          -0.48,
+          -0.52
+        ],
+        "causal_ce_close_excess": -0.3052,
+        "causal_ce_close_excess_by_seed": [
+          -0.3152,
+          -0.2952
+        ],
+        "causal_ce_close_z": -0.785,
+        "causal_ce_close_z_by_seed": [
+          -0.92,
+          -0.65
+        ],
+        "shuf_ce_excess": -0.1118,
+        "shuf_ce_excess_by_seed": [
+          -0.1803,
+          -0.0434
+        ],
+        "causal_close_excess": -0.0231,
+        "causal_close_excess_by_seed": [
+          -0.0221,
+          -0.024
+        ],
+        "causal_illegal_excess": -0.1107,
+        "causal_illegal_excess_by_seed": [
+          -0.16206,
+          -0.05943
+        ],
+        "delta_close_type_acc": -0.0001,
+        "delta_close_type_acc_by_seed": [
+          -0.0001,
+          0.0
+        ],
+        "rand_delta_close_mean": -0.0231,
+        "rand_delta_close_mean_by_seed": [
+          -0.0222,
+          -0.024
+        ],
+        "rand_delta_close_std": 0.0352,
+        "rand_delta_close_std_by_seed": [
+          0.03,
+          0.0404
+        ],
+        "shuf_delta_close": -0.0089,
+        "shuf_delta_close_by_seed": [
+          -0.0002,
+          -0.0177
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "second_type",
+        "n_classes": 2,
+        "expected_causal": false,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": false,
+        "probe_acc": 0.6282,
+        "probe_acc_by_seed": [
+          0.6111,
+          0.6454
+        ],
+        "probe_selectivity": 0.1227,
+        "probe_selectivity_by_seed": [
+          0.1016,
+          0.1439
+        ],
+        "shuffled_probe_acc": 0.503,
+        "shuffled_probe_acc_by_seed": [
+          0.5013,
+          0.5048
+        ],
+        "majority_baseline": 0.5055,
+        "majority_baseline_by_seed": [
+          0.5095,
+          0.5015
+        ],
+        "refit_probe_acc_after_erasure": 0.505,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.5086,
+          0.5015
+        ],
+        "var_frac_removed": 0.0415,
+        "var_frac_removed_by_seed": [
+          0.0565,
+          0.0264
+        ],
+        "var_frac_removed_random": 0.0406,
+        "var_frac_removed_random_by_seed": [
+          0.0445,
+          0.0368
+        ],
+        "delta_ce": 0.1515,
+        "delta_ce_by_seed": [
+          0.2109,
+          0.092
+        ],
+        "rand_delta_ce_mean": 0.1884,
+        "rand_delta_ce_mean_by_seed": [
+          0.2041,
+          0.1726
+        ],
+        "rand_delta_ce_std": 0.2005,
+        "rand_delta_ce_std_by_seed": [
+          0.1688,
+          0.2322
+        ],
+        "causal_effect_nats": 0.0146,
+        "causal_effect_nats_by_seed": [
+          0.1099,
+          -0.0806
+        ],
+        "causal_effect_z": -0.075,
+        "causal_effect_z_by_seed": [
+          0.2,
+          -0.35
+        ],
+        "causal_ce_excess": -0.0369,
+        "causal_ce_excess_by_seed": [
+          0.0068,
+          -0.0806
+        ],
+        "causal_ce_z": -0.155,
+        "causal_ce_z_by_seed": [
+          0.04,
+          -0.35
+        ],
+        "causal_ce_d0_excess": -0.0473,
+        "causal_ce_d0_excess_by_seed": [
+          0.1099,
+          -0.2044
+        ],
+        "causal_ce_d0_z": -0.16,
+        "causal_ce_d0_z_by_seed": [
+          0.2,
+          -0.52
+        ],
+        "causal_ce_close_excess": -0.0776,
+        "causal_ce_close_excess_by_seed": [
+          -0.0334,
+          -0.1217
+        ],
+        "causal_ce_close_z": -0.185,
+        "causal_ce_close_z_by_seed": [
+          -0.1,
+          -0.27
+        ],
+        "shuf_ce_excess": -0.1832,
+        "shuf_ce_excess_by_seed": [
+          -0.2025,
+          -0.1639
+        ],
+        "causal_close_excess": -0.0056,
+        "causal_close_excess_by_seed": [
+          -0.0065,
+          -0.0048
+        ],
+        "causal_illegal_excess": 0.0746,
+        "causal_illegal_excess_by_seed": [
+          0.15651,
+          -0.0074
+        ],
+        "delta_close_type_acc": -0.0175,
+        "delta_close_type_acc_by_seed": [
+          -0.0157,
+          -0.0192
+        ],
+        "rand_delta_close_mean": -0.0231,
+        "rand_delta_close_mean_by_seed": [
+          -0.0222,
+          -0.024
+        ],
+        "rand_delta_close_std": 0.0352,
+        "rand_delta_close_std_by_seed": [
+          0.03,
+          0.0404
+        ],
+        "shuf_delta_close": -0.0008,
+        "shuf_delta_close_by_seed": [
+          -0.0002,
+          -0.0014
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "top_recency",
+        "n_classes": 2,
+        "expected_causal": false,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": true,
+        "causally_used_any_seed": true,
+        "probe_acc": 0.848,
+        "probe_acc_by_seed": [
+          0.849,
+          0.847
+        ],
+        "probe_selectivity": 0.1462,
+        "probe_selectivity_by_seed": [
+          0.1509,
+          0.1416
+        ],
+        "shuffled_probe_acc": 0.7018,
+        "shuffled_probe_acc_by_seed": [
+          0.6981,
+          0.7054
+        ],
+        "majority_baseline": 0.7018,
+        "majority_baseline_by_seed": [
+          0.6981,
+          0.7054
+        ],
+        "refit_probe_acc_after_erasure": 0.7018,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.6981,
+          0.7054
+        ],
+        "var_frac_removed": 0.1072,
+        "var_frac_removed_by_seed": [
+          0.1132,
+          0.1012
+        ],
+        "var_frac_removed_random": 0.0406,
+        "var_frac_removed_random_by_seed": [
+          0.0445,
+          0.0368
+        ],
+        "delta_ce": 1.1724,
+        "delta_ce_by_seed": [
+          1.2892,
+          1.0555
+        ],
+        "rand_delta_ce_mean": 0.1884,
+        "rand_delta_ce_mean_by_seed": [
+          0.2041,
+          0.1726
+        ],
+        "rand_delta_ce_std": 0.2005,
+        "rand_delta_ce_std_by_seed": [
+          0.1688,
+          0.2322
+        ],
+        "causal_effect_nats": 1.1675,
+        "causal_effect_nats_by_seed": [
+          1.4522,
+          0.8829
+        ],
+        "causal_effect_z": 3.195,
+        "causal_effect_z_by_seed": [
+          2.59,
+          3.8
+        ],
+        "causal_ce_excess": 0.984,
+        "causal_ce_excess_by_seed": [
+          1.0851,
+          0.8829
+        ],
+        "causal_ce_z": 5.115,
+        "causal_ce_z_by_seed": [
+          6.43,
+          3.8
+        ],
+        "causal_ce_d0_excess": 0.9604,
+        "causal_ce_d0_excess_by_seed": [
+          1.4522,
+          0.4686
+        ],
+        "causal_ce_d0_z": 1.885,
+        "causal_ce_d0_z_by_seed": [
+          2.59,
+          1.18
+        ],
+        "causal_ce_close_excess": -0.312,
+        "causal_ce_close_excess_by_seed": [
+          -0.2791,
+          -0.3448
+        ],
+        "causal_ce_close_z": -0.79,
+        "causal_ce_close_z_by_seed": [
+          -0.82,
+          -0.76
+        ],
+        "shuf_ce_excess": -0.1383,
+        "shuf_ce_excess_by_seed": [
+          -0.1828,
+          -0.0938
+        ],
+        "causal_close_excess": -0.0231,
+        "causal_close_excess_by_seed": [
+          -0.022,
+          -0.0243
+        ],
+        "causal_illegal_excess": -0.112,
+        "causal_illegal_excess_by_seed": [
+          -0.16426,
+          -0.0597
+        ],
+        "delta_close_type_acc": 0.0,
+        "delta_close_type_acc_by_seed": [
+          -0.0002,
+          0.0003
+        ],
+        "rand_delta_close_mean": -0.0231,
+        "rand_delta_close_mean_by_seed": [
+          -0.0222,
+          -0.024
+        ],
+        "rand_delta_close_std": 0.0352,
+        "rand_delta_close_std_by_seed": [
+          0.03,
+          0.0404
+        ],
+        "shuf_delta_close": -0.0039,
+        "shuf_delta_close_by_seed": [
+          -0.0001,
+          -0.0076
+        ]
+      },
+      {
+        "site": "resid_final",
+        "feature": "cur_tok_is_open",
+        "n_classes": 2,
+        "expected_causal": true,
+        "erasure_rank": 1,
+        "linearly_guarded_all_seeds": true,
+        "decodable_all_seeds": true,
+        "causally_used_all_seeds": false,
+        "causally_used_any_seed": false,
+        "probe_acc": 0.9989,
+        "probe_acc_by_seed": [
+          0.9991,
+          0.9986
+        ],
+        "probe_selectivity": 0.4958,
+        "probe_selectivity_by_seed": [
+          0.4969,
+          0.4947
+        ],
+        "shuffled_probe_acc": 0.5029,
+        "shuffled_probe_acc_by_seed": [
+          0.5033,
+          0.5025
+        ],
+        "majority_baseline": 0.503,
+        "majority_baseline_by_seed": [
+          0.5022,
+          0.5039
+        ],
+        "refit_probe_acc_after_erasure": 0.4771,
+        "refit_probe_acc_after_erasure_by_seed": [
+          0.4742,
+          0.48
+        ],
+        "var_frac_removed": 0.0595,
+        "var_frac_removed_by_seed": [
+          0.0613,
+          0.0576
+        ],
+        "var_frac_removed_random": 0.0406,
+        "var_frac_removed_random_by_seed": [
+          0.0445,
+          0.0368
+        ],
+        "delta_ce": 0.372,
+        "delta_ce_by_seed": [
+          0.3276,
+          0.4163
+        ],
+        "rand_delta_ce_mean": 0.1884,
+        "rand_delta_ce_mean_by_seed": [
+          0.2041,
+          0.1726
+        ],
+        "rand_delta_ce_std": 0.2005,
+        "rand_delta_ce_std_by_seed": [
+          0.1688,
+          0.2322
+        ],
+        "causal_effect_nats": 0.3576,
+        "causal_effect_nats_by_seed": [
+          0.3353,
+          0.3798
+        ],
+        "causal_effect_z": 0.78,
+        "causal_effect_z_by_seed": [
+          0.6,
+          0.96
+        ],
+        "causal_ce_excess": 0.1835,
+        "causal_ce_excess_by_seed": [
+          0.1235,
+          0.2436
+        ],
+        "causal_ce_z": 0.89,
+        "causal_ce_z_by_seed": [
+          0.73,
+          1.05
+        ],
+        "causal_ce_d0_excess": 0.3576,
+        "causal_ce_d0_excess_by_seed": [
+          0.3353,
+          0.3798
+        ],
+        "causal_ce_d0_z": 0.78,
+        "causal_ce_d0_z_by_seed": [
+          0.6,
+          0.96
+        ],
+        "causal_ce_close_excess": 0.0574,
+        "causal_ce_close_excess_by_seed": [
+          -0.0523,
+          0.1671
+        ],
+        "causal_ce_close_z": 0.11,
+        "causal_ce_close_z_by_seed": [
+          -0.15,
+          0.37
+        ],
+        "shuf_ce_excess": 0.0869,
+        "shuf_ce_excess_by_seed": [
+          0.0126,
+          0.1612
+        ],
+        "causal_close_excess": -0.0231,
+        "causal_close_excess_by_seed": [
+          -0.022,
+          -0.0243
+        ],
+        "causal_illegal_excess": -0.1116,
+        "causal_illegal_excess_by_seed": [
+          -0.16322,
+          -0.06
+        ],
+        "delta_close_type_acc": 0.0,
+        "delta_close_type_acc_by_seed": [
+          -0.0002,
+          0.0003
+        ],
+        "rand_delta_close_mean": -0.0231,
+        "rand_delta_close_mean_by_seed": [
+          -0.0222,
+          -0.024
+        ],
+        "rand_delta_close_std": 0.0352,
+        "rand_delta_close_std_by_seed": [
+          0.03,
+          0.0404
+        ],
+        "shuf_delta_close": -0.0339,
+        "shuf_delta_close_by_seed": [
+          -0.0002,
+          -0.0676
+        ]
+      }
+    ],
+    "per_seed_raw": [
+      {
+        "seed": 0,
+        "n_params": 27200,
+        "steps_trained": 2000,
+        "train_sec": 115.8,
+        "clean": {
+          "ce": 0.87354,
+          "tok_acc": 0.55219,
+          "close_type_acc": 0.9995,
+          "illegal_close_mass": 0.00141,
+          "ce_d0": 0.60203,
+          "ce_close": 0.56634
+        },
+        "mean_depth": 3.508,
+        "n_eval_positions": 37074,
+        "label_association_cramers_v": {
+          "top_type|depth_gt0": 0.0,
+          "top_type|depth_exact": 0.021,
+          "top_type|depth_parity": 0.007,
+          "top_type|second_type": 0.008,
+          "top_type|top_recency": 0.009,
+          "top_type|cur_tok_is_open": 0.001,
+          "depth_gt0|depth_exact": 1.0,
+          "depth_gt0|depth_parity": 0.349,
+          "depth_gt0|second_type": 0.0,
+          "depth_gt0|top_recency": 0.0,
+          "depth_gt0|cur_tok_is_open": 0.306,
+          "depth_exact|depth_parity": 1.0,
+          "depth_exact|second_type": 0.025,
+          "depth_exact|top_recency": 0.131,
+          "depth_exact|cur_tok_is_open": 0.331,
+          "depth_parity|second_type": 0.009,
+          "depth_parity|top_recency": 0.024,
+          "depth_parity|cur_tok_is_open": 0.069,
+          "second_type|top_recency": 0.001,
+          "second_type|cur_tok_is_open": 0.001,
+          "top_recency|cur_tok_is_open": 0.0
+        },
+        "erased_subspace_overlap_resid_final": {
+          "top_type|depth_gt0": 0.059,
+          "top_type|depth_exact": 0.208,
+          "top_type|depth_parity": 0.034,
+          "top_type|second_type": 0.129,
+          "top_type|top_recency": 0.039,
+          "top_type|cur_tok_is_open": 0.009,
+          "depth_gt0|depth_exact": 1.0,
+          "depth_gt0|depth_parity": 0.373,
+          "depth_gt0|second_type": 0.221,
+          "depth_gt0|top_recency": 0.182,
+          "depth_gt0|cur_tok_is_open": 0.284,
+          "depth_exact|depth_parity": 1.0,
+          "depth_exact|second_type": 0.505,
+          "depth_exact|top_recency": 0.329,
+          "depth_exact|cur_tok_is_open": 0.342,
+          "depth_parity|second_type": 0.037,
+          "depth_parity|top_recency": 0.095,
+          "depth_parity|cur_tok_is_open": 0.087,
+          "second_type|top_recency": 0.006,
+          "second_type|cur_tok_is_open": 0.001,
+          "top_recency|cur_tok_is_open": 0.619
+        },
+        "per_feature": [
+          {
+            "site": "resid_mid",
+            "feature": "top_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5075,
+            "probe_acc": 0.8945,
+            "probe_selectivity": 0.387,
+            "shuffled_probe_acc": 0.4905,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5075,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1938,
+            "var_frac_removed_random": 0.0297,
+            "delta_ce": 1.7607,
+            "delta_close_type_acc": -0.4981,
+            "delta_illegal_close_mass": 0.24222,
+            "rand_delta_close_mean": -0.0855,
+            "rand_delta_close_std": 0.047,
+            "rand_delta_illegal_mean": 0.0585,
+            "shuf_delta_ce": 0.5865,
+            "shuf_delta_close": -0.1455,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.3068,
+            "rand_delta_ce_std": 0.2057,
+            "causal_ce_excess": 1.4539,
+            "causal_ce_z": 7.07,
+            "rand_delta_ce_d0_mean": 0.218,
+            "rand_delta_ce_d0_std": 0.2261,
+            "causal_ce_d0_excess": 0.9229,
+            "causal_ce_d0_z": 4.08,
+            "rand_delta_ce_close_mean": 0.5448,
+            "rand_delta_ce_close_std": 0.3566,
+            "causal_ce_close_excess": 2.893,
+            "causal_ce_close_z": 8.11,
+            "causal_effect_slice": "ce_close",
+            "causal_effect_nats": 2.893,
+            "causal_effect_z": 8.11,
+            "causal_close_excess": 0.4126,
+            "causal_illegal_excess": 0.18372,
+            "shuf_ce_excess": 0.2797,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "depth_gt0",
+            "n_classes": 2,
+            "majority_baseline": 0.8849,
+            "probe_acc": 0.9927,
+            "probe_selectivity": 0.1079,
+            "shuffled_probe_acc": 0.8849,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.8849,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0747,
+            "var_frac_removed_random": 0.0297,
+            "delta_ce": 0.4462,
+            "delta_close_type_acc": -0.0498,
+            "delta_illegal_close_mass": 0.41958,
+            "rand_delta_close_mean": -0.0855,
+            "rand_delta_close_std": 0.047,
+            "rand_delta_illegal_mean": 0.0585,
+            "shuf_delta_ce": 0.221,
+            "shuf_delta_close": -0.0513,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.3068,
+            "rand_delta_ce_std": 0.2057,
+            "causal_ce_excess": 0.1394,
+            "causal_ce_z": 0.68,
+            "rand_delta_ce_d0_mean": 0.218,
+            "rand_delta_ce_d0_std": 0.2261,
+            "causal_ce_d0_excess": 1.9703,
+            "causal_ce_d0_z": 8.72,
+            "rand_delta_ce_close_mean": 0.5448,
+            "rand_delta_ce_close_std": 0.3566,
+            "causal_ce_close_excess": -0.3948,
+            "causal_ce_close_z": -1.11,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.9703,
+            "causal_effect_z": 8.72,
+            "causal_close_excess": -0.0357,
+            "causal_illegal_excess": 0.36108,
+            "shuf_ce_excess": -0.0858,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "depth_exact",
+            "n_classes": 11,
+            "majority_baseline": 0.159,
+            "probe_acc": 0.9377,
+            "probe_selectivity": 0.7787,
+            "shuffled_probe_acc": 0.1548,
+            "probe_pearson_r": 0.9826,
+            "erasure_rank": 10,
+            "refit_probe_acc_after_erasure": 0.159,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.4004,
+            "var_frac_removed_random": 0.3058,
+            "delta_ce": 0.8386,
+            "delta_close_type_acc": -0.1671,
+            "delta_illegal_close_mass": 0.44642,
+            "rand_delta_close_mean": -0.3063,
+            "rand_delta_close_std": 0.0625,
+            "rand_delta_illegal_mean": 0.28674,
+            "shuf_delta_ce": 1.0994,
+            "shuf_delta_close": -0.2675,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 1.3759,
+            "rand_delta_ce_std": 0.2553,
+            "causal_ce_excess": -0.5373,
+            "causal_ce_z": -2.1,
+            "rand_delta_ce_d0_mean": 1.5014,
+            "rand_delta_ce_d0_std": 0.4358,
+            "causal_ce_d0_excess": 1.0155,
+            "causal_ce_d0_z": 2.33,
+            "rand_delta_ce_close_mean": 2.4512,
+            "rand_delta_ce_close_std": 0.5507,
+            "causal_ce_close_excess": -1.3107,
+            "causal_ce_close_z": -2.38,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.0155,
+            "causal_effect_z": 2.33,
+            "causal_close_excess": -0.1392,
+            "causal_illegal_excess": 0.15968,
+            "shuf_ce_excess": -0.2765,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "depth_parity",
+            "n_classes": 2,
+            "majority_baseline": 0.5189,
+            "probe_acc": 0.9999,
+            "probe_selectivity": 0.481,
+            "shuffled_probe_acc": 0.5145,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5189,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0308,
+            "var_frac_removed_random": 0.0297,
+            "delta_ce": 0.084,
+            "delta_close_type_acc": -0.0418,
+            "delta_illegal_close_mass": 0.01267,
+            "rand_delta_close_mean": -0.0855,
+            "rand_delta_close_std": 0.047,
+            "rand_delta_illegal_mean": 0.0585,
+            "shuf_delta_ce": 0.0435,
+            "shuf_delta_close": -0.0241,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.3068,
+            "rand_delta_ce_std": 0.2057,
+            "causal_ce_excess": -0.2227,
+            "causal_ce_z": -1.08,
+            "rand_delta_ce_d0_mean": 0.218,
+            "rand_delta_ce_d0_std": 0.2261,
+            "causal_ce_d0_excess": -0.1561,
+            "causal_ce_d0_z": -0.69,
+            "rand_delta_ce_close_mean": 0.5448,
+            "rand_delta_ce_close_std": 0.3566,
+            "causal_ce_close_excess": -0.3868,
+            "causal_ce_close_z": -1.08,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": -0.1561,
+            "causal_effect_z": -0.69,
+            "causal_close_excess": -0.0437,
+            "causal_illegal_excess": -0.04583,
+            "shuf_ce_excess": -0.2633,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "second_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5,
+            "probe_acc": 0.6186,
+            "probe_selectivity": 0.1186,
+            "shuffled_probe_acc": 0.5041,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0286,
+            "var_frac_removed_random": 0.0297,
+            "delta_ce": 0.0844,
+            "delta_close_type_acc": -0.0306,
+            "delta_illegal_close_mass": 0.01065,
+            "rand_delta_close_mean": -0.0855,
+            "rand_delta_close_std": 0.047,
+            "rand_delta_illegal_mean": 0.0585,
+            "shuf_delta_ce": 0.1,
+            "shuf_delta_close": -0.0316,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.3068,
+            "rand_delta_ce_std": 0.2057,
+            "causal_ce_excess": -0.2224,
+            "causal_ce_z": -1.08,
+            "rand_delta_ce_d0_mean": 0.218,
+            "rand_delta_ce_d0_std": 0.2261,
+            "causal_ce_d0_excess": -0.1746,
+            "causal_ce_d0_z": -0.77,
+            "rand_delta_ce_close_mean": 0.5448,
+            "rand_delta_ce_close_std": 0.3566,
+            "causal_ce_close_excess": -0.4187,
+            "causal_ce_close_z": -1.17,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": -0.1746,
+            "causal_effect_z": -0.77,
+            "causal_close_excess": -0.0549,
+            "causal_illegal_excess": -0.04785,
+            "shuf_ce_excess": -0.2068,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "top_recency",
+            "n_classes": 2,
+            "majority_baseline": 0.6987,
+            "probe_acc": 0.772,
+            "probe_selectivity": 0.0733,
+            "shuffled_probe_acc": 0.6988,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.6988,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0523,
+            "var_frac_removed_random": 0.0297,
+            "delta_ce": 0.3601,
+            "delta_close_type_acc": -0.0439,
+            "delta_illegal_close_mass": 0.01096,
+            "rand_delta_close_mean": -0.0855,
+            "rand_delta_close_std": 0.047,
+            "rand_delta_illegal_mean": 0.0585,
+            "shuf_delta_ce": 0.4237,
+            "shuf_delta_close": -0.1041,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.3068,
+            "rand_delta_ce_std": 0.2057,
+            "causal_ce_excess": 0.0534,
+            "causal_ce_z": 0.26,
+            "rand_delta_ce_d0_mean": 0.218,
+            "rand_delta_ce_d0_std": 0.2261,
+            "causal_ce_d0_excess": 0.0409,
+            "causal_ce_d0_z": 0.18,
+            "rand_delta_ce_close_mean": 0.5448,
+            "rand_delta_ce_close_std": 0.3566,
+            "causal_ce_close_excess": -0.442,
+            "causal_ce_close_z": -1.24,
+            "causal_effect_slice": "ce",
+            "causal_effect_nats": 0.0534,
+            "causal_effect_z": 0.26,
+            "causal_close_excess": -0.0416,
+            "causal_illegal_excess": -0.04754,
+            "shuf_ce_excess": 0.1169,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "cur_tok_is_open",
+            "n_classes": 2,
+            "majority_baseline": 0.5046,
+            "probe_acc": 1.0,
+            "probe_selectivity": 0.4954,
+            "shuffled_probe_acc": 0.5096,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5046,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0884,
+            "var_frac_removed_random": 0.0297,
+            "delta_ce": 0.104,
+            "delta_close_type_acc": -0.0148,
+            "delta_illegal_close_mass": 0.10019,
+            "rand_delta_close_mean": -0.0855,
+            "rand_delta_close_std": 0.047,
+            "rand_delta_illegal_mean": 0.0585,
+            "shuf_delta_ce": 0.0744,
+            "shuf_delta_close": -0.0284,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.3068,
+            "rand_delta_ce_std": 0.2057,
+            "causal_ce_excess": -0.2028,
+            "causal_ce_z": -0.99,
+            "rand_delta_ce_d0_mean": 0.218,
+            "rand_delta_ce_d0_std": 0.2261,
+            "causal_ce_d0_excess": 0.1438,
+            "causal_ce_d0_z": 0.64,
+            "rand_delta_ce_close_mean": 0.5448,
+            "rand_delta_ce_close_std": 0.3566,
+            "causal_ce_close_excess": -0.4593,
+            "causal_ce_close_z": -1.29,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.1438,
+            "causal_effect_z": 0.64,
+            "causal_close_excess": -0.0707,
+            "causal_illegal_excess": 0.04169,
+            "shuf_ce_excess": -0.2324,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "top_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5089,
+            "probe_acc": 0.9995,
+            "probe_selectivity": 0.4906,
+            "shuffled_probe_acc": 0.4888,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.4911,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.7505,
+            "var_frac_removed_random": 0.0445,
+            "delta_ce": 2.3795,
+            "delta_close_type_acc": -0.655,
+            "delta_illegal_close_mass": 0.02221,
+            "rand_delta_close_mean": -0.0222,
+            "rand_delta_close_std": 0.03,
+            "rand_delta_illegal_mean": 0.16312,
+            "shuf_delta_ce": 0.0761,
+            "shuf_delta_close": -0.0139,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.2041,
+            "rand_delta_ce_std": 0.1688,
+            "causal_ce_excess": 2.1755,
+            "causal_ce_z": 12.89,
+            "rand_delta_ce_d0_mean": 0.4856,
+            "rand_delta_ce_d0_std": 0.5604,
+            "causal_ce_d0_excess": -0.4512,
+            "causal_ce_d0_z": -0.81,
+            "rand_delta_ce_close_mean": 0.3144,
+            "rand_delta_ce_close_std": 0.3414,
+            "causal_ce_close_excess": 5.0595,
+            "causal_ce_close_z": 14.82,
+            "causal_effect_slice": "ce_close",
+            "causal_effect_nats": 5.0595,
+            "causal_effect_z": 14.82,
+            "causal_close_excess": 0.6328,
+            "causal_illegal_excess": -0.14091,
+            "shuf_ce_excess": -0.128,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "depth_gt0",
+            "n_classes": 2,
+            "majority_baseline": 0.8895,
+            "probe_acc": 0.9998,
+            "probe_selectivity": 0.1103,
+            "shuffled_probe_acc": 0.8895,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.8895,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0364,
+            "var_frac_removed_random": 0.0445,
+            "delta_ce": 0.2104,
+            "delta_close_type_acc": 0.0,
+            "delta_illegal_close_mass": 0.04918,
+            "rand_delta_close_mean": -0.0222,
+            "rand_delta_close_std": 0.03,
+            "rand_delta_illegal_mean": 0.16312,
+            "shuf_delta_ce": 0.0572,
+            "shuf_delta_close": -0.0001,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.2041,
+            "rand_delta_ce_std": 0.1688,
+            "causal_ce_excess": 0.0064,
+            "causal_ce_z": 0.04,
+            "rand_delta_ce_d0_mean": 0.4856,
+            "rand_delta_ce_d0_std": 0.5604,
+            "causal_ce_d0_excess": 1.2988,
+            "causal_ce_d0_z": 2.32,
+            "rand_delta_ce_close_mean": 0.3144,
+            "rand_delta_ce_close_std": 0.3414,
+            "causal_ce_close_excess": -0.2715,
+            "causal_ce_close_z": -0.8,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.2988,
+            "causal_effect_z": 2.32,
+            "causal_close_excess": -0.0222,
+            "causal_illegal_excess": -0.11394,
+            "shuf_ce_excess": -0.1469,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "depth_exact",
+            "n_classes": 11,
+            "majority_baseline": 0.1561,
+            "probe_acc": 0.8755,
+            "probe_selectivity": 0.7194,
+            "shuffled_probe_acc": 0.1548,
+            "probe_pearson_r": 0.9621,
+            "erasure_rank": 10,
+            "refit_probe_acc_after_erasure": 0.1561,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1015,
+            "var_frac_removed_random": 0.3294,
+            "delta_ce": 0.441,
+            "delta_close_type_acc": -0.0131,
+            "delta_illegal_close_mass": 0.08063,
+            "rand_delta_close_mean": -0.1583,
+            "rand_delta_close_std": 0.0673,
+            "rand_delta_illegal_mean": 0.0989,
+            "shuf_delta_ce": 0.6113,
+            "shuf_delta_close": -0.0816,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 1.0825,
+            "rand_delta_ce_std": 0.3089,
+            "causal_ce_excess": -0.6415,
+            "causal_ce_z": -2.08,
+            "rand_delta_ce_d0_mean": 1.1567,
+            "rand_delta_ce_d0_std": 0.6339,
+            "causal_ce_d0_excess": 1.0804,
+            "causal_ce_d0_z": 1.7,
+            "rand_delta_ce_close_mean": 2.0528,
+            "rand_delta_ce_close_std": 0.698,
+            "causal_ce_close_excess": -1.7135,
+            "causal_ce_close_z": -2.45,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.0804,
+            "causal_effect_z": 1.7,
+            "causal_close_excess": -0.1452,
+            "causal_illegal_excess": -0.01827,
+            "shuf_ce_excess": -0.4712,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "depth_parity",
+            "n_classes": 2,
+            "majority_baseline": 0.5195,
+            "probe_acc": 0.9933,
+            "probe_selectivity": 0.4738,
+            "shuffled_probe_acc": 0.5189,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5195,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.016,
+            "var_frac_removed_random": 0.0445,
+            "delta_ce": 0.0476,
+            "delta_close_type_acc": -0.0001,
+            "delta_illegal_close_mass": 0.00106,
+            "rand_delta_close_mean": -0.0222,
+            "rand_delta_close_std": 0.03,
+            "rand_delta_illegal_mean": 0.16312,
+            "shuf_delta_ce": 0.0238,
+            "shuf_delta_close": -0.0002,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.2041,
+            "rand_delta_ce_std": 0.1688,
+            "causal_ce_excess": -0.1565,
+            "causal_ce_z": -0.93,
+            "rand_delta_ce_d0_mean": 0.4856,
+            "rand_delta_ce_d0_std": 0.5604,
+            "causal_ce_d0_excess": -0.2689,
+            "causal_ce_d0_z": -0.48,
+            "rand_delta_ce_close_mean": 0.3144,
+            "rand_delta_ce_close_std": 0.3414,
+            "causal_ce_close_excess": -0.3152,
+            "causal_ce_close_z": -0.92,
+            "causal_effect_slice": "ce",
+            "causal_effect_nats": -0.1565,
+            "causal_effect_z": -0.93,
+            "causal_close_excess": -0.0221,
+            "causal_illegal_excess": -0.16206,
+            "shuf_ce_excess": -0.1803,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "second_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5095,
+            "probe_acc": 0.6111,
+            "probe_selectivity": 0.1016,
+            "shuffled_probe_acc": 0.5013,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5086,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0565,
+            "var_frac_removed_random": 0.0445,
+            "delta_ce": 0.2109,
+            "delta_close_type_acc": -0.0157,
+            "delta_illegal_close_mass": 0.31963,
+            "rand_delta_close_mean": -0.0222,
+            "rand_delta_close_std": 0.03,
+            "rand_delta_illegal_mean": 0.16312,
+            "shuf_delta_ce": 0.0016,
+            "shuf_delta_close": -0.0002,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.2041,
+            "rand_delta_ce_std": 0.1688,
+            "causal_ce_excess": 0.0068,
+            "causal_ce_z": 0.04,
+            "rand_delta_ce_d0_mean": 0.4856,
+            "rand_delta_ce_d0_std": 0.5604,
+            "causal_ce_d0_excess": 0.1099,
+            "causal_ce_d0_z": 0.2,
+            "rand_delta_ce_close_mean": 0.3144,
+            "rand_delta_ce_close_std": 0.3414,
+            "causal_ce_close_excess": -0.0334,
+            "causal_ce_close_z": -0.1,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.1099,
+            "causal_effect_z": 0.2,
+            "causal_close_excess": -0.0065,
+            "causal_illegal_excess": 0.15651,
+            "shuf_ce_excess": -0.2025,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "top_recency",
+            "n_classes": 2,
+            "majority_baseline": 0.6981,
+            "probe_acc": 0.849,
+            "probe_selectivity": 0.1509,
+            "shuffled_probe_acc": 0.6981,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.6981,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1132,
+            "var_frac_removed_random": 0.0445,
+            "delta_ce": 1.2892,
+            "delta_close_type_acc": -0.0002,
+            "delta_illegal_close_mass": -0.00114,
+            "rand_delta_close_mean": -0.0222,
+            "rand_delta_close_std": 0.03,
+            "rand_delta_illegal_mean": 0.16312,
+            "shuf_delta_ce": 0.0213,
+            "shuf_delta_close": -0.0001,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.2041,
+            "rand_delta_ce_std": 0.1688,
+            "causal_ce_excess": 1.0851,
+            "causal_ce_z": 6.43,
+            "rand_delta_ce_d0_mean": 0.4856,
+            "rand_delta_ce_d0_std": 0.5604,
+            "causal_ce_d0_excess": 1.4522,
+            "causal_ce_d0_z": 2.59,
+            "rand_delta_ce_close_mean": 0.3144,
+            "rand_delta_ce_close_std": 0.3414,
+            "causal_ce_close_excess": -0.2791,
+            "causal_ce_close_z": -0.82,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.4522,
+            "causal_effect_z": 2.59,
+            "causal_close_excess": -0.022,
+            "causal_illegal_excess": -0.16426,
+            "shuf_ce_excess": -0.1828,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "cur_tok_is_open",
+            "n_classes": 2,
+            "majority_baseline": 0.5022,
+            "probe_acc": 0.9991,
+            "probe_selectivity": 0.4969,
+            "shuffled_probe_acc": 0.5033,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.4742,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0613,
+            "var_frac_removed_random": 0.0445,
+            "delta_ce": 0.3276,
+            "delta_close_type_acc": -0.0002,
+            "delta_illegal_close_mass": -0.0001,
+            "rand_delta_close_mean": -0.0222,
+            "rand_delta_close_std": 0.03,
+            "rand_delta_illegal_mean": 0.16312,
+            "shuf_delta_ce": 0.2167,
+            "shuf_delta_close": -0.0002,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.2041,
+            "rand_delta_ce_std": 0.1688,
+            "causal_ce_excess": 0.1235,
+            "causal_ce_z": 0.73,
+            "rand_delta_ce_d0_mean": 0.4856,
+            "rand_delta_ce_d0_std": 0.5604,
+            "causal_ce_d0_excess": 0.3353,
+            "causal_ce_d0_z": 0.6,
+            "rand_delta_ce_close_mean": 0.3144,
+            "rand_delta_ce_close_std": 0.3414,
+            "causal_ce_close_excess": -0.0523,
+            "causal_ce_close_z": -0.15,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.3353,
+            "causal_effect_z": 0.6,
+            "causal_close_excess": -0.022,
+            "causal_illegal_excess": -0.16322,
+            "shuf_ce_excess": 0.0126,
+            "causally_used": false,
+            "decodable": true
+          }
+        ],
+        "wall_sec": 183.4
+      },
+      {
+        "seed": 1,
+        "n_params": 27200,
+        "steps_trained": 2000,
+        "train_sec": 90.0,
+        "clean": {
+          "ce": 0.87399,
+          "tok_acc": 0.55383,
+          "close_type_acc": 0.99928,
+          "illegal_close_mass": 0.00058,
+          "ce_d0": 0.5977,
+          "ce_close": 0.56786
+        },
+        "mean_depth": 3.514,
+        "n_eval_positions": 37286,
+        "label_association_cramers_v": {
+          "top_type|depth_gt0": 0.0,
+          "top_type|depth_exact": 0.026,
+          "top_type|depth_parity": 0.006,
+          "top_type|second_type": 0.002,
+          "top_type|top_recency": 0.004,
+          "top_type|cur_tok_is_open": 0.007,
+          "depth_gt0|depth_exact": 1.0,
+          "depth_gt0|depth_parity": 0.351,
+          "depth_gt0|second_type": 0.0,
+          "depth_gt0|top_recency": 0.0,
+          "depth_gt0|cur_tok_is_open": 0.308,
+          "depth_exact|depth_parity": 1.0,
+          "depth_exact|second_type": 0.034,
+          "depth_exact|top_recency": 0.125,
+          "depth_exact|cur_tok_is_open": 0.333,
+          "depth_parity|second_type": 0.0,
+          "depth_parity|top_recency": 0.013,
+          "depth_parity|cur_tok_is_open": 0.071,
+          "second_type|top_recency": 0.001,
+          "second_type|cur_tok_is_open": 0.006,
+          "top_recency|cur_tok_is_open": 0.0
+        },
+        "erased_subspace_overlap_resid_final": {
+          "top_type|depth_gt0": 0.005,
+          "top_type|depth_exact": 0.253,
+          "top_type|depth_parity": 0.011,
+          "top_type|second_type": 0.08,
+          "top_type|top_recency": 0.021,
+          "top_type|cur_tok_is_open": 0.001,
+          "depth_gt0|depth_exact": 1.0,
+          "depth_gt0|depth_parity": 0.387,
+          "depth_gt0|second_type": 0.052,
+          "depth_gt0|top_recency": 0.201,
+          "depth_gt0|cur_tok_is_open": 0.29,
+          "depth_exact|depth_parity": 1.0,
+          "depth_exact|second_type": 0.558,
+          "depth_exact|top_recency": 0.32,
+          "depth_exact|cur_tok_is_open": 0.424,
+          "depth_parity|second_type": 0.043,
+          "depth_parity|top_recency": 0.07,
+          "depth_parity|cur_tok_is_open": 0.103,
+          "second_type|top_recency": 0.086,
+          "second_type|cur_tok_is_open": 0.003,
+          "top_recency|cur_tok_is_open": 0.694
+        },
+        "per_feature": [
+          {
+            "site": "resid_mid",
+            "feature": "top_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5015,
+            "probe_acc": 0.8997,
+            "probe_selectivity": 0.3982,
+            "shuffled_probe_acc": 0.4954,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.4985,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1943,
+            "var_frac_removed_random": 0.0277,
+            "delta_ce": 1.723,
+            "delta_close_type_acc": -0.5051,
+            "delta_illegal_close_mass": 0.07817,
+            "rand_delta_close_mean": -0.0454,
+            "rand_delta_close_std": 0.0529,
+            "rand_delta_illegal_mean": 0.01544,
+            "shuf_delta_ce": 0.2384,
+            "shuf_delta_close": -0.0847,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.1353,
+            "rand_delta_ce_std": 0.1875,
+            "causal_ce_excess": 1.5877,
+            "causal_ce_z": 8.47,
+            "rand_delta_ce_d0_mean": 0.0773,
+            "rand_delta_ce_d0_std": 0.0902,
+            "causal_ce_d0_excess": 0.447,
+            "causal_ce_d0_z": 4.96,
+            "rand_delta_ce_close_mean": 0.2699,
+            "rand_delta_ce_close_std": 0.3848,
+            "causal_ce_close_excess": 3.3267,
+            "causal_ce_close_z": 8.65,
+            "causal_effect_slice": "ce_close",
+            "causal_effect_nats": 3.3267,
+            "causal_effect_z": 8.65,
+            "causal_close_excess": 0.4597,
+            "causal_illegal_excess": 0.06273,
+            "shuf_ce_excess": 0.1031,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "depth_gt0",
+            "n_classes": 2,
+            "majority_baseline": 0.8854,
+            "probe_acc": 0.998,
+            "probe_selectivity": 0.1126,
+            "shuffled_probe_acc": 0.8854,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.8854,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1743,
+            "var_frac_removed_random": 0.0277,
+            "delta_ce": 0.4559,
+            "delta_close_type_acc": -0.0819,
+            "delta_illegal_close_mass": 0.41842,
+            "rand_delta_close_mean": -0.0454,
+            "rand_delta_close_std": 0.0529,
+            "rand_delta_illegal_mean": 0.01544,
+            "shuf_delta_ce": 0.1731,
+            "shuf_delta_close": -0.0656,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.1353,
+            "rand_delta_ce_std": 0.1875,
+            "causal_ce_excess": 0.3206,
+            "causal_ce_z": 1.71,
+            "rand_delta_ce_d0_mean": 0.0773,
+            "rand_delta_ce_d0_std": 0.0902,
+            "causal_ce_d0_excess": 2.1334,
+            "causal_ce_d0_z": 23.65,
+            "rand_delta_ce_close_mean": 0.2699,
+            "rand_delta_ce_close_std": 0.3848,
+            "causal_ce_close_excess": 0.1891,
+            "causal_ce_close_z": 0.49,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 2.1334,
+            "causal_effect_z": 23.65,
+            "causal_close_excess": 0.0365,
+            "causal_illegal_excess": 0.40298,
+            "shuf_ce_excess": 0.0378,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "depth_exact",
+            "n_classes": 11,
+            "majority_baseline": 0.1574,
+            "probe_acc": 0.9741,
+            "probe_selectivity": 0.8168,
+            "shuffled_probe_acc": 0.1521,
+            "probe_pearson_r": 0.9923,
+            "erasure_rank": 10,
+            "refit_probe_acc_after_erasure": 0.1574,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.4752,
+            "var_frac_removed_random": 0.2878,
+            "delta_ce": 1.0088,
+            "delta_close_type_acc": -0.2281,
+            "delta_illegal_close_mass": 0.42933,
+            "rand_delta_close_mean": -0.2381,
+            "rand_delta_close_std": 0.0331,
+            "rand_delta_illegal_mean": 0.15882,
+            "shuf_delta_ce": 1.1512,
+            "shuf_delta_close": -0.2447,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 1.0724,
+            "rand_delta_ce_std": 0.1311,
+            "causal_ce_excess": -0.0637,
+            "causal_ce_z": -0.49,
+            "rand_delta_ce_d0_mean": 1.4998,
+            "rand_delta_ce_d0_std": 0.4594,
+            "causal_ce_d0_excess": 0.7397,
+            "causal_ce_d0_z": 1.61,
+            "rand_delta_ce_close_mean": 1.8912,
+            "rand_delta_ce_close_std": 0.2706,
+            "causal_ce_close_excess": -0.2698,
+            "causal_ce_close_z": -1.0,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.7397,
+            "causal_effect_z": 1.61,
+            "causal_close_excess": -0.01,
+            "causal_illegal_excess": 0.27051,
+            "shuf_ce_excess": 0.0788,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "depth_parity",
+            "n_classes": 2,
+            "majority_baseline": 0.5149,
+            "probe_acc": 1.0,
+            "probe_selectivity": 0.4851,
+            "shuffled_probe_acc": 0.5125,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5149,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0342,
+            "var_frac_removed_random": 0.0277,
+            "delta_ce": 0.0671,
+            "delta_close_type_acc": -0.0335,
+            "delta_illegal_close_mass": 0.00547,
+            "rand_delta_close_mean": -0.0454,
+            "rand_delta_close_std": 0.0529,
+            "rand_delta_illegal_mean": 0.01544,
+            "shuf_delta_ce": 0.3905,
+            "shuf_delta_close": -0.1117,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.1353,
+            "rand_delta_ce_std": 0.1875,
+            "causal_ce_excess": -0.0682,
+            "causal_ce_z": -0.36,
+            "rand_delta_ce_d0_mean": 0.0773,
+            "rand_delta_ce_d0_std": 0.0902,
+            "causal_ce_d0_excess": -0.0464,
+            "causal_ce_d0_z": -0.51,
+            "rand_delta_ce_close_mean": 0.2699,
+            "rand_delta_ce_close_std": 0.3848,
+            "causal_ce_close_excess": -0.1151,
+            "causal_ce_close_z": -0.3,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": -0.0464,
+            "causal_effect_z": -0.51,
+            "causal_close_excess": -0.0119,
+            "causal_illegal_excess": -0.00997,
+            "shuf_ce_excess": 0.2552,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "second_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5132,
+            "probe_acc": 0.6829,
+            "probe_selectivity": 0.1696,
+            "shuffled_probe_acc": 0.5065,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5132,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.026,
+            "var_frac_removed_random": 0.0277,
+            "delta_ce": 0.1035,
+            "delta_close_type_acc": -0.0412,
+            "delta_illegal_close_mass": 0.0925,
+            "rand_delta_close_mean": -0.0454,
+            "rand_delta_close_std": 0.0529,
+            "rand_delta_illegal_mean": 0.01544,
+            "shuf_delta_ce": 0.0497,
+            "shuf_delta_close": -0.0217,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.1353,
+            "rand_delta_ce_std": 0.1875,
+            "causal_ce_excess": -0.0318,
+            "causal_ce_z": -0.17,
+            "rand_delta_ce_d0_mean": 0.0773,
+            "rand_delta_ce_d0_std": 0.0902,
+            "causal_ce_d0_excess": 0.0864,
+            "causal_ce_d0_z": 0.96,
+            "rand_delta_ce_close_mean": 0.2699,
+            "rand_delta_ce_close_std": 0.3848,
+            "causal_ce_close_excess": -0.081,
+            "causal_ce_close_z": -0.21,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.0864,
+            "causal_effect_z": 0.96,
+            "causal_close_excess": -0.0042,
+            "causal_illegal_excess": 0.07706,
+            "shuf_ce_excess": -0.0856,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "top_recency",
+            "n_classes": 2,
+            "majority_baseline": 0.7023,
+            "probe_acc": 0.7669,
+            "probe_selectivity": 0.0646,
+            "shuffled_probe_acc": 0.7023,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.7023,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0719,
+            "var_frac_removed_random": 0.0277,
+            "delta_ce": 0.664,
+            "delta_close_type_acc": -0.0886,
+            "delta_illegal_close_mass": -4e-05,
+            "rand_delta_close_mean": -0.0454,
+            "rand_delta_close_std": 0.0529,
+            "rand_delta_illegal_mean": 0.01544,
+            "shuf_delta_ce": 1.486,
+            "shuf_delta_close": -0.2985,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.1353,
+            "rand_delta_ce_std": 0.1875,
+            "causal_ce_excess": 0.5287,
+            "causal_ce_z": 2.82,
+            "rand_delta_ce_d0_mean": 0.0773,
+            "rand_delta_ce_d0_std": 0.0902,
+            "causal_ce_d0_excess": 1.1033,
+            "causal_ce_d0_z": 12.23,
+            "rand_delta_ce_close_mean": 0.2699,
+            "rand_delta_ce_close_std": 0.3848,
+            "causal_ce_close_excess": 0.7027,
+            "causal_ce_close_z": 1.83,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.1033,
+            "causal_effect_z": 12.23,
+            "causal_close_excess": 0.0432,
+            "causal_illegal_excess": -0.01548,
+            "shuf_ce_excess": 1.3507,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_mid",
+            "feature": "cur_tok_is_open",
+            "n_classes": 2,
+            "majority_baseline": 0.5009,
+            "probe_acc": 1.0,
+            "probe_selectivity": 0.4991,
+            "shuffled_probe_acc": 0.4939,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.4991,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0941,
+            "var_frac_removed_random": 0.0277,
+            "delta_ce": 0.1108,
+            "delta_close_type_acc": -0.0196,
+            "delta_illegal_close_mass": 0.0107,
+            "rand_delta_close_mean": -0.0454,
+            "rand_delta_close_std": 0.0529,
+            "rand_delta_illegal_mean": 0.01544,
+            "shuf_delta_ce": 0.0809,
+            "shuf_delta_close": -0.0334,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.1353,
+            "rand_delta_ce_std": 0.1875,
+            "causal_ce_excess": -0.0245,
+            "causal_ce_z": -0.13,
+            "rand_delta_ce_d0_mean": 0.0773,
+            "rand_delta_ce_d0_std": 0.0902,
+            "causal_ce_d0_excess": 0.3277,
+            "causal_ce_d0_z": 3.63,
+            "rand_delta_ce_close_mean": 0.2699,
+            "rand_delta_ce_close_std": 0.3848,
+            "causal_ce_close_excess": -0.1197,
+            "causal_ce_close_z": -0.31,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.3277,
+            "causal_effect_z": 3.63,
+            "causal_close_excess": -0.0258,
+            "causal_illegal_excess": -0.00474,
+            "shuf_ce_excess": -0.0544,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "top_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5012,
+            "probe_acc": 0.9989,
+            "probe_selectivity": 0.4976,
+            "shuffled_probe_acc": 0.4991,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5013,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.7782,
+            "var_frac_removed_random": 0.0368,
+            "delta_ce": 2.6217,
+            "delta_close_type_acc": -0.6721,
+            "delta_illegal_close_mass": 0.00808,
+            "rand_delta_close_mean": -0.024,
+            "rand_delta_close_std": 0.0404,
+            "rand_delta_illegal_mean": 0.05998,
+            "shuf_delta_ce": 0.0188,
+            "shuf_delta_close": 0.0001,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.1726,
+            "rand_delta_ce_std": 0.2322,
+            "causal_ce_excess": 2.4491,
+            "causal_ce_z": 10.55,
+            "rand_delta_ce_d0_mean": 0.2677,
+            "rand_delta_ce_d0_std": 0.3968,
+            "causal_ce_d0_excess": -0.2555,
+            "causal_ce_d0_z": -0.64,
+            "rand_delta_ce_close_mean": 0.2943,
+            "rand_delta_ce_close_std": 0.4511,
+            "causal_ce_close_excess": 5.5679,
+            "causal_ce_close_z": 12.34,
+            "causal_effect_slice": "ce_close",
+            "causal_effect_nats": 5.5679,
+            "causal_effect_z": 12.34,
+            "causal_close_excess": 0.6481,
+            "causal_illegal_excess": -0.0519,
+            "shuf_ce_excess": -0.1538,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "depth_gt0",
+            "n_classes": 2,
+            "majority_baseline": 0.8854,
+            "probe_acc": 0.9999,
+            "probe_selectivity": 0.1145,
+            "shuffled_probe_acc": 0.8854,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.8854,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0331,
+            "var_frac_removed_random": 0.0368,
+            "delta_ce": 0.2223,
+            "delta_close_type_acc": -0.0002,
+            "delta_illegal_close_mass": 0.0325,
+            "rand_delta_close_mean": -0.024,
+            "rand_delta_close_std": 0.0404,
+            "rand_delta_illegal_mean": 0.05998,
+            "shuf_delta_ce": 0.1437,
+            "shuf_delta_close": -0.0004,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.1726,
+            "rand_delta_ce_std": 0.2322,
+            "causal_ce_excess": 0.0497,
+            "causal_ce_z": 0.21,
+            "rand_delta_ce_d0_mean": 0.2677,
+            "rand_delta_ce_d0_std": 0.3968,
+            "causal_ce_d0_excess": 1.6518,
+            "causal_ce_d0_z": 4.16,
+            "rand_delta_ce_close_mean": 0.2943,
+            "rand_delta_ce_close_std": 0.4511,
+            "causal_ce_close_excess": -0.2808,
+            "causal_ce_close_z": -0.62,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.6518,
+            "causal_effect_z": 4.16,
+            "causal_close_excess": -0.0238,
+            "causal_illegal_excess": -0.02748,
+            "shuf_ce_excess": -0.0289,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "depth_exact",
+            "n_classes": 11,
+            "majority_baseline": 0.1633,
+            "probe_acc": 0.9171,
+            "probe_selectivity": 0.7539,
+            "shuffled_probe_acc": 0.1602,
+            "probe_pearson_r": 0.9624,
+            "erasure_rank": 10,
+            "refit_probe_acc_after_erasure": 0.1632,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1385,
+            "var_frac_removed_random": 0.3113,
+            "delta_ce": 0.6359,
+            "delta_close_type_acc": -0.0471,
+            "delta_illegal_close_mass": 0.09054,
+            "rand_delta_close_mean": -0.1417,
+            "rand_delta_close_std": 0.0397,
+            "rand_delta_illegal_mean": 0.0805,
+            "shuf_delta_ce": 1.5525,
+            "shuf_delta_close": -0.198,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 1.0423,
+            "rand_delta_ce_std": 0.1833,
+            "causal_ce_excess": -0.4064,
+            "causal_ce_z": -2.22,
+            "rand_delta_ce_d0_mean": 1.0592,
+            "rand_delta_ce_d0_std": 0.6194,
+            "causal_ce_d0_excess": 1.2384,
+            "causal_ce_d0_z": 2.0,
+            "rand_delta_ce_close_mean": 1.9748,
+            "rand_delta_ce_close_std": 0.3963,
+            "causal_ce_close_excess": -1.2334,
+            "causal_ce_close_z": -3.11,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 1.2384,
+            "causal_effect_z": 2.0,
+            "causal_close_excess": -0.0946,
+            "causal_illegal_excess": 0.01004,
+            "shuf_ce_excess": 0.5102,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "depth_parity",
+            "n_classes": 2,
+            "majority_baseline": 0.518,
+            "probe_acc": 0.9969,
+            "probe_selectivity": 0.4789,
+            "shuffled_probe_acc": 0.5115,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.518,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0067,
+            "var_frac_removed_random": 0.0368,
+            "delta_ce": 0.0081,
+            "delta_close_type_acc": 0.0,
+            "delta_illegal_close_mass": 0.00055,
+            "rand_delta_close_mean": -0.024,
+            "rand_delta_close_std": 0.0404,
+            "rand_delta_illegal_mean": 0.05998,
+            "shuf_delta_ce": 0.1292,
+            "shuf_delta_close": -0.0177,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.1726,
+            "rand_delta_ce_std": 0.2322,
+            "causal_ce_excess": -0.1645,
+            "causal_ce_z": -0.71,
+            "rand_delta_ce_d0_mean": 0.2677,
+            "rand_delta_ce_d0_std": 0.3968,
+            "causal_ce_d0_excess": -0.207,
+            "causal_ce_d0_z": -0.52,
+            "rand_delta_ce_close_mean": 0.2943,
+            "rand_delta_ce_close_std": 0.4511,
+            "causal_ce_close_excess": -0.2952,
+            "causal_ce_close_z": -0.65,
+            "causal_effect_slice": "ce",
+            "causal_effect_nats": -0.1645,
+            "causal_effect_z": -0.71,
+            "causal_close_excess": -0.024,
+            "causal_illegal_excess": -0.05943,
+            "shuf_ce_excess": -0.0434,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "second_type",
+            "n_classes": 2,
+            "majority_baseline": 0.5015,
+            "probe_acc": 0.6454,
+            "probe_selectivity": 0.1439,
+            "shuffled_probe_acc": 0.5048,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.5015,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0264,
+            "var_frac_removed_random": 0.0368,
+            "delta_ce": 0.092,
+            "delta_close_type_acc": -0.0192,
+            "delta_illegal_close_mass": 0.05258,
+            "rand_delta_close_mean": -0.024,
+            "rand_delta_close_std": 0.0404,
+            "rand_delta_illegal_mean": 0.05998,
+            "shuf_delta_ce": 0.0087,
+            "shuf_delta_close": -0.0014,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.1726,
+            "rand_delta_ce_std": 0.2322,
+            "causal_ce_excess": -0.0806,
+            "causal_ce_z": -0.35,
+            "rand_delta_ce_d0_mean": 0.2677,
+            "rand_delta_ce_d0_std": 0.3968,
+            "causal_ce_d0_excess": -0.2044,
+            "causal_ce_d0_z": -0.52,
+            "rand_delta_ce_close_mean": 0.2943,
+            "rand_delta_ce_close_std": 0.4511,
+            "causal_ce_close_excess": -0.1217,
+            "causal_ce_close_z": -0.27,
+            "causal_effect_slice": "ce",
+            "causal_effect_nats": -0.0806,
+            "causal_effect_z": -0.35,
+            "causal_close_excess": -0.0048,
+            "causal_illegal_excess": -0.0074,
+            "shuf_ce_excess": -0.1639,
+            "causally_used": false,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "top_recency",
+            "n_classes": 2,
+            "majority_baseline": 0.7054,
+            "probe_acc": 0.847,
+            "probe_selectivity": 0.1416,
+            "shuffled_probe_acc": 0.7054,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.7054,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.1012,
+            "var_frac_removed_random": 0.0368,
+            "delta_ce": 1.0555,
+            "delta_close_type_acc": 0.0003,
+            "delta_illegal_close_mass": 0.00028,
+            "rand_delta_close_mean": -0.024,
+            "rand_delta_close_std": 0.0404,
+            "rand_delta_illegal_mean": 0.05998,
+            "shuf_delta_ce": 0.0788,
+            "shuf_delta_close": -0.0076,
+            "expected_causal": false,
+            "rand_delta_ce_mean": 0.1726,
+            "rand_delta_ce_std": 0.2322,
+            "causal_ce_excess": 0.8829,
+            "causal_ce_z": 3.8,
+            "rand_delta_ce_d0_mean": 0.2677,
+            "rand_delta_ce_d0_std": 0.3968,
+            "causal_ce_d0_excess": 0.4686,
+            "causal_ce_d0_z": 1.18,
+            "rand_delta_ce_close_mean": 0.2943,
+            "rand_delta_ce_close_std": 0.4511,
+            "causal_ce_close_excess": -0.3448,
+            "causal_ce_close_z": -0.76,
+            "causal_effect_slice": "ce",
+            "causal_effect_nats": 0.8829,
+            "causal_effect_z": 3.8,
+            "causal_close_excess": -0.0243,
+            "causal_illegal_excess": -0.0597,
+            "shuf_ce_excess": -0.0938,
+            "causally_used": true,
+            "decodable": true
+          },
+          {
+            "site": "resid_final",
+            "feature": "cur_tok_is_open",
+            "n_classes": 2,
+            "majority_baseline": 0.5039,
+            "probe_acc": 0.9986,
+            "probe_selectivity": 0.4947,
+            "shuffled_probe_acc": 0.5025,
+            "probe_pearson_r": null,
+            "erasure_rank": 1,
+            "refit_probe_acc_after_erasure": 0.48,
+            "linearly_guarded": true,
+            "var_frac_removed": 0.0576,
+            "var_frac_removed_random": 0.0368,
+            "delta_ce": 0.4163,
+            "delta_close_type_acc": 0.0003,
+            "delta_illegal_close_mass": -2e-05,
+            "rand_delta_close_mean": -0.024,
+            "rand_delta_close_std": 0.0404,
+            "rand_delta_illegal_mean": 0.05998,
+            "shuf_delta_ce": 0.3338,
+            "shuf_delta_close": -0.0676,
+            "expected_causal": true,
+            "rand_delta_ce_mean": 0.1726,
+            "rand_delta_ce_std": 0.2322,
+            "causal_ce_excess": 0.2436,
+            "causal_ce_z": 1.05,
+            "rand_delta_ce_d0_mean": 0.2677,
+            "rand_delta_ce_d0_std": 0.3968,
+            "causal_ce_d0_excess": 0.3798,
+            "causal_ce_d0_z": 0.96,
+            "rand_delta_ce_close_mean": 0.2943,
+            "rand_delta_ce_close_std": 0.4511,
+            "causal_ce_close_excess": 0.1671,
+            "causal_ce_close_z": 0.37,
+            "causal_effect_slice": "ce_d0",
+            "causal_effect_nats": 0.3798,
+            "causal_effect_z": 0.96,
+            "causal_close_excess": -0.0243,
+            "causal_illegal_excess": -0.06,
+            "shuf_ce_excess": 0.1612,
+            "causally_used": false,
+            "decodable": true
+          }
+        ],
+        "wall_sec": 175.4
+      }
+    ],
+    "headline": "depth_parity probes at 0.995 (majority 0.519, shuffled-label control 0.515) at resid_final and is linearly guarded after rank-1 LEACE erasure (refit probe 0.519 vs majority 0.519), yet the best-case erasure damage over rank-matched random erasers is only -0.161 nats (z=-0.8) and -0.023 close-type accuracy - versus +5.314 nats for top_type."
+  },
+  "config": {
+    "n_bracket_types": 2,
+    "max_depth": 10,
+    "min_pairs": 10,
+    "max_pairs": 20,
+    "p_open": 0.6,
+    "max_positions": 48,
+    "n_train_seqs": 30000,
+    "n_eval_seqs": 1200,
+    "n_probe_seqs": 2000,
+    "n_layers": 2,
+    "n_heads": 1,
+    "d_model": 32,
+    "d_ff": 128,
+    "seeds": [
+      0,
+      1
+    ],
+    "steps": 2000,
+    "batch_size": 96,
+    "lr": 0.003,
+    "warmup": 100,
+    "weight_decay": 0.01,
+    "eval_every": 100,
+    "time_cap_s_train": 150,
+    "probe_train_n": 20000,
+    "probe_test_n": 8000,
+    "probe_steps": 220,
+    "probe_lr": 0.05,
+    "probe_wd": 0.0001,
+    "leace_eps_frac": 0.0001,
+    "guard_tol": 0.02,
+    "n_random_controls": 12,
+    "decodable_threshold": 0.05,
+    "causal_ce_threshold": 0.05,
+    "causal_z_threshold": 2.0,
+    "sites": [
+      "resid_mid",
+      "resid_final"
+    ]
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130",
+    "matplotlib": "3.10.9"
+  },
+  "status": "done"
+}

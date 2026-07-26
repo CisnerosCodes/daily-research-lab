@@ -1,0 +1,64 @@
+# Filled config. run.py reads it. No magic constants in code.
+id: "2026-07-25_kan-feynman-symbolic"
+title: "KAN vs iso-param MLP on Feynman I.12.2: sample efficiency and symbolic recovery"
+hypothesis: "On the Feynman I.12.2 Coulomb law F = q1*q2/(4*pi*eps*r^2), a ~200-parameter KAN is more sample-efficient than iso-parameter MLPs (lower test RMSE at every training-set size, with the gap widening as n shrinks), and its learned edge functions are symbolically extractable back to the true multiplicative formula."
+seed: 0
+dataset:
+  name: "Feynman I.12.2 (Coulomb's law), synthetic"
+  source: "generated in run.py from the closed-form equation; AI-Feynman benchmark variable ranges U[1,5] for q1, q2, eps, r"
+  license: "n/a (synthetic)"
+
+equation:
+  feynman_id: "I.12.2"
+  formula: "F = q1*q2/(4*pi*eps*r^2)"
+  variables: ["q1", "q2", "eps", "r"]
+  ranges: [[1.0, 5.0], [1.0, 5.0], [1.0, 5.0], [1.0, 5.0]]
+  true_log_exponents: [1.0, 1.0, -1.0, -2.0]
+
+params:
+  # --- sample-efficiency sweep ---
+  train_sizes: [25, 50, 100, 250, 500, 1000]
+  data_seeds: [0, 1, 2]
+  n_test: 2000
+  test_seed: 999
+  standardize: true          # z-score X and y with TRAIN statistics only; RMSE reported in original units
+
+  # KAN (pykan) - sweep arm
+  kan_width: [4, 4, 1]
+  kan_grid: 5
+  kan_k: 3
+  kan_lamb: 0.0
+  kan_steps: 60
+  kan_stop_grid_update_step: 20
+  kan_init_seed: 0
+
+  # iso-param MLP baselines (tanh); param counts matched to the KAN's 200 spline params
+  mlp_deep_hidden: [11, 11]   # 199 params
+  mlp_wide_hidden: [33]       # 199 params
+  mlp_lbfgs_steps: 60
+  mlp_lbfgs_max_iter: 20
+  mlp_lbfgs_lr: 1.0
+  mlp_adam_steps: 2000
+  mlp_adam_lr: 0.003
+
+  # --- symbolic-extraction arm (separate model, raw un-standardized data) ---
+  sym_width: [4, 1, 1]        # the shape the true formula needs: sum of logs -> exp
+  sym_grid: 5
+  sym_refine_grid: 10
+  sym_n_train: 1000
+  sym_init_seeds: [0, 1, 2, 3]
+  sym_steps_stage1: 60
+  sym_steps_stage2: 40
+  sym_lamb: 0.001
+  sym_lib: ["x", "x^2", "x^3", "1/x", "1/x^2", "sqrt", "exp", "log", "tanh", "sin", "abs"]
+  sym_refit_steps: 30
+
+# Formula-fidelity verdict. Fidelity is measured by regressing log(F_pred) on
+# log(q1), log(q2), log(eps), log(r) over the test set: a true monomial gives
+# exponents (1, 1, -1, -2) with loglog R^2 = 1.
+verdict_thresholds:
+  exact_max_exp_err: 0.02
+  exact_min_loglog_r2: 0.9999
+  exact_max_nrmse: 0.01
+  approx_max_exp_err: 0.15
+  approx_max_nrmse: 0.10

@@ -1,0 +1,10 @@
+# actual deps used by run.py (versions from the run recorded in results.json["env"])
+numpy
+matplotlib
+pyyaml
+torch          # 2.13.0 CPU, single-threaded
+pykan==0.2.8   # pip install --break-system-packages pykan
+tqdm           # pykan import-time dep, not installed with pykan
+pandas         # pykan import-time dep
+scikit-learn   # pykan import-time dep
+sympy          # pykan symbolic_formula

@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**10 experiments logged.**
+**12 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -39,6 +39,8 @@ experiments/                one dated folder per experiment
 | 2026-07-25 | [TRM at nano scale: the outer refinement loop is the whole story, the inner latent recursion is not](experiments/2026-07-25_trm-nano-sudoku) | ✅ done | Hypothesis confirmed on the mechanism, refuted on the saturation claim - and the two resul |
 | 2026-07-25 | [nano-Coconut on DAG reachability: continuous thoughts need the curriculum, still lose to discrete CoT, and are not a BFS frontier](experiments/2026-07-25_coconut-toy-graph) | ✅ done | Half confirmed, half refuted, and the refuted half is the interesting one. On accuracy the |
 | 2026-07-25 | [Grokking (a+b) mod 59: spectral-entropy collapse LAGS the test-accuracy jump; only restricted loss leads](experiments/2026-07-25_grokking-modular-addition) | ✅ done | Hypothesis refuted, with a mechanism for why the opposite is reported. The classic grokkin |
+| 2026-07-25 | [The probe can lie: at matched 99%+ linear-probe accuracy, top-of-stack type costs 5.31 excess nats to erase and depth parity costs less than a random direction](experiments/2026-07-25_dyck-probe-can-lie) | ✅ done | Hypothesis confirmed for the headline feature, with two honest misses. The 27k-param model |
+| 2026-07-25 | [KAN on Feynman I.12.2: Coulomb's law recovered EXACTLY (exponent error 0.006), but the sample-efficiency claim is refuted - the KAN is 2.8x worse than an iso-param MLP at n=25 and its relative standing IMPROVES with data](experiments/2026-07-25_kan-feynman-symbolic) | ✅ done | The two halves of the KAN pitch come apart on the same equation. Symbolic recovery is EXAC |
 | 2026-07-24 | [Tsetlin Machine: does exact rule recovery break before accuracy under label noise?](experiments/2026-07-24_tsetlin-dnf-recovery) | ✅ done | Hypothesis partially refuted: exact recall of the planted clauses survives to 20% label no |
 | 2026-07-23 | [Superposition phase diagram: does feature correlation resist or reshape superposition?](experiments/2026-07-23_superposition-correlation-phase) | ✅ done | Hypothesis refuted: across the grid, raising within-pair correlation makes the model colla |
 | 2026-07-21 | [Game of Life: when does test-time recursion still generalize?](experiments/2026-07-21_gol-depth-recursion) | ✅ done | Capacity window: at H=4 tied recursion learns the exact reusable rule and extrapolates to  |

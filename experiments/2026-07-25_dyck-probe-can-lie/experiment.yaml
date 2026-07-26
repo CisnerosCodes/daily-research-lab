@@ -1,0 +1,49 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_dyck-probe-can-lie"
+title: "The probe can lie: probe accuracy vs causal effect for seven stack features in a 2-layer Dyck-2 transformer"
+hypothesis: "In a tiny transformer trained to next-token-predict Dyck-2 bracket sequences, several state variables (exact nesting depth, depth parity, second-from-top bracket type, top-of-stack recency) will be decodable by a linear probe at well-above-chance accuracy while carrying near-zero causal effect on the model's predictions, whereas only the variables the next-token decision actually requires - top-of-stack bracket type, the depth>0 indicator, and current-token identity - will be both decodable AND causally load-bearing."
+seed: 0
+dataset:
+  name: "synthetic Dyck-2 bracket sequences, 2 bracket types, max depth 10, 10-20 bracket pairs (length 20-40)"
+  source: "generated in run.py from the seed"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # --- data ---
+  n_bracket_types: 2
+  max_depth: 10
+  min_pairs: 10
+  max_pairs: 20
+  p_open: 0.6                # mean depth ~3.5, 11.7% of positions at depth 0
+  max_positions: 48          # 2*20 brackets + BOS + EOS = 42, padded to 48
+  n_train_seqs: 30000
+  n_eval_seqs: 1200          # behavioural eval set (fixed, shared by every ablation)
+  n_probe_seqs: 2000         # sequences whose activations feed the probes
+  # --- model ---
+  n_layers: 2
+  n_heads: 1
+  d_model: 32
+  d_ff: 128
+  # --- training ---
+  seeds: [0, 1]              # the whole pipeline (train + probe + erase) is repeated per seed
+  steps: 2000
+  batch_size: 96
+  lr: 0.003
+  warmup: 100
+  weight_decay: 0.01
+  eval_every: 100
+  time_cap_s_train: 150      # honest time-box (per seed): training stops early if hit
+  # --- probes ---
+  probe_train_n: 20000       # positions (drawn from the train half of the probe sequences)
+  probe_test_n: 8000         # positions from held-out SEQUENCES
+  probe_steps: 220
+  probe_lr: 0.05
+  probe_wd: 0.0001
+  # --- causal ---
+  leace_eps_frac: 0.0001     # ridge on the activation covariance before whitening
+  guard_tol: 0.02            # a feature counts as erased if a refit probe is <= majority + tol
+  n_random_controls: 12      # random rank-matched erasers per (site, rank)
+  decodable_threshold: 0.05  # probe acc must beat majority by this to count as "decodable"
+  causal_ce_threshold: 0.05  # excess nats over random erasers to count as "causally used"
+  causal_z_threshold: 2.0    # ...and it must sit >=2 sd clear of the random-eraser spread
+  sites: ["resid_mid", "resid_final"]
