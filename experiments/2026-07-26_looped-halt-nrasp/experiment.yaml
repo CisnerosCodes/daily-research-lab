@@ -1,0 +1,78 @@
+# Config for 2026-07-26_looped-halt-nrasp. run.py reads it. No magic constants in code.
+id: "2026-07-26_looped-halt-nrasp"
+title: "Does TRAINED (PonderNet-style) halting buy LENGTH generalization where inference-time entropy halting failed - or is stochastic depth all you need?"
+hypothesis: "On an n-RASP-L-style task whose required number of sequential steps grows linearly with input length (prefix-parity under a 2-token attention window: position i needs K >= i-1 loops), a weight-tied block trained with a PonderNet halting head learns to spend MORE loops on longer inputs and therefore extrapolates further in LENGTH than the same block trained at a fixed loop count - and at least matches the proven stochastic-depth recipe (k ~ U{1..K_train})."
+seed: 0
+dataset:
+  name: "synthetic prefix-parity (cumulative XOR): input BOS x_1..x_L with x_i in {0,1}, target y_i = XOR(x_1..x_i)"
+  source: "generated in run.py from the seed (torch.Generator, no external data)"
+  license: "n/a (synthetic)"
+
+params:
+  # --- model (identical across all arms except the 65-param halt head) ---
+  d_model: 64
+  n_heads: 2
+  d_ff: 256
+  attn_window: 1        # position i attends to {i-1, i} only -> reach grows exactly 1 per loop
+  pos_encoding: "nope"  # NoPE: with window 1 the band + BOS supply all positional structure,
+                        # and cumulative XOR over a 2-element window is order-invariant, so no
+                        # relative-position signal is needed. (2026-07-25_pe-length-gen-tiny
+                        # ranked ALiBi > RoPE > NoPE, but ALiBi's distance bias is a no-op inside
+                        # a 2-token band; NoPE here means "no position information at all", which
+                        # is the strongest possible length-extrapolation prior for this task.)
+  vocab: 3              # 0, 1, BOS
+  inject: true          # per-iteration input injection (adapter on [h ; e]); the winning variant
+                        # of 2026-07-25_loop-test-time-compute
+
+  # --- task / length regime ---
+  k_train: 7            # maximum loop budget seen in training
+  train_len_min: 2
+  train_len_max: 8      # = k_train + 1, the deepest instance K=7 loops can solve
+  test_len_max: 40      # 5x the longest training length; position 40 needs K=39
+  test_lengths: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 36, 40]
+  test_k_values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40]
+  k_max_test: 40        # adaptive arms may run up to this many loops at test time
+
+  # --- training ---
+  steps: 1000
+  batch_size: 128
+  lr: 0.002
+  weight_decay: 0.01
+  warmup: 100
+  grad_clip: 1.0
+  seeds: [0, 1]
+  time_cap_s_per_run: 130   # honest time-box: training stops early if hit
+
+  # --- PonderNet ---
+  ponder_lambda_prior: 0.2  # geometric prior, mean 5 steps
+  ponder_beta: 0.01         # KL(p || Geom) weight (PonderNet paper default)
+  halt_threshold: 0.5       # deterministic inference threshold
+  primary_policy: "cum_thresh"   # halt at the first step where the cumulative halting probability
+                                 # 1 - prod(1-lambda_m) reaches 0.5, i.e. the MEDIAN of the learned
+                                 # halting distribution. Reported alongside lambda_thresh
+                                 # (lambda_n >= 0.5), argmax_p, and seeded Bernoulli sampling.
+  # --- decisive control (mirrors 2026-07-25_shadow-halt-entropy-tiny) ---
+  threshold_sweep: [0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99]
+  random_exit_q: [0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9]
+                            # compute-matched RANDOM exit: halt each position with prob q per step
+                            # (geometric, carries zero information about difficulty)
+
+  # --- evaluation ---
+  eval_n: 384
+  eval_seed: 12345
+  solve_threshold: 0.95
+
+  # --- arms ---
+  arms:
+    - name: "fixed_K7"
+      kind: "fixed"
+      note: "(a) the naive baseline: tied block trained at a FIXED K=7, lengths U{2..8}"
+    - name: "stoch_depth"
+      kind: "stochastic"
+      note: "(b) the proven recipe from 2026-07-25_loop-test-time-compute: k ~ U{1..7} per batch with L = k+1 so every supervised position is exactly computable at that depth"
+    - name: "ponder"
+      kind: "ponder"
+      note: "(c) PonderNet: per-position halt head, expected-loss weighting over N=7 unrolled steps, KL to a geometric prior; lengths U{2..8}"
+    - name: "ponder_stoch"
+      kind: "ponder_stochastic"
+      note: "(d) hybrid: PonderNet loss but the unroll horizon is itself stochastic, N ~ U{L-1 .. 7} - tests whether trained halting needs the stochastic-depth ingredient to extrapolate"

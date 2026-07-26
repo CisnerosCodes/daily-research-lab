@@ -1,0 +1,31 @@
+=== 2026-07-26_looped-halt-nrasp ===
+task: prefix-parity, window 1 -> position i needs K >= i-1 loops
+train lengths U{2..8} (K_train=7), test lengths up to 40 (needs K=39), K_max_test=40
+  [fixed_K7] seed 0 ...
+      61.8s loss=0.0002 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=1.000
+  [fixed_K7] seed 1 ...
+      59.6s loss=0.0000 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=0.850
+  [stoch_depth] seed 0 ...
+      39.3s loss=0.0001 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=1.000
+  [stoch_depth] seed 1 ...
+      38.4s loss=0.0000 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=1.000
+  [ponder] seed 0 ...
+      65.5s loss=0.0091 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=0.874 ADAPT=0.732 (loops 14.53)
+  [ponder] seed 1 ...
+      65.5s loss=0.0152 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.590 Kmax=1.000 ADAPT=1.000 (loops 21.28)
+  [ponder_stoch] seed 0 ...
+      55.1s loss=0.0078 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=0.832 ADAPT=0.857 (loops 18.49)
+  [ponder_stoch] seed 1 ...
+      55.4s loss=0.0083 in-dist(L=8) bestK acc=1.000 | L=40: K7=0.602 Kmax=0.920 ADAPT=0.702 (loops 12.68)
+
+HEADLINE @ L=40 (needs 39 loops);  adaptive policy = cum_thresh
+  fixed_K7       K_train=0.602  K_max=0.925  oracle-bestK=0.925 (K=40)
+  stoch_depth    K_train=0.602  K_max=1.000  oracle-bestK=1.000 (K=40)
+  ponder         K_train=0.596  K_max=0.937  oracle-bestK=0.937 (K=40)  ADAPTIVE=0.866 (mean loops 17.90)
+  ponder_stoch   K_train=0.602  K_max=0.876  oracle-bestK=0.876 (K=40)  ADAPTIVE=0.779 (mean loops 15.59)
+  adaptive(ponder) - stoch_depth(oracle) = -0.1338
+  halt-step-vs-position slope: {'ponder': 0.6755, 'ponder_stoch': 0.5054} (required 1.0)
+  learned halt vs compute-matched RANDOM exit (max/mean delta): {'ponder': {'max_delta': 0.1567, 'mean_delta': 0.1446}, 'ponder_stoch': {'max_delta': 0.128, 'mean_delta': 0.0969}}
+  ADAPTIVE vs stoch_depth fixed-K at MATCHED mean compute: {'ponder': 0.1297, 'ponder_stoch': 0.0713}
+
+wrote results.json + chart.png in 468.6s

@@ -1,0 +1,46 @@
+# Config for 2026-07-26_swiglu-vs-gelu-isoparam. run.py reads it. No magic constants in code.
+id: "2026-07-26_swiglu-vs-gelu-isoparam"
+title: "SwiGLU vs GELU at equal parameters: how much of the folk SwiGLU win is just the extra matrix?"
+hypothesis: >-
+  SwiGLU's edge over GELU shrinks (or vanishes into seed noise) once d_ff is cut by the
+  standard 2/3 factor so that the three-matrix GLU FFN has the same parameter count as the
+  two-matrix baseline; the commonly demoed SwiGLU-at-4x win is substantially a
+  parameter-count artefact.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters ---
+params:
+  # FFN arms. kind: mlp (2 matrices, d->d_ff->d) or swiglu (3 matrices, gate*up then down).
+  # d_ff is given exactly so the iso-param pair can be verified, not inferred.
+  #   gelu_4x    : 2 * d * (4d)     = 8 d^2   FFN weights
+  #   swiglu_iso : 3 * d * (8d/3)  ~= 8 d^2   FFN weights  <-- the control most demos skip
+  #   swiglu_4x  : 3 * d * (4d)     = 12 d^2  FFN weights  <-- the UNFAIR comparison
+  #   relu_4x    : 2 * d * (4d)     = 8 d^2   FFN weights  <-- old-school reference
+  arms:
+    - {name: "gelu_4x",    kind: "mlp",    act: "gelu", d_ff: 512}
+    - {name: "swiglu_iso", kind: "swiglu", act: "silu", d_ff: 341}
+    - {name: "swiglu_4x",  kind: "swiglu", act: "silu", d_ff: 512}
+    - {name: "relu_4x",    kind: "mlp",    act: "relu", d_ff: 512}
+  # the two arms whose parameter counts must match within iso_param_tol_frac
+  iso_pair: ["gelu_4x", "swiglu_iso"]
+  iso_param_tol_frac: 0.01
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  n_head: 4
+  block_size: 96
+  batch_size: 16
+  steps: 700
+  lr: 0.003
+  warmup: 70
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480

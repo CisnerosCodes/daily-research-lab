@@ -1,0 +1,377 @@
+{
+ "id": "2026-07-26_looped-halt-nrasp",
+ "date": "2026-07-26",
+ "title": "Trained PonderNet halting vs stochastic depth for LENGTH generalization: the halt head learns real difficulty (allocation extrapolates 5x, +0.130 over stochastic depth at MATCHED compute, +0.145 over a compute-matched random exit) but stochastic depth is simply PERFECT at 5x train length (1.000 token acc AND 1.000 exact match), so the ceiling is not adaptive",
+ "slug": "looped-halt-nrasp",
+ "hypothesis": "On an n-RASP-L-style task whose required number of sequential steps grows linearly with input length (prefix-parity under a 2-token attention window: position i needs K >= i-1 loops), a weight-tied block trained with a PonderNet halting head learns to spend MORE loops on longer inputs and therefore extrapolates further in LENGTH than the same block trained at a fixed loop count - and at least matches the proven stochastic-depth recipe (k ~ U{1..K_train}).",
+ "question": "Does TRAINED halting (learned per-step halt probability with PonderNet expected-loss weighting and a KL to a geometric prior) succeed where the INFERENCE-TIME entropy halting of 2026-07-25_shadow-halt-entropy-tiny failed - and does it match or beat the stochastic-depth recipe of 2026-07-25_loop-test-time-compute on LENGTH (not just depth) generalization?",
+ "method": "Task engineered so that required depth is an ANALYTIC GROUND TRUTH PER POSITION. Prefix-parity (cumulative XOR): input [BOS, x_1..x_L], target y_i = XOR(x_1..x_i), with BANDED CAUSAL attention of WINDOW 1 - every position attends only to itself and its immediate predecessor - so after K applications of the tied block position i has only seen bits [i-K, i] and position i is solvable IFF K >= i-1. A length-L input therefore requires exactly L-1 loops, length generalization and depth generalization are the same axis by construction, and the halting head's allocation can be scored against truth as a SLOPE (measured 0.68 vs required 1.0) rather than judged only by downstream accuracy. Architecture: one pre-LN transformer block, d_model 64, 2 heads, d_ff 256, NoPE, weight-tied and applied K times with recurrent-depth-style per-iteration input injection (adapter on [h ; e]); 58,370 params, the two ponder arms adding a 65-param halt head (+0.11%). NoPE rather than ALiBi (which 2026-07-25_pe-length-gen-tiny ranked best) because inside a 2-token band a distance bias is a no-op and XOR over the window is order-invariant, so NoPE here means no position information at all - the strongest available length-extrapolation prior for this task. Four arms x 2 seeds = 8 runs, all with identical hyperparameters (1000 steps, batch 128, AdamW lr 2e-3 with 100-step warmup + cosine, wd 0.01, grad clip 1.0): (a) fixed_K7 - fixed K=7, lengths L ~ U{2..8}; (b) stoch_depth - the proven recipe, k ~ U{1..7} per batch with L = k+1 so every supervised position is exactly computable at that depth; (c) ponder - PonderNet with a per-position halt head over N=7 unrolled steps, loss sum_n p_n * CE_n + 0.01 * KL(p || truncated Geom(0.2)), lengths L ~ U{2..8}; (d) ponder_stoch - crossed hybrid, PonderNet loss with a STOCHASTIC unroll horizon N ~ U{L-1..7}, which is the only way to answer 'is stochastic depth all you need' rather than 'is PonderNet worse'. Evaluation: train lengths <= 8, test lengths up to 40 (5x extrapolation; the deepest position needs 39 loops), K_max_test = 40, 384 fixed held-out sequences from a disjoint seed. Because attention is causal the prediction at position i is identical for any total length >= i, so ONE length-40 batch yields every shorter length EXACTLY; this is asserted in code by prefix_consistency_check against a genuine short batch and passes for all 8 runs. Four inference policies reported: cumulative halting probability >= 0.5 (primary; the median of the learned halting distribution), lambda_n >= 0.5, argmax p_n, and seeded Bernoulli sampling - they agree within 0.013. TWO CONTROLS carry the argument: (i) a threshold sweep tracing an accuracy-vs-compute frontier for the learned signal against a COMPUTE-MATCHED RANDOM EXIT (per-step geometric halting, zero information about difficulty), interpolated to identical mean loops - the exact control that killed inference-time entropy halting in 2026-07-25_shadow-halt-entropy-tiny; and (ii) an ISO-COMPUTE comparison interpolating every arm's fixed-K frontier to the adaptive arm's mean loops per position, because the naive table gives the fixed arms 40 loops and the adaptive arm only the ~18 it chooses.",
+ "architecture": "one weight-tied pre-LN transformer block, d_model 64, 2 heads, d_ff 256, banded causal attention window 1, NoPE, per-iteration input injection adapter on [h ; e], final LayerNorm + 2-way readout; 58,370 params (58,435 with the PonderNet halt head)",
+ "dataset": {
+  "name": "synthetic prefix-parity (cumulative XOR): input BOS x_1..x_L with x_i in {0,1}, target y_i = XOR(x_1..x_i)",
+  "source": "generated in run.py from the seed (torch.Generator, no external data)",
+  "license": "n/a (synthetic)"
+ },
+ "task": "n-RASP-L-style prefix-parity; token accuracy and whole-sequence exact match vs TEST LENGTH per arm (train L<=8, test L<=40), mean loops used per length for the adaptive arms, and halt step vs position against the analytic requirement i-1",
+ "framework": "torch 2.13 (CPU, single thread)",
+ "seed": 0,
+ "compute": "CPU 1 thread, 469s (7.8 min) for 8 training runs + eval + threshold/random-exit frontiers (~24 min total machine time including one aborted run whose test range saturated and one crashed on a plotting bug)",
+ "metrics": {
+  "headline": "token accuracy and exact match vs test LENGTH at 5x train length (train L<=8, test L=40, 39 loops required), adaptive halting vs stochastic depth",
+  "verdict": "hypothesis refuted on the ceiling, confirmed on the mechanism",
+  "n_params": {
+   "fixed_K7": 58370,
+   "stoch_depth": 58370,
+   "ponder": 58435,
+   "ponder_stoch": 58435
+  },
+  "halt_head_param_overhead_frac": 0.0011,
+  "train_len_max": 8,
+  "k_train": 7,
+  "test_len_max": 40,
+  "k_max_test": 40,
+  "extrapolation_ratio": 5.0,
+  "required_loops_at_longest": 39,
+  "all_arms_perfect_in_distribution": true,
+  "prefix_consistency_check_passed_all_runs": true,
+  "token_acc_at_L40_at_Kmax40": {
+   "stoch_depth": 1.0,
+   "ponder": 0.9371,
+   "fixed_K7": 0.9247,
+   "ponder_stoch": 0.8759
+  },
+  "exact_match_at_L40_at_Kmax40": {
+   "stoch_depth": 1.0,
+   "ponder": 0.7955,
+   "fixed_K7": 0.6159,
+   "ponder_stoch": 0.3893
+  },
+  "best_adaptive_arm": "ponder",
+  "adaptive_token_acc_at_L40": 0.8662,
+  "adaptive_exact_match_at_L40": 0.5052,
+  "adaptive_mean_loops_at_L40": 17.904,
+  "adaptive_minus_stochdepth_token_acc_at_longest_MAX_COMPUTE": -0.1338,
+  "adaptive_minus_stochdepth_exact_match_at_longest_MAX_COMPUTE": -0.4948,
+  "adaptive_minus_stochdepth_fixedK_at_MATCHED_compute_at_longest": {
+   "ponder": 0.1297,
+   "ponder_stoch": 0.0713
+  },
+  "adaptive_minus_own_fixedK_at_MATCHED_compute_at_longest": {
+   "ponder": 0.144,
+   "ponder_stoch": 0.0735
+  },
+  "adaptive_minus_stochdepth_fixedK_at_MATCHED_compute_at_L20": 0.1557,
+  "learned_halt_minus_compute_matched_RANDOM_exit_at_L40": {
+   "ponder": {
+    "max": 0.1567,
+    "mean": 0.1446,
+    "range_over_frontier": [
+     0.1053,
+     0.1567
+    ]
+   },
+   "ponder_stoch": {
+    "max": 0.128,
+    "mean": 0.0969
+   }
+  },
+  "halt_step_vs_position_slope": {
+   "ponder": 0.6755,
+   "ponder_stoch": 0.5054
+  },
+  "required_slope": 1.0,
+  "halt_step_position1_to_position40": {
+   "ponder": [
+    3.0,
+    29.087
+   ],
+   "ponder_stoch": [
+    2.0,
+    21.912
+   ]
+  },
+  "expected_steps_position1_to_position40": {
+   "ponder": [
+    3.146,
+    29.238
+   ],
+   "ponder_stoch": [
+    2.596,
+    22.541
+   ]
+  },
+  "frac_positions_running_to_kmax": {
+   "ponder": 0.0221,
+   "ponder_stoch": 0.0019
+  },
+  "collapsed_to_fixed_depth": false,
+  "collapsed_to_max_depth": false,
+  "mean_lambda_step1_to_step40": {
+   "ponder": [
+    0.0065,
+    0.4092
+   ],
+   "ponder_stoch": [
+    0.008,
+    0.3634
+   ]
+  },
+  "adaptive_policy_agreement_at_L40": {
+   "cum_thresh": 0.8662,
+   "lambda_thresh": 0.8795,
+   "argmax_p": 0.8622,
+   "sampled": 0.8682
+  },
+  "token_acc_per_seed_at_L40_Kmax": {
+   "fixed_K7": [
+    1.0,
+    0.8495
+   ],
+   "stoch_depth": [
+    1.0,
+    1.0
+   ],
+   "ponder": [
+    0.8743,
+    1.0
+   ],
+   "ponder_stoch": [
+    0.8316,
+    0.9202
+   ]
+  },
+  "adaptive_token_acc_per_seed_at_L40": {
+   "ponder": [
+    0.7324,
+    1.0
+   ],
+   "ponder_stoch": [
+    0.8568,
+    0.7016
+   ]
+  },
+  "stoch_depth_per_position_acc_at_K40_all_40_positions": 1.0,
+  "ponder_stoch_breaks_in_distribution_depth_invariance": {
+   "L8_acc_at_K14": 1.0,
+   "L8_acc_at_K40": 0.9023
+  },
+  "token_acc_vs_length_at_Kmax40": {
+   "lengths": [
+    2,
+    4,
+    6,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28,
+    32,
+    36,
+    40
+   ],
+   "fixed_K7": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.9946,
+    0.9849,
+    0.9723,
+    0.9593,
+    0.9471,
+    0.9366,
+    0.9289,
+    0.9247
+   ],
+   "stoch_depth": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "ponder": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.9998,
+    0.9952,
+    0.9875,
+    0.9782,
+    0.9678,
+    0.957,
+    0.947,
+    0.9371
+   ],
+   "ponder_stoch": [
+    1.0,
+    0.957,
+    0.9254,
+    0.9023,
+    0.8703,
+    0.8624,
+    0.8664,
+    0.8763,
+    0.8882,
+    0.8917,
+    0.8855,
+    0.8759
+   ],
+   "ponder_ADAPTIVE": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.998,
+    0.9871,
+    0.9616,
+    0.9333,
+    0.9109,
+    0.8921,
+    0.8783,
+    0.8662
+   ],
+   "ponder_ADAPTIVE_mean_loops": [
+    3.31,
+    3.95,
+    4.77,
+    5.68,
+    7.6,
+    9.5,
+    11.23,
+    12.77,
+    14.19,
+    15.5,
+    16.73,
+    17.9
+   ]
+  },
+  "train_seconds_per_arm": {
+   "fixed_K7": 61.2,
+   "stoch_depth": 38.3,
+   "ponder": 67.0,
+   "ponder_stoch": 54.8
+  },
+  "train_steps": 1000,
+  "batch_size": 128,
+  "seeds": [
+   0,
+   1
+  ],
+  "n_runs": 8,
+  "eval_n": 384
+ },
+ "result_summary": "TWO-SIDED, and which side matters depends on whether you can afford max depth. (1) STOCHASTIC DEPTH IS SIMPLY PERFECT AND WINS THE CEILING. Trained with k ~ U{1..7} and L=k+1 on lengths <=8, the 58,370-param tied block scores 1.000 token accuracy AND 1.000 whole-sequence exact match at EVERY test length from 2 to 40 - 5x the longest training length, 39 loops required at the deepest position - on both seeds and at all 40 positions. The best adaptive arm reaches 0.866 / 0.505, i.e. -0.134 token accuracy and -0.495 exact match. So the backlog's 'stochastic depth is all you need' outcome is what happened. (2) BUT TRAINED HALTING IS EMPHATICALLY NOT THE NULL THAT INFERENCE-TIME HALTING WAS - this is the direct answer to 2026-07-25_shadow-halt-entropy-tiny. The PonderNet halt head, trained only on positions 1-8, learns a difficulty-tracking allocation that EXTRAPOLATES 5x: mean halt step climbs monotonically 3.0 (position 1) -> 29.1 (position 40), E[steps] 3.1 -> 29.2. It does not collapse to a fixed depth and it does not collapse to max depth (only 2.2% of positions run all 40 loops - the shallow-collapse and max-collapse failure modes were both predicted and both absent). Against the SAME compute-matched RANDOM-EXIT control that killed entropy halting, the learned signal wins by +0.105 to +0.157 token accuracy at EVERY point on its threshold-swept frontier (mean +0.145), where entropy halting had been <= 0. The difference between a worthless halting signal and a useful one is training it. (3) AT MATCHED COMPUTE THE ORDERING INVERTS AND ADAPTIVE WINS OUTRIGHT. The headline table gives the fixed arms 40 loops and the adaptive arm the 17.9 it chooses. Interpolating every arm's fixed-K frontier to 17.9 loops at L=40: ponder-ADAPTIVE 0.8662 vs stoch_depth fixed-K 0.7365 (+0.130), fixed_K7 0.7318 (+0.134), ponder's own fixed-K frontier 0.7222 (+0.144), random exit 0.7136 (+0.153). Same at L=20 (+0.156). Adaptive halting is a genuine accuracy-per-loop Pareto win over every non-adaptive arm; it buys 55% fewer loops for -0.071 accuracy against running the same weights to K=40. (4) WHY THE CEILING IS STILL LOST: THE SLOPE IS 0.68 AND NEEDS TO BE 1.0. Required loops per position is exactly i-1 (slope 1.0, intercept -1); the learned allocation is slope 0.68, intercept ~+2.4, so the head OVER-spends in distribution and UNDER-spends out of it, crossing the requirement at i~11 and buying 29 loops at position 40 where 39 are needed. Any policy that halts early is capped below 1.000 by construction on this task. (5) MECHANISM: PONDERNET'S EXPECTED LOSS STARVES THE DEEP STEPS. The learned hazard lambda_n rises 0.007 -> 0.409 over 40 steps, so the halting distribution concentrates mass early - and that same p_n is what weights the gradient in sum_n p_n * CE_n, leaving deep-step readouts undertrained, whereas stochastic depth weights every depth 1..K equally. The crossed hybrid confirms it by making things WORSE, not better: ponder_stoch is the worst arm at every long length (0.876 / 0.389 at L=40) and is the only arm to break IN-DISTRIBUTION depth-invariance, its L=8 accuracy decaying 1.000 -> 0.902 as test loops go 14 -> 40. The halting objective also costs the underlying model outright: ponder at K=40 is 0.937 against stoch_depth's 1.000. (6) INCIDENTAL CORRECTION TO OUR OWN REGISTRY: 'fixed-K training fails past its trained depth' (2026-07-25_loop-test-time-compute, frontier 1.00 -> 0.55) is really 'fixed-K with training LENGTH locked to training DEPTH fails'. Here fixed_K7 trained on L ~ U{2..8} reaches 0.925 at L=40, because easy positions must stay correct through 7 loops, which is already an implicit depth-invariance pressure. It remains the weakest non-adaptive arm on exact match (0.616 vs 1.000) and the least seed-stable (1.000 / 0.850), and its per-position accuracy carries a curious even/odd oscillation at large positions (~0.82 odd vs ~0.90 even) that the stochastic arm does not have. CAVEATS: 2 seeds, one task, one architecture; ponder's adaptive accuracy at L=40 is bimodal across seeds (0.732, 1.000) and one ponder seed does match stoch_depth, whereas the stoch_depth result (1.000/1.000 both seeds, all positions) is the tight one; stoch_depth's training length marginal comes from L=k+1 rather than an independent draw (the literal published recipe, and it is the winning arm, so the confound cannot manufacture its length-axis gap, but the data distribution is not fully matched); 'mean loops used' is an analytic compute proxy measured from halting decisions while all positions are computed to K_max, no wall-clock saving is claimed; and the geometric prior (lambda_p=0.2, beta=0.01) is the PonderNet default and was NOT tuned - a prior matched to the task's true mean depth is the most likely way to raise the 0.68 slope and is untested.",
+ "status": "done",
+ "novelty_check": {
+  "checked_on": "2026-07-26",
+  "verdict": "partial-prior-art",
+  "sources": [
+   {
+    "name": "web",
+    "query": "PonderNet adaptive halting looped transformer length generalization n-RASP-L",
+    "hits": 9
+   },
+   {
+    "name": "web",
+    "query": "\"Looped Transformers for Length Generalization\" adaptive number of steps stopping criterion",
+    "hits": 10
+   },
+   {
+    "name": "web",
+    "query": "PonderNet halting collapses to maximum steps does not correlate with problem difficulty criticism",
+    "hits": 7
+   },
+   {
+    "name": "web",
+    "query": "adaptive computation time halting head learned vs random exit compute-matched control ACT ponder small transformer parity",
+    "hits": 9
+   },
+   {
+    "name": "web",
+    "query": "stochastic depth training recurrent depth transformer extrapolate more iterations than trained randomized unrolling",
+    "hits": 7
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2409.15647v5 - what stopping criterion, trained halting head or oracle/confidence, train/test lengths, model size, does it compare against stochastic depth?",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2606.29983v1 - is 'learned stochastic stopping' a trained halting head or a stochastic depth schedule, does it test LENGTH generalization, is there a compute-matched random-exit control?",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "ar5iv.labs.arxiv.org/html/2107.05407 - does PonderNet evaluate parity and extrapolation, do step counts correlate with difficulty?",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/abs/2607.20519 - FAILED, proxy 429/403 on five attempts",
+    "hits": 0
+   },
+   {
+    "name": "script",
+    "query": "scripts/novelty_check.py 'PonderNet trained halting looped transformer length generalization parity'",
+    "hits": 0
+   }
+  ],
+  "conclusion": "The mechanism, the task family and the head-to-head each exist in the literature; the combination and the controls do not. 2409.15647 (Looped Transformers for Length Generalization, UW-Madison-Lee-Lab/looped-tf) is the n-RASP-L source and was fetched in full: it trains looped transformers on parity/copy/binary-addition at lengths 1-20 and tests past 40 with GPT-2 blocks at d=256 and NoPE, but its stopping rules are an ORACLE ('assume the number of steps needed is given') or a MAXIMUM-CONFIDENCE criterion - it does NOT train a halting head and does NOT compare against a stochastic-depth schedule. 2107.05407 (PonderNet) supplies the halting mechanism itself and claims extrapolation success. 2606.29983 ('Stabilizing Extrapolation in Looped Transformers via Learned Stochastic Stopping') is the closest head-to-head and was fetched: its RL-Halting learns a stopping distribution by REINFORCE and does evaluate length generalization (train n<20, test n>=20) on binary addition / Dyck-1 / unique-set / copy with 3-layer tied transformers against hand-designed stochastic schedules - but the halting is REINFORCE-trained rather than PonderNet, and there is no compute-matched random-exit control. 2607.20519 ('Adaptive Depth in Looped Transformers: Diagnosing Learned Halting Gates and Trajectory Readouts') is a title-level match and probably the nearest work, but could NOT be verified - arxiv.org/abs and /html both returned proxy 429/403 across five attempts, the same unavailability flagged in 2026-07-25_shadow-halt-entropy-tiny - so it stands as an unresolved prior-art risk. What appears unreported: (i) required depth known ANALYTICALLY PER POSITION via a window-1 attention band, which lets the halting head's allocation be scored as a slope (0.68 measured against 1.0 required) instead of inferred from downstream accuracy; (ii) the compute-matched RANDOM-EXIT control - the control that killed inference-time entropy halting in our own registry - applied to a TRAINED halting head, which it passes (+0.145 mean) while the arm still loses the ceiling; (iii) a direct PonderNet-vs-stochastic-depth head-to-head at 0.058M params on CPU with the crossed hybrid arm; (iv) the iso-compute inversion (adaptive +0.130 over stochastic depth's fixed-K frontier at matched mean loops, while -0.134 at max compute); (v) the mechanistic diagnosis that the expected-loss weighting starves deep-step readouts, evidenced by the hybrid breaking in-distribution depth-invariance; (vi) the correction that fixed-K training does NOT fail when the training length distribution is decoupled from the training depth. arXiv/OpenAlex APIs 403 from this environment (scripts/novelty_check.py returned 'unchecked'); the verdict rests on 5 web searches plus 3 successful full-text fetches. The 'no prior compute-matched random-exit control on a trained halting head' claim is a negative search result, not an exhaustive review, and is weakened by the unverifiable 2607.20519.",
+  "sources_note": "arXiv/OpenAlex APIs 403 from this environment. Verdict rests on WebSearch plus direct fetches of arxiv.org/html/2409.15647v5, arxiv.org/html/2606.29983v1 and ar5iv 2107.05407. arXiv 2607.20519 remains unverifiable from here (proxy 429/403 on five attempts) and is flagged as an unresolved prior-art risk."
+ },
+ "prior_art": [
+  "https://arxiv.org/abs/2409.15647",
+  "https://github.com/UW-Madison-Lee-Lab/looped-tf",
+  "https://arxiv.org/abs/2107.05407",
+  "https://arxiv.org/abs/2606.29983",
+  "https://arxiv.org/abs/2607.20519",
+  "https://arxiv.org/pdf/1603.08983"
+ ],
+ "related_ids": [
+  "2026-07-25_loop-test-time-compute",
+  "2026-07-25_shadow-halt-entropy-tiny",
+  "2026-07-25_pe-length-gen-tiny",
+  "2026-07-25_filler-vs-recur",
+  "2026-07-25_shadow-loop-vs-depth-isoflop",
+  "2026-07-25_trm-nano-sudoku"
+ ],
+ "links": {
+  "folder": "experiments/2026-07-26_looped-halt-nrasp",
+  "results_json": "experiments/2026-07-26_looped-halt-nrasp/results.json",
+  "chart": "experiments/2026-07-26_looped-halt-nrasp/chart.png",
+  "readme": "experiments/2026-07-26_looped-halt-nrasp/README.md"
+ },
+ "tags": [
+  "latent-reasoning",
+  "looped-transformer",
+  "weight-tied",
+  "recurrent-depth",
+  "pondernet",
+  "adaptive-computation-time",
+  "halting",
+  "stochastic-depth",
+  "length-generalization",
+  "n-rasp-l",
+  "parity",
+  "test-time-compute",
+  "nope",
+  "banded-attention",
+  "compute-matched-control",
+  "iso-compute",
+  "cpu-only",
+  "negative-result",
+  "hypothesis-refuted",
+  "shadow-track"
+ ]
+}

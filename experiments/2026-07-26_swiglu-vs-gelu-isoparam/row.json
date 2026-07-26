@@ -1,0 +1,269 @@
+{
+  "id": "2026-07-26_swiglu-vs-gelu-isoparam",
+  "date": "2026-07-26",
+  "title": "SwiGLU vs GELU at equal parameters: the edge does NOT shrink - 78% of the folk margin survives the iso-param correction, and the extra 31% of params buys almost nothing",
+  "slug": "swiglu-vs-gelu-isoparam",
+  "hypothesis": "SwiGLU's edge over GELU shrinks (or vanishes into seed noise) once d_ff is cut by the standard 2/3 factor so that the three-matrix GLU FFN has the same parameter count as the two-matrix baseline; the commonly demoed SwiGLU-at-4x win is substantially a parameter-count artefact.",
+  "question": "At matched parameters (GELU with d_ff = 4*d_model vs SwiGLU with d_ff = (8/3)*d_model), is the SwiGLU advantage in val bits-per-character seed-separated or noise - and what fraction of the margin shown by the UNFAIR demo comparison (SwiGLU at d_ff = 4*d_model, +31% params) is bought with parameters rather than with the gating nonlinearity?",
+  "method": "nanoGPT-style 2-layer pre-norm decoder-only char LM on tiny-shakespeare at d_model=128, 4 heads, block size 96, learned absolute positions, no biases, untied head. Only the FFN block varies, over four arms: (a) gelu_4x = W2.gelu(Wx) at d_ff=512; (b) swiglu_iso = W2.(silu(Wx) * Vx) at d_ff=341, i.e. Shazeer's standard 2/3 correction d_ff=(8/3)*d_model=341.33 rounded down; (c) swiglu_4x = same GLU FFN at d_ff=512, the parameter-advantaged comparison most tutorials and blog demos actually run; (d) relu_4x = W2.relu(Wx) at d_ff=512, the old-school reference. MATCHING POLICY: a GLU FFN has three weight matrices (gate W, up V, down W2) where a vanilla FFN has two, so at equal d_ff it carries 1.5x the FFN weights; setting d_ff=(8/3)*d for the GLU arm equalises both parameters (3*d*(8d/3) = 8d^2 = 2*d*4d) and forward MACs. Verified in-run and asserted, not assumed: the iso pair is 423,424 (gelu_4x) vs 423,168 (swiglu_iso), a relative difference of 0.0605%, well inside the 1% tolerance; FFN MACs/token are 262,144 vs 261,888. The rounding of 341.33 down to 341 leaves swiglu_iso 256 parameters BELOW the baseline, i.e. very slightly handicapped rather than favoured. swiglu_4x carries +30.96% total parameters and +50% FFN parameters. Init cannot be shared across arms (the FFN shapes differ by construction), so pairing is achieved instead by replaying an IDENTICAL batch stream across all four arms at each seed, and the per-seed spread is used as the error bar. Iso-hyperparameter otherwise: 700 steps, batch 16 x 96 tokens (1.075M tokens/run), AdamW lr 3e-3 with 70-step warmup and cosine decay to 10%, wd 0.1 on 2-D weights, grad clip 1.0. 3 seeds x 4 arms = 12 runs. Metric is val bits per character on a fixed 46,080-char held-out slice. Post-hoc derived analysis from the stored training curves and per-run seconds: an approximate wall-clock-matched comparison (who is ahead inside gelu_4x's training-time budget), reported as indicative because it uses train loss and truncates a cosine schedule written for 700 steps.",
+  "architecture": "2-layer pre-norm decoder-only transformer, d_model=128, 4 heads, block size 96, learned absolute positions, no biases, untied output head; FFN swapped between 2-matrix (gelu/relu) and 3-matrix GLU (silu gate); 423,424 params for gelu_4x and relu_4x, 423,168 for swiglu_iso, 554,496 for swiglu_4x",
+  "dataset": {
+    "name": "tiny-shakespeare (character level, V=65)",
+    "source": "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt",
+    "license": "public domain text; char-rnn repo MIT",
+    "hash": "md5:6fb458f1232090904fb40fe944165e91"
+  },
+  "task": "autoregressive character-level language modelling; val bits/character by FFN variant at matched parameter count",
+  "framework": "torch 2.13 (CPU, single thread)",
+  "seed": 0,
+  "compute": "CPU 1 thread, 708s (11.8 min) for 12 training runs + eval",
+  "metrics": {
+    "headline": "val bpc, GELU-4x vs SwiGLU-8/3x at matched parameters, with the param-advantaged SwiGLU-4x and ReLU-4x alongside",
+    "iso_param_verdict": "seed-separated: SwiGLU wins at iso-param",
+    "iso_param_pair": [
+      "gelu_4x",
+      "swiglu_iso"
+    ],
+    "iso_param_counts": {
+      "gelu_4x": 423424,
+      "swiglu_iso": 423168
+    },
+    "iso_param_rel_diff": 0.000605,
+    "iso_param_within_1pct": true,
+    "n_params_by_arm": {
+      "gelu_4x": 423424,
+      "swiglu_iso": 423168,
+      "swiglu_4x": 554496,
+      "relu_4x": 423424
+    },
+    "ffn_params_by_arm": {
+      "gelu_4x": 262144,
+      "swiglu_iso": 261888,
+      "swiglu_4x": 393216,
+      "relu_4x": 262144
+    },
+    "ffn_macs_per_token_by_arm": {
+      "gelu_4x": 262144,
+      "swiglu_iso": 261888,
+      "swiglu_4x": 393216,
+      "relu_4x": 262144
+    },
+    "val_bpc_mean_by_arm": {
+      "gelu_4x": 2.84919,
+      "swiglu_iso": 2.71128,
+      "swiglu_4x": 2.6722,
+      "relu_4x": 2.7966
+    },
+    "val_bpc_per_seed_by_arm": {
+      "gelu_4x": [
+        2.83572,
+        2.86781,
+        2.84404
+      ],
+      "swiglu_iso": [
+        2.69795,
+        2.68239,
+        2.7535
+      ],
+      "swiglu_4x": [
+        2.65118,
+        2.66965,
+        2.69578
+      ],
+      "relu_4x": [
+        2.78311,
+        2.78666,
+        2.82002
+      ]
+    },
+    "val_bpc_seed_spread_by_arm": {
+      "gelu_4x": 0.03209,
+      "swiglu_iso": 0.07111,
+      "swiglu_4x": 0.0446,
+      "relu_4x": 0.03691
+    },
+    "mean_seed_spread_bpc": 0.04618,
+    "delta_swiglu_iso_minus_gelu4x": {
+      "mean": -0.13791,
+      "std": 0.04744,
+      "per_seed": {
+        "0": -0.13777,
+        "1": -0.18542,
+        "2": -0.09054
+      },
+      "all_seeds_same_sign": true
+    },
+    "delta_swiglu_4x_minus_gelu4x": {
+      "mean": -0.17699,
+      "std": 0.02579,
+      "per_seed": {
+        "0": -0.18454,
+        "1": -0.19816,
+        "2": -0.14826
+      },
+      "all_seeds_same_sign": true
+    },
+    "delta_relu4x_minus_gelu4x": {
+      "mean": -0.05259,
+      "std": 0.02857,
+      "per_seed": {
+        "0": -0.05261,
+        "1": -0.08115,
+        "2": -0.02402
+      },
+      "all_seeds_same_sign": true
+    },
+    "delta_swiglu_4x_minus_swiglu_iso": {
+      "mean": -0.03908,
+      "std": 0.02346,
+      "all_seeds_same_sign": true
+    },
+    "iso_gap_over_mean_seed_spread": 2.99,
+    "swiglu_4x_param_excess_frac": 0.30955,
+    "swiglu_4x_ffn_param_excess_frac": 0.5,
+    "frac_of_swiglu4x_margin_surviving_isoparam": 0.7792,
+    "frac_of_swiglu4x_margin_attributable_to_params": 0.2208,
+    "ranking_best_first": [
+      "swiglu_4x",
+      "swiglu_iso",
+      "relu_4x",
+      "gelu_4x"
+    ],
+    "seeds_agree_on_best": true,
+    "ranking_identical_in_every_seed": true,
+    "arm_spread_bpc": 0.17699,
+    "final_train_loss_nats_by_arm": {
+      "gelu_4x": 1.88833,
+      "swiglu_iso": 1.75727,
+      "swiglu_4x": 1.7346,
+      "relu_4x": 1.83813
+    },
+    "train_seconds_mean_by_arm": {
+      "gelu_4x": 48.8,
+      "swiglu_iso": 55.4,
+      "swiglu_4x": 76.1,
+      "relu_4x": 51.3
+    },
+    "wall_clock_matched_approx": {
+      "reference_arm": "gelu_4x",
+      "budget_seconds": 48.8,
+      "note": "indicative only: uses smoothed TRAIN bpc and truncates a cosine schedule written for 700 steps",
+      "slowdown_vs_gelu4x": {
+        "swiglu_iso": 1.1352,
+        "swiglu_4x": 1.5594,
+        "relu_4x": 1.0512
+      },
+      "steps_within_budget": {
+        "gelu_4x": 700,
+        "swiglu_iso": 616,
+        "swiglu_4x": 448,
+        "relu_4x": 665
+      },
+      "delta_train_bpc_vs_gelu4x_at_budget": {
+        "swiglu_iso": -0.1267,
+        "swiglu_4x": 0.0895,
+        "relu_4x": -0.0306
+      }
+    },
+    "train_steps": 700,
+    "tokens_per_run": 1075200,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "n_runs": 12,
+    "eval_chars": 46080,
+    "shared_batch_stream_per_seed": true
+  },
+  "result_summary": "HYPOTHESIS REFUTED - the iso-parameter control does not dissolve SwiGLU's advantage, it removes about a fifth of it. At exactly matched parameters (423,424 for GELU-4x vs 423,168 for SwiGLU-8/3x, 0.0605% apart, and iso-MAC to 0.1%) SwiGLU wins by -0.1379 val bpc (2.7113 vs 2.8492), with all three seeds agreeing in sign and the gap at 2.99x the mean within-arm seed spread (0.0462) - verdict 'seed-separated'. THE NUMBER THIS EXPERIMENT EXISTS TO PRODUCE: the unfair demo comparison (SwiGLU at d_ff=4*d_model, +30.96% total params, +50% FFN params) beats GELU-4x by -0.1770 bpc, so 77.9% of the folk margin SURVIVES the parameter correction and only 22.1% is attributable to parameter count. The premise behind the hypothesis is wrong here by roughly 4x. Equivalently: growing SwiGLU from d_ff=341 to d_ff=512 (+31% params, +50% FFN FLOPs) buys just 0.039 bpc, less than the mean seed spread - the extra width is nearly worthless while the gating is worth 0.138. The arm ranking is IDENTICAL in every seed: swiglu_4x 2.6722 < swiglu_iso 2.7113 < relu_4x 2.7966 < gelu_4x 2.8492, no seed inverts any pair. SECONDARY FINDING: ReLU-4x beats GELU-4x at identical parameters by 0.0526 bpc in all three seeds - Shazeer's Table 1 has ReLU nominally ahead of GELU too (1.677 vs 1.679) but inside noise; here the sign is consistent and the gap is about one seed spread, so at this scale GELU is the weakest of the three activations tested and the ReLU->GELU step of the folk progression is much less load-bearing than the vanilla->gated step. MECHANISM: this is a fitting effect, not a regularisation effect - train loss orders exactly like val loss (1.888 gelu / 1.838 relu / 1.757 swiglu_iso / 1.735 swiglu_4x nats), so the gated FFN fits faster at the same parameter count rather than generalising better. WALL CLOCK: iso-param and iso-MAC is not iso-seconds - three skinnier GEMMs plus an elementwise product cost 1.135x GELU's seconds/step, and swiglu_4x costs 1.559x. Inside GELU's 48.8s budget swiglu_iso completes 616/700 steps and is still ahead by -0.127 train bpc (the win survives a CPU-seconds budget), but swiglu_4x completes only 448 steps and is +0.090 WORSE than GELU at matched seconds - the param-advantaged configuration wins per step and loses per second. Caveats: (1) EARLY TRAINING - 700 steps / 1.08M tokens leaves every arm at bpc 2.67-2.85 against a converged tiny char LM's ~1.5-1.7, so what is measured is fitting speed at matched parameters and a faster-fitting arm need not have a lower ceiling; (2) one learning rate (3e-3) shared by all arms rather than per-arm tuned, and gated FFNs change the effective gradient scale, so part of the margin could be that 3e-3 suits SwiGLU better - a per-arm LR sweep is the cleanest next control; (3) 2 layers, one width, one corpus, 3 seeds; (4) the wall-clock-matched panel uses train loss and truncates a cosine schedule written for 700 steps, so it under-serves the truncated arms and is indicative only.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "replication",
+    "sources": [
+      {
+        "name": "web",
+        "query": "SwiGLU vs GELU iso-parameter ablation 8/3 d_ff correction small language model does SwiGLU still win",
+        "hits": 8
+      },
+      {
+        "name": "web",
+        "query": "Shazeer GLU variants improve transformer 2002.05202 parameter matched two thirds hidden layer criticism replication",
+        "hits": 9
+      },
+      {
+        "name": "web",
+        "query": "nanoGPT SwiGLU ablation 'no significant' OR 'within noise' activation function char level small model d_ff 8/3 hidden dim reduction",
+        "hits": 10
+      },
+      {
+        "name": "web",
+        "query": "'gated MLP' OR 'SwiGLU' gains disappear when parameter matched small scale study activation ablation seed variance language model",
+        "hits": 8
+      },
+      {
+        "name": "web",
+        "query": "Narang Do Transformer Modifications Transfer Across Implementations and Applications GLU variants parameter matched",
+        "hits": 8
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/pdf/2002.05202 - does Shazeer apply the 2/3 d_ff correction, what are the Table 1 numbers, is variance reported?",
+        "hits": 1
+      },
+      {
+        "name": "webfetch",
+        "query": "ar5iv.labs.arxiv.org/html/2102.11972 - what does Narang et al. conclude about GLU variants, and are the variants parameter-matched?",
+        "hits": 1
+      },
+      {
+        "name": "script",
+        "query": "scripts/novelty_check.py 'SwiGLU vs GELU iso-parameter ablation GLU variants feedforward tiny transformer'",
+        "hits": 0
+      }
+    ],
+    "conclusion": "REPLICATION, and the backlog's framing needs correcting: the iso-parameter control is not something the source paper skips - Shazeer (2002.05202) applies it explicitly and states it verbatim ('To keep the number of parameters and the amount of computation constant, we reduce the number of hidden units d_ff ... by a factor of 2/3'). The PDF was fetched: Table 1 heldout log-perplexity at 524,288 steps is FFN_ReLU 1.677, FFN_GELU 1.679, FFN_SwiGLU 1.636, with ~+-0.005 inter-run std reported over 4 runs at 65,536 steps, i.e. an iso-param SwiGLU margin of ~0.043 log-ppl at ~8x run-to-run std. Our -0.138 bpc at 2.99x seed spread is the same qualitative result at four orders of magnitude smaller scale, so this run is a faithful tiny-CPU replication rather than a discovery. Narang et al. (2102.11972, EMNLP 2021) was also fetched and is the strongest independent corroboration: an audit that found MOST transformer modifications do not transfer, with GLU variants among the small set that did ('SwiGLU and GeGLU improve performance on pre-training, fine-tuning, and supervised training without sacrificing any efficiency in terms of speed'), under a design where 'each variant has approximately the same number of parameters or total operations as the vanilla Transformer'. What the search did NOT surface, and what this row therefore contributes: (a) the corrected and uncorrected comparisons run SIDE BY SIDE so the demoed margin can be decomposed into gating (77.9%) vs parameter count (22.1%) - the single number a practitioner reading an uncorrected blog demo would want, and one we could not find published anywhere; (b) the whole control at nano scale (0.42M params, CPU, 12 min) with all three seeds reported individually; (c) a consistent-sign ReLU > GELU ordering at iso-param, which the source paper leaves inside its noise band. arXiv and OpenAlex APIs both 403 from this environment (scripts/novelty_check.py returned 'unchecked'); verdict rests on 5 web searches plus 2 direct paper fetches. The 'nobody has published the 78/22 decomposition' claim is a negative search result over paper/blog search, not an exhaustive literature review.",
+    "sources_note": "arXiv/OpenAlex APIs 403 from this environment. Verdict rests on WebSearch plus direct fetches of the arXiv PDF for Shazeer 2020 (2002.05202) and the ar5iv HTML of Narang et al. 2021 (2102.11972)."
+  },
+  "prior_art": [
+    "https://arxiv.org/abs/2002.05202",
+    "https://arxiv.org/pdf/2002.05202",
+    "https://arxiv.org/abs/2102.11972",
+    "https://ar5iv.labs.arxiv.org/html/2102.11972",
+    "https://aclanthology.org/2021.emnlp-main.465/"
+  ],
+  "related_ids": [
+    "2026-07-26_head-dim-vs-count-isoparam",
+    "2026-07-26_weight-tying-tiny",
+    "2026-07-26_retnet-nano-char",
+    "2026-07-25_shadow-loop-vs-depth-isoflop",
+    "2026-07-25_pe-length-gen-tiny"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-26_swiglu-vs-gelu-isoparam",
+    "results_json": "experiments/2026-07-26_swiglu-vs-gelu-isoparam/results.json",
+    "chart": "experiments/2026-07-26_swiglu-vs-gelu-isoparam/chart.png",
+    "readme": "experiments/2026-07-26_swiglu-vs-gelu-isoparam/README.md"
+  },
+  "tags": [
+    "ablation",
+    "swiglu",
+    "glu-variants",
+    "gelu",
+    "relu",
+    "activation-function",
+    "feedforward",
+    "iso-parameter",
+    "iso-flop",
+    "parameter-matched",
+    "char-lm",
+    "tiny-shakespeare",
+    "nanogpt",
+    "bits-per-character",
+    "seed-spread",
+    "replication",
+    "hypothesis-refuted",
+    "cpu-only"
+  ]
+}

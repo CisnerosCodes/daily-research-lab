@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**30 experiments logged.**
+**32 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -38,6 +38,8 @@ experiments/                one dated folder per experiment
 | 2026-07-26 | [Weight tying at nano scale: the benefit-of-tying curve has the wrong sign - tying's cost GROWS with embedding fraction, and untying beats 37% more width](experiments/2026-07-26_weight-tying-tiny) | ✅ done | REFUTED, with the sign reversed. Across an embedding fraction of 0.07 -> 0.82 built on two |
 | 2026-07-26 | [Quantized Coconut: a continuous thought survives being squeezed to 2 bits - accuracy vs codebook size is flat from K=inf down to K=4](experiments/2026-07-26_quantized-coconut) | ✅ done | Refuted, and cleanly. The hypothesis predicted a knee: a codebook size below which discret |
 | 2026-07-26 | [Head dim vs head count at fixed d_model: no U-curve - val bpc is perfectly monotone in head_dim, one giant head ties the best, and tiny heads go DIFFUSE not sharp](experiments/2026-07-26_head-dim-vs-count-isoparam) | ✅ done | REFUTED - there is no U-curve and no interior optimum. Across the exactly-iso-parameter fa |
+| 2026-07-26 | [Trained PonderNet halting vs stochastic depth for LENGTH generalization: the halt head learns real difficulty (allocation extrapolates 5x, +0.130 over stochastic depth at MATCHED compute, +0.145 over a compute-matched random exit) but stochastic depth is simply PERFECT at 5x train length (1.000 token acc AND 1.000 exact match), so the ceiling is not adaptive](experiments/2026-07-26_looped-halt-nrasp) | ✅ done | TWO-SIDED, and which side matters depends on whether you can afford max depth. (1) STOCHAS |
+| 2026-07-26 | [SwiGLU vs GELU at equal parameters: the edge does NOT shrink - 78% of the folk margin survives the iso-param correction, and the extra 31% of params buys almost nothing](experiments/2026-07-26_swiglu-vs-gelu-isoparam) | ✅ done | HYPOTHESIS REFUTED - the iso-parameter control does not dissolve SwiGLU's advantage, it re |
 | 2026-07-25 | [NoPE vs RoPE vs ALiBi vs APE: does the length-generalization ranking survive at 0.1M params?](experiments/2026-07-25_pe-length-gen-tiny) | ✅ done | Hypothesis refuted: at 0.1M params and iso-compute the length-generalization ranking is AL |
 | 2026-07-25 | [Shadow E1: at iso-FLOPs on a 0.06-0.21M-param char LM, a weight-tied looped block loses to plain depth](experiments/2026-07-25_shadow-loop-vs-depth-isoflop) | ✅ done | Hypothesis supported. At iso-FLOPs the weight-tied loop never beats untied depth and the p |
 | 2026-07-25 | [Does the Game-of-Life capacity window transfer to language? Tied vs untied recursion across width](experiments/2026-07-25_shadow-recursion-capacity-window) | ✅ done | Hypothesis refuted - the Game-of-Life capacity window does not transfer to language. Weigh |

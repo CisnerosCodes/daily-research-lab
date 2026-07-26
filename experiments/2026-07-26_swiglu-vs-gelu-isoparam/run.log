@@ -1,0 +1,31 @@
+data: 1003854 train chars, 111540 val chars, vocab 65
+planned FFN weights per layer:
+  gelu_4x    kind=mlp    d_ff= 512 (4.000 x d_model) -> 131,072
+  swiglu_iso kind=swiglu d_ff= 341 (2.664 x d_model) -> 130,944
+  swiglu_4x  kind=swiglu d_ff= 512 (4.000 x d_model) -> 196,608
+  relu_4x    kind=mlp    d_ff= 512 (4.000 x d_model) -> 131,072
+  [gelu_4x    d_ff= 512 seed=0] P=423,424 ffnP=262,144 bpc=2.8357 (49.5s)
+  [gelu_4x    d_ff= 512 seed=1] P=423,424 ffnP=262,144 bpc=2.8678 (48.0s)
+  [gelu_4x    d_ff= 512 seed=2] P=423,424 ffnP=262,144 bpc=2.8440 (48.9s)
+  [swiglu_iso d_ff= 341 seed=0] P=423,168 ffnP=261,888 bpc=2.6980 (55.5s)
+  [swiglu_iso d_ff= 341 seed=1] P=423,168 ffnP=261,888 bpc=2.6824 (55.8s)
+  [swiglu_iso d_ff= 341 seed=2] P=423,168 ffnP=261,888 bpc=2.7535 (54.9s)
+  [swiglu_4x  d_ff= 512 seed=0] P=554,496 ffnP=393,216 bpc=2.6512 (76.0s)
+  [swiglu_4x  d_ff= 512 seed=1] P=554,496 ffnP=393,216 bpc=2.6696 (73.4s)
+  [swiglu_4x  d_ff= 512 seed=2] P=554,496 ffnP=393,216 bpc=2.6958 (78.8s)
+  [relu_4x    d_ff= 512 seed=0] P=423,424 ffnP=262,144 bpc=2.7831 (50.7s)
+  [relu_4x    d_ff= 512 seed=1] P=423,424 ffnP=262,144 bpc=2.7867 (51.2s)
+  [relu_4x    d_ff= 512 seed=2] P=423,424 ffnP=262,144 bpc=2.8200 (52.0s)
+
+=== summary ===
+iso-param pair gelu_4x=423,424 vs swiglu_iso=423,168 (rel diff 0.0605%, within 1%: True)
+  gelu_4x    d_ff= 512  P=423,424  bpc=2.8492 +-0.0167 (range 0.0321)  48.8s
+  swiglu_iso d_ff= 341  P=423,168  bpc=2.7113 +-0.0374 (range 0.0711)  55.4s
+  swiglu_4x  d_ff= 512  P=554,496  bpc=2.6722 +-0.0224 (range 0.0446)  76.1s
+  relu_4x    d_ff= 512  P=423,424  bpc=2.7966 +-0.0204 (range 0.0369)  51.3s
+iso-param delta (swiglu_iso - gelu_4x): -0.1379 per-seed [-0.13777, -0.18542, -0.09054]
+unfair delta   (swiglu_4x  - gelu_4x): -0.1770 per-seed [-0.18454, -0.19816, -0.14826]
+relu delta     (relu_4x    - gelu_4x): -0.0526
+mean seed spread: 0.0462 bpc
+VERDICT: seed-separated: SwiGLU wins at iso-param
+total 708s
