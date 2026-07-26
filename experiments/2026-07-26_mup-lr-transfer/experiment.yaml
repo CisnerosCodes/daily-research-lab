@@ -1,0 +1,45 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_mup-lr-transfer"
+title: "muP learning-rate transfer at char-LM scale: does the optimal LR stop drifting with width?"
+hypothesis: "Under muP (Yang & Hu, Tensor Programs V, arXiv:2203.03466) the loss-optimal base learning rate of a nanoGPT-style char LM is width-invariant, while under standard parametrization (SP) the optimum drifts toward smaller LR as width grows; measured as the shift of argmin_lr in octaves per width doubling."
+seed: 0
+dataset:
+  name: "tiny-shakespeare (char level, 65-symbol vocab)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain (Shakespeare); karpathy/char-rnn mirror"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  # ---- sweep axes -------------------------------------------------------
+  widths: [32, 64, 128]          # d_model; base_width is widths[0]
+  base_width: 32                 # muP reference width; m = d_model / base_width
+  parametrizations: ["sp", "mup"]
+  # base LR exponents e -> lr = 2**e.  7 log-spaced (integer-octave) points.
+  # widened one octave below the backlog's 2^-10 after a 40-step pilot showed the SP
+  # optimum drifting ~1 octave per width doubling, which would push d=128 onto the edge.
+  lr_exponents: [-11, -10, -9, -8, -7, -6, -5]
+  seeds: [0]                     # 1 seed: this experiment is about curve SHAPE, not final quality
+  # ---- model ------------------------------------------------------------
+  n_layer: 2
+  n_head: 2                      # HELD FIXED: width scaling grows head_dim (16 -> 32 -> 64)
+  d_ff_mult: 4
+  block_size: 64                 # ctx
+  char_vocab_size: 65
+  emb_init_std: 0.02             # width-independent in BOTH parametrizations
+  # ---- optimisation -----------------------------------------------------
+  steps: 500
+  batch_size: 16
+  warmup: 20                     # linear warmup then CONSTANT lr (sharper minima than cosine)
+  weight_decay: 0.0              # pure Adam: decoupled WD is a separate muP subtlety, removed
+  betas: [0.9, 0.95]
+  grad_clip: 1.0
+  train_frac: 0.9
+  # ---- eval -------------------------------------------------------------
+  max_eval_blocks: 256
+  eval_batch: 32
+  # ---- coordinate check (muP's own diagnostic) --------------------------
+  coord_check_steps: 6
+  coord_check_lr_exponent: -7
+  coord_check_batch: 16
+  # ---- safety -----------------------------------------------------------
+  divergence_loss: 20.0          # train loss above this (or nan) -> run marked diverged
+  time_cap_s: 1500               # hard wall-clock cap for the whole sweep

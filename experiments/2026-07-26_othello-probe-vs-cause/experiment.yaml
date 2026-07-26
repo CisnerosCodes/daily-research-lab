@@ -1,0 +1,59 @@
+# Mini-Othello world model: which board cells are decodable but NOT causal?
+id: "2026-07-26_othello-probe-vs-cause"
+title: "Probed vs caused on a mini-Othello world model: per-cell probe accuracy vs per-cell causal-edit success"
+hypothesis: >
+  A tiny GPT trained only on random-legal 5x5 Othello move sequences forms a linearly decodable
+  board world model, but decodability and causal use come apart per cell: cells that are
+  strategically irrelevant to the current legal-move set will probe at high accuracy while a
+  directional edit of their probe subspace fails to move the model's legal-move prediction in the
+  way the edited board implies -- the world-model version of 2026-07-25_dyck-probe-can-lie and
+  2026-07-26_tracr-ground-truth-lab (probes are recall, intervention is what localizes).
+seed: 0
+
+dataset:
+  name: "synthetic 5x5 mini-Othello games, uniform random legal moves"
+  source: "generated in run.py by a hand-written vectorised numpy Reversi engine (verified against hand-checked 4x4 positions and the canonical 8x8 opening)"
+  license: "n/a (synthetic)"
+
+board:
+  n: 5                    # 5x5. 4x4 rejected: only 13784/20000 unique games and a 12-move cap
+  start: "2x2 block at rows/cols 1-2 (W B / B W), black to move"
+  max_moves: 21
+  passes: "kept (standard Othello-GPT convention); no pass token is emitted"
+
+data:
+  n_train_games: 150000
+  n_eval_games: 6000
+  n_probe_train_games: 3000
+  n_probe_test_games: 1500
+
+model:
+  d_model: 64
+  n_layer: 4
+  n_head: 4
+  seq_len: 22             # BOS + 21 moves
+  vocab: 26               # 25 cells + BOS
+
+train:
+  steps: 3200             # ~400 s at the benchmarked 120 ms/step, batch 128, 1 CPU thread
+  batch_size: 128
+  lr: 0.001
+  warmup: 200
+  weight_decay: 0.01
+  eval_every: 400
+
+probe:
+  classes: ["empty", "mine", "yours"]   # relative to the player to move NEXT
+  steps: 400
+  lr: 0.05
+  weight_decay: 0.0001
+
+causal:
+  edit: "colour flip mine<->yours on an OCCUPIED cell, via the probe's own direction"
+  margin_grid: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+  max_instances_per_cell: 200
+  min_move_index: 6       # boards mature enough that most cells are occupied
+  n_random_controls: 1
+  # headline margin is chosen by a PRE-STATED specificity constraint, not by maximising the
+  # outcome: the largest gamma whose edit leaves >= 90% of the OTHER cells' probe readouts intact
+  collateral_budget: 0.10

@@ -1,0 +1,381 @@
+{
+  "id": "2026-07-26_othello-probe-vs-cause",
+  "date": "2026-07-26",
+  "title": "Probed vs caused on a mini-Othello world model: a 0.098 spread in per-cell probe accuracy hides a 36x spread in per-cell causal effect - interior cells carry 4x the causal weight of border cells at equal decodability (p=5e-05), and the 3-way probe accuracy the Othello-GPT literature reports is ANTI-correlated (r=-0.594) with causal use because it scores corners, the cells that are easiest to read and least used",
+  "slug": "othello-probe-vs-cause",
+  "hypothesis": "A tiny GPT trained only on random-legal 5x5 Othello move sequences forms a linearly decodable board world model, but decodability and causal use come apart per cell: some cells will probe at high accuracy while a directional edit of their probe subspace fails to move the model's legal-move prediction in the way the edited board implies - the world-model version of 2026-07-25_dyck-probe-can-lie and 2026-07-26_tracr-ground-truth-lab (probes are recall, intervention is what localizes).",
+  "question": "On a task where the board IS the computation: (a) does a 205k-param GPT trained only on move sequences form a linearly decodable board world model at 5x5 scale; (b) is that representation causally used, measured against a norm-matched random-direction control rather than against nothing; (c) per board cell, does probe accuracy rank causal importance - and which cells are decodable but NOT causally used; (d) how much of a reported 'successful intervention' is the direction and how much is the norm?",
+  "method": "HAND-WRITTEN VECTORISED NUMPY REVERSI ENGINE, self-tested before anything else runs: 6 hand-checked assertions incl. the canonical 8x8 opening (black's only legal moves from the standard start are D3/C4/F5/E6 = flat 19/26/37/44), the 4x4 and 5x5 openings, a single flip and a two-disc line flip; all 6 pass. BOARD CHOICE: 4x4 was generated and REJECTED (only 13,784/20,000 distinct games, 12-move cap); 5x5 with the standard 2x2 centre block at rows/cols 1-2 gives 19,997/20,000 distinct games and median length 21. Passes are KEPT (standard Othello-GPT convention, no pass token): 51.6% of games contain one, which is what forces board reconstruction instead of turn-parity. DATA: 150,000 uniform-random-legal games (3,115,943 moves), 6,000 eval, 4,500 probe games, all seeded. MODEL: 4-layer, d=64, 4-head, seq 22, vocab 26 GPT, 204,800 params, 3,200 steps x batch 128 = 9.0M tokens, AdamW 1e-3 cosine, 355.7 s on 1 CPU thread. Because the generator is uniform over legal moves the irreducible CE is exactly E[log|legal set|] = 1.1988 nats, a real floor. PROBES: one multinomial-logistic probe per cell for {empty, mine, yours} RELATIVE TO THE PLAYER TO MOVE NEXT, on the raw residual at all 4 layers, split BY GAME (59,266 train / 29,663 test positions), Adam lr 0.05 minibatch 8192 x 400 steps, standardised inputs mapped back to raw-space directions. CAUSAL EDIT: for an occupied cell, flip its colour IN THE RESIDUAL along the probe's own direction - a CLOSED-FORM minimum-norm patch (3 refinement rounds) that drives cell c's probe to the opposite colour with logit margin >= gamma over the RUNNER-UP class, i.e. Li et al.'s gradient-descent world-model edit solved analytically; probe flip rate is 1.000 at every gamma so the edit always takes. Only instances where the edit actually changes the legal set are used (200 per cell, 25/25 cells have 1,315-11,305 usable candidates, positions restricted to move index >= 6). OUTCOMES: `direction` = does p(move) move the right way on the moves whose legality the edit changes; `strict` = does the thresholded legal-set DECISION now match the edited board (tau=0.0723 calibrated for legal-set F1 on unedited eval data). FOUR CONTROLS on every single intervention: a RANDOM-DIRECTION PATCH OF IDENTICAL NORM, the no-edit baseline, COLLATERAL (fraction of the other 24 cells whose probe readout moved), and a CLEAN-EDIT SUBSET (target flipped, zero other cells moved). Gamma swept over {1,2,4,8,16,32}; the HEADLINE gamma is chosen by a PRE-STATED specificity constraint written into experiment.yaml (largest gamma with mean collateral <= 0.10 -> gamma=2.0), NOT by maximising the outcome - the outcome-maximising gamma=32 is reported alongside. Per-cell causal effect is EXCESS OVER THE MATCHED-NORM RANDOM CONTROL. Geometry tested by a 20,000-draw permutation test on interior-vs-border excess.",
+  "architecture": "decoder-only GPT, 4 layers, d_model 64, 4 heads, seq 22, vocab 26, 204,800 params (pre-LN, GELU, learned positions); plus 25 per-cell 3-way multinomial-logistic probes per layer",
+  "dataset": {
+    "name": "150,000 synthetic 5x5 mini-Othello games (3,115,943 moves), uniform random legal moves, passes kept",
+    "source": "generated in run.py by a hand-written vectorised numpy Reversi engine, self-tested against 6 hand-checked positions incl. the canonical 8x8 opening",
+    "license": "n/a (synthetic)",
+    "hash": "seeded (seed 0, numpy default_rng); 19,997/20,000 distinct games in the first 20k"
+  },
+  "task": "next-legal-move prediction from move sequences; headline = per-cell linear-probe accuracy vs per-cell causal-edit success on the board world model",
+  "framework": "torch 2.13 (CPU, single thread) + numpy 2.4.4; no external Othello or interpretability dependency",
+  "seed": 0,
+  "compute": "CPU 1 thread, 461.5 s (7.7 min): data gen 28.2 s, train 355.7 s, 100 probes 49.5 s, causal 20.9 s (25 cells x 12 interventions x 200 instances)",
+  "metrics": {
+    "headline": "per-cell probe accuracy vs causal excess over a matched-norm random control: pearson r=+0.608 / spearman +0.565 on the matched 2-way metric, but 4/25 cells are high-probe/low-cause (0,1,4,24 - three corners plus one corner-adjacent edge); probe accuracy spans 0.722-0.820 (0.098) while causal excess spans 0.004-0.159 (36x); interior minus border causal excess +0.0804, permutation p=5.0e-05; and 3-way probe accuracy is ANTI-correlated with causal effect at r=-0.594",
+    "board": "5x5, 2x2 centre block at rows/cols 1-2, max 21 moves",
+    "board_4x4_rejected_because": "only 13,784/20,000 distinct games and a 12-move cap (degenerate)",
+    "engine_selftest_all_pass": true,
+    "engine_selftest": {
+      "4x4_opening_legal_moves": true,
+      "8x8_canonical_opening_D3_C4_F5_E6": true,
+      "4x4_single_flip": true,
+      "4x4_two_disc_line_flip": true,
+      "5x5_opening_legal_moves": true,
+      "empty_board_no_moves": true
+    },
+    "n_train_games": 150000,
+    "n_train_moves": 3115943,
+    "mean_game_len": 20.773,
+    "unique_games_in_first_20k": 19997,
+    "frac_games_with_pass": 0.5156,
+    "mean_legal_moves_per_position": 3.7724,
+    "n_params": 204800,
+    "train_steps": 3200,
+    "train_tokens": 9011200,
+    "TOP1_LEGALITY_RATE": 0.9516,
+    "legal_set_f1": 0.8743,
+    "legal_set_precision": 0.8362,
+    "legal_set_recall": 0.9159,
+    "exact_legal_set_match_rate": 0.4856,
+    "final_ce_nats": 1.4933,
+    "irreducible_ce_nats": 1.1988,
+    "excess_ce_nats": 0.2946,
+    "legal_set_tau": 0.07227,
+    "probe_mean_acc_per_layer_3way": [
+      0.8355,
+      0.8734,
+      0.8694,
+      0.8614
+    ],
+    "probe_majority_baseline": 0.5281,
+    "probe_intervention_layer": 1,
+    "probe_mean_acc_occupied_at_layer": 0.7727,
+    "probe_acc_occ_range": [
+      0.7221,
+      0.8195
+    ],
+    "probe_n_train_positions": 59266,
+    "probe_n_test_positions": 29663,
+    "CHOSEN_MARGIN": "2.0",
+    "margin_choice_rule": "largest gamma with mean collateral <= collateral_budget (pre-stated specificity constraint, not outcome-maximising)",
+    "margin_maximising_strict": "32.0",
+    "margin_sweep_strict": {
+      "1.0": 0.3793,
+      "2.0": 0.4013,
+      "4.0": 0.4455,
+      "8.0": 0.5338,
+      "16.0": 0.6656,
+      "32.0": 0.7561
+    },
+    "margin_sweep_strict_random_control": {
+      "1.0": 0.3428,
+      "2.0": 0.3456,
+      "4.0": 0.3487,
+      "8.0": 0.3623,
+      "16.0": 0.3937,
+      "32.0": 0.4317
+    },
+    "margin_sweep_direction": {
+      "1.0": 0.8261,
+      "2.0": 0.8466,
+      "4.0": 0.8532,
+      "8.0": 0.8583,
+      "16.0": 0.8599,
+      "32.0": 0.8464
+    },
+    "margin_sweep_direction_random_control": {
+      "1.0": 0.4911,
+      "2.0": 0.4956,
+      "4.0": 0.4995,
+      "8.0": 0.5022,
+      "16.0": 0.5101,
+      "32.0": 0.5191
+    },
+    "margin_sweep_collateral": {
+      "1.0": 0.0489,
+      "2.0": 0.0722,
+      "4.0": 0.1141,
+      "8.0": 0.1792,
+      "16.0": 0.2811,
+      "32.0": 0.4243
+    },
+    "margin_sweep_rel_edit_norm": {
+      "1.0": 0.1043,
+      "2.0": 0.1482,
+      "4.0": 0.2383,
+      "8.0": 0.4249,
+      "16.0": 0.8676,
+      "32.0": 1.7824
+    },
+    "margin_sweep_frac_clean_edits": {
+      "1.0": 0.4098,
+      "2.0": 0.259,
+      "4.0": 0.117,
+      "8.0": 0.0274,
+      "16.0": 0.0018,
+      "32.0": 0.0
+    },
+    "margin_sweep_strict_on_clean_edits": {
+      "1.0": 0.4026,
+      "2.0": 0.3987,
+      "4.0": 0.4144,
+      "8.0": 0.5361,
+      "16.0": 0.8214,
+      "32.0": null
+    },
+    "probe_flip_rate": 1.0,
+    "no_edit_baseline": 0.3417,
+    "model_legality_ceiling_on_changed_moves": 0.6583,
+    "PEARSON_probe_vs_causal_excess": 0.608,
+    "SPEARMAN_probe_vs_causal_excess": 0.5654,
+    "pearson_probe_vs_causal_strict_raw": 0.2838,
+    "pearson_probe3way_vs_causal_excess_REVERSAL": -0.5943,
+    "spearman_probe3way_vs_causal_excess": -0.57,
+    "N_HIGH_PROBE_LOW_CAUSE": 4,
+    "high_probe_low_cause_cells": [
+      0,
+      1,
+      4,
+      24
+    ],
+    "high_probe_low_cause_rule": "probe acc (occupied) >= median AND strict causal excess over the norm-matched random control <= 0.05",
+    "causal_excess_range": [
+      0.0044,
+      0.1591
+    ],
+    "mean_direction_at_chosen_margin": 0.8466,
+    "mean_direction_excess_over_control": 0.351,
+    "geometry_by_kind": {
+      "corner": {
+        "n": 4,
+        "mean_probe_acc_occ": 0.7835,
+        "mean_probe_acc_3way": 0.9191,
+        "mean_causal_strict": 0.4809,
+        "mean_causal_excess": 0.0267,
+        "mean_direction": 0.7545,
+        "mean_changed_moves": 1.095,
+        "cells": [
+          0,
+          4,
+          20,
+          24
+        ]
+      },
+      "edge": {
+        "n": 12,
+        "mean_probe_acc_occ": 0.7474,
+        "mean_probe_acc_3way": 0.8824,
+        "mean_causal_strict": 0.3772,
+        "mean_causal_excess": 0.0267,
+        "mean_direction": 0.8033,
+        "mean_changed_moves": 1.1279,
+        "cells": [
+          1,
+          2,
+          3,
+          5,
+          9,
+          10,
+          14,
+          15,
+          19,
+          21,
+          22,
+          23
+        ]
+      },
+      "interior": {
+        "n": 9,
+        "mean_probe_acc_occ": 0.8017,
+        "mean_probe_acc_3way": 0.8409,
+        "mean_causal_strict": 0.398,
+        "mean_causal_excess": 0.1071,
+        "mean_direction": 0.9454,
+        "mean_changed_moves": 1.5594,
+        "cells": [
+          6,
+          7,
+          8,
+          11,
+          12,
+          13,
+          16,
+          17,
+          18
+        ]
+      }
+    },
+    "interior_minus_border_causal_excess": 0.0804,
+    "permutation_p_one_sided": 4.999750012499375e-05,
+    "interior_excess_range": [
+      0.0525,
+      0.1591
+    ],
+    "border_excess_range": [
+      0.0044,
+      0.0654
+    ],
+    "pearson_causal_vs_model_ceiling": -0.6415,
+    "correlation_at_every_margin": {
+      "1.0": {
+        "pearson_probe_vs_strict": 0.0444,
+        "spearman_probe_vs_strict": 0.0077,
+        "pearson_probe_vs_excess": 0.6039,
+        "pearson_probe_vs_direction": 0.3948,
+        "n_high_probe_low_cause": 8,
+        "mean_excess": 0.0366
+      },
+      "2.0": {
+        "pearson_probe_vs_strict": 0.2838,
+        "spearman_probe_vs_strict": 0.3,
+        "pearson_probe_vs_excess": 0.608,
+        "pearson_probe_vs_direction": 0.3982,
+        "n_high_probe_low_cause": 4,
+        "mean_excess": 0.0557
+      },
+      "4.0": {
+        "pearson_probe_vs_strict": 0.5205,
+        "spearman_probe_vs_strict": 0.4762,
+        "pearson_probe_vs_excess": 0.6785,
+        "pearson_probe_vs_direction": 0.4355,
+        "n_high_probe_low_cause": 1,
+        "mean_excess": 0.0968
+      },
+      "8.0": {
+        "pearson_probe_vs_strict": 0.6401,
+        "spearman_probe_vs_strict": 0.6085,
+        "pearson_probe_vs_excess": 0.6415,
+        "pearson_probe_vs_direction": 0.4268,
+        "n_high_probe_low_cause": 1,
+        "mean_excess": 0.1715
+      },
+      "16.0": {
+        "pearson_probe_vs_strict": 0.6205,
+        "spearman_probe_vs_strict": 0.5546,
+        "pearson_probe_vs_excess": 0.58,
+        "pearson_probe_vs_direction": 0.3738,
+        "n_high_probe_low_cause": 0,
+        "mean_excess": 0.2719
+      },
+      "32.0": {
+        "pearson_probe_vs_strict": 0.4888,
+        "spearman_probe_vs_strict": 0.4569,
+        "pearson_probe_vs_excess": 0.4503,
+        "pearson_probe_vs_direction": 0.3318,
+        "n_high_probe_low_cause": 0,
+        "mean_excess": 0.3244
+      }
+    },
+    "wall_clock_s": 461.5
+  },
+  "result_summary": "THE WORLD MODEL FORMS, IT IS CAUSALLY USED, AND THE DISSOCIATION IS REAL BUT GEOMETRIC RATHER THAN WHOLESALE. A 204,800-param 4-layer GPT trained for 355 s on 150,000 random-legal 5x5 Othello games reaches top-1 legality 0.9516, legal-set F1 0.874 and CE 1.4933 against a provable 1.1988-nat floor (the generator is uniform over legal moves, so the floor is exactly E[log|legal set|]); linear probes read {empty,mine,yours} per cell at 0.873 3-way (majority 0.528), best at layer 1 of 4. 4x4 was generated and rejected first (13,784/20,000 distinct games, 12-move cap); the numpy Reversi engine passes 6 hand-checked assertions incl. the canonical 8x8 D3/C4/F5/E6 opening before anything else runs. (1) THE REPRESENTATION IS CAUSAL, AND THE PROOF IS THE DIRECTION METRIC AT SMALL NORM: a closed-form minimum-norm patch along the probe's own direction that flips a cell's colour (probe flip rate 1.000 at every strength) moves the model's move probabilities the way the EDITED board implies 82.6% of the time at gamma=1 - where the edit is only 10% of the residual norm and disturbs 4.9% of the other cells - against 49.1% for a random patch of IDENTICAL NORM. That +0.335 gap is flat across a 32x strength sweep (0.826->0.860 while the control creeps 0.491->0.519), and on the 41% of gamma=1 instances where the edit was surgically clean (target flipped, zero other cells moved) the strict score is 0.403 vs 0.379 over all instances, so the effect is not collateral damage. Li et al. replicates at 5x5 with a 205k-param model. (2) BUT THE STRICT LEGAL-SET METRIC IS BOUGHT WITH NORM, NOT CONTENT: strict success rises monotonically 0.379->0.756 across the sweep, and so do the matched-norm random control (0.343->0.432), the collateral (0.049->0.424) and the edit norm (0.10x->1.78x THE RESIDUAL STREAM ITSELF). At gamma=32, where the number looks impressive, 42% of the other cells' probe readouts have changed - that is not a one-cell edit, it is board demolition. At the pre-stated specificity-constrained gamma=2 (collateral <= 0.10, written into experiment.yaml before the fact) the strict excess over control is only +0.056. An intervention number reported without a norm-matched control and a collateral figure is largely reporting the norm. (3) THE PER-CELL DELIVERABLE PARTLY REFUTES THE HYPOTHESIS: on the MATCHED metric (2-way mine/yours on occupied cells) probe accuracy and causal excess are POSITIVELY correlated, pearson +0.608 / spearman +0.565 - there is no wholesale probe-lies story here as there was for Dyck depth-parity or the 14/35 dead Tracr cells, because on a task where the board IS the computation most decodable cells really are used. (4) WHAT SURVIVES IS SHARPER THAN WHAT DIED: probe accuracy is nearly FLAT across the board (0.722-0.820, a 0.098 spread) while causal excess spans 0.004-0.159, a 36x ratio, and 4 of 25 cells are high-probe/low-cause (>= median probe accuracy, <= 0.05 excess over the matched-norm control): cells 0, 1, 4 and 24 - THREE OF THE FOUR CORNERS plus one corner-adjacent edge. The split is geometric and clean: the 9 interior cells average 0.107 causal excess against 0.027 for all 16 border cells, a difference of +0.0804 at permutation p=5.0e-05 over 20,000 draws with barely overlapping ranges (interior 0.052-0.159, border 0.004-0.065). (5) THE REVERSAL, WHICH IS THE WARNING FOR THE LITERATURE: the 3-way {empty,mine,yours} probe accuracy that Othello-GPT papers actually report is ANTI-CORRELATED with causal effect, pearson -0.594 / spearman -0.570. The corners score the HIGHEST 3-way probe accuracy on the board (0.919 vs 0.841 interior) and the LOWEST causal effect, for a mechanical reason: a corner disc can never be flipped and can only anchor a bracket along 3 of 8 directions, so its colour gates 1.10 legal moves against 1.56 for an interior cell, and it is empty for most of the game, which is exactly what inflates a 3-way probe. The probe is ranking cells by how EASY they are to read, not by how load-bearing they are. So probe accuracy is not a ranking of causal importance even when it is positively correlated with it, and with the metric the field uses the ranking is inverted. CAVEATS: one model, one seed, one board size, and cells are not independent samples; the strict metric has a built-in negative dependence on the model's own accuracy about the true board (pearson(ceiling, strict) = -0.641), which is precisely why the headline uses excess over a control sharing the same starting point; edits are colour flips on occupied cells only, edited boards are not constrained to be reachable, and gamma is swept on the same positions the effect is measured on (choice rule pre-stated, full sweep reported); at top-1 legality 0.9516 the model's own legal-set ceiling on the changed moves is 0.658, which caps the strict metric and is the largest source of scatter noise.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "partial-prior-art",
+    "sources": [
+      {
+        "name": "web",
+        "query": "Othello-GPT probe intervention which board cells decodable but not causal per-cell probe accuracy vs causal effect",
+        "hits": 9
+      },
+      {
+        "name": "web",
+        "query": "mini Othello 4x4 5x5 small board Othello-GPT world model linear probe emergent world representation",
+        "hits": 8
+      },
+      {
+        "name": "web",
+        "query": "'Othello' GPT probe accuracy correlate causal intervention success per tile dissociation decodable not used",
+        "hits": 9
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/html/2210.13382v5 (Li et al.) - is the intervention reported per-tile, and is any probe-vs-cause dissociation reported?",
+        "hits": 1
+      },
+      {
+        "name": "webfetch",
+        "query": "neelnanda.io/mechanistic-interpretability/othello - are there systematic per-cell probe-vs-causal comparisons?",
+        "hits": 1
+      },
+      {
+        "name": "webfetch",
+        "query": "Baldwin 'Exploring the Limits of OthelloGPT's Emergent Representations' - per-tile probe accuracy and per-tile causal effect?",
+        "hits": 1
+      },
+      {
+        "name": "script",
+        "query": "scripts/novelty_check.py not used - arXiv/OpenAlex 403 from this environment (known)",
+        "hits": 0
+      }
+    ],
+    "conclusion": "PARTIAL-PRIOR-ART. The setup, the linear probe and the probe-direction intervention are all prior art and are reproduced here deliberately: Li et al. (2210.13382, ICLR 2023) invented the world-model edit, and a direct fetch confirms they report PER-INTERVENTION AGGREGATE error rates (0.12 natural / 0.06 unnatural against baselines 2.68 / 2.59) and explicitly do NOT report per-tile intervention success, per-tile probe accuracy, or any decodable-but-not-causal dissociation. A fetch of Nanda's linear-probe follow-up confirms its interventions are 'mostly a series of case studies' by the author's own words, with no systematic per-cell breakdown. Baldwin's limits study reports aggregate probe accuracy over all 64 squares, not per-tile causal effect; the BlackboxNLP 2023 paper establishes the mine/yours linear representation without the per-cell causal comparison. WHAT THIS ROW ADDS: (a) the per-cell scatter of probe accuracy against causal-edit success with the causal axis defined as EXCESS OVER A NORM-MATCHED RANDOM-DIRECTION CONTROL rather than raw success, plus a pre-stated collateral budget for choosing the intervention strength; (b) an intervention-strength sweep showing that strict legal-set success is bought with edit norm (0.10x to 1.78x the residual) and collateral (5% to 42% of other cells) while the direction metric is already saturated and specific at one tenth the norm - which reframes how an aggregate intervention number should be read; (c) the geometric finding that interior cells carry 4x the causal effect of border cells at near-equal probe accuracy (+0.0804, permutation p=5e-05) and that 3-WAY PROBE ACCURACY IS ANTI-CORRELATED WITH CAUSAL EFFECT AT r=-0.594, i.e. the metric the field reports ranks cells backwards; (d) a 5x5 / 205k-param / 8-CPU-minute harness with a self-tested engine, making the whole probe-vs-cause loop reproducible without a GPU or a pretrained checkpoint. The 'not previously published' claim is a negative search result over 3 web searches and 3 direct fetches, not an exhaustive review.",
+    "prior_art": [
+      "https://arxiv.org/html/2210.13382v5",
+      "https://github.com/likenneth/othello_world",
+      "https://www.neelnanda.io/mechanistic-interpretability/othello",
+      "https://aclanthology.org/2023.blackboxnlp-1.2.pdf",
+      "https://arxiv.org/html/2310.07582"
+    ]
+  },
+  "prior_art": [
+    "https://github.com/likenneth/othello_world",
+    "https://arxiv.org/html/2210.13382v5",
+    "https://www.neelnanda.io/mechanistic-interpretability/othello",
+    "https://aclanthology.org/2023.blackboxnlp-1.2.pdf"
+  ],
+  "related_ids": [
+    "2026-07-25_dyck-probe-can-lie",
+    "2026-07-26_tracr-ground-truth-lab",
+    "2026-07-25_sae-on-grokked-model"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-26_othello-probe-vs-cause",
+    "results_json": "experiments/2026-07-26_othello-probe-vs-cause/results.json",
+    "chart": "experiments/2026-07-26_othello-probe-vs-cause/chart.png",
+    "readme": "experiments/2026-07-26_othello-probe-vs-cause/README.md",
+    "run": "experiments/2026-07-26_othello-probe-vs-cause/run.py"
+  },
+  "tags": [
+    "interpretability",
+    "world-model",
+    "othello",
+    "othello-gpt",
+    "mini-othello",
+    "reversi",
+    "5x5-board",
+    "emergent-representation",
+    "linear-probe",
+    "probe-accuracy",
+    "decodable-vs-used",
+    "causal-intervention",
+    "activation-patching",
+    "directional-patching",
+    "world-model-edit",
+    "norm-matched-control",
+    "collateral-damage",
+    "specificity",
+    "intervention-strength-sweep",
+    "per-cell-analysis",
+    "board-geometry",
+    "corners",
+    "permutation-test",
+    "legal-move-prediction",
+    "next-token-prediction",
+    "tiny-gpt",
+    "synthetic-task",
+    "self-tested-engine",
+    "partial-prior-art",
+    "cpu-only",
+    "partially-refuted-hypothesis",
+    "replication-at-small-scale"
+  ]
+}

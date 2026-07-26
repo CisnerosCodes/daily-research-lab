@@ -1,0 +1,5 @@
+# CPU only, single thread. No extra installs were needed for this experiment.
+torch==2.13.0+cu130
+numpy==2.4.4
+matplotlib==3.10.9
+PyYAML==6.0.3

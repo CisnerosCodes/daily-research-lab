@@ -1,0 +1,187 @@
+engine self-test: {'4x4_opening_legal_moves': True, '8x8_canonical_opening_D3_C4_F5_E6': True, '4x4_single_flip': True, '4x4_two_disc_line_flip': True, '5x5_opening_legal_moves': True, 'empty_board_no_moves': True}
+data: {'n_train_games': 150000, 'n_eval_games': 6000, 'mean_game_len': 20.772953333333334, 'median_game_len': 21.0, 'min_game_len': 9, 'max_game_len': 21, 'frac_games_with_pass': 0.5155666666666666, 'mean_passes_per_game': 0.7832133333333333, 'unique_games_in_first_20k': 19997, 'n_train_moves': 3115943} (28.2s)
+params: 204800
+/home/claude/daily-research-lab/experiments/2026-07-26_othello-probe-vs-cause/run.py:416: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:822.)
+  print(f"  step {step:5d} loss {float(loss):.4f} eval_ce {ce:.4f} "
+  step     0 loss 3.2654 eval_ce 3.2669 top1_legal 0.1461  [0s]
+  step   400 loss 1.7556 eval_ce 1.7406 top1_legal 0.8772  [45s]
+  step   800 loss 1.6383 eval_ce 1.6360 top1_legal 0.9129  [88s]
+  step  1200 loss 1.5823 eval_ce 1.5983 top1_legal 0.9287  [132s]
+  step  1600 loss 1.5418 eval_ce 1.5589 top1_legal 0.9377  [176s]
+  step  2000 loss 1.5088 eval_ce 1.5313 top1_legal 0.9434  [220s]
+  step  2400 loss 1.5092 eval_ce 1.5110 top1_legal 0.9535  [268s]
+  step  2800 loss 1.4930 eval_ce 1.4998 top1_legal 0.9509  [311s]
+  step  3199 loss 1.4861 eval_ce 1.4978 top1_legal 0.9565  [356s]
+eval: {'final_ce_nats': 1.4933486213382725, 'top1_legality_rate': 0.9515579259734531, 'irreducible_ce_nats': 1.1987817096837052, 'excess_ce_nats': 0.2945669116545673, 'legal_set_tau': 0.0722727132067618, 'legal_set_f1': 0.8742594319377491, 'legal_set_precision': 0.8362069467493523, 'legal_set_recall': 0.9159402665215284, 'exact_legal_set_match_rate': 0.4856478273868561}
+  probe L0: mean acc 0.8355 (majority 0.5281) occupied-only 0.7117
+  probe L1: mean acc 0.8734 (majority 0.5281) occupied-only 0.7727
+  probe L2: mean acc 0.8694 (majority 0.5281) occupied-only 0.7637
+  probe L3: mean acc 0.8614 (majority 0.5281) occupied-only 0.7479
+causal margin sweep: {'1.0': 0.37933424447568187, '2.0': 0.40129688776588746, '4.0': 0.4455155896606101, '8.0': 0.5338031341109373, '16.0': 0.6656169027152232, '32.0': 0.7561002685045309} chosen 2.0
+geometry: {
+ "by_kind": {
+  "corner": {
+   "n": 4,
+   "mean_probe_acc_occ": 0.7834906224650003,
+   "mean_probe_acc_3way": 0.9191248416900635,
+   "mean_causal_strict": 0.4808763110026653,
+   "mean_causal_excess": 0.02666243671781328,
+   "mean_direction": 0.7545153051614761,
+   "mean_changed_moves": 1.0950000286102295,
+   "cells": [
+    0,
+    4,
+    20,
+    24
+   ]
+  },
+  "edge": {
+   "n": 12,
+   "mean_probe_acc_occ": 0.7474118907401749,
+   "mean_probe_acc_3way": 0.8824236989021301,
+   "mean_causal_strict": 0.3772129802130968,
+   "mean_causal_excess": 0.026741548129678855,
+   "mean_direction": 0.8033088048299154,
+   "mean_changed_moves": 1.1279166837533314,
+   "cells": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10,
+    14,
+    15,
+    19,
+    21,
+    22,
+    23
+   ]
+  },
+  "interior": {
+   "n": 9,
+   "mean_probe_acc_occ": 0.8016648212253368,
+   "mean_probe_acc_3way": 0.8409092426300049,
+   "mean_causal_strict": 0.3980401319532626,
+   "mean_causal_excess": 0.10712359244162593,
+   "mean_direction": 0.9453733430968391,
+   "mean_changed_moves": 1.559444440735711,
+   "cells": [
+    6,
+    7,
+    8,
+    11,
+    12,
+    13,
+    16,
+    17,
+    18
+   ]
+  }
+ },
+ "interior_minus_border_causal_excess": 0.08040182216491347,
+ "permutation_p_one_sided": 4.999750012499375e-05,
+ "n_perm": 20000,
+ "interior_excess_range": [
+  0.05246913580246915,
+  0.15909090909090906
+ ],
+ "border_excess_range": [
+  0.004424778761061954,
+  0.06542056074766356
+ ],
+ "pearson_probe3way_vs_causal_excess": -0.5942831144947921,
+ "spearman_probe3way_vs_causal_excess": -0.57,
+ "note": "3-way probe accuracy (the quantity the Othello-GPT literature reports) is highest exactly on the cells with the LEAST causal effect"
+}
+HEADLINE: {
+ "chosen_margin": "2.0",
+ "pearson_probe_vs_causal_strict": 0.28382083983036493,
+ "spearman_probe_vs_causal_strict": 0.30000000000000004,
+ "pearson_probe_vs_causal_excess": 0.6080078233544554,
+ "spearman_probe_vs_causal_excess": 0.5653846153846154,
+ "pearson_probe_vs_causal_direction": 0.3982061700550708,
+ "spearman_probe_vs_causal_direction": 0.5092307692307693,
+ "pearson_probe_vs_direction_excess": 0.3801694345290856,
+ "pearson_probe3way_vs_causal_strict": 0.0650417212809571,
+ "n_cells": 25,
+ "n_high_probe_low_cause": 4,
+ "high_probe_low_cause_cells": [
+  0,
+  1,
+  4,
+  24
+ ],
+ "high_probe_low_cause_rule": "probe acc (occupied) >= median AND strict causal excess over the norm-matched random control <= 0.05",
+ "mean_probe_acc_occ": 0.772715542790805,
+ "mean_causal_strict": 0.40129688776588746,
+ "mean_causal_excess": 0.055666426256081314,
+ "mean_causal_direction": 0.8466450786590576,
+ "mean_direction_excess": 0.35102835059165954,
+ "mean_probe_flip_rate": 1.0,
+ "causal_strict_range": [
+  0.30612244897959184,
+  0.49794238683127573
+ ],
+ "causal_excess_range": [
+  0.004424778761061954,
+  0.15909090909090906
+ ],
+ "probe_acc_occ_range": [
+  0.7221261053440984,
+  0.819539493645282
+ ],
+ "pearson_causal_vs_model_ceiling": -0.641462460688306,
+ "by_margin": {
+  "1.0": {
+   "pearson_probe_vs_strict": 0.04439953640564952,
+   "spearman_probe_vs_strict": 0.007692307692307692,
+   "pearson_probe_vs_excess": 0.6039404401391274,
+   "pearson_probe_vs_direction": 0.39477274180715843,
+   "n_high_probe_low_cause": 8,
+   "mean_excess": 0.03656214466616505
+  },
+  "2.0": {
+   "pearson_probe_vs_strict": 0.28382083983036493,
+   "spearman_probe_vs_strict": 0.30000000000000004,
+   "pearson_probe_vs_excess": 0.6080078233544554,
+   "pearson_probe_vs_direction": 0.3982061700550708,
+   "n_high_probe_low_cause": 4,
+   "mean_excess": 0.055666426256081314
+  },
+  "4.0": {
+   "pearson_probe_vs_strict": 0.5205465080864988,
+   "spearman_probe_vs_strict": 0.4761538461538461,
+   "pearson_probe_vs_excess": 0.6785490475831203,
+   "pearson_probe_vs_direction": 0.43549604817271725,
+   "n_high_probe_low_cause": 1,
+   "mean_excess": 0.09678161190353052
+  },
+  "8.0": {
+   "pearson_probe_vs_strict": 0.6400960222220671,
+   "spearman_probe_vs_strict": 0.6084615384615384,
+   "pearson_probe_vs_excess": 0.6414746606118532,
+   "pearson_probe_vs_direction": 0.42675679374811215,
+   "n_high_probe_low_cause": 1,
+   "mean_excess": 0.1715314472278527
+  },
+  "16.0": {
+   "pearson_probe_vs_strict": 0.6204950790937936,
+   "spearman_probe_vs_strict": 0.5546153846153846,
+   "pearson_probe_vs_excess": 0.5800291222250682,
+   "pearson_probe_vs_direction": 0.37378811997201733,
+   "n_high_probe_low_cause": 0,
+   "mean_excess": 0.2718727794227953
+  },
+  "32.0": {
+   "pearson_probe_vs_strict": 0.4888461868527757,
+   "spearman_probe_vs_strict": 0.45692307692307693,
+   "pearson_probe_vs_excess": 0.45026817156629456,
+   "pearson_probe_vs_direction": 0.3318197174581607,
+   "n_high_probe_low_cause": 0,
+   "mean_excess": 0.32436540498704036
+  }
+ }
+}
+wrote results.json; total 461.5 s
