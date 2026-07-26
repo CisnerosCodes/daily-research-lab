@@ -1,0 +1,41 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_tsetlin-clause-pruning"
+title: "Can validation-based clause pruning dig the planted DNF back out from under label noise?"
+hypothesis: "Scoring each learned Tsetlin clause by its individual precision on a held-out NOISY validation set and dropping low-precision clauses restores clause precision to ~1.0 at eps=0.2 without hurting exact recall or accuracy; at eps=0.3 it may amputate true clauses instead."
+seed: 0
+dataset:
+  name: "planted 3-clause DNF over 10 boolean variables (same generator as 2026-07-24_tsetlin-dnf-recovery)"
+  source: "generated"
+  license: "n/a"
+# --- hyperparameters ---
+params:
+  n_vars: 10                # boolean input variables (x9 is an irrelevant distractor)
+  planted_dnf:              # each clause: list of [var_index, sign] with sign 1 = x, 0 = NOT x
+    - [[0, 1], [1, 1], [2, 0]]
+    - [[3, 0], [4, 1], [5, 1]]
+    - [[6, 1], [7, 0], [8, 0]]
+  n_train: 3000
+  n_test: 2000              # CLEAN labels, used for measurement only, never for pruning
+  noise_levels: [0.0, 0.2, 0.3, 0.4]   # 0.0 = control, 0.2/0.3 = the burial regime of 2026-07-24, 0.4 = stress
+  seeds: [0, 1, 2]
+  # Tsetlin Machine (identical config to 2026-07-24_tsetlin-dnf-recovery)
+  n_clauses: 20             # 10 positive-polarity + 10 negative-polarity
+  T: 10                     # vote clip threshold
+  s: 3.0                    # specificity
+  n_states: 100             # automaton states per action side
+  epochs: 60
+  # --- pruning / weighting ---
+  # The validation set is drawn from the SAME NOISY distribution as training
+  # (labels flipped at the same rate eps). We never assume access to clean labels.
+  val_sizes: [100, 500, 2000]
+  val_size_headline: 500
+  tau_grid_points: 51         # pruning thresholds swept uniformly on [0, 1]
+  min_fire_grid: [1, 10, 25]  # minimum validation firings for a clause to be scoreable
+  min_fire_headline: 10
+  auto_alpha: 0.95            # naive oracle-free rule: keep clauses with prec >= alpha * max scoreable prec
+  # statistically corrected oracle-free rule: estimate the achievable precision ceiling
+  # (~1-eps) as the largest Wilson LOWER bound, then keep every clause whose Wilson UPPER
+  # bound reaches that ceiling. Clauses must cover >= min_cov_frac of the validation set.
+  wilson_z: 1.96
+  min_cov_frac: 0.05
+  min_cov_floor: 5

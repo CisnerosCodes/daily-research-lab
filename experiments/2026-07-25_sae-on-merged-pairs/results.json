@@ -1,0 +1,5785 @@
+{
+  "id": "2026-07-25_sae-on-merged-pairs",
+  "git_commit": "0252d71a8f54619633d32d62ad090a1b29994e22",
+  "seed": 0,
+  "duration_sec": 447.04,
+  "metrics": {
+    "n_features": 16,
+    "m_hidden": 4,
+    "n_pairs": 8,
+    "headline": {
+      "cos_threshold": 0.95,
+      "primary_arm": "merged_r1.0_p0.10",
+      "primary_within_pair_abs_cos_mean": 0.999,
+      "primary_merge_verified_all_seeds": true,
+      "primary_n_represented_by_seed": [
+        14,
+        16
+      ],
+      "best_setting": "x4 lambda=0.06 seed1",
+      "n_pairdirs_recovered_of_8": 8,
+      "n_truefeats_recovered_directional_of_16": 10,
+      "n_truefeats_recovered_functional_of_16": 0,
+      "best_fvu": 0.00021,
+      "best_l0": 2.059,
+      "best_dead_fraction": 0.0,
+      "best_max_member_imbalance": 0.0069,
+      "best_mean_member_imbalance": 0.0033,
+      "max_member_imbalance_over_ALL_merged_saes": 0.3523,
+      "null_pairdirs_recovered_mean": 0.833,
+      "null_pairdirs_recovered_p95": 2,
+      "null_truefeats_recovered_mean": 1.015,
+      "max_key16_directional_over_all_merged_saes": 15,
+      "probe_mlp_sum_r2_primary": 0.7779,
+      "probe_mlp_diff_r2_primary": 0.4727,
+      "probe_lin_diff_r2_primary": 0.0336,
+      "probe_mlp_diff_r2_exact_merge_oracle": 0.0225,
+      "probe_mlp_sum_r2_exact_merge_oracle": 0.7503,
+      "probe_mlp_diff_r2_shuffled_null": -0.0225,
+      "probe_mlp_diff_r2_unmerged_control": 0.3382,
+      "probe_mlp_sum_r2_unmerged_control": 0.3739,
+      "control_arm": "control_r0.0_p0.10",
+      "control_within_pair_abs_cos": 0.2497,
+      "control_best_setting": "x8 lambda=0.02",
+      "control_n_pairdirs_of_8": 2,
+      "control_n_truefeats_functional_of_16": 2,
+      "control_max_truefeats_functional_of_16": 2,
+      "control_max_member_imbalance": 1.0,
+      "n_skipped_arms": 0
+    },
+    "toy_arms": [
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "p": 0.1,
+        "rho": 1.0,
+        "toy_final_loss": 0.010213,
+        "geometry": {
+          "n_represented": 14,
+          "features_per_dim": 3.5,
+          "within_pair_abs_cos": 0.9990002612272898,
+          "within_pair_signed_cos": 0.9990002612272898,
+          "cross_pair_abs_cos": 0.15406181898844593,
+          "min_within_pair_abs_cos": 0.9979256987571716,
+          "n_pairs_both_represented": 6,
+          "pairs_both_represented": [
+            0,
+            1,
+            3,
+            4,
+            5,
+            7
+          ],
+          "within_abs_cos_per_pair": [
+            0.9979,
+            0.9987,
+            0.8881,
+            0.9993,
+            0.9993,
+            0.999,
+            0.9767,
+            0.9998
+          ],
+          "norms": [
+            0.7201,
+            0.7074,
+            0.7258,
+            0.6932,
+            1.0108,
+            0.0225,
+            0.7055,
+            0.7199,
+            0.7083,
+            0.7091,
+            0.7149,
+            0.7172,
+            1.0067,
+            0.0308,
+            0.7214,
+            0.7123
+          ]
+        },
+        "merged_verified": true,
+        "probes": {
+          "linear": {
+            "val_a": 0.3898,
+            "val_a_max": 0.6135,
+            "val_b": 0.2537,
+            "val_b_max": 0.3861,
+            "sum": 0.573,
+            "sum_max": 0.7632,
+            "diff": 0.0698,
+            "diff_max": 0.297,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": 0.686,
+            "val_a_max": 0.8191,
+            "val_b": 0.5495,
+            "val_b_max": 0.7682,
+            "sum": 0.7485,
+            "sum_max": 0.8682,
+            "diff": 0.4889,
+            "diff_max": 0.686,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 979,
+          "n_test_samples_which_solo": 0
+        },
+        "probes_exact_merge_oracle": {
+          "linear": {
+            "val_a": 0.3892,
+            "val_a_max": 0.6132,
+            "val_b": 0.2533,
+            "val_b_max": 0.386,
+            "sum": 0.5732,
+            "sum_max": 0.7636,
+            "diff": 0.0685,
+            "diff_max": 0.2964,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": 0.4903,
+            "val_a_max": 0.8243,
+            "val_b": 0.2888,
+            "val_b_max": 0.4317,
+            "sum": 0.7042,
+            "sum_max": 0.8643,
+            "diff": 0.0758,
+            "diff_max": 0.3935,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 979,
+          "n_test_samples_which_solo": 0
+        },
+        "probes_shuffled_h_null": {
+          "linear": {
+            "val_a": -0.003,
+            "val_a_max": 0.0054,
+            "val_b": -0.0022,
+            "val_b_max": 0.0036,
+            "sum": -0.0041,
+            "sum_max": 0.0003,
+            "diff": -0.001,
+            "diff_max": 0.0041,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": -0.0281,
+            "val_a_max": -0.0043,
+            "val_b": -0.0217,
+            "val_b_max": -0.0036,
+            "sum": -0.0315,
+            "sum_max": -0.0087,
+            "diff": -0.0176,
+            "diff_max": 0.0036,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 979,
+          "n_test_samples_which_solo": 0
+        },
+        "secs": 28.4
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "p": 0.1,
+        "rho": 1.0,
+        "toy_final_loss": 0.005424,
+        "geometry": {
+          "n_represented": 16,
+          "features_per_dim": 4.0,
+          "within_pair_abs_cos": 0.9989024922251701,
+          "within_pair_signed_cos": 0.9989024922251701,
+          "cross_pair_abs_cos": 0.15656320602117343,
+          "min_within_pair_abs_cos": 0.9974610209465027,
+          "n_pairs_both_represented": 8,
+          "pairs_both_represented": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "within_abs_cos_per_pair": [
+            0.9989,
+            0.9975,
+            0.9999,
+            0.9999,
+            0.9988,
+            0.9976,
+            0.9997,
+            0.999
+          ],
+          "norms": [
+            0.7162,
+            0.7182,
+            0.7201,
+            0.6995,
+            0.7125,
+            0.7107,
+            0.7247,
+            0.7062,
+            0.7415,
+            0.7218,
+            0.6997,
+            0.7391,
+            0.7222,
+            0.7143,
+            0.7199,
+            0.7098
+          ]
+        },
+        "merged_verified": true,
+        "probes": {
+          "linear": {
+            "val_a": 0.3069,
+            "val_a_max": 0.3217,
+            "val_b": 0.288,
+            "val_b_max": 0.3199,
+            "sum": 0.6023,
+            "sum_max": 0.6355,
+            "diff": -0.0026,
+            "diff_max": 0.003,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": 0.6285,
+            "val_a_max": 0.769,
+            "val_b": 0.6269,
+            "val_b_max": 0.7844,
+            "sum": 0.8072,
+            "sum_max": 0.8449,
+            "diff": 0.4565,
+            "diff_max": 0.6639,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 981,
+          "n_test_samples_which_solo": 0
+        },
+        "probes_exact_merge_oracle": {
+          "linear": {
+            "val_a": 0.3067,
+            "val_a_max": 0.3204,
+            "val_b": 0.2878,
+            "val_b_max": 0.3192,
+            "sum": 0.6024,
+            "sum_max": 0.6355,
+            "diff": -0.0031,
+            "diff_max": 0.0006,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": 0.3873,
+            "val_a_max": 0.4182,
+            "val_b": 0.3681,
+            "val_b_max": 0.3972,
+            "sum": 0.7963,
+            "sum_max": 0.8336,
+            "diff": -0.0309,
+            "diff_max": -0.0036,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 981,
+          "n_test_samples_which_solo": 0
+        },
+        "probes_shuffled_h_null": {
+          "linear": {
+            "val_a": -0.0038,
+            "val_a_max": 0.0012,
+            "val_b": -0.0027,
+            "val_b_max": 0.0004,
+            "sum": -0.0031,
+            "sum_max": 0.0012,
+            "diff": -0.0034,
+            "diff_max": 0.0003,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": -0.0297,
+            "val_a_max": -0.0105,
+            "val_b": -0.026,
+            "val_b_max": -0.0178,
+            "sum": -0.0261,
+            "sum_max": -0.0145,
+            "diff": -0.0273,
+            "diff_max": -0.0182,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 981,
+          "n_test_samples_which_solo": 0
+        },
+        "secs": 28.0
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "p": 0.1,
+        "rho": 0.75,
+        "toy_final_loss": 0.009113,
+        "geometry": {
+          "n_represented": 16,
+          "features_per_dim": 4.0,
+          "within_pair_abs_cos": 0.9987232983112335,
+          "within_pair_signed_cos": 0.9987232983112335,
+          "cross_pair_abs_cos": 0.15789030968777037,
+          "min_within_pair_abs_cos": 0.9970365762710571,
+          "n_pairs_both_represented": 8,
+          "pairs_both_represented": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "within_abs_cos_per_pair": [
+            0.999,
+            0.9975,
+            0.9998,
+            0.9975,
+            0.9999,
+            0.997,
+            0.9998,
+            0.9992
+          ],
+          "norms": [
+            0.7186,
+            0.7247,
+            0.7227,
+            0.7099,
+            0.7309,
+            0.6955,
+            0.743,
+            0.7093,
+            0.7063,
+            0.7096,
+            0.7242,
+            0.725,
+            0.7103,
+            0.7195,
+            0.7217,
+            0.723
+          ]
+        },
+        "merged_verified": true,
+        "probes": {
+          "linear": {
+            "val_a": 0.3014,
+            "val_a_max": 0.3356,
+            "val_b": 0.3076,
+            "val_b_max": 0.3505,
+            "sum": 0.6078,
+            "sum_max": 0.6515,
+            "diff": -0.0017,
+            "diff_max": 0.0017,
+            "which_solo": -0.0033,
+            "which_solo_max": 0.0032
+          },
+          "mlp": {
+            "val_a": 0.5947,
+            "val_a_max": 0.7288,
+            "val_b": 0.6103,
+            "val_b_max": 0.6865,
+            "sum": 0.7641,
+            "sum_max": 0.8087,
+            "diff": 0.4519,
+            "diff_max": 0.6576,
+            "which_solo": 0.4774,
+            "which_solo_max": 0.7208
+          },
+          "n_test_samples_sum": 764,
+          "n_test_samples_which_solo": 445
+        },
+        "probes_exact_merge_oracle": {
+          "linear": {
+            "val_a": 0.3017,
+            "val_a_max": 0.3366,
+            "val_b": 0.3071,
+            "val_b_max": 0.3482,
+            "sum": 0.6079,
+            "sum_max": 0.6517,
+            "diff": -0.002,
+            "diff_max": 0.0037,
+            "which_solo": -0.0049,
+            "which_solo_max": 0.0035
+          },
+          "mlp": {
+            "val_a": 0.3527,
+            "val_a_max": 0.3987,
+            "val_b": 0.3571,
+            "val_b_max": 0.4063,
+            "sum": 0.7585,
+            "sum_max": 0.7971,
+            "diff": -0.0425,
+            "diff_max": -0.0126,
+            "which_solo": -0.0795,
+            "which_solo_max": -0.0469
+          },
+          "n_test_samples_sum": 764,
+          "n_test_samples_which_solo": 445
+        },
+        "probes_shuffled_h_null": {
+          "linear": {
+            "val_a": -0.0048,
+            "val_a_max": 0.0014,
+            "val_b": -0.0033,
+            "val_b_max": 0.0038,
+            "sum": -0.0059,
+            "sum_max": -0.0026,
+            "diff": -0.0021,
+            "diff_max": 0.0016,
+            "which_solo": -0.0102,
+            "which_solo_max": 0.0007
+          },
+          "mlp": {
+            "val_a": -0.0394,
+            "val_a_max": -0.009,
+            "val_b": -0.037,
+            "val_b_max": -0.0026,
+            "sum": -0.0461,
+            "sum_max": -0.0149,
+            "diff": -0.0285,
+            "diff_max": -0.0038,
+            "which_solo": -0.0659,
+            "which_solo_max": -0.0435
+          },
+          "n_test_samples_sum": 764,
+          "n_test_samples_which_solo": 445
+        },
+        "secs": 31.7
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "p": 0.05,
+        "rho": 1.0,
+        "toy_final_loss": 0.002289,
+        "geometry": {
+          "n_represented": 16,
+          "features_per_dim": 4.0,
+          "within_pair_abs_cos": 0.9375253096222878,
+          "within_pair_signed_cos": 0.9375253096222878,
+          "cross_pair_abs_cos": 0.23525634870644094,
+          "min_within_pair_abs_cos": 0.7115852236747742,
+          "n_pairs_both_represented": 8,
+          "pairs_both_represented": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "within_abs_cos_per_pair": [
+            0.9986,
+            0.7959,
+            0.9979,
+            0.999,
+            0.9988,
+            0.7116,
+            0.9987,
+            0.9997
+          ],
+          "norms": [
+            0.725,
+            0.7264,
+            0.8411,
+            0.8259,
+            0.7553,
+            0.7012,
+            0.7233,
+            0.7291,
+            0.7317,
+            0.7227,
+            0.8717,
+            0.8751,
+            0.7573,
+            0.7085,
+            0.7328,
+            0.7355
+          ]
+        },
+        "merged_verified": false,
+        "probes": {
+          "linear": {
+            "val_a": 0.4078,
+            "val_a_max": 0.522,
+            "val_b": 0.4017,
+            "val_b_max": 0.5373,
+            "sum": 0.7507,
+            "sum_max": 0.855,
+            "diff": 0.045,
+            "diff_max": 0.2043,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": 0.8251,
+            "val_a_max": 0.9171,
+            "val_b": 0.8376,
+            "val_b_max": 0.9199,
+            "sum": 0.9285,
+            "sum_max": 0.9628,
+            "diff": 0.7356,
+            "diff_max": 0.929,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 488,
+          "n_test_samples_which_solo": 0
+        },
+        "probes_exact_merge_oracle": {
+          "linear": {
+            "val_a": 0.3856,
+            "val_a_max": 0.4468,
+            "val_b": 0.3768,
+            "val_b_max": 0.4309,
+            "sum": 0.7528,
+            "sum_max": 0.8582,
+            "diff": -0.0048,
+            "diff_max": 0.0057,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": 0.4499,
+            "val_a_max": 0.563,
+            "val_b": 0.4579,
+            "val_b_max": 0.4877,
+            "sum": 0.9374,
+            "sum_max": 0.9732,
+            "diff": -0.0469,
+            "diff_max": 0.0037,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 488,
+          "n_test_samples_which_solo": 0
+        },
+        "probes_shuffled_h_null": {
+          "linear": {
+            "val_a": -0.0079,
+            "val_a_max": 0.0033,
+            "val_b": -0.0058,
+            "val_b_max": 0.0029,
+            "sum": -0.009,
+            "sum_max": 0.0011,
+            "diff": -0.0047,
+            "diff_max": 0.003,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "mlp": {
+            "val_a": -0.0484,
+            "val_a_max": -0.0221,
+            "val_b": -0.0348,
+            "val_b_max": -0.0136,
+            "sum": -0.0443,
+            "sum_max": -0.0215,
+            "diff": -0.0387,
+            "diff_max": 0.0035,
+            "which_solo": null,
+            "which_solo_max": null
+          },
+          "n_test_samples_sum": 488,
+          "n_test_samples_which_solo": 0
+        },
+        "secs": 30.9
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "p": 0.1,
+        "rho": 0.0,
+        "toy_final_loss": 0.012805,
+        "geometry": {
+          "n_represented": 12,
+          "features_per_dim": 3.0,
+          "within_pair_abs_cos": 0.2497007131576538,
+          "within_pair_signed_cos": 0.2497007131576538,
+          "cross_pair_abs_cos": 0.3761090029824953,
+          "min_within_pair_abs_cos": 0.2407316267490387,
+          "n_pairs_both_represented": 5,
+          "pairs_both_represented": [
+            2,
+            3,
+            4,
+            5,
+            7
+          ],
+          "within_abs_cos_per_pair": [
+            0.845,
+            0.6605,
+            0.2623,
+            0.2529,
+            0.2409,
+            0.2407,
+            0.0154,
+            0.2516
+          ],
+          "norms": [
+            0.014,
+            1.0702,
+            0.011,
+            1.0732,
+            1.0446,
+            1.0655,
+            1.07,
+            1.0735,
+            1.0768,
+            1.0613,
+            1.0653,
+            1.0654,
+            0.0458,
+            0.0234,
+            1.0751,
+            1.0799
+          ]
+        },
+        "merged_verified": false,
+        "probes": {
+          "linear": {
+            "val_a": 0.3088,
+            "val_a_max": 0.6246,
+            "val_b": 0.4387,
+            "val_b_max": 0.5956,
+            "sum": 0.4354,
+            "sum_max": 0.6873,
+            "diff": 0.2994,
+            "diff_max": 0.5075,
+            "which_solo": 0.3891,
+            "which_solo_max": 0.4781
+          },
+          "mlp": {
+            "val_a": 0.241,
+            "val_a_max": 0.6466,
+            "val_b": 0.4391,
+            "val_b_max": 0.728,
+            "sum": 0.3739,
+            "sum_max": 0.6844,
+            "diff": 0.3382,
+            "diff_max": 0.5299,
+            "which_solo": 0.7452,
+            "which_solo_max": 0.822
+          },
+          "n_test_samples_sum": 101,
+          "n_test_samples_which_solo": 1766
+        },
+        "probes_exact_merge_oracle": {
+          "linear": {
+            "val_a": 0.2296,
+            "val_a_max": 0.443,
+            "val_b": 0.4373,
+            "val_b_max": 0.7719,
+            "sum": 0.5555,
+            "sum_max": 0.914,
+            "diff": 0.0771,
+            "diff_max": 0.3417,
+            "which_solo": 0.122,
+            "which_solo_max": 0.5113
+          },
+          "mlp": {
+            "val_a": 0.0634,
+            "val_a_max": 0.3089,
+            "val_b": 0.3406,
+            "val_b_max": 0.8924,
+            "sum": 0.5797,
+            "sum_max": 0.946,
+            "diff": -0.211,
+            "diff_max": 0.3435,
+            "which_solo": 0.272,
+            "which_solo_max": 0.905
+          },
+          "n_test_samples_sum": 101,
+          "n_test_samples_which_solo": 1766
+        },
+        "probes_shuffled_h_null": {
+          "linear": {
+            "val_a": -0.02,
+            "val_a_max": 0.0064,
+            "val_b": -0.0476,
+            "val_b_max": 0.032,
+            "sum": -0.0498,
+            "sum_max": 0.0127,
+            "diff": -0.019,
+            "diff_max": 0.0363,
+            "which_solo": -0.0026,
+            "which_solo_max": -0.0003
+          },
+          "mlp": {
+            "val_a": -0.2085,
+            "val_a_max": -0.0124,
+            "val_b": -0.3061,
+            "val_b_max": -0.1278,
+            "sum": -0.3186,
+            "sum_max": -0.138,
+            "diff": -0.2018,
+            "diff_max": 0.0156,
+            "which_solo": -0.0511,
+            "which_solo_max": -0.0387
+          },
+          "n_test_samples_sum": 101,
+          "n_test_samples_which_solo": 1766
+        },
+        "secs": 28.3
+      }
+    ],
+    "sae_arms": [
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.02,
+        "n_feat": 8,
+        "fvu": 3e-05,
+        "l0": 1.633,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9533,
+          "matched_cos": [
+            1.0,
+            1.0,
+            0.8803,
+            0.8804,
+            1.0,
+            1.0,
+            0.9343,
+            0.931
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.959,
+          "matched_cos": [
+            0.9995,
+            null,
+            0.9997,
+            null,
+            0.8802,
+            0.9682,
+            null,
+            null,
+            0.9999,
+            null,
+            0.9998,
+            null,
+            0.9343,
+            0.9408,
+            null,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 13,
+            "0.95": 9,
+            "0.99": 8
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 5,
+            "0.95": 4,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.1701,
+          "mean_member_imbalance": 0.0434,
+          "median_member_imbalance": 0.0028,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.2
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.06,
+        "n_feat": 8,
+        "fvu": 0.0002,
+        "l0": 1.277,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9731,
+          "matched_cos": [
+            1.0,
+            1.0,
+            0.9117,
+            0.9249,
+            0.9759,
+            0.9722,
+            0.9999,
+            1.0
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9606,
+          "matched_cos": [
+            0.9996,
+            null,
+            0.9998,
+            null,
+            0.9118,
+            null,
+            0.9269,
+            null,
+            0.9783,
+            null,
+            null,
+            0.9749,
+            0.9999,
+            null,
+            0.9999,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 12,
+            "0.99": 7
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.1681,
+          "mean_member_imbalance": 0.043,
+          "median_member_imbalance": 0.0031,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 8.8
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.2,
+        "n_feat": 8,
+        "fvu": 0.00109,
+        "l0": 0.757,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9999,
+          "matched_cos": [
+            1.0,
+            0.9999,
+            1.0,
+            0.9999,
+            0.9998,
+            0.9999,
+            0.9999,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9916,
+          "matched_cos": [
+            0.9996,
+            null,
+            0.9998,
+            null,
+            1.0,
+            null,
+            0.9999,
+            null,
+            null,
+            0.9998,
+            0.9999,
+            null,
+            0.9999,
+            null,
+            null,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 15,
+            "0.99": 14
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.1715,
+          "mean_member_imbalance": 0.0435,
+          "median_member_imbalance": 0.0026,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.0
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.02,
+        "n_feat": 16,
+        "fvu": 0.00016,
+        "l0": 4.441,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8785,
+          "matched_cos": [
+            0.7504,
+            0.8264,
+            0.9111,
+            0.9235,
+            0.906,
+            0.8369,
+            0.8831,
+            0.991
+          ],
+          "recovered_injective": {
+            "0.9": 4,
+            "0.95": 1,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 4,
+            "0.95": 1,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8903,
+          "matched_cos": [
+            0.756,
+            0.7195,
+            0.829,
+            0.6173,
+            0.911,
+            0.9957,
+            0.3765,
+            0.537,
+            0.9089,
+            0.7633,
+            0.8385,
+            0.6812,
+            0.8831,
+            0.7908,
+            0.9913,
+            0.7459
+          ],
+          "recovered_injective": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 9,
+            "0.95": 4,
+            "0.99": 3
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.1723,
+          "mean_member_imbalance": 0.0432,
+          "median_member_imbalance": 0.0018,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            2,
+            1,
+            2,
+            1,
+            3,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.2
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.06,
+        "n_feat": 16,
+        "fvu": 0.00025,
+        "l0": 2.117,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9753,
+          "matched_cos": [
+            0.9762,
+            0.9999,
+            0.9958,
+            0.978,
+            0.97,
+            0.9882,
+            0.9052,
+            0.9893
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9721,
+          "matched_cos": [
+            0.9767,
+            0.8879,
+            1.0,
+            -0.6456,
+            0.9958,
+            0.7974,
+            0.9309,
+            0.9799,
+            0.7065,
+            0.972,
+            0.9911,
+            0.6977,
+            0.9051,
+            0.0644,
+            0.8211,
+            0.9903
+          ],
+          "recovered_injective": {
+            "0.9": 9,
+            "0.95": 7,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 14,
+            "0.99": 5
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 9,
+            "0.95": 7,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.1713,
+          "mean_member_imbalance": 0.0471,
+          "median_member_imbalance": 0.0039,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            1,
+            2,
+            3,
+            2,
+            1,
+            3,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.6
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.2,
+        "n_feat": 16,
+        "fvu": 0.00119,
+        "l0": 1.313,
+        "n_alive": 14,
+        "frac_dead": 0.0,
+        "frac_alive": 0.875,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9902,
+          "matched_cos": [
+            0.9922,
+            0.9999,
+            1.0,
+            1.0,
+            0.9591,
+            0.9999,
+            0.9996,
+            0.9706
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 6
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 6
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9823,
+          "matched_cos": [
+            0.9935,
+            0.9814,
+            0.9905,
+            0.9997,
+            1.0,
+            null,
+            0.9999,
+            -0.1218,
+            0.8606,
+            0.9592,
+            0.9416,
+            0.9999,
+            0.9996,
+            0.984,
+            null,
+            0.9347
+          ],
+          "recovered_injective": {
+            "0.9": 12,
+            "0.95": 10,
+            "0.99": 7
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 15,
+            "0.99": 9
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 11,
+            "0.95": 9,
+            "0.99": 7
+          }
+        },
+        "selectivity": {
+          "n_judged": 14,
+          "max_member_imbalance": 0.3523,
+          "mean_member_imbalance": 0.0507,
+          "median_member_imbalance": 0.0025,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 14,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 2,
+          "feats_per_pairdir": [
+            2,
+            2,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.7
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.02,
+        "n_feat": 32,
+        "fvu": 0.00077,
+        "l0": 9.959,
+        "n_alive": 32,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9078,
+          "matched_cos": [
+            0.9957,
+            0.7814,
+            0.9818,
+            0.9703,
+            0.9049,
+            0.8863,
+            0.8151,
+            0.9266
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9103,
+          "matched_cos": [
+            0.9972,
+            0.8642,
+            0.7862,
+            0.6893,
+            0.9818,
+            0.8692,
+            0.9674,
+            0.9713,
+            0.7123,
+            0.9118,
+            0.8889,
+            0.7888,
+            0.815,
+            0.9205,
+            0.6316,
+            0.9301
+          ],
+          "recovered_injective": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 10,
+            "0.95": 5,
+            "0.99": 2
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 32,
+          "max_member_imbalance": 0.2073,
+          "mean_member_imbalance": 0.035,
+          "median_member_imbalance": 0.0024,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 32,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 6,
+          "feats_per_pairdir": [
+            6,
+            4,
+            6,
+            6,
+            3,
+            2,
+            3,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.7
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.06,
+        "n_feat": 32,
+        "fvu": 0.00087,
+        "l0": 4.511,
+        "n_alive": 28,
+        "frac_dead": 0.0,
+        "frac_alive": 0.875,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9731,
+          "matched_cos": [
+            0.9763,
+            0.9553,
+            0.9949,
+            0.9817,
+            0.9466,
+            0.9818,
+            0.9693,
+            0.979
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9636,
+          "matched_cos": [
+            0.9781,
+            0.7391,
+            0.9582,
+            0.697,
+            0.9949,
+            0.9002,
+            0.9282,
+            0.9844,
+            0.9514,
+            0.8705,
+            0.8657,
+            0.9855,
+            0.9693,
+            0.8437,
+            0.7813,
+            0.98
+          ],
+          "recovered_injective": {
+            "0.9": 10,
+            "0.95": 8,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 13,
+            "0.99": 1
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 9,
+            "0.95": 8,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 28,
+          "max_member_imbalance": 0.2476,
+          "mean_member_imbalance": 0.0563,
+          "median_member_imbalance": 0.004,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 28,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 5,
+          "feats_per_pairdir": [
+            3,
+            2,
+            3,
+            4,
+            3,
+            3,
+            5,
+            5
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.5
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.2,
+        "n_feat": 32,
+        "fvu": 0.00134,
+        "l0": 1.851,
+        "n_alive": 20,
+        "frac_dead": 0.0,
+        "frac_alive": 0.625,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9967,
+          "matched_cos": [
+            0.9973,
+            0.9959,
+            0.9976,
+            0.9987,
+            0.9895,
+            0.9964,
+            0.9985,
+            0.9998
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 7
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 7
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9883,
+          "matched_cos": [
+            0.9976,
+            0.992,
+            0.9716,
+            0.9974,
+            0.9976,
+            -0.2228,
+            0.996,
+            0.9992,
+            0.9846,
+            0.9912,
+            0.9882,
+            0.9979,
+            0.9985,
+            0.337,
+            0.3319,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 13,
+            "0.95": 13,
+            "0.99": 10
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 15,
+            "0.99": 13
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 13,
+            "0.95": 13,
+            "0.99": 10
+          }
+        },
+        "selectivity": {
+          "n_judged": 20,
+          "max_member_imbalance": 0.2935,
+          "mean_member_imbalance": 0.0686,
+          "median_member_imbalance": 0.0034,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 20,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 4,
+          "feats_per_pairdir": [
+            3,
+            2,
+            4,
+            2,
+            3,
+            2,
+            3,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.1
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 2,
+        "l1_coeff": 0.02,
+        "n_feat": 8,
+        "fvu": 3e-05,
+        "l0": 1.855,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9591,
+          "matched_cos": [
+            0.9999,
+            0.9291,
+            0.9289,
+            1.0,
+            0.9077,
+            1.0,
+            0.9071,
+            1.0
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9588,
+          "matched_cos": [
+            0.9997,
+            null,
+            0.9303,
+            null,
+            0.93,
+            null,
+            1.0,
+            null,
+            null,
+            0.9153,
+            0.9995,
+            null,
+            null,
+            0.908,
+            null,
+            0.9997
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0074,
+          "mean_member_imbalance": 0.0032,
+          "median_member_imbalance": 0.003,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.2
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 2,
+        "l1_coeff": 0.06,
+        "n_feat": 8,
+        "fvu": 0.00023,
+        "l0": 1.513,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8698,
+          "matched_cos": [
+            0.7066,
+            0.9965,
+            0.9962,
+            0.7292,
+            0.9995,
+            0.768,
+            0.9997,
+            0.7632
+          ],
+          "recovered_injective": {
+            "0.9": 4,
+            "0.95": 4,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 4,
+            "0.95": 4,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8695,
+          "matched_cos": [
+            null,
+            null,
+            null,
+            0.9963,
+            null,
+            0.9967,
+            null,
+            0.7325,
+            null,
+            0.9998,
+            null,
+            0.7755,
+            null,
+            0.9999,
+            0.7764,
+            0.7234
+          ],
+          "recovered_injective": {
+            "0.9": 4,
+            "0.95": 4,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 4,
+            "0.95": 4,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0131,
+          "mean_member_imbalance": 0.0041,
+          "median_member_imbalance": 0.0034,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 2,
+          "feats_per_pairdir": [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.9
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 2,
+        "l1_coeff": 0.2,
+        "n_feat": 8,
+        "fvu": 0.00122,
+        "l0": 0.762,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9999,
+          "matched_cos": [
+            0.9997,
+            0.9999,
+            0.9997,
+            1.0,
+            1.0,
+            0.9999,
+            1.0,
+            0.9998
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9996,
+          "matched_cos": [
+            null,
+            1.0,
+            0.9993,
+            null,
+            null,
+            0.9997,
+            0.9999,
+            null,
+            0.9998,
+            null,
+            null,
+            0.9998,
+            0.9999,
+            null,
+            0.9997,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 16,
+            "0.99": 16
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0065,
+          "mean_member_imbalance": 0.0031,
+          "median_member_imbalance": 0.0036,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.0
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 4,
+        "l1_coeff": 0.02,
+        "n_feat": 16,
+        "fvu": 0.00035,
+        "l0": 4.065,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.867,
+          "matched_cos": [
+            0.9585,
+            0.9708,
+            0.8512,
+            0.9918,
+            0.7464,
+            0.6859,
+            0.8607,
+            0.8707
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 3,
+            "0.95": 3,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8673,
+          "matched_cos": [
+            0.8322,
+            0.962,
+            0.804,
+            0.9704,
+            0.8538,
+            0.7254,
+            0.9918,
+            0.5555,
+            0.73,
+            0.7534,
+            -0.7276,
+            0.5241,
+            0.708,
+            0.8627,
+            0.8683,
+            0.8811
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 6,
+            "0.95": 6,
+            "0.99": 2
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 3,
+            "0.95": 3,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.0119,
+          "mean_member_imbalance": 0.0034,
+          "median_member_imbalance": 0.0026,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            2,
+            1,
+            3,
+            0,
+            3,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.9
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 4,
+        "l1_coeff": 0.06,
+        "n_feat": 16,
+        "fvu": 0.00021,
+        "l0": 2.059,
+        "n_alive": 15,
+        "frac_dead": 0.0,
+        "frac_alive": 0.9375,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9942,
+          "matched_cos": [
+            0.9851,
+            1.0,
+            0.9856,
+            0.9924,
+            0.9999,
+            0.9926,
+            0.9986,
+            0.9998
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 6
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 6
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.994,
+          "matched_cos": [
+            0.9795,
+            0.9887,
+            0.9996,
+            null,
+            0.9521,
+            0.9866,
+            0.9329,
+            0.993,
+            0.6502,
+            0.9998,
+            0.7928,
+            0.992,
+            0.9987,
+            -0.435,
+            1.0,
+            0.6509
+          ],
+          "recovered_injective": {
+            "0.9": 11,
+            "0.95": 10,
+            "0.99": 6
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 16,
+            "0.99": 12
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 11,
+            "0.95": 10,
+            "0.99": 6
+          }
+        },
+        "selectivity": {
+          "n_judged": 15,
+          "max_member_imbalance": 0.0069,
+          "mean_member_imbalance": 0.0033,
+          "median_member_imbalance": 0.0035,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 15,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            1,
+            3,
+            3,
+            2,
+            2,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.0
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 4,
+        "l1_coeff": 0.2,
+        "n_feat": 16,
+        "fvu": 0.00148,
+        "l0": 1.447,
+        "n_alive": 14,
+        "frac_dead": 0.0,
+        "frac_alive": 0.875,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9857,
+          "matched_cos": [
+            0.9215,
+            0.9984,
+            1.0,
+            0.9885,
+            0.9993,
+            0.9805,
+            0.9974,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 5
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 5
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.986,
+          "matched_cos": [
+            0.9288,
+            0.9233,
+            0.9217,
+            0.9993,
+            0.1463,
+            1.0,
+            0.9885,
+            0.9321,
+            0.9995,
+            null,
+            0.8553,
+            0.9847,
+            0.9978,
+            0.9295,
+            0.9998,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 12,
+            "0.95": 7,
+            "0.99": 5
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 14,
+            "0.99": 10
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 12,
+            "0.95": 7,
+            "0.99": 5
+          }
+        },
+        "selectivity": {
+          "n_judged": 14,
+          "max_member_imbalance": 0.0066,
+          "mean_member_imbalance": 0.0033,
+          "median_member_imbalance": 0.0038,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 14,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            1,
+            2,
+            1,
+            3,
+            2,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.2
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 8,
+        "l1_coeff": 0.02,
+        "n_feat": 32,
+        "fvu": 0.00075,
+        "l0": 8.57,
+        "n_alive": 32,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8776,
+          "matched_cos": [
+            0.9063,
+            0.9139,
+            0.992,
+            0.9065,
+            0.8045,
+            0.9231,
+            0.7159,
+            0.859
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 1,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 1,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8775,
+          "matched_cos": [
+            0.8719,
+            0.913,
+            0.9136,
+            0.7996,
+            0.9031,
+            0.9927,
+            0.8419,
+            0.9068,
+            0.7608,
+            0.8157,
+            0.9335,
+            0.8936,
+            0.7187,
+            0.7019,
+            0.7113,
+            0.8692
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 1,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 9,
+            "0.95": 2,
+            "0.99": 2
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 6,
+            "0.95": 1,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 32,
+          "max_member_imbalance": 0.0113,
+          "mean_member_imbalance": 0.0039,
+          "median_member_imbalance": 0.0032,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 32,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 6,
+          "feats_per_pairdir": [
+            5,
+            3,
+            6,
+            5,
+            2,
+            3,
+            5,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.7
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 8,
+        "l1_coeff": 0.06,
+        "n_feat": 32,
+        "fvu": 0.00123,
+        "l0": 6.02,
+        "n_alive": 31,
+        "frac_dead": 0.0,
+        "frac_alive": 0.9688,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.928,
+          "matched_cos": [
+            0.8435,
+            0.9933,
+            0.9343,
+            0.8999,
+            0.9903,
+            0.9445,
+            0.9769,
+            0.8414
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9278,
+          "matched_cos": [
+            0.7911,
+            0.8439,
+            0.8881,
+            0.9944,
+            0.9354,
+            0.9103,
+            0.8185,
+            0.9019,
+            0.9901,
+            0.9674,
+            0.9539,
+            0.8097,
+            0.9771,
+            0.8684,
+            0.8471,
+            0.8013
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 11,
+            "0.95": 7,
+            "0.99": 3
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "selectivity": {
+          "n_judged": 31,
+          "max_member_imbalance": 0.0197,
+          "mean_member_imbalance": 0.0055,
+          "median_member_imbalance": 0.0041,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 31,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 7,
+          "feats_per_pairdir": [
+            2,
+            5,
+            7,
+            5,
+            4,
+            3,
+            3,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.4
+      },
+      {
+        "arm": "merged_r1.0_p0.10",
+        "seed": 1,
+        "expansion": 8,
+        "l1_coeff": 0.2,
+        "n_feat": 32,
+        "fvu": 0.00168,
+        "l0": 2.393,
+        "n_alive": 24,
+        "frac_dead": 0.0312,
+        "frac_alive": 0.75,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9695,
+          "matched_cos": [
+            0.9288,
+            0.9667,
+            0.9749,
+            0.9875,
+            0.9179,
+            0.9925,
+            0.9906,
+            0.9974
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 3
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 3
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9695,
+          "matched_cos": [
+            0.9322,
+            0.9161,
+            0.9672,
+            0.9686,
+            0.9755,
+            0.9644,
+            0.9877,
+            0.9844,
+            0.9245,
+            0.8596,
+            0.9934,
+            0.8965,
+            0.9906,
+            0.9783,
+            0.9925,
+            0.9984
+          ],
+          "recovered_injective": {
+            "0.9": 14,
+            "0.95": 11,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 12,
+            "0.99": 6
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 14,
+            "0.95": 11,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 24,
+          "max_member_imbalance": 0.0525,
+          "mean_member_imbalance": 0.0053,
+          "median_member_imbalance": 0.0036,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 24,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 4,
+          "feats_per_pairdir": [
+            2,
+            4,
+            3,
+            2,
+            4,
+            3,
+            3,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.0
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.02,
+        "n_feat": 8,
+        "fvu": 4e-05,
+        "l0": 2.151,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9717,
+          "matched_cos": [
+            0.9496,
+            0.9999,
+            0.9436,
+            0.9958,
+            0.9509,
+            0.938,
+            0.9962,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9714,
+          "matched_cos": [
+            null,
+            0.9547,
+            0.9994,
+            null,
+            null,
+            0.9449,
+            0.9965,
+            null,
+            0.9531,
+            null,
+            null,
+            0.9423,
+            null,
+            0.9963,
+            1.0,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 10,
+            "0.99": 8
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.009,
+          "mean_member_imbalance": 0.0042,
+          "median_member_imbalance": 0.0024,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.9
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.06,
+        "n_feat": 8,
+        "fvu": 0.00025,
+        "l0": 1.861,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9402,
+          "matched_cos": [
+            0.888,
+            0.9999,
+            0.9488,
+            0.9265,
+            0.8945,
+            0.944,
+            0.9203,
+            1.0
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9399,
+          "matched_cos": [
+            null,
+            0.8888,
+            null,
+            0.9996,
+            null,
+            0.9522,
+            0.9359,
+            null,
+            0.8968,
+            null,
+            null,
+            0.9463,
+            null,
+            0.9203,
+            0.9999,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 12,
+            "0.95": 5,
+            "0.99": 4
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 2
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0115,
+          "mean_member_imbalance": 0.0046,
+          "median_member_imbalance": 0.0029,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.1
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.2,
+        "n_feat": 8,
+        "fvu": 0.00139,
+        "l0": 0.927,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 1.0,
+          "matched_cos": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.9999,
+            1.0,
+            1.0,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9996,
+          "matched_cos": [
+            0.9998,
+            null,
+            null,
+            0.9994,
+            1.0,
+            null,
+            null,
+            0.9994,
+            null,
+            0.9999,
+            null,
+            0.9993,
+            null,
+            1.0,
+            0.9999,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 16,
+            "0.99": 16
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.008,
+          "mean_member_imbalance": 0.0036,
+          "median_member_imbalance": 0.0017,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.3
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.02,
+        "n_feat": 16,
+        "fvu": 0.00018,
+        "l0": 4.687,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9056,
+          "matched_cos": [
+            0.9131,
+            0.9799,
+            0.9553,
+            0.7936,
+            0.9426,
+            0.9191,
+            0.8124,
+            0.9287
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9068,
+          "matched_cos": [
+            0.9165,
+            -0.523,
+            0.9812,
+            0.7445,
+            0.9581,
+            0.8633,
+            0.811,
+            0.8,
+            0.7721,
+            0.9443,
+            0.7018,
+            0.9197,
+            0.815,
+            0.71,
+            0.9317,
+            0.5806
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 12,
+            "0.95": 4,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.0129,
+          "mean_member_imbalance": 0.0041,
+          "median_member_imbalance": 0.0035,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            1,
+            2,
+            3,
+            3,
+            2,
+            2,
+            2,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.7
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.06,
+        "n_feat": 16,
+        "fvu": 0.00041,
+        "l0": 2.977,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9781,
+          "matched_cos": [
+            0.9649,
+            0.991,
+            0.9522,
+            0.9878,
+            0.9841,
+            0.9797,
+            0.9717,
+            0.9935
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9778,
+          "matched_cos": [
+            0.8048,
+            0.9653,
+            0.9939,
+            0.9703,
+            0.9535,
+            0.9075,
+            0.988,
+            0.8324,
+            0.9847,
+            -0.0613,
+            0.9859,
+            0.6366,
+            0.9726,
+            0.8697,
+            0.9939,
+            0.9053
+          ],
+          "recovered_injective": {
+            "0.9": 11,
+            "0.95": 9,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 16,
+            "0.99": 3
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 11,
+            "0.95": 9,
+            "0.99": 2
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.0098,
+          "mean_member_imbalance": 0.0041,
+          "median_member_imbalance": 0.0027,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            3,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.7
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.2,
+        "n_feat": 16,
+        "fvu": 0.00154,
+        "l0": 1.656,
+        "n_alive": 14,
+        "frac_dead": 0.0625,
+        "frac_alive": 0.875,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9979,
+          "matched_cos": [
+            0.9956,
+            0.9998,
+            0.9929,
+            0.9998,
+            0.997,
+            1.0,
+            0.9999,
+            0.9982
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9976,
+          "matched_cos": [
+            0.9971,
+            0.9323,
+            0.3928,
+            0.9994,
+            0.993,
+            0.9677,
+            0.9992,
+            -0.0019,
+            0.9879,
+            0.9974,
+            null,
+            0.9993,
+            0.9999,
+            null,
+            0.9983,
+            0.9847
+          ],
+          "recovered_injective": {
+            "0.9": 12,
+            "0.95": 11,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 16,
+            "0.99": 16
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 12,
+            "0.95": 11,
+            "0.99": 8
+          }
+        },
+        "selectivity": {
+          "n_judged": 14,
+          "max_member_imbalance": 0.008,
+          "mean_member_imbalance": 0.0044,
+          "median_member_imbalance": 0.0045,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 14,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            3,
+            1,
+            3,
+            1,
+            2,
+            1,
+            1,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 8.4
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.02,
+        "n_feat": 32,
+        "fvu": 0.00071,
+        "l0": 10.677,
+        "n_alive": 32,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9484,
+          "matched_cos": [
+            0.992,
+            0.8887,
+            0.872,
+            0.9658,
+            0.9744,
+            0.9558,
+            0.9735,
+            0.9649
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 6,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 6,
+            "0.95": 6,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9484,
+          "matched_cos": [
+            0.8653,
+            0.993,
+            0.8924,
+            0.8304,
+            0.8755,
+            0.808,
+            0.9672,
+            0.9676,
+            0.7572,
+            0.9745,
+            0.9612,
+            0.9489,
+            0.9739,
+            0.9738,
+            0.969,
+            0.7029
+          ],
+          "recovered_injective": {
+            "0.9": 9,
+            "0.95": 8,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 12,
+            "0.95": 11,
+            "0.99": 2
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 9,
+            "0.95": 8,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 32,
+          "max_member_imbalance": 0.0106,
+          "mean_member_imbalance": 0.0037,
+          "median_member_imbalance": 0.0026,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 32,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 7,
+          "feats_per_pairdir": [
+            3,
+            4,
+            4,
+            7,
+            2,
+            3,
+            6,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.8
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.06,
+        "n_feat": 32,
+        "fvu": 0.00069,
+        "l0": 4.938,
+        "n_alive": 27,
+        "frac_dead": 0.0,
+        "frac_alive": 0.8438,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9429,
+          "matched_cos": [
+            0.9374,
+            0.9288,
+            0.9135,
+            0.9847,
+            0.9799,
+            0.9546,
+            0.8864,
+            0.958
+          ],
+          "recovered_injective": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9427,
+          "matched_cos": [
+            0.9437,
+            0.843,
+            0.9404,
+            0.9003,
+            0.9127,
+            0.9168,
+            0.986,
+            0.9382,
+            0.9807,
+            0.9382,
+            0.9327,
+            0.9593,
+            0.8903,
+            0.8353,
+            0.9045,
+            0.9587
+          ],
+          "recovered_injective": {
+            "0.9": 13,
+            "0.95": 4,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 14,
+            "0.95": 7,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 13,
+            "0.95": 4,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 27,
+          "max_member_imbalance": 0.0088,
+          "mean_member_imbalance": 0.0044,
+          "median_member_imbalance": 0.0051,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 27,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 5,
+          "feats_per_pairdir": [
+            5,
+            4,
+            3,
+            3,
+            2,
+            3,
+            2,
+            5
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.9
+      },
+      {
+        "arm": "merged_r0.75_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.2,
+        "n_feat": 32,
+        "fvu": 0.00191,
+        "l0": 2.64,
+        "n_alive": 22,
+        "frac_dead": 0.0,
+        "frac_alive": 0.6875,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9919,
+          "matched_cos": [
+            0.9853,
+            0.9876,
+            0.992,
+            0.9977,
+            0.9919,
+            0.9977,
+            0.9992,
+            0.9836
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 5
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 5
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9916,
+          "matched_cos": [
+            0.9569,
+            0.9862,
+            0.9627,
+            0.9884,
+            0.9924,
+            0.9924,
+            0.9981,
+            0.975,
+            0.9744,
+            0.992,
+            0.9985,
+            0.9839,
+            0.928,
+            0.9996,
+            0.981,
+            0.9838
+          ],
+          "recovered_injective": {
+            "0.9": 16,
+            "0.95": 15,
+            "0.99": 6
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 16,
+            "0.99": 10
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 16,
+            "0.95": 15,
+            "0.99": 6
+          }
+        },
+        "selectivity": {
+          "n_judged": 22,
+          "max_member_imbalance": 0.0083,
+          "mean_member_imbalance": 0.0042,
+          "median_member_imbalance": 0.002,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 22,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 4,
+          "feats_per_pairdir": [
+            4,
+            3,
+            4,
+            2,
+            2,
+            2,
+            2,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 7.1
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.02,
+        "n_feat": 8,
+        "fvu": 1e-05,
+        "l0": 1.303,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8243,
+          "matched_cos": [
+            0.913,
+            0.8857,
+            0.9279,
+            0.8815,
+            0.6631,
+            0.8363,
+            0.6605,
+            0.8263
+          ],
+          "recovered_injective": {
+            "0.9": 2,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 2,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8108,
+          "matched_cos": [
+            0.9222,
+            null,
+            null,
+            0.9749,
+            null,
+            0.9289,
+            null,
+            0.8817,
+            null,
+            0.6804,
+            0.865,
+            null,
+            0.6725,
+            null,
+            0.8299,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0229,
+          "mean_member_imbalance": 0.0068,
+          "median_member_imbalance": 0.0025,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.0
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.06,
+        "n_feat": 8,
+        "fvu": 0.00011,
+        "l0": 1.058,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9804,
+          "matched_cos": [
+            0.9999,
+            0.945,
+            0.9967,
+            0.9663,
+            0.9996,
+            0.969,
+            0.996,
+            0.9707
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.965,
+          "matched_cos": [
+            0.9996,
+            null,
+            null,
+            0.9293,
+            null,
+            0.9977,
+            0.9718,
+            null,
+            0.9997,
+            null,
+            null,
+            0.9557,
+            null,
+            0.9965,
+            0.971,
+            null
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 14,
+            "0.95": 13,
+            "0.99": 8
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0158,
+          "mean_member_imbalance": 0.0041,
+          "median_member_imbalance": 0.0021,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.9
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.2,
+        "n_feat": 8,
+        "fvu": 0.00084,
+        "l0": 0.699,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9998,
+          "matched_cos": [
+            0.9999,
+            0.9994,
+            0.9999,
+            1.0,
+            1.0,
+            1.0,
+            0.9995,
+            1.0
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 8
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9837,
+          "matched_cos": [
+            0.9996,
+            null,
+            null,
+            0.9532,
+            null,
+            0.9996,
+            null,
+            0.9998,
+            null,
+            0.9997,
+            null,
+            0.9263,
+            null,
+            0.9994,
+            null,
+            0.9999
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 6
+          },
+          "recovered_maxcos": {
+            "0.9": 16,
+            "0.95": 13,
+            "0.99": 12
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 7,
+            "0.99": 6
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.0068,
+          "mean_member_imbalance": 0.0031,
+          "median_member_imbalance": 0.0023,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 1,
+          "feats_per_pairdir": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.6
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.02,
+        "n_feat": 16,
+        "fvu": 8e-05,
+        "l0": 2.374,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9263,
+          "matched_cos": [
+            0.9601,
+            0.987,
+            0.9861,
+            0.9564,
+            0.8716,
+            0.8521,
+            0.9121,
+            0.8851
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 4,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 4,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9189,
+          "matched_cos": [
+            0.8943,
+            0.965,
+            0.103,
+            0.9737,
+            0.9858,
+            0.9555,
+            0.928,
+            0.9591,
+            0.5321,
+            0.8785,
+            0.7948,
+            0.8959,
+            0.9147,
+            0.4949,
+            0.8891,
+            0.8051
+          ],
+          "recovered_injective": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 9,
+            "0.95": 7,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.0373,
+          "mean_member_imbalance": 0.0098,
+          "median_member_imbalance": 0.0036,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            2,
+            3,
+            1,
+            3,
+            1,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.7
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.06,
+        "n_feat": 16,
+        "fvu": 0.00023,
+        "l0": 2.357,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9615,
+          "matched_cos": [
+            0.9479,
+            0.9615,
+            0.949,
+            0.8593,
+            0.9874,
+            0.9918,
+            0.9984,
+            0.9963
+          ],
+          "recovered_injective": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 3
+          },
+          "recovered_maxcos": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 3
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9455,
+          "matched_cos": [
+            0.9479,
+            0.7342,
+            0.9634,
+            0.8338,
+            0.7448,
+            0.9513,
+            0.8147,
+            0.861,
+            0.916,
+            0.9876,
+            0.7609,
+            0.9488,
+            0.9982,
+            0.1566,
+            0.8573,
+            0.9969
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 2
+          },
+          "recovered_maxcos": {
+            "0.9": 12,
+            "0.95": 8,
+            "0.99": 4
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.0321,
+          "mean_member_imbalance": 0.0055,
+          "median_member_imbalance": 0.0035,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            1,
+            2
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.9
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.2,
+        "n_feat": 16,
+        "fvu": 0.00105,
+        "l0": 1.358,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9909,
+          "matched_cos": [
+            0.9869,
+            0.9901,
+            0.9986,
+            0.9999,
+            0.9821,
+            0.9834,
+            0.9865,
+            1.0
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 8,
+            "0.99": 4
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9805,
+          "matched_cos": [
+            0.8935,
+            0.9875,
+            0.9779,
+            0.8329,
+            0.9981,
+            0.8634,
+            0.9998,
+            0.0722,
+            0.9624,
+            0.9855,
+            0.9469,
+            0.9613,
+            0.9249,
+            0.9905,
+            0.9999,
+            0.1359
+          ],
+          "recovered_injective": {
+            "0.9": 11,
+            "0.95": 9,
+            "0.99": 4
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 14,
+            "0.99": 7
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 11,
+            "0.95": 9,
+            "0.99": 4
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 0.0181,
+          "mean_member_imbalance": 0.0044,
+          "median_member_imbalance": 0.0028,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            2,
+            1,
+            2,
+            3,
+            3,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.8
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.02,
+        "n_feat": 32,
+        "fvu": 0.00066,
+        "l0": 6.852,
+        "n_alive": 32,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8732,
+          "matched_cos": [
+            0.9007,
+            0.8064,
+            0.9385,
+            0.8603,
+            0.8414,
+            0.8844,
+            0.8927,
+            0.8614
+          ],
+          "recovered_injective": {
+            "0.9": 2,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 2,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.868,
+          "matched_cos": [
+            0.9005,
+            0.903,
+            0.8955,
+            0.7047,
+            0.9282,
+            0.9473,
+            0.8682,
+            0.8603,
+            0.8194,
+            0.8436,
+            0.8714,
+            0.8164,
+            0.857,
+            0.9038,
+            0.8346,
+            0.8669
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 5,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 32,
+          "max_member_imbalance": 0.0604,
+          "mean_member_imbalance": 0.0118,
+          "median_member_imbalance": 0.0057,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 32,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 6,
+          "feats_per_pairdir": [
+            2,
+            2,
+            3,
+            4,
+            3,
+            6,
+            6,
+            6
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.7
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.06,
+        "n_feat": 32,
+        "fvu": 0.00087,
+        "l0": 4.593,
+        "n_alive": 32,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9093,
+          "matched_cos": [
+            0.9021,
+            0.9521,
+            0.9955,
+            0.9847,
+            0.9584,
+            0.8741,
+            0.8123,
+            0.7949
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 4,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9049,
+          "matched_cos": [
+            0.6807,
+            0.9032,
+            0.9269,
+            0.9788,
+            0.9952,
+            0.8105,
+            0.9618,
+            0.9865,
+            0.962,
+            0.663,
+            0.9519,
+            0.536,
+            0.8247,
+            0.742,
+            0.8007,
+            0.6914
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 11,
+            "0.95": 8,
+            "0.99": 2
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 32,
+          "max_member_imbalance": 0.0471,
+          "mean_member_imbalance": 0.0076,
+          "median_member_imbalance": 0.003,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 32,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 7,
+          "feats_per_pairdir": [
+            5,
+            4,
+            7,
+            4,
+            2,
+            2,
+            5,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.6
+      },
+      {
+        "arm": "merged_r1.0_p0.05",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.2,
+        "n_feat": 32,
+        "fvu": 0.0017,
+        "l0": 2.137,
+        "n_alive": 26,
+        "frac_dead": 0.0312,
+        "frac_alive": 0.8125,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9687,
+          "matched_cos": [
+            0.9668,
+            0.9852,
+            0.9355,
+            0.95,
+            0.9674,
+            0.9715,
+            0.9786,
+            0.9945
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 6,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.9529,
+          "matched_cos": [
+            0.9701,
+            0.6988,
+            0.8912,
+            0.9438,
+            0.9425,
+            0.9013,
+            0.9209,
+            0.9509,
+            0.9529,
+            0.9704,
+            0.9422,
+            0.8486,
+            0.9121,
+            0.9792,
+            0.9947,
+            0.9562
+          ],
+          "recovered_injective": {
+            "0.9": 13,
+            "0.95": 7,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 15,
+            "0.95": 9,
+            "0.99": 2
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 13,
+            "0.95": 7,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 26,
+          "max_member_imbalance": 0.0285,
+          "mean_member_imbalance": 0.0058,
+          "median_member_imbalance": 0.004,
+          "n_member_selective_feats": 0,
+          "n_true_feats_with_selective_sae_feat": 0
+        },
+        "collapse": {
+          "n_alive": 26,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 5,
+          "feats_per_pairdir": [
+            2,
+            3,
+            2,
+            4,
+            3,
+            3,
+            5,
+            4
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.5
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.02,
+        "n_feat": 8,
+        "fvu": 5e-05,
+        "l0": 3.013,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.7654,
+          "matched_cos": [
+            -0.6718,
+            0.7162,
+            0.6633,
+            0.9286,
+            0.6128,
+            0.9403,
+            0.6826,
+            0.8552
+          ],
+          "recovered_injective": {
+            "0.9": 2,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 2,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.7668,
+          "matched_cos": [
+            null,
+            null,
+            null,
+            null,
+            0.9691,
+            0.7507,
+            0.9498,
+            null,
+            null,
+            null,
+            0.88,
+            0.7911,
+            null,
+            0.8776,
+            0.7452,
+            0.817
+          ],
+          "recovered_injective": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.5498,
+          "median_member_imbalance": 0.4395,
+          "n_member_selective_feats": 4,
+          "n_true_feats_with_selective_sae_feat": 4
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 2,
+          "feats_per_pairdir": [
+            0,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 1,
+        "truefeats_recovered_functional": [
+          4
+        ],
+        "secs": 5.8
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.06,
+        "n_feat": 8,
+        "fvu": 0.00043,
+        "l0": 2.746,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8256,
+          "matched_cos": [
+            0.8991,
+            0.9191,
+            0.7641,
+            0.7101,
+            0.9577,
+            0.7224,
+            -0.4473,
+            0.8325
+          ],
+          "recovered_injective": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.789,
+          "matched_cos": [
+            null,
+            0.8991,
+            null,
+            0.9191,
+            null,
+            null,
+            0.7661,
+            null,
+            0.882,
+            null,
+            0.8742,
+            0.9945,
+            null,
+            null,
+            0.9266,
+            0.7452
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 1
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 0.9941,
+          "mean_member_imbalance": 0.5041,
+          "median_member_imbalance": 0.4276,
+          "n_member_selective_feats": 3,
+          "n_true_feats_with_selective_sae_feat": 3
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 2,
+          "feats_per_pairdir": [
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 1,
+        "truefeats_recovered_functional": [
+          11
+        ],
+        "secs": 6.0
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 2,
+        "l1_coeff": 0.2,
+        "n_feat": 8,
+        "fvu": 0.00398,
+        "l0": 2.618,
+        "n_alive": 8,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.689,
+          "matched_cos": [
+            0.6145,
+            -0.4354,
+            0.4375,
+            0.7578,
+            0.6469,
+            0.7147,
+            0.7345,
+            0.7205
+          ],
+          "recovered_injective": {
+            "0.9": 0,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 0,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.7681,
+          "matched_cos": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            0.8139,
+            null,
+            0.9331,
+            null,
+            0.8605,
+            null,
+            0.7804,
+            0.7341,
+            0.9607,
+            0.8855,
+            0.8175
+          ],
+          "recovered_injective": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 1,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 8,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.6108,
+          "median_member_imbalance": 0.5771,
+          "n_member_selective_feats": 5,
+          "n_true_feats_with_selective_sae_feat": 5
+        },
+        "collapse": {
+          "n_alive": 8,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 2,
+          "feats_per_pairdir": [
+            1,
+            0,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 6.0
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.02,
+        "n_feat": 16,
+        "fvu": 0.00011,
+        "l0": 5.865,
+        "n_alive": 16,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8075,
+          "matched_cos": [
+            0.7489,
+            0.8849,
+            0.7942,
+            0.854,
+            0.8791,
+            0.7998,
+            0.7971,
+            0.6832
+          ],
+          "recovered_injective": {
+            "0.9": 0,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 0,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8363,
+          "matched_cos": [
+            -0.7938,
+            -0.2723,
+            0.7153,
+            0.8848,
+            0.8844,
+            0.8996,
+            0.9037,
+            0.9711,
+            0.6819,
+            0.8563,
+            0.8483,
+            0.7637,
+            0.7992,
+            0.9153,
+            0.7891,
+            0.869
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 2,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 16,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.5171,
+          "median_member_imbalance": 0.3732,
+          "n_member_selective_feats": 7,
+          "n_true_feats_with_selective_sae_feat": 6
+        },
+        "collapse": {
+          "n_alive": 16,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            2,
+            2,
+            3,
+            2,
+            3,
+            3,
+            1,
+            0
+          ]
+        },
+        "n_truefeats_recovered_functional": 0,
+        "truefeats_recovered_functional": [],
+        "secs": 5.8
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.06,
+        "n_feat": 16,
+        "fvu": 0.00079,
+        "l0": 5.049,
+        "n_alive": 15,
+        "frac_dead": 0.0625,
+        "frac_alive": 0.9375,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8208,
+          "matched_cos": [
+            0.7632,
+            0.7675,
+            0.7389,
+            0.7452,
+            0.8637,
+            0.8913,
+            0.5068,
+            0.9031
+          ],
+          "recovered_injective": {
+            "0.9": 1,
+            "0.95": 0,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 1,
+            "0.95": 0,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8468,
+          "matched_cos": [
+            null,
+            0.6263,
+            0.9652,
+            0.6036,
+            0.9503,
+            0.9072,
+            0.7925,
+            0.8445,
+            0.8709,
+            0.9862,
+            0.7636,
+            0.7064,
+            0.2129,
+            0.898,
+            0.768,
+            0.9464
+          ],
+          "recovered_injective": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 15,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.5932,
+          "median_member_imbalance": 0.6078,
+          "n_member_selective_feats": 9,
+          "n_true_feats_with_selective_sae_feat": 6
+        },
+        "collapse": {
+          "n_alive": 15,
+          "n_distinct_pairdirs_claimed": 7,
+          "max_feats_per_pairdir": 4,
+          "feats_per_pairdir": [
+            4,
+            2,
+            3,
+            1,
+            1,
+            3,
+            0,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 1,
+        "truefeats_recovered_functional": [
+          4
+        ],
+        "secs": 6.0
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 4,
+        "l1_coeff": 0.2,
+        "n_feat": 16,
+        "fvu": 0.00531,
+        "l0": 3.878,
+        "n_alive": 15,
+        "frac_dead": 0.0,
+        "frac_alive": 0.9375,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8363,
+          "matched_cos": [
+            0.886,
+            0.7188,
+            0.9121,
+            0.8621,
+            0.5663,
+            0.9543,
+            0.9395,
+            0.6037
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.7938,
+          "matched_cos": [
+            0.901,
+            0.855,
+            0.7757,
+            0.7188,
+            0.8392,
+            0.7754,
+            0.5626,
+            0.9612,
+            null,
+            0.7969,
+            0.5694,
+            0.7526,
+            0.9407,
+            -0.2763,
+            0.7497,
+            0.8133
+          ],
+          "recovered_injective": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 1,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 15,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.5957,
+          "median_member_imbalance": 0.6985,
+          "n_member_selective_feats": 9,
+          "n_true_feats_with_selective_sae_feat": 7
+        },
+        "collapse": {
+          "n_alive": 15,
+          "n_distinct_pairdirs_claimed": 6,
+          "max_feats_per_pairdir": 3,
+          "feats_per_pairdir": [
+            3,
+            2,
+            3,
+            3,
+            0,
+            2,
+            2,
+            0
+          ]
+        },
+        "n_truefeats_recovered_functional": 1,
+        "truefeats_recovered_functional": [
+          7
+        ],
+        "secs": 6.2
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.02,
+        "n_feat": 32,
+        "fvu": 0.00071,
+        "l0": 11.25,
+        "n_alive": 32,
+        "frac_dead": 0.0,
+        "frac_alive": 1.0,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8874,
+          "matched_cos": [
+            0.9637,
+            0.9793,
+            0.8685,
+            0.9333,
+            0.8863,
+            0.6863,
+            0.9095,
+            0.8326
+          ],
+          "recovered_injective": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.86,
+          "matched_cos": [
+            0.9739,
+            0.9637,
+            0.7529,
+            0.9793,
+            0.8312,
+            0.9158,
+            0.941,
+            0.9439,
+            0.6259,
+            0.8587,
+            0.7532,
+            0.5494,
+            0.9117,
+            0.9382,
+            0.779,
+            0.815
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 3,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 3,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 5,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 32,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.5259,
+          "median_member_imbalance": 0.4768,
+          "n_member_selective_feats": 16,
+          "n_true_feats_with_selective_sae_feat": 8
+        },
+        "collapse": {
+          "n_alive": 32,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 7,
+          "feats_per_pairdir": [
+            5,
+            4,
+            7,
+            5,
+            6,
+            2,
+            2,
+            1
+          ]
+        },
+        "n_truefeats_recovered_functional": 2,
+        "truefeats_recovered_functional": [
+          1,
+          3
+        ],
+        "secs": 6.4
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.06,
+        "n_feat": 32,
+        "fvu": 0.0013,
+        "l0": 8.33,
+        "n_alive": 29,
+        "frac_dead": 0.0,
+        "frac_alive": 0.9062,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9066,
+          "matched_cos": [
+            0.9201,
+            0.9136,
+            0.9097,
+            0.9163,
+            0.9224,
+            0.989,
+            0.8498,
+            0.8075
+          ],
+          "recovered_injective": {
+            "0.9": 6,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 6,
+            "0.95": 1,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8742,
+          "matched_cos": [
+            0.9622,
+            0.9162,
+            0.8675,
+            0.9136,
+            0.8966,
+            0.8321,
+            0.8873,
+            0.7508,
+            0.7589,
+            0.7148,
+            0.9435,
+            0.9272,
+            0.8526,
+            0.9413,
+            0.7353,
+            0.993
+          ],
+          "recovered_injective": {
+            "0.9": 7,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_maxcos": {
+            "0.9": 7,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 5,
+            "0.95": 1,
+            "0.99": 1
+          }
+        },
+        "selectivity": {
+          "n_judged": 29,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.5916,
+          "median_member_imbalance": 0.7802,
+          "n_member_selective_feats": 17,
+          "n_true_feats_with_selective_sae_feat": 7
+        },
+        "collapse": {
+          "n_alive": 29,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 6,
+          "feats_per_pairdir": [
+            4,
+            4,
+            5,
+            2,
+            2,
+            6,
+            3,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 1,
+        "truefeats_recovered_functional": [
+          15
+        ],
+        "secs": 6.2
+      },
+      {
+        "arm": "control_r0.0_p0.10",
+        "seed": 0,
+        "expansion": 8,
+        "l1_coeff": 0.2,
+        "n_feat": 32,
+        "fvu": 0.0065,
+        "l0": 6.849,
+        "n_alive": 25,
+        "frac_dead": 0.0,
+        "frac_alive": 0.7812,
+        "n_resampled": 0,
+        "key8_pairdirs": {
+          "mean_max_cos": 0.9019,
+          "matched_cos": [
+            0.8296,
+            0.8455,
+            0.9754,
+            0.9073,
+            0.9895,
+            0.8283,
+            0.9324,
+            0.7574
+          ],
+          "recovered_injective": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 5,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8898,
+          "matched_cos": [
+            0.8932,
+            0.8296,
+            0.8451,
+            0.8455,
+            0.9291,
+            0.8518,
+            0.9424,
+            0.934,
+            0.9034,
+            0.8953,
+            0.7834,
+            0.7981,
+            0.9305,
+            0.912,
+            0.975,
+            0.9685
+          ],
+          "recovered_injective": {
+            "0.9": 8,
+            "0.95": 2,
+            "0.99": 0
+          },
+          "recovered_maxcos": {
+            "0.9": 8,
+            "0.95": 2,
+            "0.99": 0
+          },
+          "recovered_injective_represented_only": {
+            "0.9": 6,
+            "0.95": 2,
+            "0.99": 0
+          }
+        },
+        "selectivity": {
+          "n_judged": 25,
+          "max_member_imbalance": 1.0,
+          "mean_member_imbalance": 0.6593,
+          "median_member_imbalance": 0.814,
+          "n_member_selective_feats": 17,
+          "n_true_feats_with_selective_sae_feat": 11
+        },
+        "collapse": {
+          "n_alive": 25,
+          "n_distinct_pairdirs_claimed": 8,
+          "max_feats_per_pairdir": 4,
+          "feats_per_pairdir": [
+            3,
+            3,
+            4,
+            4,
+            4,
+            2,
+            2,
+            3
+          ]
+        },
+        "n_truefeats_recovered_functional": 2,
+        "truefeats_recovered_functional": [
+          14,
+          15
+        ],
+        "secs": 6.2
+      }
+    ],
+    "null_random_directions": {
+      "8": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.6885,
+          "recovered_mean": {
+            "0.9": 1.147,
+            "0.95": 0.37,
+            "0.99": 0.033
+          },
+          "recovered_p95": {
+            "0.9": 3,
+            "0.95": 1,
+            "0.99": 0
+          },
+          "recovered_max": {
+            "0.9": 4,
+            "0.95": 3,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.6884,
+          "recovered_mean": {
+            "0.9": 1.427,
+            "0.95": 0.545,
+            "0.99": 0.065
+          },
+          "recovered_p95": {
+            "0.9": 3,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 2
+          }
+        }
+      },
+      "14": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.7841,
+          "recovered_mean": {
+            "0.9": 1.877,
+            "0.95": 0.715,
+            "0.99": 0.072
+          },
+          "recovered_p95": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.784,
+          "recovered_mean": {
+            "0.9": 2.275,
+            "0.95": 0.87,
+            "0.99": 0.1
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 1
+          }
+        }
+      },
+      "15": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.7936,
+          "recovered_mean": {
+            "0.9": 1.972,
+            "0.95": 0.833,
+            "0.99": 0.077
+          },
+          "recovered_p95": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.7909,
+          "recovered_mean": {
+            "0.9": 2.455,
+            "0.95": 1.015,
+            "0.99": 0.113
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 2
+          }
+        }
+      },
+      "16": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8006,
+          "recovered_mean": {
+            "0.9": 2.118,
+            "0.95": 0.825,
+            "0.99": 0.08
+          },
+          "recovered_p95": {
+            "0.9": 4,
+            "0.95": 2,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 1
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8,
+          "recovered_mean": {
+            "0.9": 2.632,
+            "0.95": 1.012,
+            "0.99": 0.113
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 8,
+            "0.95": 5,
+            "0.99": 3
+          }
+        }
+      },
+      "20": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.827,
+          "recovered_mean": {
+            "0.9": 2.545,
+            "0.95": 1.042,
+            "0.99": 0.105
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8256,
+          "recovered_mean": {
+            "0.9": 3.21,
+            "0.95": 1.228,
+            "0.99": 0.13
+          },
+          "recovered_p95": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 9,
+            "0.95": 6,
+            "0.99": 2
+          }
+        }
+      },
+      "22": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8396,
+          "recovered_mean": {
+            "0.9": 2.737,
+            "0.95": 1.105,
+            "0.99": 0.08
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8383,
+          "recovered_mean": {
+            "0.9": 3.635,
+            "0.95": 1.36,
+            "0.99": 0.145
+          },
+          "recovered_p95": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 9,
+            "0.95": 6,
+            "0.99": 2
+          }
+        }
+      },
+      "24": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8468,
+          "recovered_mean": {
+            "0.9": 2.935,
+            "0.95": 1.115,
+            "0.99": 0.092
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8471,
+          "recovered_mean": {
+            "0.9": 4.027,
+            "0.95": 1.61,
+            "0.99": 0.175
+          },
+          "recovered_p95": {
+            "0.9": 7,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 10,
+            "0.95": 6,
+            "0.99": 2
+          }
+        }
+      },
+      "25": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.851,
+          "recovered_mean": {
+            "0.9": 2.958,
+            "0.95": 1.238,
+            "0.99": 0.117
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8498,
+          "recovered_mean": {
+            "0.9": 4.005,
+            "0.95": 1.617,
+            "0.99": 0.138
+          },
+          "recovered_p95": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 9,
+            "0.95": 6,
+            "0.99": 2
+          }
+        }
+      },
+      "26": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8568,
+          "recovered_mean": {
+            "0.9": 3.163,
+            "0.95": 1.393,
+            "0.99": 0.145
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 6,
+            "0.95": 4,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8562,
+          "recovered_mean": {
+            "0.9": 4.18,
+            "0.95": 1.73,
+            "0.99": 0.172
+          },
+          "recovered_p95": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 10,
+            "0.95": 5,
+            "0.99": 2
+          }
+        }
+      },
+      "27": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8597,
+          "recovered_mean": {
+            "0.9": 3.27,
+            "0.95": 1.323,
+            "0.99": 0.128
+          },
+          "recovered_p95": {
+            "0.9": 5,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8603,
+          "recovered_mean": {
+            "0.9": 4.503,
+            "0.95": 1.835,
+            "0.99": 0.18
+          },
+          "recovered_p95": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 10,
+            "0.95": 6,
+            "0.99": 2
+          }
+        }
+      },
+      "28": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8642,
+          "recovered_mean": {
+            "0.9": 3.397,
+            "0.95": 1.383,
+            "0.99": 0.158
+          },
+          "recovered_p95": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.862,
+          "recovered_mean": {
+            "0.9": 4.48,
+            "0.95": 1.847,
+            "0.99": 0.225
+          },
+          "recovered_p95": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 10,
+            "0.95": 6,
+            "0.99": 3
+          }
+        }
+      },
+      "29": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8629,
+          "recovered_mean": {
+            "0.9": 3.348,
+            "0.95": 1.395,
+            "0.99": 0.147
+          },
+          "recovered_p95": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8663,
+          "recovered_mean": {
+            "0.9": 4.622,
+            "0.95": 1.877,
+            "0.99": 0.198
+          },
+          "recovered_p95": {
+            "0.9": 7,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 11,
+            "0.95": 6,
+            "0.99": 2
+          }
+        }
+      },
+      "31": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8721,
+          "recovered_mean": {
+            "0.9": 3.615,
+            "0.95": 1.448,
+            "0.99": 0.172
+          },
+          "recovered_p95": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8724,
+          "recovered_mean": {
+            "0.9": 4.94,
+            "0.95": 2.018,
+            "0.99": 0.207
+          },
+          "recovered_p95": {
+            "0.9": 8,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 10,
+            "0.95": 5,
+            "0.99": 2
+          }
+        }
+      },
+      "32": {
+        "key8_pairdirs": {
+          "mean_max_cos": 0.8726,
+          "recovered_mean": {
+            "0.9": 3.558,
+            "0.95": 1.472,
+            "0.99": 0.158
+          },
+          "recovered_p95": {
+            "0.9": 6,
+            "0.95": 3,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 7,
+            "0.95": 5,
+            "0.99": 2
+          }
+        },
+        "key16_truefeats": {
+          "mean_max_cos": 0.8741,
+          "recovered_mean": {
+            "0.9": 5.02,
+            "0.95": 2.015,
+            "0.99": 0.2
+          },
+          "recovered_p95": {
+            "0.9": 9,
+            "0.95": 4,
+            "0.99": 1
+          },
+          "recovered_max": {
+            "0.9": 12,
+            "0.95": 7,
+            "0.99": 2
+          }
+        }
+      }
+    },
+    "skipped_arms": [],
+    "hparams": {
+      "toy_steps": 3000,
+      "toy_batch": 1024,
+      "toy_lr": 0.01,
+      "expansions": [
+        2,
+        4,
+        8
+      ],
+      "l1_coeffs": [
+        0.02,
+        0.06,
+        0.2
+      ],
+      "sae_steps": 4000,
+      "sae_batch": 512,
+      "sae_lr": 0.003,
+      "n_act_train": 65536,
+      "n_act_eval": 32768,
+      "alive_min_fire_frac": 0.005,
+      "cos_thresholds": [
+        0.9,
+        0.95,
+        0.99
+      ],
+      "headline_cos_threshold": 0.95,
+      "n_null_trials": 400,
+      "assoc_min_abs_corr": 0.2,
+      "member_selectivity_threshold": 0.5,
+      "probe_hidden": 64,
+      "probe_steps": 1500,
+      "model_arms": [
+        {
+          "name": "merged_r1.0_p0.10",
+          "p": 0.1,
+          "rho": 1.0,
+          "seeds": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "merged_r0.75_p0.10",
+          "p": 0.1,
+          "rho": 0.75,
+          "seeds": [
+            0
+          ]
+        },
+        {
+          "name": "merged_r1.0_p0.05",
+          "p": 0.05,
+          "rho": 1.0,
+          "seeds": [
+            0
+          ]
+        },
+        {
+          "name": "control_r0.0_p0.10",
+          "p": 0.1,
+          "rho": 0.0,
+          "seeds": [
+            0
+          ]
+        }
+      ]
+    }
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130",
+    "matplotlib": "3.10.9"
+  },
+  "status": "done"
+}

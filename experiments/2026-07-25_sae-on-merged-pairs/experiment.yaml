@@ -1,0 +1,50 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_sae-on-merged-pairs"
+title: "SAEs on the merged-pair toy model: 8 pair-directions or 16 true features?"
+hypothesis: "An L1 SAE trained on the 4-dim hidden layer of the merged-pair toy model recovers the 8 MERGED pair-directions, not the 16 true generative features, and no SAE feature can separate the two members of a merged pair because the model's hidden layer no longer contains that information (a probe on the 4-dim hidden cannot predict the within-pair value difference)."
+seed: 0
+dataset:
+  name: "synthetic sparse features in correlated pairs (16 features, 8 pairs), and the 4-dim hidden activations of a toy autoencoder trained on them"
+  source: "generated in run.py (recipe of 2026-07-23_superposition-correlation-phase)"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # ---- toy model (Anthropic-style x_hat = ReLU(W^T W x + b)) ----
+  n_features: 16            # 8 pairs
+  m_hidden: 4               # bottleneck dims (4x compression); the SAE's input space
+  toy_steps: 3000
+  toy_batch: 1024
+  toy_lr: 0.01
+  represented_norm_threshold: 0.5
+  merge_verify_abs_cos: 0.95   # backlog's "verify pairs merged" bar
+  model_arms:
+    - {name: "merged_r1.0_p0.10", p: 0.10, rho: 1.0, seeds: [0, 1]}   # primary
+    - {name: "merged_r0.75_p0.10", p: 0.10, rho: 0.75, seeds: [0]}    # partial corr (solo firings exist)
+    - {name: "merged_r1.0_p0.05", p: 0.05, rho: 1.0, seeds: [0]}      # sparser
+    - {name: "control_r0.0_p0.10", p: 0.10, rho: 0.0, seeds: [0]}     # UNMERGED positive control
+  # ---- activations ----
+  n_act_train: 65536
+  n_act_eval: 32768
+  # ---- SAE ----
+  expansions: [2, 4, 8]     # -> 8 / 16 / 32 dictionary features over a 4-dim space
+  l1_coeffs: [0.02, 0.06, 0.2]
+  sae_steps: 4000
+  sae_batch: 512
+  sae_lr: 0.003
+  resample_at: [0.4, 0.7]
+  resample_n_err: 4096
+  alive_min_fire_frac: 0.005
+  # ---- scoring ----
+  cos_thresholds: [0.9, 0.95, 0.99]
+  headline_cos_threshold: 0.95
+  n_null_trials: 400
+  assoc_min_abs_corr: 0.2             # SAE feature must be this associated with a pair to be judged
+  member_selectivity_threshold: 0.5   # imbalance |r_a-r_b|/(|r_a|+|r_b|) to call it member-selective
+  # ---- probe control ----
+  probe_hidden: 64
+  probe_steps: 1500
+  probe_batch: 2048
+  probe_lr: 0.01
+  probe_ridge: 1.0e-6
+  # ---- budget ----
+  time_budget_s: 620

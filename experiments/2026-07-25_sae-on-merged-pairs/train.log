@@ -1,0 +1,98 @@
+[toy/merged_r1.0_p0.10/s0] loss 0.01021 rep 14/16 pairs_both 6/8 within|cos| 0.9990 cross|cos| 0.1541 merged=True
+          probe MLP R2: sum 0.7485 diff 0.4889 val_a 0.686 which_solo None || oracle diff 0.0758 || shuffled diff -0.0176 | 28.4s
+  [sae/merged_r1.0_p0.10/s0] x2 lam=0.02: FVU 0.0000 L0 1.63 alive 8/8 | KEY8 4/8 KEY16dir 5/16 KEY16func 0/16 | maxImb 0.1701 | 7.2s
+  [sae/merged_r1.0_p0.10/s0] x2 lam=0.06: FVU 0.0002 L0 1.28 alive 8/8 | KEY8 6/8 KEY16dir 6/16 KEY16func 0/16 | maxImb 0.1681 | 8.8s
+  [sae/merged_r1.0_p0.10/s0] x2 lam=0.2: FVU 0.0011 L0 0.76 alive 8/8 | KEY8 8/8 KEY16dir 8/16 KEY16func 0/16 | maxImb 0.1715 | 7.0s
+  [sae/merged_r1.0_p0.10/s0] x4 lam=0.02: FVU 0.0002 L0 4.44 alive 16/16 | KEY8 1/8 KEY16dir 2/16 KEY16func 0/16 | maxImb 0.1723 | 7.2s
+  [sae/merged_r1.0_p0.10/s0] x4 lam=0.06: FVU 0.0002 L0 2.12 alive 16/16 | KEY8 7/8 KEY16dir 7/16 KEY16func 0/16 | maxImb 0.1713 | 6.6s
+  [sae/merged_r1.0_p0.10/s0] x4 lam=0.2: FVU 0.0012 L0 1.31 alive 14/16 | KEY8 8/8 KEY16dir 10/16 KEY16func 0/16 | maxImb 0.3523 | 6.7s
+  [sae/merged_r1.0_p0.10/s0] x8 lam=0.02: FVU 0.0008 L0 9.96 alive 32/32 | KEY8 3/8 KEY16dir 4/16 KEY16func 0/16 | maxImb 0.2073 | 6.7s
+  [sae/merged_r1.0_p0.10/s0] x8 lam=0.06: FVU 0.0009 L0 4.51 alive 28/32 | KEY8 7/8 KEY16dir 8/16 KEY16func 0/16 | maxImb 0.2476 | 7.5s
+  [sae/merged_r1.0_p0.10/s0] x8 lam=0.2: FVU 0.0013 L0 1.85 alive 20/32 | KEY8 8/8 KEY16dir 13/16 KEY16func 0/16 | maxImb 0.2935 | 7.1s
+[toy/merged_r1.0_p0.10/s1] loss 0.00542 rep 16/16 pairs_both 8/8 within|cos| 0.9989 cross|cos| 0.1566 merged=True
+          probe MLP R2: sum 0.8072 diff 0.4565 val_a 0.6285 which_solo None || oracle diff -0.0309 || shuffled diff -0.0273 | 28.0s
+  [sae/merged_r1.0_p0.10/s1] x2 lam=0.02: FVU 0.0000 L0 1.86 alive 8/8 | KEY8 4/8 KEY16dir 4/16 KEY16func 0/16 | maxImb 0.0074 | 6.2s
+  [sae/merged_r1.0_p0.10/s1] x2 lam=0.06: FVU 0.0002 L0 1.51 alive 8/8 | KEY8 4/8 KEY16dir 4/16 KEY16func 0/16 | maxImb 0.0131 | 5.9s
+  [sae/merged_r1.0_p0.10/s1] x2 lam=0.2: FVU 0.0012 L0 0.76 alive 8/8 | KEY8 8/8 KEY16dir 8/16 KEY16func 0/16 | maxImb 0.0065 | 6.0s
+  [sae/merged_r1.0_p0.10/s1] x4 lam=0.02: FVU 0.0003 L0 4.07 alive 16/16 | KEY8 3/8 KEY16dir 3/16 KEY16func 0/16 | maxImb 0.0119 | 5.9s
+  [sae/merged_r1.0_p0.10/s1] x4 lam=0.06: FVU 0.0002 L0 2.06 alive 15/16 | KEY8 8/8 KEY16dir 10/16 KEY16func 0/16 | maxImb 0.0069 | 6.0s
+  [sae/merged_r1.0_p0.10/s1] x4 lam=0.2: FVU 0.0015 L0 1.45 alive 14/16 | KEY8 7/8 KEY16dir 7/16 KEY16func 0/16 | maxImb 0.0066 | 6.2s
+  [sae/merged_r1.0_p0.10/s1] x8 lam=0.02: FVU 0.0008 L0 8.57 alive 32/32 | KEY8 1/8 KEY16dir 1/16 KEY16func 0/16 | maxImb 0.0113 | 6.7s
+  [sae/merged_r1.0_p0.10/s1] x8 lam=0.06: FVU 0.0012 L0 6.02 alive 31/32 | KEY8 3/8 KEY16dir 5/16 KEY16func 0/16 | maxImb 0.0197 | 6.4s
+  [sae/merged_r1.0_p0.10/s1] x8 lam=0.2: FVU 0.0017 L0 2.39 alive 24/32 | KEY8 6/8 KEY16dir 11/16 KEY16func 0/16 | maxImb 0.0525 | 7.0s
+[toy/merged_r0.75_p0.10/s0] loss 0.00911 rep 16/16 pairs_both 8/8 within|cos| 0.9987 cross|cos| 0.1579 merged=True
+          probe MLP R2: sum 0.7641 diff 0.4519 val_a 0.5947 which_solo 0.4774 || oracle diff -0.0425 || shuffled diff -0.0285 | 31.7s
+  [sae/merged_r0.75_p0.10/s0] x2 lam=0.02: FVU 0.0000 L0 2.15 alive 8/8 | KEY8 5/8 KEY16dir 6/16 KEY16func 0/16 | maxImb 0.009 | 7.9s
+  [sae/merged_r0.75_p0.10/s0] x2 lam=0.06: FVU 0.0002 L0 1.86 alive 8/8 | KEY8 2/8 KEY16dir 3/16 KEY16func 0/16 | maxImb 0.0115 | 6.1s
+  [sae/merged_r0.75_p0.10/s0] x2 lam=0.2: FVU 0.0014 L0 0.93 alive 8/8 | KEY8 8/8 KEY16dir 8/16 KEY16func 0/16 | maxImb 0.008 | 6.3s
+  [sae/merged_r0.75_p0.10/s0] x4 lam=0.02: FVU 0.0002 L0 4.69 alive 16/16 | KEY8 2/8 KEY16dir 2/16 KEY16func 0/16 | maxImb 0.0129 | 6.7s
+  [sae/merged_r0.75_p0.10/s0] x4 lam=0.06: FVU 0.0004 L0 2.98 alive 16/16 | KEY8 8/8 KEY16dir 9/16 KEY16func 0/16 | maxImb 0.0098 | 7.7s
+  [sae/merged_r0.75_p0.10/s0] x4 lam=0.2: FVU 0.0015 L0 1.66 alive 14/16 | KEY8 8/8 KEY16dir 11/16 KEY16func 0/16 | maxImb 0.008 | 8.4s
+  [sae/merged_r0.75_p0.10/s0] x8 lam=0.02: FVU 0.0007 L0 10.68 alive 32/32 | KEY8 6/8 KEY16dir 8/16 KEY16func 0/16 | maxImb 0.0106 | 7.8s
+  [sae/merged_r0.75_p0.10/s0] x8 lam=0.06: FVU 0.0007 L0 4.94 alive 27/32 | KEY8 4/8 KEY16dir 4/16 KEY16func 0/16 | maxImb 0.0088 | 7.9s
+  [sae/merged_r0.75_p0.10/s0] x8 lam=0.2: FVU 0.0019 L0 2.64 alive 22/32 | KEY8 8/8 KEY16dir 15/16 KEY16func 0/16 | maxImb 0.0083 | 7.1s
+[toy/merged_r1.0_p0.05/s0] loss 0.00229 rep 16/16 pairs_both 8/8 within|cos| 0.9375 cross|cos| 0.2353 merged=False
+          probe MLP R2: sum 0.9285 diff 0.7356 val_a 0.8251 which_solo None || oracle diff -0.0469 || shuffled diff -0.0387 | 30.9s
+  [sae/merged_r1.0_p0.05/s0] x2 lam=0.02: FVU 0.0000 L0 1.30 alive 8/8 | KEY8 0/8 KEY16dir 1/16 KEY16func 0/16 | maxImb 0.0229 | 6.0s
+  [sae/merged_r1.0_p0.05/s0] x2 lam=0.06: FVU 0.0001 L0 1.06 alive 8/8 | KEY8 7/8 KEY16dir 7/16 KEY16func 0/16 | maxImb 0.0158 | 5.9s
+  [sae/merged_r1.0_p0.05/s0] x2 lam=0.2: FVU 0.0008 L0 0.70 alive 8/8 | KEY8 8/8 KEY16dir 7/16 KEY16func 0/16 | maxImb 0.0068 | 5.6s
+  [sae/merged_r1.0_p0.05/s0] x4 lam=0.02: FVU 0.0001 L0 2.37 alive 16/16 | KEY8 4/8 KEY16dir 5/16 KEY16func 0/16 | maxImb 0.0373 | 5.7s
+  [sae/merged_r1.0_p0.05/s0] x4 lam=0.06: FVU 0.0002 L0 2.36 alive 16/16 | KEY8 5/8 KEY16dir 5/16 KEY16func 0/16 | maxImb 0.0321 | 5.9s
+  [sae/merged_r1.0_p0.05/s0] x4 lam=0.2: FVU 0.0010 L0 1.36 alive 16/16 | KEY8 8/8 KEY16dir 9/16 KEY16func 0/16 | maxImb 0.0181 | 5.8s
+  [sae/merged_r1.0_p0.05/s0] x8 lam=0.02: FVU 0.0007 L0 6.85 alive 32/32 | KEY8 0/8 KEY16dir 0/16 KEY16func 0/16 | maxImb 0.0604 | 6.7s
+  [sae/merged_r1.0_p0.05/s0] x8 lam=0.06: FVU 0.0009 L0 4.59 alive 32/32 | KEY8 4/8 KEY16dir 6/16 KEY16func 0/16 | maxImb 0.0471 | 6.6s
+  [sae/merged_r1.0_p0.05/s0] x8 lam=0.2: FVU 0.0017 L0 2.14 alive 26/32 | KEY8 6/8 KEY16dir 7/16 KEY16func 0/16 | maxImb 0.0285 | 6.5s
+[toy/control_r0.0_p0.10/s0] loss 0.01280 rep 12/16 pairs_both 5/8 within|cos| 0.2497 cross|cos| 0.3761 merged=False
+          probe MLP R2: sum 0.3739 diff 0.3382 val_a 0.241 which_solo 0.7452 || oracle diff -0.211 || shuffled diff -0.2018 | 28.3s
+  [sae/control_r0.0_p0.10/s0] x2 lam=0.02: FVU 0.0000 L0 3.01 alive 8/8 | KEY8 0/8 KEY16dir 1/16 KEY16func 1/16 | maxImb 1.0 | 5.8s
+  [sae/control_r0.0_p0.10/s0] x2 lam=0.06: FVU 0.0004 L0 2.75 alive 8/8 | KEY8 1/8 KEY16dir 1/16 KEY16func 1/16 | maxImb 0.9941 | 6.0s
+  [sae/control_r0.0_p0.10/s0] x2 lam=0.2: FVU 0.0040 L0 2.62 alive 8/8 | KEY8 0/8 KEY16dir 1/16 KEY16func 0/16 | maxImb 1.0 | 6.0s
+  [sae/control_r0.0_p0.10/s0] x4 lam=0.02: FVU 0.0001 L0 5.87 alive 16/16 | KEY8 0/8 KEY16dir 1/16 KEY16func 0/16 | maxImb 1.0 | 5.8s
+  [sae/control_r0.0_p0.10/s0] x4 lam=0.06: FVU 0.0008 L0 5.05 alive 15/16 | KEY8 0/8 KEY16dir 3/16 KEY16func 1/16 | maxImb 1.0 | 6.0s
+  [sae/control_r0.0_p0.10/s0] x4 lam=0.2: FVU 0.0053 L0 3.88 alive 15/16 | KEY8 1/8 KEY16dir 1/16 KEY16func 1/16 | maxImb 1.0 | 6.2s
+  [sae/control_r0.0_p0.10/s0] x8 lam=0.02: FVU 0.0007 L0 11.25 alive 32/32 | KEY8 2/8 KEY16dir 3/16 KEY16func 2/16 | maxImb 1.0 | 6.4s
+  [sae/control_r0.0_p0.10/s0] x8 lam=0.06: FVU 0.0013 L0 8.33 alive 29/32 | KEY8 1/8 KEY16dir 2/16 KEY16func 1/16 | maxImb 1.0 | 6.2s
+  [sae/control_r0.0_p0.10/s0] x8 lam=0.2: FVU 0.0065 L0 6.85 alive 25/32 | KEY8 2/8 KEY16dir 2/16 KEY16func 2/16 | maxImb 1.0 | 6.2s
+null(random dirs, primary keys) {"8": {"key8_pairdirs": {"0.9": 1.147, "0.95": 0.37, "0.99": 0.033}, "key16_truefeats": {"0.9": 1.427, "0.95": 0.545, "0.99": 0.065}}, "14": {"key8_pairdirs": {"0.9": 1.877, "0.95": 0.715, "0.99": 0.072}, "key16_truefeats": {"0.9": 2.275, "0.95": 0.87, "0.99": 0.1}}, "15": {"key8_pairdirs": {"0.9": 1.972, "0.95": 0.833, "0.99": 0.077}, "key16_truefeats": {"0.9": 2.455, "0.95": 1.015, "0.99": 0.113}}, "16": {"key8_pairdirs": {"0.9": 2.118, "0.95": 0.825, "0.99": 0.08}, "key16_truefeats": {"0.9": 2.632, "0.95": 1.012, "0.99": 0.113}}, "20": {"key8_pairdirs": {"0.9": 2.545, "0.95": 1.042, "0.99": 0.105}, "key16_truefeats": {"0.9": 3.21, "0.95": 1.228, "0.99": 0.13}}, "22": {"key8_pairdirs": {"0.9": 2.737, "0.95": 1.105, "0.99": 0.08}, "key16_truefeats": {"0.9": 3.635, "0.95": 1.36, "0.99": 0.145}}, "24": {"key8_pairdirs": {"0.9": 2.935, "0.95": 1.115, "0.99": 0.092}, "key16_truefeats": {"0.9": 4.027, "0.95": 1.61, "0.99": 0.175}}, "25": {"key8_pairdirs": {"0.9": 2.958, "0.95": 1.238, "0.99": 0.117}, "key16_truefeats": {"0.9": 4.005, "0.95": 1.617, "0.99": 0.138}}, "26": {"key8_pairdirs": {"0.9": 3.163, "0.95": 1.393, "0.99": 0.145}, "key16_truefeats": {"0.9": 4.18, "0.95": 1.73, "0.99": 0.172}}, "27": {"key8_pairdirs": {"0.9": 3.27, "0.95": 1.323, "0.99": 0.128}, "key16_truefeats": {"0.9": 4.503, "0.95": 1.835, "0.99": 0.18}}, "28": {"key8_pairdirs": {"0.9": 3.397, "0.95": 1.383, "0.99": 0.158}, "key16_truefeats": {"0.9": 4.48, "0.95": 1.847, "0.99": 0.225}}, "29": {"key8_pairdirs": {"0.9": 3.348, "0.95": 1.395, "0.99": 0.147}, "key16_truefeats": {"0.9": 4.622, "0.95": 1.877, "0.99": 0.198}}, "31": {"key8_pairdirs": {"0.9": 3.615, "0.95": 1.448, "0.99": 0.172}, "key16_truefeats": {"0.9": 4.94, "0.95": 2.018, "0.99": 0.207}}, "32": {"key8_pairdirs": {"0.9": 3.558, "0.95": 1.472, "0.99": 0.158}, "key16_truefeats": {"0.9": 5.02, "0.95": 2.015, "0.99": 0.2}}}
+HEADLINE {
+ "cos_threshold": 0.95,
+ "primary_arm": "merged_r1.0_p0.10",
+ "primary_within_pair_abs_cos_mean": 0.999,
+ "primary_merge_verified_all_seeds": true,
+ "primary_n_represented_by_seed": [
+  14,
+  16
+ ],
+ "best_setting": "x4 lambda=0.06 seed1",
+ "n_pairdirs_recovered_of_8": 8,
+ "n_truefeats_recovered_directional_of_16": 10,
+ "n_truefeats_recovered_functional_of_16": 0,
+ "best_fvu": 0.00021,
+ "best_l0": 2.059,
+ "best_dead_fraction": 0.0,
+ "best_max_member_imbalance": 0.0069,
+ "best_mean_member_imbalance": 0.0033,
+ "max_member_imbalance_over_ALL_merged_saes": 0.3523,
+ "null_pairdirs_recovered_mean": 0.833,
+ "null_pairdirs_recovered_p95": 2,
+ "null_truefeats_recovered_mean": 1.015,
+ "max_key16_directional_over_all_merged_saes": 15,
+ "probe_mlp_sum_r2_primary": 0.7779,
+ "probe_mlp_diff_r2_primary": 0.4727,
+ "probe_lin_diff_r2_primary": 0.0336,
+ "probe_mlp_diff_r2_exact_merge_oracle": 0.0225,
+ "probe_mlp_sum_r2_exact_merge_oracle": 0.7503,
+ "probe_mlp_diff_r2_shuffled_null": -0.0225,
+ "probe_mlp_diff_r2_unmerged_control": 0.3382,
+ "probe_mlp_sum_r2_unmerged_control": 0.3739,
+ "control_arm": "control_r0.0_p0.10",
+ "control_within_pair_abs_cos": 0.2497,
+ "control_best_setting": "x8 lambda=0.02",
+ "control_n_pairdirs_of_8": 2,
+ "control_n_truefeats_functional_of_16": 2,
+ "control_max_truefeats_functional_of_16": 2,
+ "control_max_member_imbalance": 1.0,
+ "n_skipped_arms": 0
+}
+
+wrote results.json + chart.png in 447.04s
