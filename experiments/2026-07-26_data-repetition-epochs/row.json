@@ -1,0 +1,303 @@
+{
+  "id": "2026-07-26_data-repetition-epochs",
+  "date": "2026-07-26",
+  "title": "Data repetition at fixed compute, 0.17M params: the '4 epochs is free' knee is at R=1.7 with contiguous subsets - but 90% of that penalty is corpus coverage, not repetition, and the controlled knee is >8.6",
+  "slug": "data-repetition-epochs",
+  "hypothesis": "Muennighoff et al. (arXiv:2305.16264) find that up to ~4 epochs of repeated data cost almost nothing versus fresh data at 10M-9B params. At ~0.17M params on a ~1M-character corpus - 60x below the smallest model in that paper - the knee should NOT sit at 4 epochs; follow-up work (arXiv:2511.13421) argues the repetition allowance grows with unique-dataset size, so with tiny unique pools the knee was expected EARLIER than 4.",
+  "question": "At a fixed total-token compute budget and ~0.17M parameters, at what repetition count R = budget_tokens / unique_tokens does val bits-per-character leave a 2% band around the all-fresh (R~1) value, and where does degradation become steep - is the knee near 4 epochs as at 4B+ scale, or elsewhere? And how does the train-val gap (memorization signature) move with R?",
+  "method": "nanoGPT-style 2-layer pre-norm decoder-only char LM on tiny-shakespeare: d_model=80, 4 heads, d_ff=320, block size 96, learned absolute positions, no biases, untied head, 172,480 params. Every arm has IDENTICAL model shape, identical init at equal seed, identical optimiser and schedule, and an identical FIXED COMPUTE budget of 700 steps x batch 16 x 96 tokens = 1,075,200 tokens. The only thing varied is the amount of UNIQUE data those tokens are drawn from: a contiguous prefix of the train split of fraction u in {1, 1/2, 1/4, 1/8, 1/16, 1/32}, giving repetition counts R = 1.07, 2.14, 4.28, 8.57, 17.13, 34.32. Split: last 10% of the 1,115,394-char corpus (111,539 chars) is val, fixed and disjoint from every unique subset; headline val bpc on the first 46,080 val chars = 475 non-overlapping 97-char windows, identical windows for every run. Data ordering is TRUE EPOCHING, not random offset sampling: the unique subset is cut into non-overlapping (block+1)-char windows, shuffled with a seeded RNG, consumed, then reshuffled - so R is an exact epoch count. Optimisation held fixed across arms: AdamW lr 3e-3, 70-step warmup, cosine to 10%, betas (0.9,0.95), wd 0.1 on 2-D weights only, grad clip 1.0. Memorization readout: train bpc evaluated on 300 evenly spaced windows drawn from the unique subset the model actually trained on; gap = val bpc - train bpc. CONTROL ARM ('spread'), the piece the naive design needs: at u=1/8 and u=1/32, the SAME number of unique windows is sampled EVENLY ACROSS THE WHOLE train split instead of taken as a prefix - same R, same unique-char count, same compute, only corpus COVERAGE differs. This is needed because a shorter prefix is not only less data, it is also a narrower and textually more distant slice of Shakespeare relative to a val split taken from the END of the corpus. 6 fractions x 2 seeds + 2 control points x 2 seeds = 16 runs.",
+  "architecture": "2-layer pre-norm decoder-only transformer, d_model=80, 4 heads (head_dim 20), d_ff=320 GELU, block size 96, learned absolute positions, no biases, untied output head; 172,480 params; identical in every arm",
+  "dataset": {
+    "name": "tiny-shakespeare (character level, V=65)",
+    "source": "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt",
+    "license": "public domain text; char-rnn repo MIT",
+    "hash": "md5:6fb458f1232090904fb40fe944165e91"
+  },
+  "task": "autoregressive character-level language modelling; val bits/character vs data repetition count R at fixed total-token compute",
+  "framework": "torch 2.13 (CPU, single thread)",
+  "seed": 0,
+  "compute": "CPU 1 thread, 572s (9.5 min) for 16 training runs + eval",
+  "metrics": {
+    "headline": "val bpc vs repetition count R at fixed 1.075M-token compute; the R at which val bpc leaves a 2% band around the all-fresh (R~1) value, with a prefix-vs-spread control isolating corpus coverage from repetition",
+    "n_params": 172480,
+    "budget_tokens": 1075200,
+    "n_runs": 16,
+    "seeds": [
+      0,
+      1
+    ],
+    "unique_fractions": [
+      1.0,
+      0.5,
+      0.25,
+      0.125,
+      0.0625,
+      0.03125
+    ],
+    "R_values": [
+      1.0711,
+      2.1424,
+      4.2847,
+      8.5661,
+      17.1322,
+      34.3174
+    ],
+    "n_unique_chars_by_R": {
+      "1.0711": 1003853,
+      "2.1424": 501878,
+      "4.2847": 250939,
+      "8.5661": 125518,
+      "17.1322": 62759,
+      "34.3174": 31331
+    },
+    "val_bpc_fresh_reference": 3.06578,
+    "threshold_2pct_bpc": 3.1271,
+    "val_bpc_mean_by_R": {
+      "1.0711": 3.06578,
+      "2.1424": 3.16081,
+      "4.2847": 3.29838,
+      "8.5661": 3.4552,
+      "17.1322": 3.63013,
+      "34.3174": 4.88511
+    },
+    "val_bpc_per_seed_by_R": {
+      "1.0711": [
+        3.06424,
+        3.06733
+      ],
+      "2.1424": [
+        3.16019,
+        3.16144
+      ],
+      "4.2847": [
+        3.30077,
+        3.29599
+      ],
+      "8.5661": [
+        3.43968,
+        3.47072
+      ],
+      "17.1322": [
+        3.60152,
+        3.65874
+      ],
+      "34.3174": [
+        4.85594,
+        4.91427
+      ]
+    },
+    "rel_excess_vs_fresh_by_R": {
+      "1.0711": 0.0,
+      "2.1424": 0.031,
+      "4.2847": 0.07587,
+      "8.5661": 0.12702,
+      "17.1322": 0.18408,
+      "34.3174": 0.59343
+    },
+    "within_2pct_by_R": {
+      "1.0711": true,
+      "2.1424": false,
+      "4.2847": false,
+      "8.5661": false,
+      "17.1322": false,
+      "34.3174": false
+    },
+    "train_bpc_mean_by_R": {
+      "1.0711": 2.96648,
+      "2.1424": 2.91777,
+      "4.2847": 2.8092,
+      "8.5661": 2.61162,
+      "17.1322": 2.58348,
+      "34.3174": 1.90198
+    },
+    "train_val_gap_by_R": {
+      "1.0711": 0.09931,
+      "2.1424": 0.24306,
+      "4.2847": 0.48918,
+      "8.5661": 0.84359,
+      "17.1322": 1.04665,
+      "34.3174": 2.98312
+    },
+    "last_R_within_2pct": 1.0711,
+    "first_R_beyond_2pct": 2.1424,
+    "knee_R_2pct_interpolated_prefix": 1.675,
+    "paper_knee_R": 4.0,
+    "knee_ratio_ours_over_paper_prefix": 0.419,
+    "degradation_per_doubling": [
+      {
+        "from_R": 1.071,
+        "to_R": 2.142,
+        "delta_val_bpc": 0.09503,
+        "delta_rel_to_fresh": 0.031
+      },
+      {
+        "from_R": 2.142,
+        "to_R": 4.285,
+        "delta_val_bpc": 0.13757,
+        "delta_rel_to_fresh": 0.04487
+      },
+      {
+        "from_R": 4.285,
+        "to_R": 8.566,
+        "delta_val_bpc": 0.15682,
+        "delta_rel_to_fresh": 0.05115
+      },
+      {
+        "from_R": 8.566,
+        "to_R": 17.132,
+        "delta_val_bpc": 0.17493,
+        "delta_rel_to_fresh": 0.05706
+      },
+      {
+        "from_R": 17.132,
+        "to_R": 34.317,
+        "delta_val_bpc": 1.25498,
+        "delta_rel_to_fresh": 0.40935
+      }
+    ],
+    "steepest_doubling": {
+      "from_R": 17.132,
+      "to_R": 34.317,
+      "delta_val_bpc": 1.25498,
+      "delta_rel_to_fresh": 0.40935
+    },
+    "steepest_doubling_over_previous": 7.17,
+    "mean_seed_spread_bpc": 0.02595,
+    "total_val_bpc_range": 1.81933,
+    "range_over_seed_spread": 70.1,
+    "gap_bpc_at_min_R": 0.09931,
+    "gap_bpc_at_max_R": 2.98312,
+    "gap_growth_factor": 30.0,
+    "control_spread_vs_prefix": [
+      {
+        "unique_frac": 0.125,
+        "R": 8.566,
+        "val_bpc_spread_mode": 3.10224,
+        "val_bpc_spread_mode_per_seed": [
+          3.10082,
+          3.10367
+        ],
+        "val_bpc_prefix_mode": 3.4552,
+        "delta_spread_minus_prefix": -0.35296,
+        "gap_bpc_spread_mode": 0.17486,
+        "gap_bpc_prefix_mode": 0.84359
+      },
+      {
+        "unique_frac": 0.03125,
+        "R": 34.317,
+        "val_bpc_spread_mode": 4.44145,
+        "val_bpc_spread_mode_per_seed": [
+          4.44243,
+          4.44048
+        ],
+        "val_bpc_prefix_mode": 4.88511,
+        "delta_spread_minus_prefix": -0.44366,
+        "gap_bpc_spread_mode": 2.34581,
+        "gap_bpc_prefix_mode": 2.98312
+      }
+    ],
+    "control_coverage_share_of_penalty": {
+      "8.566": 0.9064,
+      "34.317": 0.2439
+    },
+    "control_spread_rel_excess_vs_fresh": {
+      "8.566": 0.01189,
+      "34.317": 0.44872
+    },
+    "control_spread_within_2pct": {
+      "8.566": true,
+      "34.317": false
+    },
+    "knee_R_coverage_corrected_bracket": [
+      8.566,
+      34.317
+    ],
+    "train_steps": 700,
+    "batch_size": 16,
+    "block_size": 96,
+    "eval_val_windows": 475,
+    "eval_train_windows": 300,
+    "epoching": "exact: non-overlapping windows shuffled per epoch, not random-offset sampling"
+  },
+  "result_summary": "THE KNEE IS NOWHERE NEAR 4 - and which side of 4 it falls on depends entirely on how the corpus is shrunk. PART 1 (the specified design, contiguous prefixes): at a fixed 1,075,200-token budget, only R=1.07 sits inside the 2% band around the all-fresh val bpc of 3.0658 (band top 3.1271). The very FIRST doubling, R=2.14, already costs +3.10%; R=4.28 costs +7.59%; log-interpolated 2% crossing is R=1.68, i.e. 2.4x BELOW the paper's 4-epoch knee. Seeds are tight (mean spread 0.0260 bpc; total sweep range 1.8193 bpc = 70x the seed spread), so the curve is signal, not noise. Degradation is SMOOTH from R=1 to R=17 (+0.095, +0.138, +0.157, +0.175 bpc per doubling) and then EXPLODES: the 17.1->34.3 doubling alone costs +1.255 bpc, 7.2x the previous doubling and 48x the seed spread. The memorization signature is textbook: train bpc on the unique subset falls monotonically 2.9665 -> 1.9020 while val bpc rises 3.0658 -> 4.8851, and the train-val gap grows 30x, +0.099 -> +2.983 bits. PART 2, THE FINDING THAT MATTERS: the prefix design is confounded, because a shorter prefix is not just less data but a narrower slice of Shakespeare further from a val split taken from the END of the corpus. The spread control holds unique-char count, R and compute fixed while restoring corpus coverage, and at R=8.57 it recovers almost the entire penalty: val bpc 3.1022 (+1.19% over all-fresh, INSIDE the 2% band) versus 3.4552 (+12.70%) for the prefix - 90.6% of the measured repetition penalty is corpus coverage, not repetition, a confound 9x larger than the effect. The train-val gap collapses with it (0.175 spread vs 0.844 prefix), so the 'memorization' at moderate R was largely distribution shift. At R=34.32 the control rescues much less (4.4414, +44.87%, versus 4.8851, +59.34%; only 24.4% coverage), so past ~17 epochs the damage is genuine repetition damage. NET: the coverage-corrected knee is bracketed at 8.6 < R <= 34.3, ABOVE the paper's 4, while the naive prefix measurement lands at 1.7, BELOW it - the two readings bracket 4 from opposite sides and neither lands on it. METHODOLOGICAL UPSHOT: any data-repetition sweep that shrinks the unique pool by taking contiguous subsets will systematically UNDERSTATE the repetition allowance. Our prior (from arXiv:2511.13421, allowance grows with dataset size, so tiny pools should tolerate fewer repeats) is confirmed only by the confounded measurement and refuted by the controlled one. Caveats: (1) EARLY-TRAINING, COMPUTE-POOR regime - all arms sit at 3.0-4.9 bpc against a converged tiny char LM's ~1.5, so this measures fitting speed under repetition rather than a converged loss, and it is the opposite regime from the paper's compute-rich/data-poor one; the tiny model tolerates repeats partly because it has not extracted the pool even once; (2) 2 seeds, one model size, one LR, one corpus; (3) the control was run at only 2 of 6 points, so the corrected knee is bracketed, not localized; (4) character-level Shakespeare is far more redundant than the token-level web text of the source paper.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "partial-prior-art",
+    "sources": [
+      {
+        "name": "script",
+        "query": "scripts/novelty_check.py 'data repetition epochs scaling data-constrained language models 4 epochs knee repeated data'",
+        "hits": 0,
+        "note": "arXiv and OpenAlex both 403 from this environment; returned verdict 'unchecked'"
+      },
+      {
+        "name": "web",
+        "query": "Muennighoff Scaling Data-Constrained Language Models 4 epochs repeated data knee small scale replication",
+        "hits": 10
+      },
+      {
+        "name": "web",
+        "query": "does the '4 epochs of repeated data' result hold at small model scale? data repetition ablation tiny transformer char LM",
+        "hits": 10
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/abs/2305.16264 - exact 4-epoch claim, model scales tested, does the allowance depend on model or dataset size?",
+        "hits": 1
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/html/2305.16264v5 - fitted constants, smallest model and smallest unique dataset tested",
+        "hits": 1
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/html/2511.13421v1 - how does the allowed number of repetitions depend on dataset size and model size?",
+        "hits": 1
+      }
+    ],
+    "conclusion": "PARTIAL-PRIOR-ART. The 4-epoch claim itself is squarely prior art: Muennighoff et al. (2305.16264, NeurIPS 2023) state verbatim that 'training with up to 4 epochs of repeated data yields negligible changes to loss compared to having unique data', across 'more than 400 models ranging from 10 million to 9 billion parameters' and up to 900B tokens. The key fact the fetch established is that the SMALLEST model in that paper is 10M params - about 60x larger than the 0.17M model here - so the sub-1M regime this row occupies is genuinely untested by the source. Prior art on the scale-dependence question also exists and is recent: 'Larger Datasets Can Be Repeated More' (2511.13421) argues directly against a universal 4-epoch constant, showing the effective reuse rate E(K,N) saturates at a point that GROWS with unique-dataset size N (Theta(log N) under strong convexity, a power of N under power-law data distributions) and concluding 'larger datasets can be repeated more times before the marginal benefit vanishes'. That paper supplies the prior this experiment set out to test, and it is a prior about DATASET size, not model size. Also adjacent: 'To Repeat or Not To Repeat' (2305.13230) and Anthropic's 'scaling laws and interpretability of learning from repeated data', both at >=100M scale. WHAT THIS ROW ADDS AND THE SEARCH DID NOT SURFACE: (a) the repetition sweep run at 0.17M params, ~60x below the smallest published point, CPU-only in under 10 minutes, with exact epoch semantics rather than random-offset sampling; (b) the PREFIX-VS-SPREAD CONTROL, which decomposes the measured repetition penalty into a corpus-coverage component and a true-repetition component (90.6% / 9.4% at R=8.6) - we could not find this control published anywhere, and it inverts which side of 4 the answer falls on, which makes it a methodological warning for every small-scale repetition sweep that shrinks its pool contiguously; (c) the train-val gap reported per repetition level as an explicit memorization readout, and shown to be itself largely a coverage artefact at moderate R. The 'no published version of this control' claim is a negative search result over web and paper search, not an exhaustive literature review; arXiv and OpenAlex APIs 403 from this environment, so the verdict rests on 2 web searches plus 3 direct page fetches.",
+    "sources_note": "arXiv/OpenAlex APIs 403 from this environment (scripts/novelty_check.py returned 'unchecked'). Verdict rests on WebSearch plus direct fetches of arxiv.org/abs/2305.16264, arxiv.org/html/2305.16264v5 and arxiv.org/html/2511.13421v1."
+  },
+  "prior_art": [
+    "https://arxiv.org/abs/2305.16264",
+    "https://jmlr.org/papers/volume26/24-1000/24-1000.pdf",
+    "https://arxiv.org/html/2511.13421v1",
+    "https://ar5iv.labs.arxiv.org/html/2305.13230",
+    "https://www.anthropic.com/research/scaling-laws-and-interpretability-of-learning-from-repeated-data"
+  ],
+  "related_ids": [
+    "2026-07-26_swiglu-vs-gelu-isoparam",
+    "2026-07-26_weight-tying-tiny",
+    "2026-07-26_head-dim-vs-count-isoparam",
+    "2026-07-26_retnet-nano-char",
+    "2026-07-25_shadow-loop-vs-depth-isoflop"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-26_data-repetition-epochs",
+    "results_json": "experiments/2026-07-26_data-repetition-epochs/results.json",
+    "chart": "experiments/2026-07-26_data-repetition-epochs/chart.png",
+    "readme": "experiments/2026-07-26_data-repetition-epochs/README.md"
+  },
+  "tags": [
+    "ablation",
+    "data-repetition",
+    "epochs",
+    "data-constrained",
+    "scaling-laws",
+    "fixed-compute",
+    "iso-compute",
+    "memorization",
+    "train-val-gap",
+    "overfitting",
+    "char-lm",
+    "tiny-shakespeare",
+    "nanogpt",
+    "bits-per-character",
+    "confound-control",
+    "coverage-vs-repetition",
+    "partial-prior-art",
+    "cpu-only"
+  ]
+}

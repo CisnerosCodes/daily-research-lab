@@ -1,0 +1,51 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_data-repetition-epochs"
+title: "Data repetition at fixed compute: where is the '~4 epochs is free' knee at 0.17M params?"
+hypothesis: >
+  Muennighoff et al. (arXiv:2305.16264) find that at up to 9B params / 900B tokens, up to ~4 epochs of
+  repeated data cost almost nothing versus fresh data. At ~0.17M params with a ~1M-character corpus,
+  the knee should NOT sit at 4 epochs: the model is nowhere near data-bottlenecked, and follow-up work
+  (arXiv:2511.13421) argues the repetition allowance grows with unique-dataset size, so at our tiny
+  unique-data sizes we expect the knee EARLIER than 4 epochs.
+seed: 0
+
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+
+# --- hyperparameters ---
+params:
+  # data split
+  val_frac: 0.10              # last 10% of the corpus is val, fixed and disjoint for every arm
+  eval_val_chars: 46080       # fixed held-out slice used for the headline val bpc
+  eval_val_windows_curve: 128 # cheaper eval used for the mid-training curve
+  eval_train_windows: 300     # windows from the UNIQUE subset, for the memorization gap
+
+  # the swept axis: fraction of the train split used as the unique pool
+  unique_fractions: [1.0, 0.5, 0.25, 0.125, 0.0625, 0.03125]
+
+  # control: identical unique-char budget, but the windows are spread evenly over the WHOLE train
+  # split instead of taken as a prefix. Separates "less unique data" from "a narrower slice".
+  control_fractions: [0.125, 0.03125]
+
+  # fixed compute budget (identical for every arm)
+  steps: 700
+  batch_size: 16
+  block_size: 96
+
+  # model (identical shape and init for every arm)
+  n_layer: 2
+  n_head: 4
+  d_model: 80
+  d_ff: 320
+
+  # optimisation (identical for every arm)
+  lr: 0.003
+  warmup_steps: 70
+  min_lr_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+
+  eval_every: 100
+  seeds: [0, 1]
