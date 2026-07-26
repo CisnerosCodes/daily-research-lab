@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**17 experiments logged.**
+**19 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -46,6 +46,8 @@ experiments/                one dated folder per experiment
 | 2026-07-25 | [Weight decay and the grokking delay on (a+b) mod 59: monotone where it groks (1825 -> 750 steps for WD 1 -> 3) but the window is only ~1 decade wide, and WD never touches memorization speed](experiments/2026-07-25_grokking-weight-decay-phase) | ✅ done | A 7-point weight-decay sweep spanning three orders of magnitude (0.03 to 30) on a 57k-para |
 | 2026-07-25 | [Test-time compute on a 0.06M-param weight-tied loop: trained at a FIXED K=3 the loop degrades past its trained depth (frontier acc 1.00 -> 0.55, easy instances 1.00 -> 0.71); trained with a STOCHASTIC depth schedule the identical model extrapolates to 2.67x the trained depth (0.85 at K=8, 11x full-sequence exact match)](experiments/2026-07-25_loop-test-time-compute) | ✅ done | The direct test of the 'test-time-compute axis' that 2026-07-25_shadow-loop-vs-depth-isofl |
 | 2026-07-25 | [SAEs on a grokked (a+b) mod 59 transformer: against a provable Fourier ground truth the raw neuron basis is 0.75 frequency-pure and the best usable SAE only 0.32 - the sparsity prior fights the density of the true features](experiments/2026-07-25_sae-on-grokked-model) | ✅ done | The hypothesis is REFUTED, and the sharpest number is the baseline nobody runs. Against a  |
+| 2026-07-25 | [The merge breakpoint: correlated feature pairs never choose local orthogonality - unequal importance kills the weak member by amplitude decay along the SAME direction, and anticorrelated values only bend the merge to |cos| 0.64-0.75](experiments/2026-07-25_superposition-merge-breakpoint) | ✅ done | The hypothesis is REFUTED on the importance axis and only partially met on the value axis; |
+| 2026-07-25 | [Echo State Network on Mackey-Glass-17: there is no edge-of-chaos ridge just below sr=1 - the free-running optimum sits ABOVE 1 in 13 of 16 reservoirs (median sr 1.10), the sr=0.9 default costs 7.3x the error, and the memory-capacity peak is too flat to localise it](experiments/2026-07-25_esn-reservoir) | ✅ done | The hypothesis is REFUTED on location and only half-confirmed on sharpness. (1) THE OPTIMU |
 | 2026-07-24 | [Tsetlin Machine: does exact rule recovery break before accuracy under label noise?](experiments/2026-07-24_tsetlin-dnf-recovery) | ✅ done | Hypothesis partially refuted: exact recall of the planted clauses survives to 20% label no |
 | 2026-07-23 | [Superposition phase diagram: does feature correlation resist or reshape superposition?](experiments/2026-07-23_superposition-correlation-phase) | ✅ done | Hypothesis refuted: across the grid, raising within-pair correlation makes the model colla |
 | 2026-07-21 | [Game of Life: when does test-time recursion still generalize?](experiments/2026-07-21_gol-depth-recursion) | ✅ done | Capacity window: at H=4 tied recursion learns the exact reusable rule and extrapolates to  |

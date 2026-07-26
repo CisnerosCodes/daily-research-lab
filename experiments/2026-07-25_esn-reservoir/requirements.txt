@@ -1,0 +1,6 @@
+# Actual deps for this experiment. The ESN is hand-rolled in numpy; no reservoirpy,
+# no scikit-learn, no gradient training. torch is imported ONLY to call
+# torch.set_num_threads(1) per the lab's CPU-sharing rule and is optional.
+numpy==2.4.4
+matplotlib==3.10.9
+PyYAML==6.0.3

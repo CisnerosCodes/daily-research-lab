@@ -1,0 +1,5 @@
+# actual deps used by run.py (CPU-only; versions as installed on the run machine)
+torch==2.13.0
+numpy==2.4.4
+matplotlib==3.10.9
+PyYAML==6.0.3

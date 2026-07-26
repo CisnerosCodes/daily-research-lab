@@ -1,0 +1,36 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_superposition-merge-breakpoint"
+title: "The merge breakpoint: what makes a correlated feature pair stop sharing one direction?"
+hypothesis: "In the Anthropic toy autoencoder, the pair-merging seen at equal importance in 2026-07-23_superposition-correlation-phase breaks down under two stressors - unequal within-pair importance and anticorrelated within-pair VALUES - and past some breakpoint the pair abandons its shared direction for local orthogonality (within-pair |cos| < 0.7)."
+seed: 0
+dataset:
+  name: "synthetic sparse features in correlated pairs, with tunable within-pair importance ratio and value correlation"
+  source: "generated"
+  license: "n/a"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  n_features: 16          # 8 pairs; index 2k = LOW importance, index 2k+1 = HIGH importance
+  m_hidden: 4             # bottleneck dims (4x compression), same as the sibling run
+  density: 0.1            # P(feature active); "moderate density" per the backlog item
+  seeds: [0, 1]
+  steps: 3000             # same budget as the sibling run
+  batch: 1024
+  lr: 0.01
+  represented_norm_threshold: 0.5   # ||W_i|| >= this  => feature is "represented" (sibling's rule)
+  merge_cos_threshold: 0.7          # |cos| >= this => pair counted as MERGED (backlog's ~0.7)
+  ortho_cos_threshold: 0.3          # |cos| <= this => pair counted as LOCALLY ORTHOGONAL
+  eval_batch: 8192                  # fresh held-out batch for per-feature reconstruction loss
+
+  # --- sweep A: within-pair IMPORTANCE RATIO r, at fixed value-correlation 0 ---
+  # importances are normalised to (2/(1+r), 2r/(1+r)) so pair TOTAL importance is 2 for every r
+  sweep_a_ratios: [1, 2, 4, 8, 16, 64, 256]
+  sweep_a_rhos: [0.0, 0.75, 1.0]    # rho=0 is the UNPAIRED control (is the drop importance, or pairing?)
+
+  # --- sweep B: within-pair VALUE correlation c, at fixed importance ratio 1 ---
+  sweep_b_vcorrs: [1.0, 0.5, 0.0, -0.5, -1.0]
+  sweep_b_rhos: [0.75, 1.0]
+
+  # --- sweep C: joint corner, both stressors at once, at rho = 1 ---
+  sweep_c_ratios: [1, 4, 16]
+  sweep_c_vcorrs: [1.0, 0.0, -1.0]
+  sweep_c_rho: 1.0

@@ -1,0 +1,71 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_esn-reservoir"
+title: "Is there an edge-of-chaos ridge? A fine spectral-radius sweep of a hand-rolled Echo State Network on Mackey-Glass-17"
+hypothesis: "The classic 'edge of chaos' claim predicts a sharp performance ridge just below spectral radius 1: NRMSE on Mackey-Glass-17 should fall steeply as sr -> 1 from below, be minimised in a narrow band around sr ~ 0.9-1.0, degrade quickly past sr = 1, and the NRMSE optimum should coincide with the peak of linear memory capacity."
+seed: 0
+dataset:
+  name: "Mackey-Glass tau=17 chaotic time series (MG-17), RK4 dt=0.1 subsampled to unit step, squashed with tanh(x-1) per Jaeger's ESN benchmark"
+  source: "generated in run.py (delay differential equation, deterministic constant history x=1.2)"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # --- Mackey-Glass generation ---
+  mg_tau: 17
+  mg_dt: 0.1
+  mg_beta: 0.2
+  mg_gamma: 0.1
+  mg_power: 10
+  mg_x0: 1.2
+  mg_discard: 1000          # unit-steps of transient dropped before the series starts
+  mg_squash: true           # y = tanh(x - 1), the standard MG-17 ESN preprocessing
+
+  # --- data split (unit time steps) ---
+  n_washout: 200
+  n_train: 3000
+  n_val: 1000
+  n_test: 2000
+
+  # --- reservoir ---
+  density: 0.1              # sparsity of the recurrent matrix
+  leak_rate: 1.0            # classic (non-leaky) ESN
+  # W_in ~ U(-1,1)*input_scaling and bias ~ U(-1,1)*input_scaling (bias = a constant input).
+  # An "arm" is one (reservoir size, input scaling) pair; the sr grid is swept inside each.
+  # The recurrent topology is drawn ONCE per (N, seed) and only rescaled, so the sr sweep is
+  # a within-reservoir comparison, and the input-scaling arms share topologies too.
+  arms:
+    - {label: "N200_in0.5", N: 200, input_scaling: 0.5, n_seeds: 5}
+    - {label: "N100_in0.5", N: 100, input_scaling: 0.5, n_seeds: 3}
+    - {label: "N400_in0.5", N: 400, input_scaling: 0.5, n_seeds: 2}
+    - {label: "N200_in0.1", N: 200, input_scaling: 0.1, n_seeds: 3}
+    - {label: "N200_in1.0", N: 200, input_scaling: 1.0, n_seeds: 3}
+  headline_arm: "N200_in0.5"
+  size_arms: ["N100_in0.5", "N200_in0.5", "N400_in0.5"]
+  inscale_arms: ["N200_in0.1", "N200_in0.5", "N200_in1.0"]
+
+  # --- the swept variable ---
+  spectral_radii: [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75,
+                   0.80, 0.85, 0.90, 0.925, 0.95, 0.975, 1.00, 1.025, 1.05, 1.10,
+                   1.15, 1.20, 1.25, 1.30, 1.35, 1.40, 1.45, 1.50, 1.55, 1.60]
+
+  # --- readout ---
+  ridge_alphas: [1.0e-10, 1.0e-8, 1.0e-6, 1.0e-4, 1.0e-2, 1.0]
+
+  # --- free-running evaluation (classic MG-17 benchmark) ---
+  horizon: 84
+  n_freerun_val: 20
+  n_freerun_test: 50
+  freerun_clip: 3.0         # feedback safety clip on the predicted value
+  valid_time_thresh: 0.2    # |err| > thresh * std(signal) ends the "valid" window
+
+  # --- linear memory capacity probe ---
+  mc_enabled: true
+  mc_washout: 200
+  mc_train: 3000
+  mc_val: 500               # used only to pick the ridge alpha
+  mc_test: 1500
+  mc_kmax_frac: 1.0         # K_max = round(mc_kmax_frac * N) delays
+  mc_match_input_std: true  # i.i.d. uniform input rescaled to the MG input's std
+
+  # --- honesty knobs ---
+  ridge_width_factor: 1.5   # "near-optimal band" = sr where metric <= factor * min
+  time_cap_s: 780           # hard wall-clock cap; remaining cells are skipped and recorded
