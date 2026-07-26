@@ -1,0 +1,40 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_retnet-nano-char"
+title: "RetNet retention at nano scale: parallel == recurrent to 1e-6, but does the decay schedule buy anything on a char LM?"
+hypothesis: "Hand-rolled multi-scale retention reproduces the paper's parallel/recurrent duality to floating-point precision (max abs logit deviation ~1e-5 or less), and on a tiny char LM at matched params/steps retention trails softmax attention in val bits/char while the decay schedule (multi-scale geometric vs uniform vs no-decay vs learned) makes a difference smaller than the seed-to-seed noise."
+seed: 0
+dataset:
+  name: "tiny-shakespeare (char-level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters ---
+params:
+  d_model: 64
+  n_heads: 4
+  n_layers: 2
+  d_ff: 192              # retention arms; attention arm's d_ff is binary-searched to match params
+  ctx: 128
+  batch_size: 16
+  train_steps: 800
+  eval_every: 200
+  eval_batches_curve: 12
+  eval_batches_final: 40
+  lr: 0.002
+  warmup: 60
+  min_lr_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  seeds: [0, 1]
+  val_frac: 0.1
+  # arms: softmax attention reference + four retention decay schedules
+  arms: [attn, ret_multiscale, ret_uniform, ret_nodecay, ret_learned]
+  uniform_gamma: 0.97
+  nodecay_gamma: 1.0
+  # multiscale: gamma_h = 1 - 2^-(5+h), the RetNet paper's schedule
+  multiscale_base_exp: 5
+  # numerical-equivalence check
+  equiv_lengths: [16, 32, 64, 128]
+  equiv_batch: 4
+  # wall-clock guard (seconds of training before we stop launching new runs)
+  time_budget_sec: 780

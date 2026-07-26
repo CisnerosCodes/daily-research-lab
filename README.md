@@ -28,11 +28,12 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**25 experiments logged.**
+**26 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
 | 2026-07-26 | [MQAR at nano scale: the linear-attention recall cliff is pinned at N~8 across a 4x width sweep (state-size story refuted at fixed budget), and a scalar forget gate is a no-op](experiments/2026-07-26_mqar-state-capacity) | ✅ done | Frontier (max N with acc>=0.9, d=32/64/128): attn 8/16/16, linattn 2/4/4, gla 2/4/4. The l |
+| 2026-07-26 | [RetNet retention at nano scale: parallel == recurrent to 3e-7, and the decay schedule is worth 12.7x the seed noise](experiments/2026-07-26_retnet-nano-char) | ✅ done | Two of three hypotheses held; the third was refuted hard. (1) DUALITY CONFIRMED and it is  |
 | 2026-07-25 | [NoPE vs RoPE vs ALiBi vs APE: does the length-generalization ranking survive at 0.1M params?](experiments/2026-07-25_pe-length-gen-tiny) | ✅ done | Hypothesis refuted: at 0.1M params and iso-compute the length-generalization ranking is AL |
 | 2026-07-25 | [Shadow E1: at iso-FLOPs on a 0.06-0.21M-param char LM, a weight-tied looped block loses to plain depth](experiments/2026-07-25_shadow-loop-vs-depth-isoflop) | ✅ done | Hypothesis supported. At iso-FLOPs the weight-tied loop never beats untied depth and the p |
 | 2026-07-25 | [Does the Game-of-Life capacity window transfer to language? Tied vs untied recursion across width](experiments/2026-07-25_shadow-recursion-capacity-window) | ✅ done | Hypothesis refuted - the Game-of-Life capacity window does not transfer to language. Weigh |

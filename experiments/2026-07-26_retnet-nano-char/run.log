@@ -1,0 +1,128 @@
+[iso-param] retention 108032 params (d_ff=192), attention 108098 params (d_ff=225), spread 0.061%
+[equiv @init] {"ret_multiscale": 2.980232238769531e-07, "ret_uniform": 2.980232238769531e-07, "ret_nodecay": 3.2782554626464844e-07, "ret_learned": 3.2782554626464844e-07}
+[train] arm=attn            seed=0 val_bpc=3.2640 (58.0s)
+[train] arm=ret_multiscale  seed=0 val_bpc=3.3027 (52.3s)
+[train] arm=ret_uniform     seed=0 val_bpc=3.2698 (61.3s)
+[train] arm=ret_nodecay     seed=0 val_bpc=3.3880 (55.0s)
+[train] arm=ret_learned     seed=0 val_bpc=3.1488 (58.7s)
+[train] arm=attn            seed=1 val_bpc=3.2835 (58.6s)
+[train] arm=ret_multiscale  seed=1 val_bpc=3.2927 (53.4s)
+[train] arm=ret_uniform     seed=1 val_bpc=3.2714 (56.0s)
+[train] arm=ret_nodecay     seed=1 val_bpc=3.4049 (53.9s)
+[train] arm=ret_learned     seed=1 val_bpc=3.1504 (57.5s)
+{
+  "n_params": {
+    "retention": 108032,
+    "attention": 108098
+  },
+  "d_ff": {
+    "retention": 192,
+    "attention": 225
+  },
+  "param_spread_pct": 0.0611,
+  "train_steps": 800,
+  "ctx": 128,
+  "batch_size": 16,
+  "tokens_per_run": 1638400,
+  "seeds_completed": [
+    0,
+    1
+  ],
+  "multiscale_gammas": [
+    0.96875,
+    0.984375,
+    0.992188,
+    0.996094
+  ],
+  "val_bpc": {
+    "attn": {
+      "mean": 3.2738,
+      "min": 3.264,
+      "max": 3.2835,
+      "n_seeds": 2
+    },
+    "ret_multiscale": {
+      "mean": 3.2977,
+      "min": 3.2927,
+      "max": 3.3027,
+      "n_seeds": 2
+    },
+    "ret_uniform": {
+      "mean": 3.2706,
+      "min": 3.2698,
+      "max": 3.2714,
+      "n_seeds": 2
+    },
+    "ret_nodecay": {
+      "mean": 3.3965,
+      "min": 3.388,
+      "max": 3.4049,
+      "n_seeds": 2
+    },
+    "ret_learned": {
+      "mean": 3.1496,
+      "min": 3.1488,
+      "max": 3.1504,
+      "n_seeds": 2
+    }
+  },
+  "ret_multiscale_minus_attn_bpc": 0.0239,
+  "best_retention_arm": "ret_learned",
+  "worst_retention_arm": "ret_nodecay",
+  "decay_schedule_ranking": [
+    [
+      "ret_learned",
+      3.1496
+    ],
+    [
+      "ret_uniform",
+      3.2706
+    ],
+    [
+      "ret_multiscale",
+      3.2977
+    ],
+    [
+      "ret_nodecay",
+      3.3965
+    ]
+  ],
+  "decay_schedule_spread_bpc": 0.2469,
+  "seed_spread_max_bpc": 0.0195,
+  "max_abs_logit_dev_at_ctx_init": 3.2782554626464844e-07,
+  "max_abs_logit_dev_at_ctx_trained": 4.76837158203125e-06,
+  "learned_gammas_final": {
+    "0": [
+      [
+        0.91209,
+        0.9589,
+        0.97655,
+        0.98783
+      ],
+      [
+        0.91187,
+        0.9544,
+        0.97792,
+        0.98878
+      ]
+    ],
+    "1": [
+      [
+        0.91229,
+        0.96258,
+        0.97547,
+        0.98758
+      ],
+      [
+        0.91168,
+        0.9569,
+        0.97651,
+        0.98824
+      ]
+    ]
+  },
+  "forward_sec_parallel": 0.0065,
+  "forward_sec_recurrent_pyloop": 0.0289,
+  "headline": "parallel vs recurrent max abs logit deviation 3.28e-07 at T=128 (init) / 4.77e-06 (trained); retention(multiscale) 3.2977 vs attention 3.2738 val bpc (delta +0.0239); decay-schedule spread 0.2469 bpc vs seed spread 0.0195"
+}
+duration_sec 567.1
