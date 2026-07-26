@@ -1,0 +1,65 @@
+# Grokking beyond addition: abelian vs non-abelian group multiplication.
+id: "2026-07-26_group-grokking"
+title: "Grokking beyond addition: does the abelian/non-abelian divide change WHEN a model groks and WHETHER the same progress measure fires?"
+hypothesis: "A 1-layer transformer learning (a, b) -> a*b groks on a non-abelian group as well as on an abelian one of the SAME order, but with a longer delay and a higher data requirement; and the two progress measures that worked on modular addition - restricted/excluded loss and Fourier power concentration of the embeddings - generalise verbatim once 'Fourier frequency' is replaced by 'irreducible representation', so the leading indicator fires the same way on both sides of the divide."
+seed: 0
+dataset:
+  name: "full multiplication tables of Z/48, D_24 (order 48), Z/24 and S_4 (order 24); deterministic random train/test split of the n^2 cells"
+  source: "generated in run.py from the seed (group tables + character tables constructed and verified in-code)"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # --- architecture: the lab's proven grokking recipe, reused verbatim from
+  #     2026-07-25_grokking-modular-addition / 2026-07-25_grokking-weight-decay-phase
+  #     (1-layer, no LayerNorm, no biases, full-batch AdamW, wd=1.0, lr=1e-3,
+  #     betas 0.9/0.98, init_std_scale 0.8), with d_mlp SHRUNK 256 -> 128 following
+  #     2026-07-26_clock-vs-pizza (measured there: groks at ~650 steps instead of ~1850).
+  d_model: 64
+  n_heads: 4
+  d_mlp: 128
+  n_ctx: 3                  # [a, b, "="]
+  init_std_scale: 0.8       # weight std = init_std_scale / sqrt(d_model)
+  lr: 0.001
+  weight_decay: 1.0
+  beta1: 0.9
+  beta2: 0.98
+
+  # --- the swept variable: GROUP (abelian vs non-abelian) x train fraction ---
+  # Two MATCHED-ORDER pairs. Primary pair is order 48 (2304-cell table):
+  #   Z/48   abelian,     48 one-dimensional irreps
+  #   D_24   NON-abelian, order 48 (symmetries of the 24-gon), irreps 1,1,1,1 + 2x11
+  # D_24 = Z/24 semidirect Z/2, so it differs from the abelian arm by exactly one twist,
+  # and both arms have identical table size, vocab and parameter count.
+  # Secondary pair is order 24 (576-cell table), and includes S_4 because it is the group
+  # the prior art (Chughtai et al. 2302.03025) uses and has the richest irrep set (1,1,2,3,3):
+  #   Z/24   abelian, 24 one-dimensional irreps
+  #   S_4    NON-abelian, order 24
+  # S_5 (order 120, 14400 cells) from the backlog is far outside the CPU box; SHRUNK to S_4.
+  #
+  # Runs are attempted in this order and are skipped (and reported) if the global
+  # wall-clock budget runs out. Non-abelian arms get the larger step caps because the
+  # literature says non-abelian grokking needs more data / longer.
+  # Step caps are ASYMMETRIC on purpose and that asymmetry favours the non-abelian arms:
+  # a pilot showed Z/48 at frac 0.5 already at test acc 0.50 by step 300, so the abelian
+  # arms need only ~3000 steps to be fully resolved, while the non-abelian arms are given
+  # 5-16k steps. Any non-abelian censoring is therefore NOT an artifact of a stingier box.
+  runs:
+    - {group: "Z48",  train_frac: 0.5, max_steps: 3000,  time_cap_s: 55}
+    - {group: "D24",  train_frac: 0.5, max_steps: 9000,  time_cap_s: 165}
+    - {group: "D24",  train_frac: 0.6, max_steps: 9000,  time_cap_s: 150}
+    - {group: "Z48",  train_frac: 0.6, max_steps: 3000,  time_cap_s: 50}
+    - {group: "S4",   train_frac: 0.6, max_steps: 16000, time_cap_s: 65}
+    - {group: "Z24",  train_frac: 0.6, max_steps: 6000,  time_cap_s: 30}
+    - {group: "S4",   train_frac: 0.8, max_steps: 16000, time_cap_s: 45}
+    - {group: "Z24",  train_frac: 0.8, max_steps: 6000,  time_cap_s: 25}
+    - {group: "D24",  train_frac: 0.4, max_steps: 5000,  time_cap_s: 70}
+    - {group: "Z48",  train_frac: 0.4, max_steps: 4000,  time_cap_s: 50}
+  total_train_budget_s: 715   # hard global wall-clock budget across ALL runs
+
+  eval_every: 20              # steps between online progress-measure evaluations
+  ckpt_every_evals: 5         # in-RAM checkpoint (for the restricted/excluded replay) every 100 steps
+  train_acc_memorized_threshold: 0.99
+  test_acc_jump_thresholds: [0.3, 0.5, 0.95]
+  plateau_exit_abs: 0.05      # "left the memorization plateau" = test acc > chance + this
+  key_irrep_power: 0.9        # key irreps = smallest set holding this share of W_E isotypic power
+  max_key_irreps: 12          # cap; conjugate-closed afterwards, so cyclic groups get pairs

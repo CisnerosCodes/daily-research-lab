@@ -1,0 +1,154 @@
+group OK: D_24  order  48 NON-abelian irreps [1, 1, 1, 1, 2, 2]... | ideal-logit reconstruction err 1.4e-14, random-logit energy outside restricted subspace 0.9998
+group OK: S_4   order  24 NON-abelian irreps [1, 1, 2, 3, 3] | ideal-logit reconstruction err 4.3e-15, random-logit energy outside restricted subspace 0.9998
+group OK: Z/24  order  24 abelian     irreps [1, 1, 1, 1, 1, 1]... | ideal-logit reconstruction err 4.4e-15, random-logit energy outside restricted subspace 0.9975
+group OK: Z/48  order  48 abelian     irreps [1, 1, 1, 1, 1, 1]... | ideal-logit reconstruction err 1.3e-14, random-logit energy outside restricted subspace 0.9998
+run: Z48 train_frac=0.5 cap=55s max_steps=3000
+  Z/48  frac=0.5  1152 train / 1152 test  (abelian, 48 irreps)
+    step      0  tr 0.0182  te 0.0234  KL 0.010  H 5.575  (1s)
+    step    500  tr 1.0000  te 0.5365  KL 0.518  H 5.067  (10s)
+    step   1000  tr 1.0000  te 0.6745  KL 0.793  H 4.792  (23s)
+    step   1500  tr 1.0000  te 0.8811  KL 1.047  H 4.538  (36s)
+    step   2000  tr 1.0000  te 0.9731  KL 1.399  H 4.186  (48s)
+    TIME CAP at step 2402 (55s)
+    key irreps ['k=0', 'k=4', 'k=10', 'k=13', 'k=16', 'k=20', 'k=24', 'k=28', 'k=32', 'k=35', 'k=38', 'k=44'] (87.7% of W_E isotypic power); replayed 25 ckpts; 56s
+    -> final test_acc 0.9983 after 2402 steps; mem@212.9000123024104, test50@303.33331425988337, delay=90
+run: D24 train_frac=0.5 cap=165s max_steps=9000
+  D_24  frac=0.5  1152 train / 1152 test  (NON-abelian, 15 irreps)
+    step      0  tr 0.0200  te 0.0217  KL 0.006  H 3.745  (0s)
+    step    500  tr 1.0000  te 0.0469  KL 0.121  H 3.680  (8s)
+    step   1000  tr 1.0000  te 0.0538  KL 0.151  H 3.680  (18s)
+    step   1500  tr 1.0000  te 0.0660  KL 0.175  H 3.678  (31s)
+    step   2000  tr 1.0000  te 0.0616  KL 0.204  H 3.664  (45s)
+    step   2500  tr 1.0000  te 0.0720  KL 0.218  H 3.669  (56s)
+    step   3000  tr 1.0000  te 0.0799  KL 0.242  H 3.667  (68s)
+    step   3500  tr 1.0000  te 0.0868  KL 0.279  H 3.644  (82s)
+    step   4000  tr 1.0000  te 0.1024  KL 0.307  H 3.622  (91s)
+    step   4500  tr 1.0000  te 0.1120  KL 0.323  H 3.610  (101s)
+    step   5000  tr 1.0000  te 0.1128  KL 0.343  H 3.596  (115s)
+    step   5500  tr 1.0000  te 0.1233  KL 0.336  H 3.601  (126s)
+    step   6000  tr 1.0000  te 0.1215  KL 0.345  H 3.599  (139s)
+    step   6500  tr 1.0000  te 0.1293  KL 0.374  H 3.575  (154s)
+    TIME CAP at step 6988 (165s)
+    key irreps ['1d-sgn_r', '1d-sgn_rs', '2d-h=1', '2d-h=2', '2d-h=3', '2d-h=5', '2d-h=7', '2d-h=8', '2d-h=9', '2d-h=10', '2d-h=11'] (91.4% of W_E isotypic power); replayed 70 ckpts; 166s
+    -> final test_acc 0.1302 after 6988 steps; mem@234.6051375229322, test50@None, delay=CENSORED
+run: D24 train_frac=0.6 cap=150s max_steps=9000
+  D_24  frac=0.6  1382 train / 922 test  (NON-abelian, 15 irreps)
+    step      0  tr 0.0203  te 0.0217  KL 0.006  H 3.745  (0s)
+    step    500  tr 1.0000  te 0.1226  KL 0.331  H 3.546  (11s)
+    step   1000  tr 1.0000  te 0.1399  KL 0.397  H 3.499  (27s)
+    step   1500  tr 1.0000  te 0.1659  KL 0.437  H 3.477  (45s)
+    step   2000  tr 1.0000  te 0.1963  KL 0.491  H 3.443  (63s)
+    step   2500  tr 1.0000  te 0.2278  KL 0.542  H 3.412  (79s)
+    step   3000  tr 1.0000  te 0.2462  KL 0.561  H 3.409  (90s)
+    step   3500  tr 1.0000  te 0.2538  KL 0.576  H 3.401  (106s)
+    step   4000  tr 1.0000  te 0.2722  KL 0.631  H 3.364  (123s)
+    step   4500  tr 1.0000  te 0.2809  KL 0.656  H 3.350  (134s)
+    step   5000  tr 1.0000  te 0.2831  KL 0.663  H 3.347  (148s)
+    TIME CAP at step 5075 (150s)
+    key irreps ['1d-sgn_s', '1d-sgn_r', '2d-h=2', '2d-h=3', '2d-h=5', '2d-h=7', '2d-h=8', '2d-h=9', '2d-h=10', '2d-h=11'] (91.5% of W_E isotypic power); replayed 51 ckpts; 151s
+    -> final test_acc 0.2842 after 5075 steps; mem@257.93513145269196, test50@None, delay=CENSORED
+run: Z48 train_frac=0.6 cap=50s max_steps=3000
+  Z/48  frac=0.6  1382 train / 922 test  (abelian, 48 irreps)
+    step      0  tr 0.0174  te 0.0260  KL 0.010  H 5.575  (0s)
+    step    500  tr 1.0000  te 0.6963  KL 0.812  H 4.773  (14s)
+    step   1000  tr 1.0000  te 0.9501  KL 1.371  H 4.214  (30s)
+    step   1500  tr 1.0000  te 1.0000  KL 1.771  H 3.814  (46s)
+    TIME CAP at step 1602 (50s)
+    key irreps ['k=3', 'k=6', 'k=14', 'k=16', 'k=17', 'k=20', 'k=24', 'k=28', 'k=31', 'k=32', 'k=34', 'k=42', 'k=45'] (89.0% of W_E isotypic power); replayed 17 ckpts; 50s
+    -> final test_acc 1.0000 after 1602 steps; mem@214.62728104974062, test50@220.0, delay=5
+run: S4 train_frac=0.6 cap=65s max_steps=16000
+  S_4   frac=0.6  346 train / 230 test  (NON-abelian, 5 irreps)
+    step      0  tr 0.0434  te 0.0391  KL 0.007  H 1.794  (0s)
+    step    500  tr 1.0000  te 0.0087  KL 0.110  H 1.841  (3s)
+    step   1000  tr 1.0000  te 0.0087  KL 0.140  H 1.825  (7s)
+    step   1500  tr 1.0000  te 0.0087  KL 0.150  H 1.810  (10s)
+    step   2000  tr 1.0000  te 0.0130  KL 0.160  H 1.839  (14s)
+    step   2500  tr 1.0000  te 0.0130  KL 0.159  H 1.836  (17s)
+    step   3000  tr 1.0000  te 0.0130  KL 0.161  H 1.837  (21s)
+    step   3500  tr 1.0000  te 0.0087  KL 0.169  H 1.849  (24s)
+    step   4000  tr 1.0000  te 0.0130  KL 0.188  H 1.829  (28s)
+    step   4500  tr 1.0000  te 0.0174  KL 0.195  H 1.820  (31s)
+    step   5000  tr 1.0000  te 0.0261  KL 0.197  H 1.832  (35s)
+    step   5500  tr 1.0000  te 0.0217  KL 0.214  H 1.815  (39s)
+    step   6000  tr 1.0000  te 0.0304  KL 0.223  H 1.810  (42s)
+    step   6500  tr 1.0000  te 0.0304  KL 0.221  H 1.820  (46s)
+    step   7000  tr 1.0000  te 0.0304  KL 0.225  H 1.804  (50s)
+    step   7500  tr 1.0000  te 0.0391  KL 0.229  H 1.801  (53s)
+    step   8000  tr 1.0000  te 0.0348  KL 0.227  H 1.808  (57s)
+    step   8500  tr 1.0000  te 0.0391  KL 0.241  H 1.808  (60s)
+    step   9000  tr 1.0000  te 0.0348  KL 0.242  H 1.803  (64s)
+    TIME CAP at step 9133 (65s)
+    key irreps ['sgn', '2d', 'std', 'std*sgn'] (99.5% of W_E isotypic power); replayed 92 ckpts; 65s
+    -> final test_acc 0.0391 after 9133 steps; mem@158.24285649049048, test50@None, delay=CENSORED
+run: Z24 train_frac=0.6 cap=30s max_steps=6000
+  Z/24  frac=0.6  346 train / 230 test  (abelian, 24 irreps)
+    step      0  tr 0.0405  te 0.0435  KL 0.009  H 4.576  (0s)
+    step    500  tr 1.0000  te 0.2870  KL 0.216  H 4.369  (3s)
+    step   1000  tr 1.0000  te 0.3696  KL 0.302  H 4.283  (7s)
+    step   1500  tr 1.0000  te 0.4783  KL 0.365  H 4.220  (10s)
+    step   2000  tr 1.0000  te 0.6304  KL 0.413  H 4.172  (14s)
+    step   2500  tr 1.0000  te 0.7783  KL 0.494  H 4.091  (17s)
+    step   3000  tr 1.0000  te 0.8565  KL 0.598  H 3.987  (21s)
+    step   3500  tr 1.0000  te 0.9043  KL 0.757  H 3.828  (24s)
+    step   4000  tr 1.0000  te 0.9826  KL 0.844  H 3.741  (28s)
+    TIME CAP at step 4301 (30s)
+    key irreps ['k=0', 'k=1', 'k=3', 'k=9', 'k=10', 'k=11', 'k=12', 'k=13', 'k=14', 'k=15', 'k=21', 'k=23'] (86.6% of W_E isotypic power); replayed 44 ckpts; 30s
+    -> final test_acc 0.9826 after 4301 steps; mem@157.83749995166437, test50@1580.0, delay=1422
+run: S4 train_frac=0.8 cap=45s max_steps=16000
+  S_4   frac=0.8  461 train / 115 test  (NON-abelian, 5 irreps)
+    step      0  tr 0.0390  te 0.0522  KL 0.007  H 1.794  (0s)
+    step    500  tr 1.0000  te 0.0696  KL 0.176  H 1.701  (4s)
+    step   1000  tr 1.0000  te 0.0522  KL 0.210  H 1.657  (8s)
+    step   1500  tr 1.0000  te 0.0522  KL 0.231  H 1.638  (12s)
+    step   2000  tr 1.0000  te 0.0522  KL 0.266  H 1.620  (17s)
+    step   2500  tr 1.0000  te 0.0696  KL 0.266  H 1.618  (21s)
+    step   3000  tr 1.0000  te 0.0609  KL 0.272  H 1.613  (25s)
+    step   3500  tr 1.0000  te 0.0609  KL 0.292  H 1.613  (30s)
+    step   4000  tr 1.0000  te 0.0609  KL 0.294  H 1.609  (34s)
+    step   4500  tr 1.0000  te 0.0348  KL 0.297  H 1.605  (38s)
+    step   5000  tr 1.0000  te 0.0435  KL 0.322  H 1.601  (43s)
+    TIME CAP at step 5268 (45s)
+    key irreps ['sgn', 'std', 'std*sgn'] (94.2% of W_E isotypic power); replayed 53 ckpts; 45s
+    -> final test_acc 0.0348 after 5268 steps; mem@175.60952404629344, test50@None, delay=CENSORED
+run: Z24 train_frac=0.8 cap=25s max_steps=6000
+  Z/24  frac=0.8  461 train / 115 test  (abelian, 24 irreps)
+    step      0  tr 0.0390  te 0.0522  KL 0.009  H 4.576  (0s)
+    step    500  tr 1.0000  te 0.8522  KL 0.444  H 4.141  (4s)
+    step   1000  tr 1.0000  te 0.9304  KL 0.648  H 3.937  (9s)
+    step   1500  tr 1.0000  te 0.9652  KL 0.784  H 3.801  (13s)
+    step   2000  tr 1.0000  te 0.9391  KL 0.921  H 3.664  (18s)
+    step   2500  tr 1.0000  te 0.9652  KL 0.998  H 3.587  (22s)
+    TIME CAP at step 2792 (25s)
+    key irreps ['k=0', 'k=1', 'k=2', 'k=7', 'k=9', 'k=10', 'k=14', 'k=15', 'k=17', 'k=22', 'k=23'] (90.2% of W_E isotypic power); replayed 28 ckpts; 25s
+    -> final test_acc 0.9652 after 2792 steps; mem@153.8533288391928, test50@160.0, delay=6
+run: D24 train_frac=0.4 cap=70s max_steps=5000
+  D_24  frac=0.4  922 train / 1382 test  (NON-abelian, 15 irreps)
+    step      0  tr 0.0217  te 0.0203  KL 0.006  H 3.745  (0s)
+    step    500  tr 1.0000  te 0.0094  KL 0.047  H 3.704  (7s)
+    step   1000  tr 1.0000  te 0.0130  KL 0.057  H 3.707  (15s)
+    step   1500  tr 1.0000  te 0.0116  KL 0.065  H 3.706  (24s)
+    step   2000  tr 0.9881  te 0.0116  KL 0.072  H 3.703  (34s)
+    step   2500  tr 1.0000  te 0.0123  KL 0.080  H 3.705  (41s)
+    step   3000  tr 1.0000  te 0.0152  KL 0.087  H 3.710  (48s)
+    step   3500  tr 1.0000  te 0.0181  KL 0.094  H 3.709  (58s)
+    step   4000  tr 1.0000  te 0.0166  KL 0.111  H 3.705  (66s)
+    TIME CAP at step 4310 (70s)
+    key irreps ['1d-sgn_s', '2d-h=1', '2d-h=2', '2d-h=3', '2d-h=4', '2d-h=5', '2d-h=6', '2d-h=7', '2d-h=8', '2d-h=9', '2d-h=10', '2d-h=11'] (94.5% of W_E isotypic power); replayed 44 ckpts; 71s
+    -> final test_acc 0.0152 after 4310 steps; mem@217.77871984172828, test50@None, delay=CENSORED
+run: Z48 train_frac=0.4 cap=49s max_steps=4000
+  Z/48  frac=0.4  922 train / 1382 test  (abelian, 48 irreps)
+    step      0  tr 0.0163  te 0.0239  KL 0.010  H 5.575  (0s)
+    step    500  tr 1.0000  te 0.0904  KL 0.160  H 5.425  (7s)
+    step   1000  tr 1.0000  te 0.1122  KL 0.208  H 5.376  (15s)
+    step   1500  tr 1.0000  te 0.1295  KL 0.237  H 5.348  (24s)
+    step   2000  tr 1.0000  te 0.1324  KL 0.284  H 5.301  (34s)
+    step   2500  tr 1.0000  te 0.1512  KL 0.297  H 5.288  (42s)
+    TIME CAP at step 2967 (49s)
+    key irreps ['k=1', 'k=8', 'k=10', 'k=13', 'k=14', 'k=16', 'k=32', 'k=34', 'k=35', 'k=38', 'k=40', 'k=47'] (49.8% of W_E isotypic power); replayed 30 ckpts; 50s
+    -> final test_acc 0.1606 after 2967 steps; mem@216.81026512509422, test50@None, delay=CENSORED
+headline: order 48 frac 0.4 (922 train): Z/48 delay CENSORED vs D_24 delay CENSORED at step 4310 | order 48 frac 0.5 (1152 train): Z/48 delay 90 vs D_24 delay CENSORED at step 6988 | order 48 frac 0.6 (1382 train): Z/48 delay 5 vs D_24 delay CENSORED at step 5075 | order 24 frac 0.6 (346 train): Z/24 delay 1422 vs S_4 delay CENSORED at step 9133 | order 24 frac 0.8 (461 train): Z/24 delay 6 vs S_4 delay CENSORED at step 5268 | restricted-loss lead over test-acc-50%: abelian mean 315.8, non-abelian mean None steps | irrep-power-concentration (KL vs null) lead: abelian mean -909.8, non-abelian mean None steps | 6/10 run(s) have a correctly-SIGNED irrep circuit (restricted-only test acc 1.0, a 1-bit statement) while the full model is <0.50; the MAGNITUDE separates them: restricted logit-energy fraction 0.782976 on grokked runs vs 0.239922 on censored runs (clean separation: True)
+{
+  "id": "2026-07-26_group-grokking",
+  "duration_sec": 714.37,
+  "status": "done"
+}

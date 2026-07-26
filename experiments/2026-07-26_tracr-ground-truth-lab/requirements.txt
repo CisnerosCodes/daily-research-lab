@@ -1,0 +1,15 @@
+# actually used by run.py (versions as run on 2026-07-26, CPU only)
+numpy==2.4.4
+torch==2.13.0
+matplotlib==3.10.9
+pyyaml
+
+# Tracr is NOT on PyPI under the name `tracr` (that install fails). Install from source:
+#   pip install --break-system-packages "tracr @ git+https://github.com/google-deepmind/tracr.git"
+# which pulls the JAX stack below. Compilation and the reference forward pass run on CPU in ~6 s.
+tracr @ git+https://github.com/google-deepmind/tracr.git   # tracr==1.0.0
+jax==0.10.2
+jaxlib==0.10.2
+dm-haiku==0.0.16
+chex==0.1.92
+einops==0.8.2

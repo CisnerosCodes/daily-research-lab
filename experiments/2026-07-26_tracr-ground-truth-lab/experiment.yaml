@@ -1,0 +1,53 @@
+# Tracr ground-truth interpretability lab. run.py reads this. No magic constants in code.
+id: "2026-07-26_tracr-ground-truth-lab"
+title: "Interpretability with the answer key: probes and SAEs against a Tracr-compiled reverse circuit"
+hypothesis: >
+  On a Tracr-compiled transformer whose every residual dimension is a labelled variable by
+  construction, (a) linear probes will recover each intermediate variable at the layer where it is
+  constructed but will ALSO fire above chance at layers where the variable provably does not exist
+  (because it is inferable from what is there), so probe accuracy localizes information rather than
+  computation; and (b) an L1 SAE on the residual stream should ACE the axis-aligned uncompressed
+  basis (near 100% recovery, unlike the lab's 0.32 purity on the grokked model), while a linearly
+  COMPRESSED tracr model - a constructed superposition with a known encoding matrix - is the case
+  where the SAE has to earn its keep.
+seed: 0
+dataset:
+  name: "exhaustive reverse-task inputs (all sequences of length 1..5 over a 4-symbol vocab)"
+  source: "generated in run.py; ground truth from the RASP program itself"
+  license: "n/a (synthetic)"
+params:
+  # --- compiled program ---
+  vocab: ["a", "b", "c", "d"]
+  max_seq_len: 6          # includes the BOS position
+  min_real_len: 1
+  max_real_len: 5
+  compiler_bos: "BOS"
+  compiler_pad: "PAD"
+  # --- probes ---
+  probe_train_frac: 0.7
+  probe_steps: 400
+  probe_lr: 0.1
+  probe_wd: 0.0001
+  detect_margin: 0.05     # probe acc must beat majority by this to count as "detected"
+  # --- causal ablation ---
+  n_random_erasers: 8
+  # --- SAE ---
+  sae_steps: 1500
+  sae_batch: 512
+  sae_lr: 0.003
+  sae_expansions: [1, 2, 4]        # main grid, on the real tracr code
+  sae_control_expansions: [1, 2]   # independence control (reduced grid, seed 0 only)
+  sae_proj_expansions: [1, 2, 4]   # projected/superposed arms (seed 0 only)
+  sae_lambdas: [0.003, 0.01, 0.03, 0.1, 0.3]
+  sae_seeds: [0, 1]
+  sae_cos_threshold: 0.95
+  sae_f1_threshold: 0.95
+  sae_alive_fire_frac: 0.005
+  sae_null_repeats: 20
+  # --- constructed superposition in ACTIVATION space (orthonormal-row random projection) ---
+  proj_dims: [20, 14]
+  # --- model compression attempt (frozen tracr weights, learned read/write matrix) ---
+  compress_dims: [32, 24]
+  compress_steps: 1500
+  compress_lr: 0.01
+  compress_batch: 256

@@ -1,0 +1,470 @@
+{
+ "id": "2026-07-26_group-grokking",
+ "date": "2026-07-26",
+ "title": "Grokking beyond addition - abelian vs non-abelian group multiplication at MATCHED ORDER: 4/4 abelian arms grok, 0/5 non-abelian arms grok even with 2-3x more steps (delay ratio >=75x at order 48 / 50% of the table, and S_4 sits at chance with 80% of its table memorised). The divide is not 'the non-abelian model fails to find the algorithm' - every model builds a correctly-signed one - it is that the correct circuit never wins the MAGNITUDE contest: the share of logit energy in the correct-algorithm subspace stalls at ~0.24 instead of climbing past 0.71, and that one scalar separates grokked from censored with no overlap and no reference to commutativity",
+ "slug": "group-grokking",
+ "hypothesis": "A 1-layer transformer learning (a, b) -> a*b groks on a non-abelian group as well as on an abelian one of the SAME order, but with a longer delay and a higher data requirement; and the two progress measures that worked on modular addition - restricted/excluded loss and Fourier power concentration of the embeddings - generalise verbatim once 'Fourier frequency' is replaced by 'irreducible representation', so the leading indicator fires the same way on both sides of the divide.",
+ "question": "At matched group ORDER, matched table size and matched parameter count: (a) does a non-abelian group grok at all inside a 12-minute CPU box, and with what delay relative to an abelian group at the same order and train fraction; (b) does Nanda's restricted/excluded loss - the measure that LED the test jump in this lab's 2026-07-25 grokking row - still lead once 'key frequency' is generalised to 'key irreducible representation'; (c) does the abelian Fourier-power collapse of the embeddings have a non-abelian mirror in irrep power concentration, and does it fire the same way; (d) is there ANY scalar that predicts grokking without reference to commutativity?",
+ "method": "The lab's proven grokking recipe reused verbatim from 2026-07-25_grokking-modular-addition / 2026-07-25_grokking-weight-decay-phase: 1-layer transformer, NO LayerNorm, no biases, sequence [a, b, '='], logits read from the LAST position only (MLP+unembed applied at that one position - identical maths, ~3x cheaper), FULL-BATCH AdamW lr 1e-3, weight decay 1.0, betas (0.9, 0.98), init_std_scale 0.8, d_model 64, n_heads 4; d_mlp SHRUNK 256 -> 128 following 2026-07-26_clock-vs-pizza. 39,168 params at order 48, 36,096 at order 24. TWO MATCHED-ORDER PAIRS so that within a pair the table size, vocabulary and parameter count are IDENTICAL and the only difference is commutativity: order 48 / 2304 cells = Z/48 (abelian, 48 one-dim irreps) vs D_24, the symmetries of the 24-gon (irreps 1,1,1,1 + eleven 2-dim); order 24 / 576 cells = Z/24 vs S_4 (irreps 1,1,2,3,3). D_24 is the sharpest partner for Z/48 because D_24 = Z/24 semidirect Z/2 - same order, differing from cyclic by exactly one twist. S_5 (order 120, 14400 cells) from the backlog is far outside the box, so SHRUNK to S_4. Random train/test split of the table at fractions 0.4/0.5/0.6 (order 48) and 0.6/0.8 (order 24); STEP CAPS ARE ASYMMETRIC IN FAVOUR OF THE NON-ABELIAN ARMS (abelian 3-6k steps, non-abelian 5-16k) so no censoring is an artifact of a stingier box. THE METHODOLOGICAL CORE - both abelian progress measures generalised so that they reduce EXACTLY to the abelian versions when G is cyclic, making this one experiment rather than two: (1) IRREP POWER CONCENTRATION of W_E via the isotypic projector P_rho[x,y] = (d_rho/|G|)*chi_rho(y x^-1), power = tr(W^T P_rho W), which for Z/n is exactly the squared DFT magnitude at frequency rho; because groups differ in the number and dimension of their irreps, raw entropy is NOT comparable across the divide, so the reported statistic is the excess concentration against the group's own random-embedding null, KL_bits = sum p_rho log2(p_rho/q_rho) with q_rho = d_rho^2/|G|. (2) RESTRICTED/EXCLUDED LOSS generalised: the correct algorithm must give logits L(a,b,c) = phi(a b c^-1) with phi a CLASS FUNCTION, because the ideal target delta(a b c^-1 = e) = (1/|G|) sum_rho d_rho chi_rho(a b c^-1); the f_rho(a,b,c) = chi_rho(a b c^-1) are orthogonal with ||f_rho||^2 = |G|^3, so the centred logit tensor splits into the part on the model's KEY IRREPS (restricted, key set taken from the FINAL model per Nanda's protocol via in-RAM checkpoint replay, conjugation-closed) and the rest (excluded); for Z/n this is Nanda's mask on the diagonal frequency triples (k,k,k), the canonical and slightly tighter version. EVERYTHING IS ASSERTED NUMERICALLY AT STARTUP, NOT ASSUMED: every table checked to be a Latin square and associative over all n^3 triples; every character table checked for chi(e)=d, sum d^2=|G|, row orthonormality, class-function property; isotypic projectors checked to sum to I, be idempotent and Hermitian with trace d_rho^2; the restricted subspace checked to reconstruct the IDEAL delta-logits to <=1.4e-14 and to leave >=99.75% of random-logit energy outside it. MID-EXPERIMENT CORRECTION: restricted-only TEST ACCURACY turned out to be a vacuous ONE-BIT statistic - a restricted logit phi(a b c^-1) has provably identical cross-entropy on every (a,b) cell (asserted in code), so its accuracy is 1.0 whenever phi merely peaks at the identity however tiny phi is, and it is indeed 1.0 in all 10 runs including ones at chance; the informative quantity, added and reported, is the RESTRICTED ENERGY FRACTION ||R||^2/||L||^2. Lead times measured from the MEMORISATION step (train acc >= 0.99), each measure normalised by its own total post-memorisation movement - identical machinery to the 2026-07-25 grokking row so the numbers are directly comparable. 10 runs under a hard 715 s global wall-clock budget, 0 skipped, 710 s.",
+ "architecture": "1-layer attention+MLP transformer, no LayerNorm, no biases, d_model 64, 4 heads, d_mlp 128, n_ctx 3, last-position readout; 39,168 params (order-48 groups) / 36,096 params (order-24 groups)",
+ "dataset": {
+  "name": "full multiplication tables of Z/48 and D_24 (order 48, 2304 cells) and Z/24 and S_4 (order 24, 576 cells); deterministic random train/test split of the n^2 cells",
+  "source": "generated in run.py from the seed; group tables and character tables constructed and verified in-code (Latin square, associativity over all n^3 triples, character orthonormality, isotypic projector completeness)",
+  "license": "n/a (synthetic)"
+ },
+ "task": "group multiplication (a, b) -> a*b; headline = grok delay of an abelian vs a non-abelian group at MATCHED ORDER and matched train fraction, plus whether the irrep-generalised restricted/excluded loss and irrep power concentration fire the same way across the divide",
+ "framework": "torch 2.13 (CPU, single thread), numpy; hand-rolled group and character tables, hand-rolled isotypic projections",
+ "seed": 0,
+ "compute": "CPU 1 thread, 710 s (11.8 min) for 10 runs (4 groups x 2-3 train fractions) including online progress measures and post-hoc checkpoint replay of the restricted/excluded decomposition",
+ "metrics": {
+  "headline": "4/4 abelian arms above the data threshold grok; 0/5 non-abelian arms grok despite 2-3x larger step caps. Matched-order delay ratio >=75x (order 48, frac 0.5). The restricted logit-ENERGY FRACTION separates grokked (0.706-0.874) from censored (0.033-0.355) with NO overlap and no reference to commutativity",
+  "n_params": {
+   "order_48": 39168,
+   "order_24": 36096
+  },
+  "arch": {
+   "d_model": 64,
+   "n_heads": 4,
+   "d_mlp": 128,
+   "n_ctx": 3,
+   "init_std_scale": 0.8
+  },
+  "optimizer": {
+   "lr": 0.001,
+   "weight_decay": 1.0,
+   "betas": [
+    0.9,
+    0.98
+   ],
+   "full_batch": true
+  },
+  "groups": {
+   "Z/48": {
+    "order": 48,
+    "abelian": true,
+    "n_irreps": 48,
+    "irrep_dims": "48 x 1"
+   },
+   "D_24": {
+    "order": 48,
+    "abelian": false,
+    "n_irreps": 15,
+    "irrep_dims": "4 x 1, 11 x 2"
+   },
+   "Z/24": {
+    "order": 24,
+    "abelian": true,
+    "n_irreps": 24,
+    "irrep_dims": "24 x 1"
+   },
+   "S_4": {
+    "order": 24,
+    "abelian": false,
+    "n_irreps": 5,
+    "irrep_dims": "1,1,2,3,3"
+   }
+  },
+  "group_verification": {
+   "ideal_delta_logit_reconstruction_maxerr_all_groups": 1.4e-14,
+   "random_logit_energy_outside_restricted_subspace_min": 0.9975,
+   "checks": "Latin square, associativity over all n^3 triples, chi(e)=d, sum d^2=|G|, character row orthonormality, class-function property, isotypic projectors sum to I / idempotent / Hermitian / trace d^2"
+  },
+  "n_runs": 10,
+  "n_skipped": 0,
+  "PRIMARY_grokked_arms": [
+   "Z/48@0.5",
+   "Z/48@0.6",
+   "Z/24@0.6",
+   "Z/24@0.8"
+  ],
+  "PRIMARY_censored_arms": [
+   "Z/48@0.4",
+   "D_24@0.4",
+   "D_24@0.5",
+   "D_24@0.6",
+   "S_4@0.6",
+   "S_4@0.8"
+  ],
+  "PRIMARY_abelian_grok_rate": "4/4 above threshold (4/6 of all abelian arms)",
+  "PRIMARY_nonabelian_grok_rate": "0/5",
+  "per_run": [
+   {
+    "run": "Z/48@0.4",
+    "abelian": true,
+    "n_train": 922,
+    "steps_run": 2967,
+    "step_memorized": 217,
+    "step_test50": null,
+    "grok_delay": null,
+    "final_test_acc": 0.1606,
+    "chance": 0.0208,
+    "restricted_energy_frac": 0.2077,
+    "KL_irrep_final": 0.317
+   },
+   {
+    "run": "Z/48@0.5",
+    "abelian": true,
+    "n_train": 1152,
+    "steps_run": 2402,
+    "step_memorized": 213,
+    "step_test50": 303,
+    "grok_delay": 90.4,
+    "final_test_acc": 0.9983,
+    "chance": 0.0208,
+    "restricted_energy_frac": 0.7787,
+    "KL_irrep_final": 1.72
+   },
+   {
+    "run": "Z/48@0.6",
+    "abelian": true,
+    "n_train": 1382,
+    "steps_run": 1602,
+    "step_memorized": 215,
+    "step_test50": 220,
+    "grok_delay": 5.4,
+    "final_test_acc": 1.0,
+    "chance": 0.0208,
+    "restricted_energy_frac": 0.8737,
+    "KL_irrep_final": 1.88
+   },
+   {
+    "run": "D_24@0.4",
+    "abelian": false,
+    "n_train": 922,
+    "steps_run": 4310,
+    "step_memorized": 218,
+    "step_test50": null,
+    "grok_delay": null,
+    "final_test_acc": 0.0152,
+    "chance": 0.0208,
+    "restricted_energy_frac": 0.0334,
+    "KL_irrep_final": 0.114
+   },
+   {
+    "run": "D_24@0.5",
+    "abelian": false,
+    "n_train": 1152,
+    "steps_run": 6988,
+    "step_memorized": 235,
+    "step_test50": null,
+    "grok_delay": null,
+    "final_test_acc": 0.1302,
+    "chance": 0.0208,
+    "restricted_energy_frac": 0.287,
+    "KL_irrep_final": 0.404
+   },
+   {
+    "run": "D_24@0.6",
+    "abelian": false,
+    "n_train": 1382,
+    "steps_run": 5075,
+    "step_memorized": 258,
+    "step_test50": null,
+    "grok_delay": null,
+    "final_test_acc": 0.2842,
+    "chance": 0.0208,
+    "restricted_energy_frac": 0.3548,
+    "KL_irrep_final": 0.663
+   },
+   {
+    "run": "Z/24@0.6",
+    "abelian": true,
+    "n_train": 346,
+    "steps_run": 4301,
+    "step_memorized": 158,
+    "step_test50": 1580,
+    "grok_delay": 1422.2,
+    "final_test_acc": 0.9826,
+    "chance": 0.0417,
+    "restricted_energy_frac": 0.7736,
+    "KL_irrep_final": 0.914
+   },
+   {
+    "run": "Z/24@0.8",
+    "abelian": true,
+    "n_train": 461,
+    "steps_run": 2792,
+    "step_memorized": 154,
+    "step_test50": 160,
+    "grok_delay": 6.1,
+    "final_test_acc": 0.9652,
+    "chance": 0.0417,
+    "restricted_energy_frac": 0.7059,
+    "KL_irrep_final": 1.005
+   },
+   {
+    "run": "S_4@0.6",
+    "abelian": false,
+    "n_train": 346,
+    "steps_run": 9133,
+    "step_memorized": 158,
+    "step_test50": null,
+    "grok_delay": null,
+    "final_test_acc": 0.0391,
+    "chance": 0.0417,
+    "restricted_energy_frac": 0.2458,
+    "KL_irrep_final": 0.242
+   },
+   {
+    "run": "S_4@0.8",
+    "abelian": false,
+    "n_train": 461,
+    "steps_run": 5268,
+    "step_memorized": 176,
+    "step_test50": null,
+    "grok_delay": null,
+    "final_test_acc": 0.0348,
+    "chance": 0.0417,
+    "restricted_energy_frac": 0.3108,
+    "KL_irrep_final": 0.338
+   }
+  ],
+  "PRIMARY_matched_order_delay_lower_bounds": [
+   {
+    "pair": "Z/48 vs D_24",
+    "order": 48,
+    "train_frac": 0.5,
+    "abelian_delay_steps": 90.4,
+    "nonabelian_post_memorization_steps_at_cap": 6753,
+    "delay_ratio_lower_bound": 74.7
+   },
+   {
+    "pair": "Z/48 vs D_24",
+    "order": 48,
+    "train_frac": 0.6,
+    "abelian_delay_steps": 5.4,
+    "nonabelian_post_memorization_steps_at_cap": 4817,
+    "delay_ratio_lower_bound": 892.0
+   },
+   {
+    "pair": "Z/24 vs S_4",
+    "order": 24,
+    "train_frac": 0.6,
+    "abelian_delay_steps": 1422.2,
+    "nonabelian_post_memorization_steps_at_cap": 8975,
+    "delay_ratio_lower_bound": 6.3
+   },
+   {
+    "pair": "Z/24 vs S_4",
+    "order": 24,
+    "train_frac": 0.8,
+    "abelian_delay_steps": 6.1,
+    "nonabelian_post_memorization_steps_at_cap": 5092,
+    "delay_ratio_lower_bound": 834.8
+   }
+  ],
+  "memorization_step_is_group_blind": {
+   "range": [
+    154,
+    258
+   ],
+   "note": "every arm memorises at essentially the same step regardless of group or commutativity; the sides part company only afterwards"
+  },
+  "PRIMARY_restricted_energy_fraction": {
+   "definition": "share of the centred logit tensor's squared energy in the correct-algorithm subspace {phi(a b c^-1) on the key irreps}",
+   "grokked_range": [
+    0.70591,
+    0.87372
+   ],
+   "grokked_mean": 0.782976,
+   "censored_range": [
+    0.03339,
+    0.354826
+   ],
+   "censored_mean": 0.239922,
+   "separates_grokked_from_censored_no_overlap": true,
+   "group_blind": "censored ABELIAN Z/48@0.4 sits at 0.208, inside the censored band, so the threshold does not reference commutativity",
+   "all_irreps_control_changes_nothing": true
+  },
+  "restricted_only_test_acc_is_a_one_bit_statistic": {
+   "value_in_all_10_runs": 1.0,
+   "reason": "a restricted logit phi(a b c^-1) has provably identical cross-entropy on every (a,b) cell (asserted in code, train-minus-test CE = 0 to 1e-9), so its accuracy is 1.0 whenever phi merely peaks at the identity, however small phi is",
+   "consequence": "magnitude (energy fraction), not accuracy, is the informative readout"
+  },
+  "lead_over_test_acc_50pct_steps": {
+   "note": "+ = fires BEFORE the test jump; every NON-ABELIAN entry is null because no non-abelian run ever reached test acc 50%, so a lead time is undefined - the backlog's question cannot be asked as posed",
+   "restricted_loss": {
+    "Z/48@0.5": 3.3,
+    "Z/48@0.6": -80.0,
+    "Z/24@0.6": 1380.0,
+    "Z/24@0.8": -40.0,
+    "abelian_mean": 315.8,
+    "nonabelian_mean": null
+   },
+   "excluded_loss": {
+    "Z/48@0.5": 3.3,
+    "Z/48@0.6": -80.0,
+    "Z/24@0.6": 1166.7,
+    "Z/24@0.8": -175.7,
+    "abelian_mean": 228.6,
+    "nonabelian_mean": null
+   },
+   "restricted_energy_frac": {
+    "Z/48@0.5": -649.4,
+    "Z/48@0.6": -80.0,
+    "Z/24@0.6": -110.6,
+    "Z/24@0.8": -173.0,
+    "abelian_mean": -253.2,
+    "nonabelian_mean": null
+   },
+   "KL_irrep": {
+    "Z/48@0.5": -1173.0,
+    "Z/48@0.6": -624.1,
+    "Z/24@0.6": -1044.5,
+    "Z/24@0.8": -797.5,
+    "abelian_mean": -909.8,
+    "nonabelian_mean": null
+   },
+   "H_svd": {
+    "Z/48@0.5": -1112.7,
+    "Z/48@0.6": -548.3,
+    "Z/24@0.6": -246.7,
+    "Z/24@0.8": -837.6,
+    "abelian_mean": -686.3,
+    "nonabelian_mean": null
+   },
+   "interpretation": "on the abelian side the 2026-07-25 finding reproduces with the group-general measures: restricted/excluded LEAD, spectral concentration LAGS by ~900 steps on 4/4 runs. The two runs where restricted 'lags' are exactly the two whose grok delay is 5 and 6 steps - no gap left to lead"
+  },
+  "false_positive_control_memorized_never_left_plateau": [
+   {
+    "run": "S_4@0.6",
+    "final_test_acc": 0.0391,
+    "chance": 0.0417,
+    "steps_run": 9133,
+    "KL_irrep_rise_bits": 0.2354
+   },
+   {
+    "run": "D_24@0.4",
+    "final_test_acc": 0.0152,
+    "chance": 0.0208,
+    "steps_run": 4310,
+    "KL_irrep_rise_bits": 0.108
+   }
+  ],
+  "null_referencing_is_load_bearing": {
+   "S_4@0.6_top3_irrep_share": 0.8581,
+   "S_4@0.6_top3_RANDOM_null_share": 0.9167,
+   "note": "raw concentration is BELOW the null for S_4 because its irrep dims are 1,1,2,3,3; only KL against the group's own null q_rho = d_rho^2/|G| is interpretable across groups"
+  },
+  "irrep_selection_by_the_nonabelian_models": {
+   "D_24": "power moves off the four 1-dim irreps onto 2-dim ones (top: 2d-h=8, 2d-h=2, 2d-h=5)",
+   "S_4": "power moves off the trivial irrep onto std and std*sgn"
+  },
+  "abelian_data_threshold_exists_too": {
+   "Z/48": "censored at frac 0.4 (test 0.161), groks at 0.5 and 0.6",
+   "nonabelian_threshold": "above 0.6 at order 48 and above 0.8 at order 24"
+  },
+  "nonabelian_still_climbing_at_the_cap": {
+   "D_24_final_test_acc_by_frac": {
+    "0.4": 0.0152,
+    "0.5": 0.1302,
+    "0.6": 0.2842
+   },
+   "S_4_flat_at_chance": true
+  },
+  "total_compute_seconds": 710.5,
+  "wall_clock_seconds": 714.4
+ },
+ "result_summary": "AT MATCHED ORDER, THE NON-ABELIAN SIDE DID NOT GROK AT ALL. Four groups (Z/48 and D_24 at order 48, 2304 cells; Z/24 and S_4 at order 24, 576 cells), identical architecture, identical table size and identical parameter count within each pair, with step caps ASYMMETRIC IN FAVOUR of the non-abelian arms (abelian 3-6k, non-abelian 5-16k): 4/4 abelian arms above the data threshold grok (Z/48@0.5 test 0.998 at delay 90 steps, Z/48@0.6 test 1.000 at delay 5, Z/24@0.6 test 0.983 at delay 1422, Z/24@0.8 test 0.965 at delay 6) and 0/5 non-abelian arms grok. Every model memorises at essentially the same step (154-258, group-blind); the sides part company only afterwards. Matched-order delay-ratio LOWER BOUNDS, taking the censoring point as a lower bound on the non-abelian delay: >=75x at order 48 / frac 0.5 (90 vs >=6753 post-memorisation steps), >=6.3x at order 24 / frac 0.6, and >=890x / >=835x at the higher fractions. The two non-abelian groups fail differently: D_24 is still CLIMBING at the cap (test 0.015 -> 0.130 -> 0.284 as the fraction goes 0.4 -> 0.5 -> 0.6), so it is slow rather than flat, whereas S_4 with 80% OF ITS MULTIPLICATION TABLE MEMORISED leaves the remaining 115 cells at 0.035 against a chance of 0.042 - no progress at all. This is not simply 'non-abelian is different': the abelian arm has a data threshold too (Z/48@0.4 is also censored at 0.161), it just sits between 0.4 and 0.5 instead of above 0.6/0.8. THE BACKLOG'S SECOND QUESTION DISSOLVED AND WAS REPLACED. 'Does the leading indicator fire the same way across the divide?' cannot be asked as posed, because a lead time is defined against the test-accuracy jump and no non-abelian run has one - all non-abelian lead times are null. On the abelian side the 2026-07-25 result reproduces with the group-general measures: restricted/excluded loss LEADS (+3, +1380 on the two runs that have a real gap) while the irrep-concentration measure LAGS by ~910 steps on 4/4 runs, exactly as Fourier spectral entropy lagged before. WHAT DOES TRANSFER IS A MAGNITUDE, NOT A TIMING. Every model, abelian or not, builds a correctly-SIGNED group-composition circuit: restricted-only test accuracy is 1.0 in all 10 runs - but that is a vacuous ONE-BIT statistic, because a restricted logit phi(a b c^-1) has provably identical cross-entropy on every (a,b) cell (verified: train-minus-test CE = 0 to 1e-9), so it reads 1.0 whenever phi merely peaks at the identity however tiny phi is. The informative quantity is the RESTRICTED ENERGY FRACTION, the share of centred logit energy in the correct-algorithm subspace: 0.706-0.874 on every grokked run and 0.033-0.355 on every censored run, NO OVERLAP, and the ordering ignores commutativity entirely - censored ABELIAN Z/48@0.4 sits at 0.208, inside the censored band. The non-abelian arms stall at about a third of the way along the same axis the abelian arms run to completion on. So the mechanism is not that the non-abelian model fails to find the algorithm; it is that the correct circuit never wins the magnitude contest against the memorising circuit. TWO METHOD POINTS. (i) The generalised concentration measure inherits the false-positive behaviour of its abelian ancestor: S_4@0.6 memorised and NEVER left the plateau (0.039 vs chance 0.042 after 9133 steps) yet its irrep KL still rose 0.235 bits, and D_24@0.4 the same at 0.108 bits - it is a structure detector, not a generalisation detector. (ii) Null-referencing is load-bearing, not decoration: S_4's top-3 irreps hold 0.858 of final embedding power, which sounds like concentration until you notice the RANDOM null already holds 0.917 because S_4's irrep dims are 1,1,2,3,3 - only KL against the group's own null q_rho = d_rho^2/|G| is comparable across groups. Both non-abelian models do select irreps (D_24 moves power off its four 1-dim irreps onto 2-dim ones; S_4 off the trivial onto std and std*sgn). CAVEATS: one seed (the split is 4/4 vs 0/5 across four groups and five fractions, but each cell is n=1); censoring is a wall-clock cap, not a proof of impossibility, and D_24 was still rising when it hit - the honest claim is 'much slower at this scale', not 'cannot'; 'grok delay' degenerates at high train fraction where the abelian arms go from memorisation to generalisation in 5-6 steps, so the informative abelian points are Z/48@0.5 and Z/24@0.6; Z/48 and Z/24 are composite, chosen to match the non-abelian orders exactly; key irreps come from the final model per Nanda's protocol, and an all-irreps control changes nothing.",
+ "status": "done",
+ "novelty_check": {
+  "checked_on": "2026-07-26",
+  "verdict": "partial-prior-art",
+  "sources": [
+   {
+    "name": "script",
+    "query": "scripts/novelty_check.py 'grokking non-abelian group multiplication irreducible representations progress measure'",
+    "hits": 0,
+    "note": "arXiv and OpenAlex both 403 from this environment; returned verdict 'unchecked'"
+   },
+   {
+    "name": "web",
+    "query": "grokking non-abelian group composition transformer irreducible representations progress measure",
+    "hits": 10
+   },
+   {
+    "name": "web",
+    "query": "Chughtai Chan Nanda 'A Toy Model of Universality' group composition representations grokking S5",
+    "hits": 9
+   },
+   {
+    "name": "web",
+    "query": "grokking delay comparison cyclic group versus dihedral symmetric group matched order transformer modular addition",
+    "hits": 9
+   },
+   {
+    "name": "web",
+    "query": "'restricted loss' 'excluded loss' progress measure generalized to non-abelian groups irrep power concentration embeddings",
+    "hits": 9
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/abs/2302.03025 - groups used, GCR mechanism, progress measures, any abelian-vs-non-abelian delay comparison",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/abs/2312.06581 - coset account, does it dispute the representation-theory reading",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2509.06931 - which groups, is grokking delay compared across the abelian divide, what progress measures",
+    "hits": 1
+   }
+  ],
+  "conclusion": "PARTIAL-PRIOR-ART. The task family and the representation-theoretic reading are colonised. Chughtai et al. 2302.03025 is the direct ancestor - networks learn group composition via irreducible representations (GCR), and the restricted subspace used here is exactly their chi_rho(a b c^-1) form. Stander et al. 2312.06581 DISPUTES that account on S_5/S_6, arguing the circuit decomposes via cosets, so the representation-theoretic reading is contested rather than settled prior art; nothing here adjudicates it, and deliberately so - the restricted subspace used here is the space of CORRECT logits whatever circuit produces them. arXiv 2509.06931 trains MLPs on both abelian and non-abelian groups (including S_4 and D_8) and reports that the required example fraction and how pronounced grokking is 'depends on the underlying group', but explicitly does NOT compare grokking DELAY across the divide. Power et al. 2201.02177 is the origin of the task family. WHAT THIS ROW ADDS: (a) a MATCHED-ORDER abelian/non-abelian comparison - Z/48 vs D_24 = Z/24 semidirect Z/2, same order, same 2304-cell table, same vocab, same 39,168 parameters, differing by exactly one semidirect twist - with the grok DELAY as the reported quantity and asymmetric step caps favouring the non-abelian arm, which none of the above controls; (b) Nanda's restricted/excluded loss carried across the divide by replacing the frequency mask with a class-function-of-abc^-1 projection, with the reduction to the abelian case and the exactness of the ideal-delta-logit reconstruction VERIFIED numerically (<=1.4e-14) rather than asserted; (c) the null-referenced irrep concentration KL(p || d_rho^2/|G|), which is the only form of 'spectral collapse' comparable between groups of differing irrep dimension - and the S_4 case here shows the raw form is actively misleading (0.858 top-3 share against a 0.917 random null); (d) the restricted ENERGY FRACTION as a group-blind grokking predictor with clean separation, plus the observation that restricted-only ACCURACY is a vacuous one-bit statistic; (e) the negative itself - a concrete boundary marker that a 39k-parameter, width-64, 12-minute box which groks four cyclic-group arms cleanly cannot reach non-abelian grokking at all, telling this lab where the cheap non-abelian experiments stop being cheap. The 'no published version of this specific matched-order accounting' claim is a negative search result over four web searches and three direct fetches, not an exhaustive review; arXiv/OpenAlex APIs 403 from this environment."
+ },
+ "prior_art": [
+  "https://arxiv.org/abs/2302.03025",
+  "https://arxiv.org/abs/2312.06581",
+  "https://arxiv.org/html/2509.06931",
+  "https://arxiv.org/abs/2201.02177",
+  "https://arxiv.org/abs/2301.05217"
+ ],
+ "related_ids": [
+  "2026-07-25_grokking-modular-addition",
+  "2026-07-25_grokking-weight-decay-phase",
+  "2026-07-26_clock-vs-pizza",
+  "2026-07-25_sae-on-grokked-model",
+  "2026-07-25_induction-heads-emergence"
+ ],
+ "links": {
+  "folder": "experiments/2026-07-26_group-grokking",
+  "results_json": "experiments/2026-07-26_group-grokking/results.json",
+  "chart": "experiments/2026-07-26_group-grokking/chart.png",
+  "readme": "experiments/2026-07-26_group-grokking/README.md"
+ },
+ "tags": [
+  "grokking",
+  "group-theory",
+  "non-abelian",
+  "abelian",
+  "representation-theory",
+  "irreducible-representations",
+  "character-table",
+  "dihedral-group",
+  "symmetric-group",
+  "cyclic-group",
+  "matched-order",
+  "progress-measures",
+  "restricted-excluded-loss",
+  "fourier-features",
+  "spectral-entropy",
+  "isotypic-decomposition",
+  "null-referenced",
+  "energy-fraction",
+  "false-positive-control",
+  "censored-result",
+  "negative-result",
+  "interpretability",
+  "mechanistic-interpretability",
+  "1-layer-transformer",
+  "full-batch",
+  "weight-decay",
+  "hand-rolled",
+  "pure-pytorch",
+  "cpu-only",
+  "partial-prior-art"
+ ]
+}
