@@ -1,0 +1,425 @@
+{
+  "id": "2026-07-26_mqar-state-capacity",
+  "git_commit": "3849c7d6411951b9f8076649b0924228c9d74337",
+  "seed": 0,
+  "duration_sec": 799.49,
+  "metrics": {
+    "runs": [
+      {
+        "mixer": "attn",
+        "num_pairs": 2,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.9951,
+        "steps": 500,
+        "params": 26624,
+        "secs": 2.6
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 4,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.999,
+        "steps": 1000,
+        "params": 26624,
+        "secs": 6.0
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 8,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.999,
+        "steps": 1250,
+        "params": 26624,
+        "secs": 9.8
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 16,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.099,
+        "steps": 2000,
+        "params": 26624,
+        "secs": 23.7
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 2,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.998,
+        "steps": 500,
+        "params": 86016,
+        "secs": 3.1
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 4,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9951,
+        "steps": 250,
+        "params": 86016,
+        "secs": 1.9
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 8,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9995,
+        "steps": 500,
+        "params": 86016,
+        "secs": 5.2
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 16,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9999,
+        "steps": 750,
+        "params": 86016,
+        "secs": 13.8
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 2,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 1.0,
+        "steps": 250,
+        "params": 303104,
+        "secs": 2.2
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 4,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.999,
+        "steps": 250,
+        "params": 303104,
+        "secs": 3.3
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 8,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.9993,
+        "steps": 250,
+        "params": 303104,
+        "secs": 5.1
+      },
+      {
+        "mixer": "attn",
+        "num_pairs": 16,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 1.0,
+        "steps": 500,
+        "params": 303104,
+        "secs": 19.8
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 2,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.9922,
+        "steps": 1750,
+        "params": 26624,
+        "secs": 10.5
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 4,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.2808,
+        "steps": 2000,
+        "params": 26624,
+        "secs": 15.6
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 8,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.1663,
+        "steps": 2000,
+        "params": 26624,
+        "secs": 18.4
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 16,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.097,
+        "steps": 2000,
+        "params": 26624,
+        "secs": 28.4
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 2,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9922,
+        "steps": 750,
+        "params": 86016,
+        "secs": 5.6
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 4,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9917,
+        "steps": 2000,
+        "params": 86016,
+        "secs": 18.0
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 8,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.1699,
+        "steps": 2000,
+        "params": 86016,
+        "secs": 25.9
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 16,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.116,
+        "steps": 2000,
+        "params": 86016,
+        "secs": 45.7
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 2,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.9961,
+        "steps": 500,
+        "params": 303104,
+        "secs": 5.2
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 4,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.9961,
+        "steps": 1000,
+        "params": 303104,
+        "secs": 15.1
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 8,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.1763,
+        "steps": 2000,
+        "params": 303104,
+        "secs": 49.5
+      },
+      {
+        "mixer": "linattn",
+        "num_pairs": 16,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.1226,
+        "steps": 2000,
+        "params": 303104,
+        "secs": 94.0
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 2,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.9961,
+        "steps": 1500,
+        "params": 26756,
+        "secs": 10.0
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 4,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.2817,
+        "steps": 2000,
+        "params": 26756,
+        "secs": 17.6
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 8,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.1611,
+        "steps": 2000,
+        "params": 26756,
+        "secs": 21.3
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 16,
+        "d_model": 32,
+        "seed": 0,
+        "acc": 0.0979,
+        "steps": 2000,
+        "params": 26756,
+        "secs": 34.6
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 2,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9961,
+        "steps": 1000,
+        "params": 86276,
+        "secs": 8.1
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 4,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.9941,
+        "steps": 2000,
+        "params": 86276,
+        "secs": 19.8
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 8,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.1709,
+        "steps": 2000,
+        "params": 86276,
+        "secs": 28.0
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 16,
+        "d_model": 64,
+        "seed": 0,
+        "acc": 0.1184,
+        "steps": 2000,
+        "params": 86276,
+        "secs": 50.8
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 2,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.999,
+        "steps": 750,
+        "params": 303620,
+        "secs": 8.8
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 4,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.9922,
+        "steps": 1000,
+        "params": 303620,
+        "secs": 16.7
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 8,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.1865,
+        "steps": 2000,
+        "params": 303620,
+        "secs": 54.6
+      },
+      {
+        "mixer": "gla",
+        "num_pairs": 16,
+        "d_model": 128,
+        "seed": 0,
+        "acc": 0.1176,
+        "steps": 2000,
+        "params": 303620,
+        "secs": 100.0
+      }
+    ],
+    "mean_acc": {
+      "attn_d32_N2": 0.9951,
+      "attn_d32_N4": 0.999,
+      "attn_d32_N8": 0.999,
+      "attn_d32_N16": 0.099,
+      "attn_d64_N2": 0.998,
+      "attn_d64_N4": 0.9951,
+      "attn_d64_N8": 0.9995,
+      "attn_d64_N16": 0.9999,
+      "attn_d128_N2": 1.0,
+      "attn_d128_N4": 0.999,
+      "attn_d128_N8": 0.9993,
+      "attn_d128_N16": 1.0,
+      "linattn_d32_N2": 0.9922,
+      "linattn_d32_N4": 0.2808,
+      "linattn_d32_N8": 0.1663,
+      "linattn_d32_N16": 0.097,
+      "linattn_d64_N2": 0.9922,
+      "linattn_d64_N4": 0.9917,
+      "linattn_d64_N8": 0.1699,
+      "linattn_d64_N16": 0.116,
+      "linattn_d128_N2": 0.9961,
+      "linattn_d128_N4": 0.9961,
+      "linattn_d128_N8": 0.1763,
+      "linattn_d128_N16": 0.1226,
+      "gla_d32_N2": 0.9961,
+      "gla_d32_N4": 0.2817,
+      "gla_d32_N8": 0.1611,
+      "gla_d32_N16": 0.0979,
+      "gla_d64_N2": 0.9961,
+      "gla_d64_N4": 0.9941,
+      "gla_d64_N8": 0.1709,
+      "gla_d64_N16": 0.1184,
+      "gla_d128_N2": 0.999,
+      "gla_d128_N4": 0.9922,
+      "gla_d128_N8": 0.1865,
+      "gla_d128_N16": 0.1176
+    },
+    "capacity_frontier_maxN_at_0.9": {
+      "attn_d32": 8,
+      "attn_d64": 16,
+      "attn_d128": 16,
+      "linattn_d32": 2,
+      "linattn_d64": 4,
+      "linattn_d128": 4,
+      "gla_d32": 2,
+      "gla_d64": 4,
+      "gla_d128": 4
+    }
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130"
+  },
+  "status": "done"
+}

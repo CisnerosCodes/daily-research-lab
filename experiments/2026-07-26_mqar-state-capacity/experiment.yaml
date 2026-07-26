@@ -1,0 +1,28 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_mqar-state-capacity"
+title: "MQAR at nano scale: where does linear-attention recall break, and does a selective gate move the capacity frontier?"
+hypothesis: "On multi-query associative recall, softmax attention stays near-perfect regardless of width, vanilla linear attention falls off a cliff once the number of key-value pairs approaches its per-head state capacity (~d_head), and adding the cheapest possible selectivity - one input-dependent scalar forget gate per head - shifts that cliff to more pairs at the same width."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  mixers: [attn, linattn, gla]
+  num_pairs: [2, 4, 8, 16]
+  d_model: [32, 64, 128]
+  seeds: [0]
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  train_steps: 2000
+  eval_every: 250
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
