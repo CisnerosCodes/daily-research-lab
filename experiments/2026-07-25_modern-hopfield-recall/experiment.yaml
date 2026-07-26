@@ -1,0 +1,36 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_modern-hopfield-recall"
+title: "Modern Hopfield capacity at d=64: exponential in theory, single digits in practice once corruption exceeds 30%"
+hypothesis: "The modern (continuous, softmax) Hopfield update of Ramsauer et al. (arXiv:2008.02217) has capacity exponential in d, so at d=64 it should retrieve corrupted queries from banks of thousands of random bipolar patterns - far past the classical Hebbian 0.14d ~ 9 - with a sharp retrieval boundary that moves outward as the inverse temperature beta grows, and at low beta retrieval should collapse to metastable averages of many stored patterns."
+seed: 0
+dataset:
+  name: "random bipolar patterns (+/-1) and binarized sklearn 8x8 digits"
+  source: "generated (numpy RNG) / sklearn.datasets.load_digits"
+  license: "n/a / CC-BY-4.0 (UCI Optical Recognition of Handwritten Digits)"
+# --- hyperparameters ---
+params:
+  d_main: 64                 # headline dimension
+  n_grid_exponent_min: 2     # N = round(2^(k/2)) for k = 2..24  -> 2, 3, 4, 6, 8 ... 4096
+  n_grid_exponent_max: 24
+  deep_n: [8192, 16384, 32768, 65536]   # extra N, headline slice only (f=0.2, d=64)
+  deep_flip: 0.2
+  betas: [0.25, 1.0, 4.0, 16.0]
+  flip_fracs: [0.1, 0.2, 0.3, 0.4]
+  n_queries: 500             # queries per cell (binomial sd at rate .95 = 0.0097)
+  max_iters: 10              # iterated retrieval steps
+  converge_tol: 1.0e-6
+  capacity_threshold: 0.95   # empirical capacity = largest N with >= this exact-retrieval rate
+  max_matrix_elems: 4000000  # query chunking, keeps the (q x N) softmax under ~32 MB
+  # classical Hebbian reference
+  classical_max_n: 256
+  classical_sweeps: 5
+  # dimension sweep: does capacity grow exponentially in d?
+  # d = d_main is supplied by the main sweep (same f, beta and protocol, different bank)
+  d_sweep: [16, 24, 32, 40, 48]
+  d_sweep_flip: 0.2
+  d_sweep_betas: [4.0, 16.0]
+  # correlated real patterns
+  digits_betas: [1.0, 4.0, 16.0]
+  digits_flips: [0.1, 0.2, 0.3]
+  digits_threshold: 8        # pixel intensity 0..16 -> bipolar at > 8
+  digits_max_n: 1448

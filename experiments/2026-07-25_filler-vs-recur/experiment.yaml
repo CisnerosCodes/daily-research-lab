@@ -1,0 +1,60 @@
+# Pause/filler tokens vs true recurrence at matched inference FLOPs.
+# run.py reads this file. No magic constants in code.
+id: "2026-07-25_filler-vs-recur"
+title: "Pause tokens vs true recurrence at matched inference FLOPs on modular-arithmetic chains"
+hypothesis: >-
+  On mod-p arithmetic chains ((a op b) op c) op d, where difficulty is the number of sequential
+  reductions, extra test-time compute spent as TRUE RECURRENCE (re-applying the same 2-layer block)
+  buys more accuracy per inference FLOP than the same FLOPs spent as k learnable pause/filler tokens,
+  and - transferring the 2026-07-25_loop-test-time-compute finding from parity to arithmetic -
+  training the recurrent arm with a stochastic depth schedule k~U{1..k_max} beats training it at a
+  fixed k.
+seed: 0
+dataset:
+  name: "synthetic modular-arithmetic chains: left-nested ((a op1 b) op2 c) ... mod p, ops from {+,-,*}"
+  source: "generated in run.py (numpy PCG64 from the seeds below)"
+  license: "n/a (synthetic)"
+
+params:
+  # --- task ---
+  # SHRINK (12-minute box): p=5 and chain lengths {1,2,3} instead of p=7 / {2,3,4}.
+  # Chain length 3 is exactly the backlog's ((a op1 b) op2 c) op3 d; chain length 1 is a single
+  # op and lets the model bootstrap the mod-p op table inside the budget. A pilot showed p=7
+  # chains and chain lengths {2,3,4} need >3000 steps per run, which does not fit.
+  p: 5                       # modulus; uniform chance = 1/5, but * skews the answer marginal,
+                             # so run.py reports the empirical MAJORITY-CLASS baseline instead
+  chain_lens: [1, 2, 3]      # number of binary ops in the chain (difficulty)
+  max_chain: 3
+  eval_n_per_len: 512
+  eval_seed: 987654
+
+  # --- model (~0.08M params, identical across every arm) ---
+  d_model: 64
+  n_heads: 4
+  d_ff: 128
+  n_layers: 2
+  max_positions: 20
+
+  # --- optimisation (identical across every arm) ---
+  steps: 1300
+  batch_size: 96
+  lr: 0.002
+  warmup: 60
+  weight_decay: 0.01
+  grad_clip: 1.0
+  seeds: [0]                 # SHRINK: one seed; the box does not fit two. See README caveats.
+  time_cap_s_per_run: 100
+
+  # --- the sweep ---
+  k_values: [1, 2, 4]
+  full_k_values: [2]         # whole-sequence loop is k+1 x the cost, so only its k=2 point is trained
+  cot_slots: 3               # trace = 3 running values + the answer -> 3 extra positions
+  extrapolation_k: [1, 2, 4, 6, 8]   # test-time k for the k_max recurrence arms (eval only)
+  arms:
+    - direct                 # 1 pass, no extra positions (the no-extra-compute baseline)
+    - pause                  # k learnable <pause> tokens appended before the answer readout
+    - recur_full_fix         # whole-sequence loop, k+1 passes, trained at fixed depth
+    - recur_full_stoch       # same, trained with depth ~ U{1..k+1}
+    - recur_tail_fix         # FLOP-MATCHED to pause: k extra block applications at the answer position
+    - recur_tail_stoch       # same, trained with extra depth ~ U{0..k}
+    - cot                    # discrete supervision on the intermediate values (reference upper line)

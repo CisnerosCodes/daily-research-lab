@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**21 experiments logged.**
+**23 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -50,6 +50,8 @@ experiments/                one dated folder per experiment
 | 2026-07-25 | [Echo State Network on Mackey-Glass-17: there is no edge-of-chaos ridge just below sr=1 - the free-running optimum sits ABOVE 1 in 13 of 16 reservoirs (median sr 1.10), the sr=0.9 default costs 7.3x the error, and the memory-capacity peak is too flat to localise it](experiments/2026-07-25_esn-reservoir) | ✅ done | The hypothesis is REFUTED on location and only half-confirmed on sharpness. (1) THE OPTIMU |
 | 2026-07-25 | [SAEs on the merged-pair toy model: the dictionary recovers all 8 MERGED pair-directions one-to-one and 0 of the 16 true features (max member-selectivity 0.007/1.0 across 27 SAEs) - but an MLP probe reads the within-pair difference at R2 0.47 from the same 4 numbers, so the SAE's ceiling is its linear hypothesis class, not lost information](experiments/2026-07-25_sae-on-merged-pairs) | ✅ done | The hypothesis is CONFIRMED on the SAE half and REFUTED on the mechanism half, and the ref |
 | 2026-07-25 | [Validation-based clause pruning un-buries the planted DNF: at 20% label noise a 500-sample NOISY validation set restores Tsetlin clause precision 0.49 -> 1.00 with zero recall loss, and the binding constraint is the unknown noise rate, not the missing clean labels](experiments/2026-07-25_tsetlin-clause-pruning) | ✅ done | Hypothesis confirmed at eps=0.2, partially at eps=0.3, refuted at eps=0.4 - and the real o |
+| 2026-07-25 | [Modern Hopfield capacity at d=64 is exponential in d with the textbook constant (0.244 bits/dim, R2=0.993) but stops responding to beta above 1 - the update is just a nearest-neighbour decoder, and corruption, not temperature, is the binding constraint](experiments/2026-07-25_modern-hopfield-recall) | ✅ done | Split verdict. CONFIRMED: capacity is exponential in d with the textbook constant - log2(c |
+| 2026-07-25 | [Pause/filler tokens and true recurrence buy the SAME accuracy per FLOP on serial mod-5 arithmetic chains (tie within 1-2 eval SE), both saturate after the FIRST extra application, the whole-sequence loop is 3.1-3.6x WORSE per FLOP than spending nothing, and 3 tokens of discrete intermediate supervision hit 1.000 at fewer FLOPs than 4 pause tokens](experiments/2026-07-25_filler-vs-recur) | ✅ done | Main hypothesis refuted by a tie, with three sharper findings underneath. (1) Put on the s |
 | 2026-07-24 | [Tsetlin Machine: does exact rule recovery break before accuracy under label noise?](experiments/2026-07-24_tsetlin-dnf-recovery) | ✅ done | Hypothesis partially refuted: exact recall of the planted clauses survives to 20% label no |
 | 2026-07-23 | [Superposition phase diagram: does feature correlation resist or reshape superposition?](experiments/2026-07-23_superposition-correlation-phase) | ✅ done | Hypothesis refuted: across the grid, raising within-pair correlation makes the model colla |
 | 2026-07-21 | [Game of Life: when does test-time recursion still generalize?](experiments/2026-07-21_gol-depth-recursion) | ✅ done | Capacity window: at H=4 tied recursion learns the exact reusable rule and extrapolates to  |

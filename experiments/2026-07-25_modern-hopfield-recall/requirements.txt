@@ -1,0 +1,5 @@
+numpy==2.4.4
+matplotlib==3.10.9
+PyYAML==6.0.3
+scikit-learn==1.8.0
+# torch is imported only to pin torch.set_num_threads(1); the experiment itself is pure numpy

@@ -1,0 +1,739 @@
+{
+  "id": "2026-07-25_filler-vs-recur",
+  "git_commit": "fcb317de6c49091027621a0d3d85f0c84188af33",
+  "seed": 0,
+  "duration_sec": 633.61,
+  "metrics": {
+    "uniform_chance_acc": 0.2,
+    "majority_class_baseline": {
+      "overall": 0.2715,
+      "1": 0.2461,
+      "2": 0.2949,
+      "3": 0.2734
+    },
+    "n_params": 77632,
+    "prefix_len": 9,
+    "eval_n": 1536,
+    "per_run": [
+      {
+        "arm": "direct",
+        "k": 0,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 31.3,
+        "final_loss": 1.1221,
+        "flops_per_example": 1350144,
+        "acc": {
+          "overall": 0.3333,
+          "1": 0.3633,
+          "2": 0.3242,
+          "3": 0.3125
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "pause",
+        "k": 1,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 35.7,
+        "final_loss": 1.0116,
+        "flops_per_example": 1502720,
+        "acc": {
+          "overall": 0.4108,
+          "1": 0.4961,
+          "2": 0.4043,
+          "3": 0.332
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "pause",
+        "k": 2,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 38.0,
+        "final_loss": 0.9773,
+        "flops_per_example": 1655808,
+        "acc": {
+          "overall": 0.3815,
+          "1": 0.4785,
+          "2": 0.3574,
+          "3": 0.3086
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "pause",
+        "k": 4,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 47.5,
+        "final_loss": 0.9539,
+        "flops_per_example": 1963520,
+        "acc": {
+          "overall": 0.4102,
+          "1": 0.5293,
+          "2": 0.3809,
+          "3": 0.3203
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "recur_full_fix",
+        "k": 2,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 79.0,
+        "final_loss": 1.1609,
+        "flops_per_example": 4050432,
+        "acc": {
+          "overall": 0.3262,
+          "1": 0.3633,
+          "2": 0.3027,
+          "3": 0.3125
+        },
+        "extrapolation_acc": {
+          "1": 0.1439,
+          "2": 0.3262,
+          "4": 0.3229,
+          "6": 0.3197,
+          "8": 0.2715
+        }
+      },
+      {
+        "arm": "recur_full_stoch",
+        "k": 2,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 54.0,
+        "final_loss": 1.2555,
+        "flops_per_example": 4050432,
+        "acc": {
+          "overall": 0.2793,
+          "1": 0.2773,
+          "2": 0.2988,
+          "3": 0.2617
+        },
+        "extrapolation_acc": {
+          "1": 0.2956,
+          "2": 0.2793,
+          "4": 0.3021,
+          "6": 0.2962,
+          "8": 0.2969
+        }
+      },
+      {
+        "arm": "recur_tail_fix",
+        "k": 1,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 41.4,
+        "final_loss": 0.8822,
+        "flops_per_example": 1502208,
+        "acc": {
+          "overall": 0.4316,
+          "1": 0.4746,
+          "2": 0.4609,
+          "3": 0.3594
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "recur_tail_fix",
+        "k": 2,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 52.2,
+        "final_loss": 0.937,
+        "flops_per_example": 1654272,
+        "acc": {
+          "overall": 0.4115,
+          "1": 0.4824,
+          "2": 0.4199,
+          "3": 0.332
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "recur_tail_fix",
+        "k": 4,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 71.1,
+        "final_loss": 0.9992,
+        "flops_per_example": 1958400,
+        "acc": {
+          "overall": 0.4049,
+          "1": 0.5137,
+          "2": 0.3867,
+          "3": 0.3145
+        },
+        "extrapolation_acc": {
+          "1": 0.2617,
+          "2": 0.2539,
+          "4": 0.4049,
+          "6": 0.2878,
+          "8": 0.3431
+        }
+      },
+      {
+        "arm": "recur_tail_stoch",
+        "k": 1,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 37.7,
+        "final_loss": 1.0037,
+        "flops_per_example": 1502208,
+        "acc": {
+          "overall": 0.3958,
+          "1": 0.5117,
+          "2": 0.375,
+          "3": 0.3008
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "recur_tail_stoch",
+        "k": 2,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 41.8,
+        "final_loss": 1.1278,
+        "flops_per_example": 1654272,
+        "acc": {
+          "overall": 0.3639,
+          "1": 0.3984,
+          "2": 0.3516,
+          "3": 0.3418
+        },
+        "extrapolation_acc": {}
+      },
+      {
+        "arm": "recur_tail_stoch",
+        "k": 4,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 49.3,
+        "final_loss": 0.9642,
+        "flops_per_example": 1958400,
+        "acc": {
+          "overall": 0.4232,
+          "1": 0.5176,
+          "2": 0.4199,
+          "3": 0.332
+        },
+        "extrapolation_acc": {
+          "1": 0.4323,
+          "2": 0.4368,
+          "4": 0.4232,
+          "6": 0.4076,
+          "8": 0.39
+        }
+      },
+      {
+        "arm": "cot",
+        "k": 3,
+        "seed": 0,
+        "n_params": 77632,
+        "steps_run": 1300,
+        "time_capped": false,
+        "train_seconds": 40.1,
+        "final_loss": 0.0001,
+        "flops_per_example": 1809408,
+        "acc": {
+          "overall": 1.0,
+          "1": 1.0,
+          "2": 1.0,
+          "3": 1.0
+        },
+        "extrapolation_acc": {}
+      }
+    ],
+    "aggregate": {
+      "direct_k0": {
+        "arm": "direct",
+        "k": 0,
+        "flops_per_example": 1350144,
+        "mflops": 1.35,
+        "acc": {
+          "overall": 0.3333,
+          "1": 0.3633,
+          "2": 0.3242,
+          "3": 0.3125
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.3333
+        ],
+        "acc_per_mflop": 0.2469,
+        "extrapolation_acc": {}
+      },
+      "pause_k1": {
+        "arm": "pause",
+        "k": 1,
+        "flops_per_example": 1502720,
+        "mflops": 1.503,
+        "acc": {
+          "overall": 0.4108,
+          "1": 0.4961,
+          "2": 0.4043,
+          "3": 0.332
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.4108
+        ],
+        "acc_per_mflop": 0.2734,
+        "extrapolation_acc": {}
+      },
+      "pause_k2": {
+        "arm": "pause",
+        "k": 2,
+        "flops_per_example": 1655808,
+        "mflops": 1.656,
+        "acc": {
+          "overall": 0.3815,
+          "1": 0.4785,
+          "2": 0.3574,
+          "3": 0.3086
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.3815
+        ],
+        "acc_per_mflop": 0.2304,
+        "extrapolation_acc": {}
+      },
+      "pause_k4": {
+        "arm": "pause",
+        "k": 4,
+        "flops_per_example": 1963520,
+        "mflops": 1.964,
+        "acc": {
+          "overall": 0.4102,
+          "1": 0.5293,
+          "2": 0.3809,
+          "3": 0.3203
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.4102
+        ],
+        "acc_per_mflop": 0.2089,
+        "extrapolation_acc": {}
+      },
+      "recur_full_fix_k2": {
+        "arm": "recur_full_fix",
+        "k": 2,
+        "flops_per_example": 4050432,
+        "mflops": 4.05,
+        "acc": {
+          "overall": 0.3262,
+          "1": 0.3633,
+          "2": 0.3027,
+          "3": 0.3125
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.3262
+        ],
+        "acc_per_mflop": 0.0805,
+        "extrapolation_acc": {
+          "1": 0.1439,
+          "2": 0.3262,
+          "4": 0.3229,
+          "6": 0.3197,
+          "8": 0.2715
+        }
+      },
+      "recur_full_stoch_k2": {
+        "arm": "recur_full_stoch",
+        "k": 2,
+        "flops_per_example": 4050432,
+        "mflops": 4.05,
+        "acc": {
+          "overall": 0.2793,
+          "1": 0.2773,
+          "2": 0.2988,
+          "3": 0.2617
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.2793
+        ],
+        "acc_per_mflop": 0.069,
+        "extrapolation_acc": {
+          "1": 0.2956,
+          "2": 0.2793,
+          "4": 0.3021,
+          "6": 0.2962,
+          "8": 0.2969
+        }
+      },
+      "recur_tail_fix_k1": {
+        "arm": "recur_tail_fix",
+        "k": 1,
+        "flops_per_example": 1502208,
+        "mflops": 1.502,
+        "acc": {
+          "overall": 0.4316,
+          "1": 0.4746,
+          "2": 0.4609,
+          "3": 0.3594
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.4316
+        ],
+        "acc_per_mflop": 0.2873,
+        "extrapolation_acc": {}
+      },
+      "recur_tail_fix_k2": {
+        "arm": "recur_tail_fix",
+        "k": 2,
+        "flops_per_example": 1654272,
+        "mflops": 1.654,
+        "acc": {
+          "overall": 0.4115,
+          "1": 0.4824,
+          "2": 0.4199,
+          "3": 0.332
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.4115
+        ],
+        "acc_per_mflop": 0.2487,
+        "extrapolation_acc": {}
+      },
+      "recur_tail_fix_k4": {
+        "arm": "recur_tail_fix",
+        "k": 4,
+        "flops_per_example": 1958400,
+        "mflops": 1.958,
+        "acc": {
+          "overall": 0.4049,
+          "1": 0.5137,
+          "2": 0.3867,
+          "3": 0.3145
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.4049
+        ],
+        "acc_per_mflop": 0.2068,
+        "extrapolation_acc": {
+          "1": 0.2617,
+          "2": 0.2539,
+          "4": 0.4049,
+          "6": 0.2878,
+          "8": 0.3431
+        }
+      },
+      "recur_tail_stoch_k1": {
+        "arm": "recur_tail_stoch",
+        "k": 1,
+        "flops_per_example": 1502208,
+        "mflops": 1.502,
+        "acc": {
+          "overall": 0.3958,
+          "1": 0.5117,
+          "2": 0.375,
+          "3": 0.3008
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.3958
+        ],
+        "acc_per_mflop": 0.2635,
+        "extrapolation_acc": {}
+      },
+      "recur_tail_stoch_k2": {
+        "arm": "recur_tail_stoch",
+        "k": 2,
+        "flops_per_example": 1654272,
+        "mflops": 1.654,
+        "acc": {
+          "overall": 0.3639,
+          "1": 0.3984,
+          "2": 0.3516,
+          "3": 0.3418
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.3639
+        ],
+        "acc_per_mflop": 0.22,
+        "extrapolation_acc": {}
+      },
+      "recur_tail_stoch_k4": {
+        "arm": "recur_tail_stoch",
+        "k": 4,
+        "flops_per_example": 1958400,
+        "mflops": 1.958,
+        "acc": {
+          "overall": 0.4232,
+          "1": 0.5176,
+          "2": 0.4199,
+          "3": 0.332
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          0.4232
+        ],
+        "acc_per_mflop": 0.2161,
+        "extrapolation_acc": {
+          "1": 0.4323,
+          "2": 0.4368,
+          "4": 0.4232,
+          "6": 0.4076,
+          "8": 0.39
+        }
+      },
+      "cot_k3": {
+        "arm": "cot",
+        "k": 3,
+        "flops_per_example": 1809408,
+        "mflops": 1.809,
+        "acc": {
+          "overall": 1.0,
+          "1": 1.0,
+          "2": 1.0,
+          "3": 1.0
+        },
+        "acc_std": 0.0,
+        "acc_per_seed": [
+          1.0
+        ],
+        "acc_per_mflop": 0.5527,
+        "extrapolation_acc": {}
+      }
+    },
+    "direct_baseline_acc": 0.3333,
+    "matched_flop_head_to_head": {
+      "1": {
+        "mflops": 1.503,
+        "pause": 0.4108,
+        "recur_tail_fix": 0.4316,
+        "recur_tail_stoch": 0.3958,
+        "flop_rel_mismatch": 0.0003,
+        "best": "recur_tail_fix",
+        "delta_recur_best_minus_pause": 0.0208
+      },
+      "2": {
+        "mflops": 1.656,
+        "pause": 0.3815,
+        "recur_tail_fix": 0.4115,
+        "recur_tail_stoch": 0.3639,
+        "flop_rel_mismatch": 0.0009,
+        "best": "recur_tail_fix",
+        "delta_recur_best_minus_pause": 0.03
+      },
+      "4": {
+        "mflops": 1.964,
+        "pause": 0.4102,
+        "recur_tail_fix": 0.4049,
+        "recur_tail_stoch": 0.4232,
+        "flop_rel_mismatch": 0.0026,
+        "best": "recur_tail_stoch",
+        "delta_recur_best_minus_pause": 0.013
+      }
+    },
+    "stochastic_minus_fixed_depth": {
+      "recur_full_k2": -0.0469,
+      "recur_tail_k1": -0.0358,
+      "recur_tail_k2": -0.0476,
+      "recur_tail_k4": 0.0183
+    },
+    "acc_per_mflop_ranking": [
+      "cot_k3",
+      "recur_tail_fix_k1",
+      "pause_k1",
+      "recur_tail_stoch_k1",
+      "recur_tail_fix_k2",
+      "direct_k0",
+      "pause_k2",
+      "recur_tail_stoch_k2",
+      "recur_tail_stoch_k4",
+      "pause_k4",
+      "recur_tail_fix_k4",
+      "recur_full_fix_k2",
+      "recur_full_stoch_k2"
+    ],
+    "acc_ranking": [
+      "cot_k3",
+      "recur_tail_fix_k1",
+      "recur_tail_stoch_k4",
+      "recur_tail_fix_k2",
+      "pause_k1",
+      "pause_k4",
+      "recur_tail_fix_k4",
+      "recur_tail_stoch_k1",
+      "pause_k2",
+      "recur_tail_stoch_k2",
+      "direct_k0",
+      "recur_full_fix_k2",
+      "recur_full_stoch_k2"
+    ],
+    "best_acc_per_mflop": {
+      "config": "cot_k3",
+      "value": 0.5527,
+      "acc": 1.0
+    },
+    "best_acc": {
+      "config": "cot_k3",
+      "value": 1.0,
+      "mflops": 1.809
+    },
+    "cot_reference_acc": 1.0,
+    "extrapolation_kmax": {
+      "recur_full_fix_k2": {
+        "1": 0.1439,
+        "2": 0.3262,
+        "4": 0.3229,
+        "6": 0.3197,
+        "8": 0.2715
+      },
+      "recur_full_stoch_k2": {
+        "1": 0.2956,
+        "2": 0.2793,
+        "4": 0.3021,
+        "6": 0.2962,
+        "8": 0.2969
+      },
+      "recur_tail_fix_k4": {
+        "1": 0.2617,
+        "2": 0.2539,
+        "4": 0.4049,
+        "6": 0.2878,
+        "8": 0.3431
+      },
+      "recur_tail_stoch_k4": {
+        "1": 0.4323,
+        "2": 0.4368,
+        "4": 0.4232,
+        "6": 0.4076,
+        "8": 0.39
+      }
+    },
+    "acc_by_chain_len": {
+      "direct_k0": {
+        "overall": 0.3333,
+        "1": 0.3633,
+        "2": 0.3242,
+        "3": 0.3125
+      },
+      "pause_k1": {
+        "overall": 0.4108,
+        "1": 0.4961,
+        "2": 0.4043,
+        "3": 0.332
+      },
+      "pause_k2": {
+        "overall": 0.3815,
+        "1": 0.4785,
+        "2": 0.3574,
+        "3": 0.3086
+      },
+      "pause_k4": {
+        "overall": 0.4102,
+        "1": 0.5293,
+        "2": 0.3809,
+        "3": 0.3203
+      },
+      "recur_full_fix_k2": {
+        "overall": 0.3262,
+        "1": 0.3633,
+        "2": 0.3027,
+        "3": 0.3125
+      },
+      "recur_full_stoch_k2": {
+        "overall": 0.2793,
+        "1": 0.2773,
+        "2": 0.2988,
+        "3": 0.2617
+      },
+      "recur_tail_fix_k1": {
+        "overall": 0.4316,
+        "1": 0.4746,
+        "2": 0.4609,
+        "3": 0.3594
+      },
+      "recur_tail_fix_k2": {
+        "overall": 0.4115,
+        "1": 0.4824,
+        "2": 0.4199,
+        "3": 0.332
+      },
+      "recur_tail_fix_k4": {
+        "overall": 0.4049,
+        "1": 0.5137,
+        "2": 0.3867,
+        "3": 0.3145
+      },
+      "recur_tail_stoch_k1": {
+        "overall": 0.3958,
+        "1": 0.5117,
+        "2": 0.375,
+        "3": 0.3008
+      },
+      "recur_tail_stoch_k2": {
+        "overall": 0.3639,
+        "1": 0.3984,
+        "2": 0.3516,
+        "3": 0.3418
+      },
+      "recur_tail_stoch_k4": {
+        "overall": 0.4232,
+        "1": 0.5176,
+        "2": 0.4199,
+        "3": 0.332
+      },
+      "cot_k3": {
+        "overall": 1.0,
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0
+      }
+    },
+    "whole_sequence_loop_vs_matched_flop_pause": {
+      "recur_full_fix": 0.3262,
+      "recur_full_stoch": 0.2793,
+      "mflops_full": 4.05,
+      "mflops_pause_kmax": 1.964,
+      "flop_ratio_full_over_pause_kmax": 2.063
+    },
+    "headline": "at IDENTICAL inference FLOPs (pause k vs tail-recurrence k), the winner is k=1: recur_tail_fix (0.432 vs pause 0.411), k=2: recur_tail_fix (0.411 vs pause 0.382), k=4: recur_tail_stoch (0.423 vs pause 0.410); best accuracy-per-MFLOP overall = cot_k3; direct baseline 0.333, CoT reference 1.000, majority-class baseline 0.271"
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130"
+  },
+  "status": "done"
+}
