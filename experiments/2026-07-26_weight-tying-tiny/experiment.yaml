@@ -1,0 +1,51 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-26_weight-tying-tiny"
+title: "Weight tying vs embedding fraction: does tying only help when the vocab owns most of the parameters?"
+hypothesis: "Tying the input embedding to the output unembedding helps only when the vocab/param ratio is high: delta val bpc (tied minus untied) should be negative at high embedding fraction and ~0 or positive at low embedding fraction, with a crossover somewhere in between."
+seed: 0
+dataset:
+  name: "tiny-shakespeare (char stream; BPE vocabs built from the train split itself)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "MIT (karpathy/char-rnn)"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+
+# --- hyperparameters -------------------------------------------------------
+params:
+  # matching policy: MATCHED-ARCHITECTURE is primary (identical d_model / n_layer /
+  # n_head / d_ff / block_size / vocab; the ONLY difference is whether the output
+  # projection reuses the token-embedding matrix). A secondary MATCHED-TOTAL-PARAMS
+  # control is run at the two extremes of the embedding-fraction axis, where the
+  # untied model's d_model is shrunk until its total param count matches the tied one.
+  matching_policy: "matched-architecture (primary) + matched-total-params control at the two extremes"
+
+  n_layer: 1
+  n_head: 4
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 800
+  warmup: 80
+  lr: 0.003
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  seeds: [0, 1]
+
+  train_frac: 0.9                  # first 90% of characters = train, last 10% = val
+  bpe_target_vocabs: [512, 2000]   # built by BPE merges fitted on the TRAIN split only
+  char_vocab_size: 65              # discovered from the corpus; asserted at runtime
+
+  # (vocab_size, d_model) grid. char=65 sweeps d_model; d_model=64 sweeps vocab.
+  configs:
+    - {name: "d128_char",  vocab: 65,   d_model: 128}
+    - {name: "d64_char",   vocab: 65,   d_model: 64}
+    - {name: "d32_char",   vocab: 65,   d_model: 32}
+    - {name: "d64_bpe512", vocab: 512,  d_model: 64}
+    - {name: "d64_bpe2k",  vocab: 2000, d_model: 64}
+
+  # matched-total-params control runs (config names from the grid above), 1 seed
+  control_configs: ["d128_char", "d64_bpe2k"]
+  control_seed: 0
+
+  eval_batch: 64
+  time_budget_s: 780               # wall-clock guard; control runs are skipped if exceeded

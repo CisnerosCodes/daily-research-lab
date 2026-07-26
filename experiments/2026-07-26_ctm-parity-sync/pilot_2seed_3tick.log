@@ -1,0 +1,35 @@
+[param match] target=55800  h_syn(last/mean)=286  gru_hidden=109
+[plan] 30 runs, budget 660s, 1.087s per step across all runs -> steps=550 (projected 598s)
+  sync      T=4   seed=0  params= 55800 steps=550    11.7s  bit_acc=0.7193 exact=0.009
+  sync      T=4   seed=1  params= 55800 steps=550    12.7s  bit_acc=0.6687 exact=0.004
+  last      T=4   seed=0  params= 55766 steps=550    10.2s  bit_acc=0.6355 exact=0.003
+  last      T=4   seed=1  params= 55766 steps=550    10.2s  bit_acc=0.6845 exact=0.005
+  mean      T=4   seed=0  params= 55766 steps=550    10.3s  bit_acc=0.6467 exact=0.003
+  mean      T=4   seed=1  params= 55766 steps=550    10.2s  bit_acc=0.6271 exact=0.001
+  pairlast  T=4   seed=0  params= 55544 steps=550    11.4s  bit_acc=0.7074 exact=0.009
+  pairlast  T=4   seed=1  params= 55544 steps=550    18.2s  bit_acc=0.7072 exact=0.008
+  gru       T=4   seed=0  params= 55590 steps=550     9.6s  bit_acc=0.6055 exact=0.003
+  gru       T=4   seed=1  params= 55590 steps=550     8.9s  bit_acc=0.5722 exact=0.002
+  sync      T=8   seed=0  params= 55800 steps=550    24.4s  bit_acc=0.7235 exact=0.009
+  sync      T=8   seed=1  params= 55800 steps=550    23.6s  bit_acc=0.6695 exact=0.007
+  last      T=8   seed=0  params= 55766 steps=550    18.4s  bit_acc=0.6641 exact=0.003
+  last      T=8   seed=1  params= 55766 steps=550    16.6s  bit_acc=0.6693 exact=0.004
+  mean      T=8   seed=0  params= 55766 steps=550    17.0s  bit_acc=0.6258 exact=0.003
+  mean      T=8   seed=1  params= 55766 steps=550    17.9s  bit_acc=0.6109 exact=0.001
+  pairlast  T=8   seed=0  params= 55544 steps=550    23.0s  bit_acc=0.6950 exact=0.005
+  pairlast  T=8   seed=1  params= 55544 steps=550    20.6s  bit_acc=0.6630 exact=0.006
+  gru       T=8   seed=0  params= 55590 steps=550    14.1s  bit_acc=0.5858 exact=0.001
+  gru       T=8   seed=1  params= 55590 steps=550    14.5s  bit_acc=0.6031 exact=0.002
+  sync      T=16  seed=0  params= 55800 steps=550    42.3s  bit_acc=0.6786 exact=0.005
+  sync      T=16  seed=1  params= 55800 steps=550    42.7s  bit_acc=0.6640 exact=0.005
+  last      T=16  seed=0  params= 55766 steps=550    31.2s  bit_acc=0.5937 exact=0.003
+  last      T=16  seed=1  params= 55766 steps=550    32.0s  bit_acc=0.6644 exact=0.005
+  mean      T=16  seed=0  params= 55766 steps=550    34.0s  bit_acc=0.6060 exact=0.001
+  mean      T=16  seed=1  params= 55766 steps=550    33.7s  bit_acc=0.5620 exact=0.000
+  pairlast  T=16  seed=0  params= 55544 steps=550    37.3s  bit_acc=0.6783 exact=0.003
+  pairlast  T=16  seed=1  params= 55544 steps=550    38.3s  bit_acc=0.6694 exact=0.007
+  gru       T=16  seed=0  params= 55590 steps=193     8.7s  bit_acc=0.5773 exact=0.000  [CAPPED]
+  gru       T=16  seed=1  params= 55590 steps=68      3.0s  bit_acc=0.5208 exact=0.001  [CAPPED]
+
+at T=16: pairlast 0.674, sync 0.671, last 0.629, mean 0.584, gru 0.549 (bit acc, chance 0.5; max seed spread 0.0707)
+total 619.8s

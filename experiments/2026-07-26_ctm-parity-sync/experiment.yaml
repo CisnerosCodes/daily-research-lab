@@ -1,0 +1,46 @@
+id: "2026-07-26_ctm-parity-sync"
+title: "Nano CTM parity: ablating the synchronization readout"
+hypothesis: >
+  On cumulative (prefix) parity, at matched core / internal ticks / parameters / steps,
+  the Continuous Thought Machine's neuron-pair SYNCHRONIZATION readout is not doing the
+  work the paper attributes to it: a last-tick or mean-over-ticks readout on the SAME
+  recurrent core, and a plain GRU with a last-state readout, will land within
+  seed-to-seed noise of it, i.e. the win is recurrence depth (T), not timing sync.
+seed: 0
+dataset:
+  name: "synthetic random binary strings (cumulative/prefix parity)"
+  source: "generated in run.py by torch.randint with a fixed generator seed"
+  license: "n/a (synthetic)"
+
+# --- hyperparameters ---
+params:
+  # task
+  L: 12                 # bits per string (SHRUNK from the backlog's 24-40 to fit the 12-min box)
+  n_eval: 2000          # fixed held-out strings, identical for every run
+
+  # core
+  N: 64                 # CTM neurons
+  M: 4                  # per-neuron pre-activation memory length
+  d: 32                 # embedding / attention width
+  h_neuron: 8           # hidden width of each neuron's private history MLP
+  h_syn_ref: 256        # synapse-MLP hidden width for the reference (sync) arm
+  n_pairs: 256          # neuron pairs sampled from the 2080 i<=j pairs
+  pair_seed: 1234       # fixed pair subset shared by every sync/pairlast run
+
+  # arms and sweep
+  arms: ["sync", "last", "mean", "pairlast", "gru"]
+  ticks: [4, 16]        # T=8 traded away for a 3rd seed: seed spread (~0.07) was larger
+  seeds: [0, 1, 2]      # than the arm-to-arm gaps in a 2-seed pilot
+
+  # optimisation (identical for every arm)
+  max_steps: 900        # upper bound; the actual step count is set by the timing calibration
+  batch: 64
+  lr: 0.003
+  wd: 0.01
+  warmup: 50
+  step_granularity: 25  # calibrated step count is rounded down to a multiple of this
+
+  budget_seconds: 700   # wall-clock budget for the whole sweep
+  calib_steps: 5        # timing probe steps per (arm, T) cell
+  eval_reserve_s: 20    # held back from the budget for the held-out evaluations
+  safety_factor: 1.12   # calibration underestimates steady-state cost by ~8% on a shared box

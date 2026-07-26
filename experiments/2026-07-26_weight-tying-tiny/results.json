@@ -1,0 +1,595 @@
+{
+  "id": "2026-07-26_weight-tying-tiny",
+  "git_commit": "08ca60a894fe418bdafd2cabee65eb151745ac32",
+  "seed": 0,
+  "duration_sec": 614.94,
+  "metrics": {
+    "headline": "delta val bpc (tied - untied) vs embedding fraction",
+    "matching_policy": "matched-architecture (primary) + matched-total-params control at the two extremes",
+    "grid": [
+      {
+        "name": "d128_char",
+        "vocab": 65,
+        "d_model": 128,
+        "n_params_untied": 226304,
+        "n_params_tied": 217984,
+        "emb_frac_untied": 0.0735,
+        "emb_frac_tied": 0.0382
+      },
+      {
+        "name": "d64_char",
+        "vocab": 65,
+        "d_model": 64,
+        "n_params_untied": 64000,
+        "n_params_tied": 59840,
+        "emb_frac_untied": 0.13,
+        "emb_frac_tied": 0.0695
+      },
+      {
+        "name": "d32_char",
+        "vocab": 65,
+        "d_model": 32,
+        "n_params_untied": 19712,
+        "n_params_tied": 17632,
+        "emb_frac_untied": 0.211,
+        "emb_frac_tied": 0.118
+      },
+      {
+        "name": "d64_bpe512",
+        "vocab": 512,
+        "d_model": 64,
+        "n_params_untied": 121216,
+        "n_params_tied": 88448,
+        "emb_frac_untied": 0.5407,
+        "emb_frac_tied": 0.3705
+      },
+      {
+        "name": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model": 64,
+        "n_params_untied": 311680,
+        "n_params_tied": 183680,
+        "emb_frac_untied": 0.8214,
+        "emb_frac_tied": 0.6969
+      }
+    ],
+    "per_config": [
+      {
+        "name": "d128_char",
+        "vocab": 65,
+        "d_model": 128,
+        "n_params_untied": 226304,
+        "n_params_tied": 217984,
+        "emb_frac_untied": 0.0735,
+        "emb_frac_tied": 0.0382,
+        "bpc_tied_mean": 2.77982,
+        "bpc_untied_mean": 2.75265,
+        "bpc_tied_per_seed": [
+          2.76917,
+          2.79048
+        ],
+        "bpc_untied_per_seed": [
+          2.72733,
+          2.77796
+        ],
+        "delta_bpc_per_seed": [
+          0.04184,
+          0.01252
+        ],
+        "delta_bpc_mean": 0.02718,
+        "delta_bpc_std": 0.01466,
+        "delta_sign_consistent": true,
+        "tying_wins": false
+      },
+      {
+        "name": "d64_char",
+        "vocab": 65,
+        "d_model": 64,
+        "n_params_untied": 64000,
+        "n_params_tied": 59840,
+        "emb_frac_untied": 0.13,
+        "emb_frac_tied": 0.0695,
+        "bpc_tied_mean": 3.0766,
+        "bpc_untied_mean": 3.02858,
+        "bpc_tied_per_seed": [
+          3.07704,
+          3.07616
+        ],
+        "bpc_untied_per_seed": [
+          3.02417,
+          3.033
+        ],
+        "delta_bpc_per_seed": [
+          0.05287,
+          0.04316
+        ],
+        "delta_bpc_mean": 0.04802,
+        "delta_bpc_std": 0.00486,
+        "delta_sign_consistent": true,
+        "tying_wins": false
+      },
+      {
+        "name": "d32_char",
+        "vocab": 65,
+        "d_model": 32,
+        "n_params_untied": 19712,
+        "n_params_tied": 17632,
+        "emb_frac_untied": 0.211,
+        "emb_frac_tied": 0.118,
+        "bpc_tied_mean": 3.46064,
+        "bpc_untied_mean": 3.29851,
+        "bpc_tied_per_seed": [
+          3.48485,
+          3.43643
+        ],
+        "bpc_untied_per_seed": [
+          3.28555,
+          3.31147
+        ],
+        "delta_bpc_per_seed": [
+          0.1993,
+          0.12496
+        ],
+        "delta_bpc_mean": 0.16213,
+        "delta_bpc_std": 0.03717,
+        "delta_sign_consistent": true,
+        "tying_wins": false
+      },
+      {
+        "name": "d64_bpe512",
+        "vocab": 512,
+        "d_model": 64,
+        "n_params_untied": 121216,
+        "n_params_tied": 88448,
+        "emb_frac_untied": 0.5407,
+        "emb_frac_tied": 0.3705,
+        "bpc_tied_mean": 2.74113,
+        "bpc_untied_mean": 2.65696,
+        "bpc_tied_per_seed": [
+          2.74787,
+          2.7344
+        ],
+        "bpc_untied_per_seed": [
+          2.65772,
+          2.6562
+        ],
+        "delta_bpc_per_seed": [
+          0.09015,
+          0.0782
+        ],
+        "delta_bpc_mean": 0.08417,
+        "delta_bpc_std": 0.00598,
+        "delta_sign_consistent": true,
+        "tying_wins": false
+      },
+      {
+        "name": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model": 64,
+        "n_params_untied": 311680,
+        "n_params_tied": 183680,
+        "emb_frac_untied": 0.8214,
+        "emb_frac_tied": 0.6969,
+        "bpc_tied_mean": 2.85149,
+        "bpc_untied_mean": 2.51189,
+        "bpc_tied_per_seed": [
+          2.83411,
+          2.86886
+        ],
+        "bpc_untied_per_seed": [
+          2.50211,
+          2.52168
+        ],
+        "delta_bpc_per_seed": [
+          0.332,
+          0.34718
+        ],
+        "delta_bpc_mean": 0.33959,
+        "delta_bpc_std": 0.00759,
+        "delta_sign_consistent": true,
+        "tying_wins": false
+      }
+    ],
+    "delta_bpc_vs_emb_frac": [
+      {
+        "name": "d128_char",
+        "emb_frac": 0.0735,
+        "delta_bpc": 0.02718,
+        "std": 0.01466
+      },
+      {
+        "name": "d64_char",
+        "emb_frac": 0.13,
+        "delta_bpc": 0.04802,
+        "std": 0.00486
+      },
+      {
+        "name": "d32_char",
+        "emb_frac": 0.211,
+        "delta_bpc": 0.16213,
+        "std": 0.03717
+      },
+      {
+        "name": "d64_bpe512",
+        "emb_frac": 0.5407,
+        "delta_bpc": 0.08417,
+        "std": 0.00598
+      },
+      {
+        "name": "d64_bpe2k",
+        "emb_frac": 0.8214,
+        "delta_bpc": 0.33959,
+        "std": 0.00759
+      }
+    ],
+    "crossover_emb_frac": null,
+    "pattern": "tying never helps at this scale (delta > 0 at every embedding fraction)",
+    "spearman_delta_vs_embfrac": 0.9,
+    "matched_total_params_control": [
+      {
+        "config": "d128_char",
+        "vocab": 65,
+        "d_model_tied": 128,
+        "d_model_untied_matched": 124,
+        "n_params_tied": 217984,
+        "n_params_untied_matched": 213280,
+        "param_gap_pct": -2.16,
+        "emb_frac_untied": 0.0735,
+        "bpc_tied": 2.76917,
+        "bpc_untied_matched": 2.76185,
+        "delta_bpc": 0.00732
+      },
+      {
+        "config": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model_tied": 64,
+        "d_model_untied_matched": 40,
+        "n_params_tied": 183680,
+        "n_params_untied_matched": 183280,
+        "param_gap_pct": -0.22,
+        "emb_frac_untied": 0.8214,
+        "bpc_tied": 2.83411,
+        "bpc_untied_matched": 2.52588,
+        "delta_bpc": 0.30823
+      }
+    ],
+    "controls_skipped_for_time": [],
+    "per_run": [
+      {
+        "tag": "d128_char",
+        "vocab": 65,
+        "d_model": 128,
+        "tied": true,
+        "seed": 0,
+        "n_params": 217984,
+        "n_params_vocab_matrices": 8320,
+        "train_seconds": 32.9,
+        "final_train_loss_ma50": 1.7934,
+        "val_bpc": 2.76917,
+        "val_bits_per_token": 2.76917,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d128_char",
+        "vocab": 65,
+        "d_model": 128,
+        "tied": false,
+        "seed": 0,
+        "n_params": 226304,
+        "n_params_vocab_matrices": 16640,
+        "train_seconds": 34.3,
+        "final_train_loss_ma50": 1.7645,
+        "val_bpc": 2.72733,
+        "val_bits_per_token": 2.72733,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d128_char",
+        "vocab": 65,
+        "d_model": 128,
+        "tied": true,
+        "seed": 1,
+        "n_params": 217984,
+        "n_params_vocab_matrices": 8320,
+        "train_seconds": 35.0,
+        "final_train_loss_ma50": 1.8113,
+        "val_bpc": 2.79048,
+        "val_bits_per_token": 2.79048,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d128_char",
+        "vocab": 65,
+        "d_model": 128,
+        "tied": false,
+        "seed": 1,
+        "n_params": 226304,
+        "n_params_vocab_matrices": 16640,
+        "train_seconds": 33.6,
+        "final_train_loss_ma50": 1.7885,
+        "val_bpc": 2.77796,
+        "val_bits_per_token": 2.77796,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d64_char",
+        "vocab": 65,
+        "d_model": 64,
+        "tied": true,
+        "seed": 0,
+        "n_params": 59840,
+        "n_params_vocab_matrices": 4160,
+        "train_seconds": 15.6,
+        "final_train_loss_ma50": 2.0929,
+        "val_bpc": 3.07704,
+        "val_bits_per_token": 3.07704,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d64_char",
+        "vocab": 65,
+        "d_model": 64,
+        "tied": false,
+        "seed": 0,
+        "n_params": 64000,
+        "n_params_vocab_matrices": 8320,
+        "train_seconds": 15.8,
+        "final_train_loss_ma50": 2.0357,
+        "val_bpc": 3.02417,
+        "val_bits_per_token": 3.02417,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d64_char",
+        "vocab": 65,
+        "d_model": 64,
+        "tied": true,
+        "seed": 1,
+        "n_params": 59840,
+        "n_params_vocab_matrices": 4160,
+        "train_seconds": 15.2,
+        "final_train_loss_ma50": 2.0908,
+        "val_bpc": 3.07616,
+        "val_bits_per_token": 3.07616,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d64_char",
+        "vocab": 65,
+        "d_model": 64,
+        "tied": false,
+        "seed": 1,
+        "n_params": 64000,
+        "n_params_vocab_matrices": 8320,
+        "train_seconds": 16.3,
+        "final_train_loss_ma50": 2.0472,
+        "val_bpc": 3.033,
+        "val_bits_per_token": 3.033,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d32_char",
+        "vocab": 65,
+        "d_model": 32,
+        "tied": true,
+        "seed": 0,
+        "n_params": 17632,
+        "n_params_vocab_matrices": 2080,
+        "train_seconds": 10.2,
+        "final_train_loss_ma50": 2.4024,
+        "val_bpc": 3.48485,
+        "val_bits_per_token": 3.48485,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d32_char",
+        "vocab": 65,
+        "d_model": 32,
+        "tied": false,
+        "seed": 0,
+        "n_params": 19712,
+        "n_params_vocab_matrices": 4160,
+        "train_seconds": 10.2,
+        "final_train_loss_ma50": 2.2487,
+        "val_bpc": 3.28555,
+        "val_bits_per_token": 3.28555,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d32_char",
+        "vocab": 65,
+        "d_model": 32,
+        "tied": true,
+        "seed": 1,
+        "n_params": 17632,
+        "n_params_vocab_matrices": 2080,
+        "train_seconds": 9.8,
+        "final_train_loss_ma50": 2.37,
+        "val_bpc": 3.43643,
+        "val_bits_per_token": 3.43643,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d32_char",
+        "vocab": 65,
+        "d_model": 32,
+        "tied": false,
+        "seed": 1,
+        "n_params": 19712,
+        "n_params_vocab_matrices": 4160,
+        "train_seconds": 10.5,
+        "final_train_loss_ma50": 2.268,
+        "val_bpc": 3.31147,
+        "val_bits_per_token": 3.31147,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d64_bpe512",
+        "vocab": 512,
+        "d_model": 64,
+        "tied": true,
+        "seed": 0,
+        "n_params": 88448,
+        "n_params_vocab_matrices": 32768,
+        "train_seconds": 22.4,
+        "final_train_loss_ma50": 3.8921,
+        "val_bpc": 2.74787,
+        "val_bits_per_token": 5.91831,
+        "eval_chars": 111445
+      },
+      {
+        "tag": "d64_bpe512",
+        "vocab": 512,
+        "d_model": 64,
+        "tied": false,
+        "seed": 0,
+        "n_params": 121216,
+        "n_params_vocab_matrices": 65536,
+        "train_seconds": 22.2,
+        "final_train_loss_ma50": 3.7224,
+        "val_bpc": 2.65772,
+        "val_bits_per_token": 5.72412,
+        "eval_chars": 111445
+      },
+      {
+        "tag": "d64_bpe512",
+        "vocab": 512,
+        "d_model": 64,
+        "tied": true,
+        "seed": 1,
+        "n_params": 88448,
+        "n_params_vocab_matrices": 32768,
+        "train_seconds": 23.5,
+        "final_train_loss_ma50": 3.8758,
+        "val_bpc": 2.7344,
+        "val_bits_per_token": 5.88928,
+        "eval_chars": 111445
+      },
+      {
+        "tag": "d64_bpe512",
+        "vocab": 512,
+        "d_model": 64,
+        "tied": false,
+        "seed": 1,
+        "n_params": 121216,
+        "n_params_vocab_matrices": 65536,
+        "train_seconds": 23.8,
+        "final_train_loss_ma50": 3.7291,
+        "val_bpc": 2.6562,
+        "val_bits_per_token": 5.72086,
+        "eval_chars": 111445
+      },
+      {
+        "tag": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model": 64,
+        "tied": true,
+        "seed": 0,
+        "n_params": 183680,
+        "n_params_vocab_matrices": 128000,
+        "train_seconds": 41.7,
+        "final_train_loss_ma50": 5.5424,
+        "val_bpc": 2.83411,
+        "val_bits_per_token": 8.10654,
+        "eval_chars": 111485
+      },
+      {
+        "tag": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model": 64,
+        "tied": false,
+        "seed": 0,
+        "n_params": 311680,
+        "n_params_vocab_matrices": 256000,
+        "train_seconds": 42.5,
+        "final_train_loss_ma50": 4.6575,
+        "val_bpc": 2.50211,
+        "val_bits_per_token": 7.15692,
+        "eval_chars": 111485
+      },
+      {
+        "tag": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model": 64,
+        "tied": true,
+        "seed": 1,
+        "n_params": 183680,
+        "n_params_vocab_matrices": 128000,
+        "train_seconds": 41.1,
+        "final_train_loss_ma50": 5.5949,
+        "val_bpc": 2.86886,
+        "val_bits_per_token": 8.20596,
+        "eval_chars": 111485
+      },
+      {
+        "tag": "d64_bpe2k",
+        "vocab": 2000,
+        "d_model": 64,
+        "tied": false,
+        "seed": 1,
+        "n_params": 311680,
+        "n_params_vocab_matrices": 256000,
+        "train_seconds": 44.5,
+        "final_train_loss_ma50": 4.6462,
+        "val_bpc": 2.52168,
+        "val_bits_per_token": 7.21289,
+        "eval_chars": 111485
+      },
+      {
+        "tag": "d128_char_ctrl",
+        "vocab": 65,
+        "d_model": 124,
+        "tied": false,
+        "seed": 0,
+        "n_params": 213280,
+        "n_params_vocab_matrices": 16120,
+        "train_seconds": 38.6,
+        "final_train_loss_ma50": 1.7828,
+        "val_bpc": 2.76185,
+        "val_bits_per_token": 2.76185,
+        "eval_chars": 111456
+      },
+      {
+        "tag": "d64_bpe2k_ctrl",
+        "vocab": 2000,
+        "d_model": 40,
+        "tied": false,
+        "seed": 0,
+        "n_params": 183280,
+        "n_params_vocab_matrices": 160000,
+        "train_seconds": 34.7,
+        "final_train_loss_ma50": 4.7509,
+        "val_bpc": 2.52588,
+        "val_bits_per_token": 7.2249,
+        "eval_chars": 111485
+      }
+    ],
+    "tokenizer": {
+      "65": {
+        "train_tokens": 1003854,
+        "val_tokens": 111540,
+        "chars_per_token": 1.0
+      },
+      "512": {
+        "train_tokens": 452223,
+        "val_tokens": 51792,
+        "chars_per_token": 2.2198
+      },
+      "2000": {
+        "train_tokens": 315926,
+        "val_tokens": 38997,
+        "chars_per_token": 3.1775
+      }
+    },
+    "n_train_chars": 1003854,
+    "n_val_chars": 111540,
+    "tokenizer_build_seconds": 26.5
+  },
+  "env": {
+    "python": "3.11.15",
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130",
+    "matplotlib": "3.10.9"
+  },
+  "status": "done"
+}
