@@ -1,0 +1,40 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_induction-heads-emergence"
+title: "Induction-head emergence: does K-composition strength LEAD the in-context loss phase transition?"
+hypothesis: "In a 2-layer attention-only transformer trained on periodically-repeating random-token sequences, the in-context loss drops as a sharp phase transition, and the K-composition strength ||W_QK^(1) W_OV^(0)|| of the winning (prev-token head, induction head) pair starts rising BEFORE that drop - a leading progress measure, unlike the spectral-entropy measures that LAGGED in 2026-07-25_grokking-modular-addition."
+seed: 0
+dataset:
+  name: "synthetic periodic random-token sequences: per-sample period p ~ U{12..24}, first p tokens sampled WITHOUT replacement from a 128-symbol vocab, then tiled to length 48"
+  source: "generated in run.py (numpy PCG64; train seed = run seed, eval seed 999 - disjoint)"
+  license: "n/a (synthetic)"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  vocab: 128
+  seq_len: 48
+  period_min: 12
+  period_max: 24
+  d_model: 64
+  n_heads: 4
+  n_layers: 2          # attention-only, NO MLPs, NO LayerNorm (keeps the W_QK@W_OV path exact)
+  steps: 1800
+  warmup: 100
+  batch_size: 64
+  lr: 0.003
+  weight_decay: 0.01
+  betas: [0.9, 0.98]
+  eval_every: 20
+  dense_eval_until: 100    # extra dense evals early, so an early onset is resolvable
+  dense_eval_every: 5
+  eval_n: 192
+  eval_seed: 999
+  n_null_rotations: 16     # random orthogonal rotations for the composition null
+  # criterion A/B: fraction-of-total-movement (needs the final model; artifact-prone)
+  movement_fracs: [0.5, 0.1]
+  # criterion C: ONLINE absolute thresholds, no future information required
+  z_null_thresh: 5.0       # composition: z above the spectrum-preserving rotation null
+  attn_ratio_thresh: 2.0   # attention scores: x times the uniform-attention baseline
+  delta_frac_thresh: 0.05  # in-context delta: 5% of log(V) nats below zero
+  onset_sustain: 2         # consecutive evals required for any absolute onset
+  seeds: [0, 1, 2]
+  run_control: true        # i.i.d. non-repeating tokens -> induction impossible (false-positive control)
+  time_cap_s_per_run: 190  # honest time-box: training stops early if hit

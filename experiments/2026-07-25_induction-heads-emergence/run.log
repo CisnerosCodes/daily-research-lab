@@ -1,0 +1,11 @@
+induction-heads-emergence: 3 seeds + i.i.d. control
+  [seed0] params=52224 steps=1800 (88s) delta=-4.962 prev=0.426 ind=0.585 compK_max=0.2570 (null 0.1244)
+  [seed1] params=52224 steps=1800 (96s) delta=-5.023 prev=0.372 ind=0.611 compK_max=0.2194 (null 0.1255)
+  [seed2] params=52224 steps=1800 (92s) delta=-4.995 prev=0.437 ind=0.620 compK_max=0.2027 (null 0.1226)
+  [control_iid] params=52224 steps=1800 (88s) delta=+0.000 prev=0.073 ind=0.033 compK_max=0.2027 (null 0.1224)
+{
+  "id": "2026-07-25_induction-heads-emergence",
+  "duration_sec": 368.23,
+  "status": "done"
+}
+headline: in-context loss delta +0.00 -> -5.00 nats, phase transition at step 707.6 (10-90% width 439.7 steps = 24% of training); K-composition of the winning pair leads by 601.0 steps under the 50%-of-movement criterion and 133.3 steps under the online absolute-threshold criterion; prev-token score -166.5 / -360.0, induction score -64.8 / -220.0 (positive = leads)

@@ -1,0 +1,672 @@
+{
+ "id": "2026-07-25_induction-heads-emergence",
+ "date": "2026-07-25",
+ "title": "Induction heads form as a phase transition and weight-space K-composition LEADS it by 601 steps (133 steps under a strictly online criterion) where the attention-pattern scores LAG - but the rise is shared by all 16 head pairs, overshoots 1.68x and decays, and fires a late false positive on a model where induction is impossible",
+ "slug": "induction-heads-emergence",
+ "hypothesis": "In a 2-layer attention-only transformer (no MLPs, no LayerNorm) trained on periodically-repeating random-token sequences, the in-context loss (loss on repeated tokens minus loss on first-occurrence tokens) drops as a sharp phase transition, and the K-composition strength ||W_QK^(1) W_OV^(0)||_F of the winning (previous-token head, induction head) pair starts rising BEFORE the drop - a genuinely leading progress measure, unlike the spectral-entropy measures that LAGGED the jump in 2026-07-25_grokking-modular-addition.",
+ "question": "Does a weight-only composition measure LEAD the induction-head phase transition, and how does it rank head-to-head against the standard activation-space diagnostics (previous-token score, induction/prefix-matching score) measured on the same runs - under an artifact-prone fraction-of-movement criterion, an earliest-detection variant, and a strictly online absolute threshold?",
+ "method": "2-layer attention-only transformer, 4 heads per layer, trained on periodic random-token sequences: per sample a period p ~ U{12..24} is drawn, the first p tokens are sampled WITHOUT replacement from a 128-symbol vocab (so the induction target is unambiguous and the diagnostics are exact), and the sequence is tiled to length 48. The per-sample random period blocks the purely positional 'attend to i-p' shortcut that the classic fixed 'second half repeats the first half' construction leaves open. Target index j <= p-1 is a first occurrence (irreducible, floor = log 128 = 4.852 nats); j >= p+1 is solvable ONLY through an induction circuit; j = p is excluded from both masks because the query token at p-1 has no earlier occurrence to induct from. Four measures logged every 20 steps (plus every 5 steps up to step 100, so an early onset is resolvable) on a FIXED 192-sequence held-out eval batch: (1) in-context loss delta = mean loss(repeat) - mean loss(first occurrence); (2) previous-token score = layer-0 head attention mass at position i-1; (3) induction score = layer-1 head attention mass at (previous occurrence of the current token) + 1; (4) composition scores for all 4x4 head pairs, ||A W_OV^(0)||_F / (||A||_F ||W_OV^(0)||_F) with A = W_QK^(1) (K-composition), W_QK^(1)T (Q) and W_OV^(1) (V), each against a SPECTRUM-PRESERVING NULL of 16 random orthogonal rotations R applied as A(R W_OV) - which destroys alignment while leaving both singular-value spectra intact, converting a raw composition number into a z-score. Onsets are computed under three criteria so nothing rests on one: (A) 50% of total init->final movement, matched to the grokking experiment and requiring the final model; (B) 10% of movement, the earliest-detection variant of the same family; (C) ONLINE absolute thresholds using no future information - composition z > 5 vs its rotation null, attention scores > 2x their uniform-attention baseline (0.0736 prev / 0.0331 induction), loss delta < -5% of log V (-0.243 nats), all sustained 2 consecutive evals. Plus the truncation control that demolished the spectral result in the grokking run: criterion A recomputed as if training had STOPPED at the transition. Held fixed: 1800 steps, batch 64, AdamW lr 3e-3 (100-step warmup), wd 0.01, betas (0.9, 0.98), 3 seeds. Two controls: (a) a false-positive control - an identical model trained on i.i.d. NON-repeating tokens, where an induction head is impossible, evaluated on the same repeating eval batch; (b) Q- and V-composition of the same head pair against their own nulls, as a specificity check on which side of the layer-1 head reads the layer-0 head.",
+ "architecture": "2-layer attention-only transformer, NO MLPs and NO LayerNorm (so the W_QK^(1) @ W_OV^(0) path is exact with no normalization to fold through), d_model 64, 4 heads per layer (head dim 16), learned absolute positions, untied unembed; 52,224 params",
+ "dataset": {
+  "name": "synthetic periodic random-token sequences: per-sample period p ~ U{12..24}, first p tokens sampled WITHOUT replacement from a 128-symbol vocab, tiled to length 48; train data resampled fresh every step, eval = a fixed 192-sequence batch",
+  "source": "generated in run.py (numpy PCG64; train seed = run seed, eval seed 999 - disjoint)",
+  "license": "n/a (synthetic)",
+  "hash": "n/a (regenerated deterministically from the seeds in experiment.yaml)"
+ },
+ "task": "in-context copying of repeated random tokens; solvable only by a previous-token head in layer 0 K-composing with an induction head in layer 1",
+ "framework": "torch 2.13",
+ "seed": 0,
+ "compute": "CPU single-threaded (torch.set_num_threads(1), OMP_NUM_THREADS=1), 368.2s wall clock for all 4 training runs + per-eval diagnostics + chart, against a ~720s box",
+ "metrics": {
+  "n_params": 52224,
+  "steps": 1800,
+  "eval_every": 20,
+  "eval_n": 192,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "vocab": 128,
+  "seq_len": 48,
+  "period_range": [
+   12,
+   24
+  ],
+  "log_vocab_nats": 4.852,
+  "phase_transition_step_mean": 707.6,
+  "phase_transition_step_per_seed": [
+   728.3,
+   688.9,
+   705.7
+  ],
+  "transition_width_10_90_mean": 439.7,
+  "transition_width_10_90_per_seed": [
+   648.0,
+   366.1,
+   304.9
+  ],
+  "transition_width_frac_of_training": 0.2443,
+  "delta_init_mean": 0.0,
+  "delta_final_mean": -4.9974,
+  "loss_rep_final_mean": 0.087,
+  "loss_first_final_mean": 5.0801,
+  "lead_steps_movement50": {
+   "compK_winpair": {
+    "mean": 601.0,
+    "per_seed": [
+     609.3,
+     592.4,
+     601.4
+    ]
+   },
+   "compK_maxpair": {
+    "mean": 594.6,
+    "per_seed": [
+     618.1,
+     567.2,
+     598.6
+    ]
+   },
+   "prev_token_score": {
+    "mean": -166.5,
+    "per_seed": [
+     -20.4,
+     -258.1,
+     -221.1
+    ]
+   },
+   "induction_score": {
+    "mean": -64.8,
+    "per_seed": [
+     -18.6,
+     -98.8,
+     -77.1
+    ]
+   }
+  },
+  "lead_steps_movement10": {
+   "compK_winpair": {
+    "mean": 458.0,
+    "per_seed": [
+     460.0,
+     428.6,
+     485.4
+    ]
+   },
+   "compK_maxpair": {
+    "mean": 445.2,
+    "per_seed": [
+     463.0,
+     417.1,
+     455.4
+    ]
+   },
+   "prev_token_score": {
+    "mean": -45.8,
+    "per_seed": [
+     -80.0,
+     -24.2,
+     -33.3
+    ]
+   },
+   "induction_score": {
+    "mean": -55.2,
+    "per_seed": [
+     -71.1,
+     -44.1,
+     -50.3
+    ]
+   }
+  },
+  "lead_steps_absolute_online": {
+   "compK_winpair": {
+    "mean": 133.3,
+    "per_seed": [
+     40.0,
+     140.0,
+     220.0
+    ]
+   },
+   "compK_maxpair": {
+    "mean": 206.7,
+    "per_seed": [
+     200.0,
+     200.0,
+     220.0
+    ]
+   },
+   "prev_token_score": {
+    "mean": -360.0,
+    "per_seed": [
+     -400.0,
+     -340.0,
+     -340.0
+    ]
+   },
+   "induction_score": {
+    "mean": -220.0,
+    "per_seed": [
+     -280.0,
+     -160.0,
+     -220.0
+    ]
+   }
+  },
+  "lead_steps_movement50_truncated_control": {
+   "compK_winpair": {
+    "mean": 520.8,
+    "per_seed": [
+     513.2,
+     510.7,
+     538.5
+    ]
+   },
+   "compK_maxpair": {
+    "mean": 530.9,
+    "per_seed": [
+     559.0,
+     497.5,
+     536.1
+    ]
+   },
+   "prev_token_score": {
+    "mean": 24.2,
+    "per_seed": [
+     -10.0,
+     42.1,
+     40.5
+    ]
+   },
+   "induction_score": {
+    "mean": 1.5,
+    "per_seed": [
+     -9.4,
+     6.3,
+     7.6
+    ]
+   }
+  },
+  "onset_steps_absolute_online": {
+   "compK_winpair": [
+    280.0,
+    180.0,
+    120.0
+   ],
+   "compK_maxpair": [
+    120.0,
+    120.0,
+    120.0
+   ],
+   "prev_token_score": [
+    720.0,
+    660.0,
+    680.0
+   ],
+   "induction_score": [
+    600.0,
+    480.0,
+    560.0
+   ]
+  },
+  "loss_onset_step_absolute_online": [
+   320.0,
+   320.0,
+   340.0
+  ],
+  "abs_thresholds": {
+   "delta_nats": -0.2426,
+   "prev_token": 0.1472,
+   "induction": 0.0661,
+   "comp_z_vs_null": 5.0,
+   "uniform_prev_baseline": 0.0736,
+   "uniform_induction_baseline": 0.0331
+  },
+  "composition_leads_under_movement50": true,
+  "composition_leads_under_absolute_online": true,
+  "measures_that_lead_movement50": [
+   "compK_winpair",
+   "compK_maxpair"
+  ],
+  "measures_that_lead_absolute_online": [
+   "compK_winpair",
+   "compK_maxpair"
+  ],
+  "compK_winpair_final_mean": 0.1837,
+  "compK_winpair_init_mean": 0.126,
+  "compK_null_mean_final": 0.1255,
+  "compK_winpair_z_vs_null_final_mean": 6.09,
+  "specificity_mean": {
+   "compK_z_final_winpair": 6.093,
+   "compK_z_final_max_over_pairs": 10.933,
+   "compK_z_final_mean_over_pairs": 1.383,
+   "compK_z_final_mean_other_pairs": 1.067,
+   "compK_z_at_transition_winpair": 5.246,
+   "compK_z_at_transition_mean_over_pairs": 2.526,
+   "compK_winpair_minus_others_at_transition": 0.043,
+   "compK_winpair_minus_others_final": 0.047
+  },
+  "compQ_winpair_final_mean": 0.0524,
+  "compV_winpair_final_mean": 0.0477,
+  "compQ_winpair_z_vs_null_final_mean": -6.47,
+  "compV_winpair_z_vs_null_final_mean": -7.45,
+  "frac_of_movement_done_at_transition": {
+   "compK_winpair": 1.6821,
+   "compK_maxpair": 1.0089,
+   "prev_token_score": 0.301,
+   "induction_score": 0.3398
+  },
+  "per_run": [
+   {
+    "tag": "seed0",
+    "seed": 0,
+    "repeating": true,
+    "winning_pair": {
+     "layer0_head": 2,
+     "layer1_head": 0
+    },
+    "delta_init": -0.0,
+    "delta_final": -4.9603,
+    "loss_rep_final": 0.0777,
+    "loss_first_final": 5.0393,
+    "transition_step_50": 728.3,
+    "transition_step_10": 564.4,
+    "transition_step_90": 1212.4,
+    "transition_width_10_90": 648.0,
+    "delta_abs_onset_step": 320.0,
+    "onset_absolute": {
+     "compK_winpair": 280.0,
+     "compK_maxpair": 120.0,
+     "prev_token_score": 720.0,
+     "induction_score": 600.0
+    },
+    "lead_steps_movement": {
+     "0.5": {
+      "compK_winpair": 609.3,
+      "compK_maxpair": 618.1,
+      "prev_token_score": -20.4,
+      "induction_score": -18.6
+     },
+     "0.1": {
+      "compK_winpair": 460.0,
+      "compK_maxpair": 463.0,
+      "prev_token_score": -80.0,
+      "induction_score": -71.1
+     }
+    },
+    "lead_steps_absolute": {
+     "compK_winpair": 40.0,
+     "compK_maxpair": 200.0,
+     "prev_token_score": -400.0,
+     "induction_score": -280.0
+    },
+    "lead_steps_movement50_truncated_at_transition": {
+     "compK_winpair": 513.2,
+     "compK_maxpair": 559.0,
+     "prev_token_score": -10.0,
+     "induction_score": -9.4
+    },
+    "compK_winpair_init": 0.1288,
+    "compK_winpair_final": 0.2426,
+    "compK_null_mean_final": 0.1242,
+    "compK_winpair_z_vs_null_final": 13.44,
+    "compK_winpair_z_vs_null_init": 0.04,
+    "compK_other_pairs_mean_final": 0.1177,
+    "specificity": {
+     "compK_z_final_winpair": 13.44,
+     "compK_z_final_max_over_pairs": 13.44,
+     "compK_z_final_mean_over_pairs": -0.28,
+     "compK_z_final_mean_other_pairs": -1.2,
+     "compK_z_at_transition_winpair": 11.3378,
+     "compK_z_at_transition_mean_over_pairs": 3.8404,
+     "compK_winpair_minus_others_at_transition": 0.1101,
+     "compK_winpair_minus_others_final": 0.1249
+    },
+    "compQ_winpair_final": 0.0604,
+    "compV_winpair_final": 0.0553,
+    "compQ_winpair_z_vs_null_final": -6.63,
+    "compV_winpair_z_vs_null_final": -7.54,
+    "frac_of_movement_done_at_transition": {
+     "compK_winpair": 1.3128,
+     "compK_maxpair": 1.2647,
+     "prev_token_score": 0.3572,
+     "induction_score": 0.3706
+    }
+   },
+   {
+    "tag": "seed1",
+    "seed": 1,
+    "repeating": true,
+    "winning_pair": {
+     "layer0_head": 1,
+     "layer1_head": 0
+    },
+    "delta_init": 0.0001,
+    "delta_final": -5.0441,
+    "loss_rep_final": 0.0904,
+    "loss_first_final": 5.1135,
+    "transition_step_50": 688.9,
+    "transition_step_10": 520.9,
+    "transition_step_90": 887.0,
+    "transition_width_10_90": 366.1,
+    "delta_abs_onset_step": 320.0,
+    "onset_absolute": {
+     "compK_winpair": 180.0,
+     "compK_maxpair": 120.0,
+     "prev_token_score": 660.0,
+     "induction_score": 480.0
+    },
+    "lead_steps_movement": {
+     "0.5": {
+      "compK_winpair": 592.4,
+      "compK_maxpair": 567.2,
+      "prev_token_score": -258.1,
+      "induction_score": -98.8
+     },
+     "0.1": {
+      "compK_winpair": 428.6,
+      "compK_maxpair": 417.1,
+      "prev_token_score": -24.2,
+      "induction_score": -44.1
+     }
+    },
+    "lead_steps_absolute": {
+     "compK_winpair": 140.0,
+     "compK_maxpair": 200.0,
+     "prev_token_score": -340.0,
+     "induction_score": -160.0
+    },
+    "lead_steps_movement50_truncated_at_transition": {
+     "compK_winpair": 510.7,
+     "compK_maxpair": 497.5,
+     "prev_token_score": 42.1,
+     "induction_score": 6.3
+    },
+    "compK_winpair_init": 0.1231,
+    "compK_winpair_final": 0.1309,
+    "compK_null_mean_final": 0.129,
+    "compK_winpair_z_vs_null_final": 0.1,
+    "compK_winpair_z_vs_null_init": -0.18,
+    "compK_other_pairs_mean_final": 0.1531,
+    "specificity": {
+     "compK_z_final_winpair": 0.1,
+     "compK_z_final_max_over_pairs": 11.37,
+     "compK_z_final_mean_over_pairs": 2.86,
+     "compK_z_final_mean_other_pairs": 3.04,
+     "compK_z_at_transition_winpair": 1.1204,
+     "compK_z_at_transition_mean_over_pairs": 2.1112,
+     "compK_winpair_minus_others_at_transition": -0.0069,
+     "compK_winpair_minus_others_final": -0.0223
+    },
+    "compQ_winpair_final": 0.0669,
+    "compV_winpair_final": 0.0541,
+    "compQ_winpair_z_vs_null_final": -3.24,
+    "compV_winpair_z_vs_null_final": -6.63,
+    "frac_of_movement_done_at_transition": {
+     "compK_winpair": 2.7713,
+     "compK_maxpair": 0.8835,
+     "prev_token_score": 0.3025,
+     "induction_score": 0.3089
+    }
+   },
+   {
+    "tag": "seed2",
+    "seed": 2,
+    "repeating": true,
+    "winning_pair": {
+     "layer0_head": 1,
+     "layer1_head": 1
+    },
+    "delta_init": 0.0,
+    "delta_final": -4.9878,
+    "loss_rep_final": 0.0929,
+    "loss_first_final": 5.0876,
+    "transition_step_50": 705.7,
+    "transition_step_10": 555.7,
+    "transition_step_90": 860.5,
+    "transition_width_10_90": 304.9,
+    "delta_abs_onset_step": 340.0,
+    "onset_absolute": {
+     "compK_winpair": 120.0,
+     "compK_maxpair": 120.0,
+     "prev_token_score": 680.0,
+     "induction_score": 560.0
+    },
+    "lead_steps_movement": {
+     "0.5": {
+      "compK_winpair": 601.4,
+      "compK_maxpair": 598.6,
+      "prev_token_score": -221.1,
+      "induction_score": -77.1
+     },
+     "0.1": {
+      "compK_winpair": 485.4,
+      "compK_maxpair": 455.4,
+      "prev_token_score": -33.3,
+      "induction_score": -50.3
+     }
+    },
+    "lead_steps_absolute": {
+     "compK_winpair": 220.0,
+     "compK_maxpair": 220.0,
+     "prev_token_score": -340.0,
+     "induction_score": -220.0
+    },
+    "lead_steps_movement50_truncated_at_transition": {
+     "compK_winpair": 538.5,
+     "compK_maxpair": 536.1,
+     "prev_token_score": 40.5,
+     "induction_score": 7.6
+    },
+    "compK_winpair_init": 0.126,
+    "compK_winpair_final": 0.1775,
+    "compK_null_mean_final": 0.1232,
+    "compK_winpair_z_vs_null_final": 4.74,
+    "compK_winpair_z_vs_null_init": -0.08,
+    "compK_other_pairs_mean_final": 0.1392,
+    "specificity": {
+     "compK_z_final_winpair": 4.74,
+     "compK_z_final_max_over_pairs": 7.99,
+     "compK_z_final_mean_over_pairs": 1.57,
+     "compK_z_final_mean_other_pairs": 1.36,
+     "compK_z_at_transition_winpair": 3.2788,
+     "compK_z_at_transition_mean_over_pairs": 1.6269,
+     "compK_winpair_minus_others_at_transition": 0.0254,
+     "compK_winpair_minus_others_final": 0.0384
+    },
+    "compQ_winpair_final": 0.0299,
+    "compV_winpair_final": 0.0337,
+    "compQ_winpair_z_vs_null_final": -9.55,
+    "compV_winpair_z_vs_null_final": -8.19,
+    "frac_of_movement_done_at_transition": {
+     "compK_winpair": 0.9621,
+     "compK_maxpair": 0.8785,
+     "prev_token_score": 0.2432,
+     "induction_score": 0.3398
+    }
+   },
+   {
+    "tag": "control_iid",
+    "seed": 0,
+    "repeating": false,
+    "winning_pair": {
+     "layer0_head": 2,
+     "layer1_head": 0
+    },
+    "delta_init": -0.0,
+    "delta_final": 0.0001,
+    "loss_rep_final": 4.8541,
+    "loss_first_final": 4.8539,
+    "transition_step_50": 315.9,
+    "transition_step_10": 68.9,
+    "transition_step_90": 319.6,
+    "transition_width_10_90": 250.7,
+    "delta_abs_onset_step": null,
+    "onset_absolute": {
+     "compK_winpair": null,
+     "compK_maxpair": 1720.0,
+     "prev_token_score": null,
+     "induction_score": null
+    },
+    "lead_steps_movement": {
+     "0.5": {
+      "compK_winpair": -844.0,
+      "compK_maxpair": -292.9,
+      "prev_token_score": -1128.1,
+      "induction_score": -1042.1
+     },
+     "0.1": {
+      "compK_winpair": 20.5,
+      "compK_maxpair": -55.4,
+      "prev_token_score": -833.2,
+      "induction_score": -595.7
+     }
+    },
+    "lead_steps_absolute": {
+     "compK_winpair": null,
+     "compK_maxpair": null,
+     "prev_token_score": null,
+     "induction_score": null
+    },
+    "lead_steps_movement50_truncated_at_transition": {
+     "compK_winpair": -258.3,
+     "compK_maxpair": -98.6,
+     "prev_token_score": -108.4,
+     "induction_score": -246.2
+    },
+    "compK_winpair_init": 0.1288,
+    "compK_winpair_final": 0.1092,
+    "compK_null_mean_final": 0.1204,
+    "compK_winpair_z_vs_null_final": -0.77,
+    "compK_winpair_z_vs_null_init": 0.04,
+    "compK_other_pairs_mean_final": 0.1578,
+    "specificity": {
+     "compK_z_final_winpair": -0.77,
+     "compK_z_final_max_over_pairs": 4.48,
+     "compK_z_final_mean_over_pairs": 1.51,
+     "compK_z_final_mean_other_pairs": 1.66,
+     "compK_z_at_transition_winpair": 0.5044,
+     "compK_z_at_transition_mean_over_pairs": 0.181,
+     "compK_winpair_minus_others_at_transition": 0.0047,
+     "compK_winpair_minus_others_final": -0.0485
+    },
+    "compQ_winpair_final": 0.1214,
+    "compV_winpair_final": 0.1439,
+    "compQ_winpair_z_vs_null_final": -0.06,
+    "compV_winpair_z_vs_null_final": 1.89,
+    "frac_of_movement_done_at_transition": {
+     "compK_winpair": -0.1033,
+     "compK_maxpair": 0.2107,
+     "prev_token_score": -0.008,
+     "induction_score": 0.0142
+    }
+   }
+  ],
+  "wall_seconds_per_run": {
+   "seed0": 88.2,
+   "seed1": 95.6,
+   "seed2": 91.9,
+   "control_iid": 88.5
+  },
+  "control_iid": {
+   "delta_final": 0.0001,
+   "compK_winpair_final": 0.1092,
+   "compK_null_mean_final": 0.1204,
+   "compK_winpair_z_vs_null_final": -0.77,
+   "compK_max_final": 0.2027,
+   "compK_z_final_max_over_pairs": 4.48,
+   "compK_z_final_mean_over_pairs": 1.51,
+   "prev_token_score_final": 0.0725,
+   "induction_score_final": 0.033,
+   "compK_abs_onset_step": null,
+   "compK_maxpair_abs_onset_step": 1720.0,
+   "prev_token_abs_onset_step": null,
+   "induction_abs_onset_step": null,
+   "delta_abs_onset_step": null,
+   "false_positive_composition": true
+  },
+  "headline": "in-context loss delta +0.00 -> -5.00 nats, phase transition at step 707.6 (10-90% width 439.7 steps = 24% of training); K-composition of the winning pair leads by 601.0 steps under the 50%-of-movement criterion and 133.3 steps under the online absolute-threshold criterion; prev-token score -166.5 / -360.0, induction score -64.8 / -220.0 (positive = leads)"
+ },
+ "result_summary": "Hypothesis confirmed on TIMING, refuted on SPECIFICITY. (1) The phase transition reproduces cleanly at 52,224 params in 90 seconds of CPU: the in-context loss delta (loss on repeat tokens minus loss on first-occurrence tokens) goes 0.00 -> -5.00 nats, with loss on repeat tokens falling 4.85 -> 0.087 while first-occurrence loss RISES to 5.08 (above the log-128 = 4.852 floor) as capacity is spent on copying; final prev-token score 0.37-0.44 (5.0-5.9x the 0.0736 uniform baseline) and induction score 0.585-0.620 (17.7-18.7x the 0.0331 baseline). The transition sits at step 707.6 (728/689/706 per seed) after ~500 flat steps, but is honestly a fast sigmoid rather than a discontinuity: 10-90% width 440 steps = 24% of training (648/366/305), and seed 0 is two-stage (a shelf at -4.2 from step ~850 to ~1250, then a second drop). (2) K-composition LEADS under all three criteria and the two activation-space diagnostics LAG under all three, with all 3 seeds agreeing in sign everywhere: winning-pair K-composition +601.0 steps (609/592/601) on the 50%-of-movement criterion, +458.0 on the 10% variant, and +133.3 (40/140/220) on the strictly online absolute threshold; best-of-16-pairs +594.6 / +445.2 / +206.7; previous-token score -166.5 / -45.8 / -360.0; induction score -64.8 / -55.2 / -220.0. In online step numbers: composition crosses at step 120-280, the loss at 320-340, the induction score at 480-600, the previous-token score at 660-720. At the moment of the loss transition composition has already completed 168% of its total movement (it overshoots) while the attention scores have completed only 30% and 34% of theirs. (3) The lead is NOT a truncation artifact, and the artifact that ruined the grokking result is directly visible on the other measures: recomputing the 50%-of-movement criterion on data truncated at the transition moves composition only +601 -> +521, but flips previous-token -166 -> +24 and induction -65 -> +1.5. So the same manoeuvre that manufactured fake spectral leads in 2026-07-25_grokking-modular-addition manufactures fake leads here too - for the attention measures, not for composition. (4) The elevation is specific to the KEY side, exactly as the Anthropic framework predicts: for the same head pair at the end of training, K-composition sits at z = +6.09 above its spectrum-preserving rotation null while Q-composition is at z = -6.47 and V-composition at z = -7.45 (raw 0.184 vs 0.052 vs 0.048) - the layer-1 head reads the layer-0 head on the key side and actively avoids it on the query and value sides, recovered from weights alone. (5) But the measure is a coarse alarm, not a circuit identifier, and this is where the hypothesis breaks. The early rise is BROAD: at the transition the winning pair exceeds the mean of the other 15 pairs by only +0.043 raw (per seed +0.110 / -0.007 / +0.025), i.e. all 16 pairs rise together and only separate afterwards. The pair identified by the final attention patterns is the top-composition pair in just 1 of 3 seeds (winning-pair final z 13.44 / 0.10 / 4.74 vs best-of-16 z 13.44 / 11.37 / 7.99); in seed 1 that pair's composition has returned to the null by the end of training even though it crossed z > 5 at step 180, so the weight alignment is a TRANSIENT SCAFFOLD (the 1.68 overshoot) rather than a persistent signature, and the final score is a poor fingerprint even when the trajectory was a good predictor. And the i.i.d. false-positive control, where an induction head is impossible, behaves correctly on everything activation-based - delta stays at +0.0001 nats, prev-token 0.0725 and induction 0.0330 are exactly the uniform-attention baselines, none of their online onsets ever fire - yet its best-of-16 composition still reaches z = 4.48 and crosses the z > 5 threshold at step 1720. That is a real false positive; it is 14x later than the trained models' step-120 onset and it brackets seed 2's own winning-pair z of 4.74. Net: composition strength LEADS where spectral entropy LAGGED, and survives the control that killed the spectral result - a genuine positive for weight-space progress measures - but what it announces is 'a circuit is assembling', not 'this circuit is assembling', and it can announce it on a model that has no circuit to assemble. Caveats: 3 seeds, one task, one architecture, one hyperparameter setting, a synthetic task engineered so the transition is findable, and the winning pair is selected from the final model (the max-over-pairs variant, which is causally online, behaves the same).",
+ "status": "done",
+ "novelty_check": {
+  "checked_on": "2026-07-26",
+  "verdict": "partial-prior-art",
+  "sources": [
+   {
+    "name": "web",
+    "query": "induction head phase transition progress measure composition score predicts onset before loss drop",
+    "hits": 9
+   },
+   {
+    "name": "web",
+    "query": "K-composition score W_QK W_OV leading indicator induction head formation two-layer attention-only transformer",
+    "hits": 8
+   },
+   {
+    "name": "web",
+    "query": "\"induction head\" emergence progress measure predicts phase transition before loss drop 2025 2026 arxiv",
+    "hits": 9
+   },
+   {
+    "name": "webfetch",
+    "query": "transformer-circuits.pub/2022/in-context-learning-and-induction-heads - sharpness and leading indicators",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2511.16893v1 - Predicting the Emergence of Induction Heads: what measure, what lead",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/pdf/2404.07129 - What needs to go right for an induction head: subcircuit dynamics",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2509.22947 - Induction Signatures Are Not Enough: specificity and controls",
+    "hits": 1
+   },
+   {
+    "name": "script",
+    "query": "scripts/novelty_check.py 'induction head emergence composition score progress measure phase transition'",
+    "hits": 0
+   }
+  ],
+  "conclusion": "Every ingredient is published separately but the head-to-head is not. Olsson et al. 2022 supply the setting and composition scores as a diagnostic; read directly, they describe the phase change as abrupt, explicitly report NO leading indicator ('there is not some known exogenous factor precipitating everything'), and show composition scores rising DURING the window - with only 15 snapshots for their large models, i.e. too little time resolution to see a lead if one existed. The 2021 Mathematical Framework supplies the K/Q/V-composition definitions. arXiv:2511.16893 predicts the formation STEP from a batch-x-context scaling law (U_PT = T*sqrt(BC), r=0.98) on a 2-layer toy GPT-2 over 1B tokens using the prefix-matching score - a data-statistics predictor, not a model-internal one, and with no leading-indicator comparison. arXiv:2404.07129 clamps three subcircuits causally during training and finds they co-evolve, without ranking measures by lead time. arXiv:2509.22947 shows attention-map induction signatures are not load-bearing, using random-head ablation rather than weight-space composition. To our search, no prior work puts a weight-only K-composition score head-to-head against the attention-pattern scores as competing LEADING progress measures on the same runs, with (a) a spectrum-preserving random-orthogonal-rotation null that turns composition into a z-score, (b) an online absolute threshold alongside the artifact-prone fraction-of-movement criterion AND the truncation control that separates them, (c) an i.i.d. false-positive control where induction is impossible, and (d) Q- and V-composition of the same pair as specificity controls. arXiv and OpenAlex return HTTP 403 from this environment (known; scripts/novelty_check.py returned 'unchecked'), so the verdict rests on web search plus direct reads of the four sources above.",
+  "sources_note": "arXiv/OpenAlex APIs 403 from this environment; verdict rests on web search plus direct page reads of Olsson et al. 2022, the 2021 Mathematical Framework, 2511.16893, 2404.07129 and 2509.22947."
+ },
+ "prior_art": [
+  "https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html",
+  "https://transformer-circuits.pub/2021/framework/index.html",
+  "https://arxiv.org/abs/2511.16893",
+  "https://arxiv.org/pdf/2404.07129",
+  "https://arxiv.org/html/2509.22947"
+ ],
+ "related_ids": [
+  "2026-07-25_grokking-modular-addition",
+  "2026-07-25_dyck-probe-can-lie",
+  "2026-07-25_sae-on-grokked-model"
+ ],
+ "links": {
+  "folder": "experiments/2026-07-25_induction-heads-emergence",
+  "results_json": "experiments/2026-07-25_induction-heads-emergence/results.json",
+  "chart": "experiments/2026-07-25_induction-heads-emergence/chart.png",
+  "readme": "experiments/2026-07-25_induction-heads-emergence/README.md"
+ },
+ "tags": [
+  "interpretability",
+  "induction-heads",
+  "phase-transition",
+  "progress-measure",
+  "composition-scores",
+  "transformer-circuits",
+  "attention-only",
+  "emergence",
+  "in-context-learning",
+  "leading-indicator",
+  "false-positive-control",
+  "cpu-only"
+ ]
+}

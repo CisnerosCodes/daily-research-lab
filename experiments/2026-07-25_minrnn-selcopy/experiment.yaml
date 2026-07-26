@@ -1,0 +1,33 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_minrnn-selcopy"
+title: "Does removing the hidden-state dependence of the gates (minGRU) cost anything on selective copy?"
+hypothesis: "The minRNN paper (arXiv:2410.01201) claims gates that see only the current input match full RNNs broadly; the Mamba literature (arXiv:2312.00752) claims selective copy is exactly the task that needs content-dependent state updates. At matched params and matched steps on selective copy we expect these to CONFLICT: minGRU can gate on the current token (so it can ignore noise) but cannot condition on what is already stored (so it cannot know which output slot the current data token belongs in), and should therefore lose to a standard GRU, with the gap widening in k (number of tokens to memorise) rather than in L (sequence length)."
+seed: 0
+dataset:
+  name: "synthetic selective copy (Mamba-style): L-token sequence of a single blank/noise token with k data tokens at uniformly random positions; target = the k data-token values in order of appearance"
+  source: "generated in run.py (torch.Generator; train seed 1000+seed, eval seed 999999 - disjoint)"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  v_data: 8               # data-token alphabet size (minRNN paper uses 16); noise token id 0
+  d_in: 48                # shared embedding width
+  d_read: 64              # shared readout bottleneck width
+  target_params: 60000    # every arm's hidden width is fitted so TOTAL params ~= this
+  steps: 600
+  batch_size: 32
+  lr: 0.003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  warmup_frac: 0.1        # OneCycleLR pct_start
+  eval_n: 1024            # fixed held-out eval examples per cell
+  cells:                  # difficulty sweep: [L, k]
+    - [32, 4]
+    - [32, 8]
+    - [64, 4]
+    - [64, 8]
+  probe_cells:            # cells used for the extra-budget and depth probes
+    - [32, 4]
+    - [64, 8]
+  long_budget_mult: 3     # extra-steps probe for minGRU: 3x the shared step budget
+  seeds: [0, 1]           # seed 1 only for the headline pair (gru vs mingru_mp), budget permitting
+  time_cap_s: 660         # hard wall-clock guard; queued runs past this are skipped and recorded
