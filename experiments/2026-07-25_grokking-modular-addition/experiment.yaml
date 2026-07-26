@@ -1,0 +1,36 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_grokking-modular-addition"
+title: "Grokking (a+b) mod 59: does spectral-entropy collapse actually LEAD the test-accuracy jump, and does it beat restricted/excluded loss?"
+hypothesis: "A 1-layer LayerNorm-free transformer trained full-batch on a fraction of (a+b) mod 59 will memorize fast and generalize late (grokking); the spectral entropy of its token-embedding matrix will collapse, and that collapse will begin measurably BEFORE the test-accuracy jump - making it a predictive progress measure, and (the novel part) one that is competitive with Nanda's restricted/excluded loss without needing to know the model's key frequencies in advance."
+seed: 0
+dataset:
+  name: "all 59^2 = 3481 (a, b) pairs for (a+b) mod 59; deterministic random split at three train fractions (0.4 / 0.5 / 0.3)"
+  source: "generated in run.py from the seed"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  p: 59                     # modulus (prime). SHRUNK from the usual 97/113 for the CPU time-box.
+  d_model: 64               # SHRUNK from the Nanda-et-al 128
+  n_heads: 4
+  d_mlp: 256                # SHRUNK from 512
+  n_ctx: 3                  # [a, b, "="]
+  init_std_scale: 0.8       # weight std = init_std_scale / sqrt(d_model)
+  max_steps: 40000          # never reached; the wall-clock cap binds first
+  lr: 0.001
+  weight_decay: 1.0
+  beta1: 0.9
+  beta2: 0.98
+  eval_every: 50            # steps between online progress-measure evaluations
+  ckpt_every_evals: 2       # in-RAM checkpoints (for the restricted/excluded replay) every 100 steps
+  train_acc_memorized_threshold: 0.99
+  test_acc_jump_thresholds: [0.3, 0.5, 0.9]
+  plateau_exit_abs: 0.05    # "left the memorization plateau" = test acc > chance + this
+  key_freq_power: 0.9       # key frequencies = smallest set holding this share of W_E Fourier power
+  max_key_freqs: 6
+  # Three runs at decreasing train fraction. The primary run for the lead-time analysis
+  # is chosen automatically as the first one that groks FULLY (a lead time measured on a
+  # run truncated at its own jump is biased). Wall-clock caps are honest time-boxes.
+  runs:
+    - {train_frac: 0.5, time_cap_s: 150}   # groks FULLY inside the box -> the primary lead-time analysis
+    - {train_frac: 0.4, time_cap_s: 360}   # long plateau; reaches the jump only at the cap (truncation control)
+    - {train_frac: 0.3, time_cap_s: 90}    # plateau never breaks inside the box (false-positive control)

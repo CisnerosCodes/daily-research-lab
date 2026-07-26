@@ -1,0 +1,43 @@
+run: train_frac=0.5 cap=150s
+  data: p=59, frac=0.5, 1740 train / 1741 test
+    step      0  tr 0.0138  te 0.0190  Hf 4.848  Hs 5.193  Hc 4.158  (1s)
+    step   1000  tr 1.0000  te 0.5181  Hf 4.325  Hs 4.506  Hc 4.522  (34s)
+    step   2000  tr 1.0000  te 0.9437  Hf 3.514  Hs 4.077  Hc 2.350  (73s)
+    step   3000  tr 1.0000  te 1.0000  Hf 3.106  Hs 3.861  Hc 3.474  (110s)
+    step   4000  tr 1.0000  te 1.0000  Hf 2.895  Hs 3.707  Hc 3.491  (148s)
+    TIME CAP at step 4056 (150s)
+    key freqs [24, 17, 5, 3, 6, 25] (90.5% of embedding power); replayed 41 checkpoints
+    -> final test_acc 1.0000 after 4056 steps; memorized at 219.9999713897432, test50 at 862.5002161919092
+run: train_frac=0.4 cap=360s
+  data: p=59, frac=0.4, 1392 train / 2089 test
+    step      0  tr 0.0136  te 0.0182  Hf 4.848  Hs 5.193  Hc 4.154  (0s)
+    step   1000  tr 1.0000  te 0.1944  Hf 4.696  Hs 4.605  Hc 4.773  (25s)
+    step   2000  tr 1.0000  te 0.2279  Hf 4.642  Hs 4.411  Hc 2.764  (52s)
+    step   3000  tr 1.0000  te 0.2532  Hf 4.593  Hs 4.381  Hc 4.697  (78s)
+    step   4000  tr 1.0000  te 0.2786  Hf 4.540  Hs 4.292  Hc 4.660  (107s)
+    step   5000  tr 1.0000  te 0.3169  Hf 4.485  Hs 4.240  Hc 4.007  (140s)
+    step   6000  tr 1.0000  te 0.3337  Hf 4.434  Hs 4.242  Hc 4.531  (172s)
+    step   7000  tr 1.0000  te 0.3662  Hf 4.369  Hs 4.182  Hc 4.476  (203s)
+    step   8000  tr 1.0000  te 0.3944  Hf 4.309  Hs 4.149  Hc 3.611  (232s)
+    step   9000  tr 1.0000  te 0.4174  Hf 4.252  Hs 4.158  Hc 4.310  (262s)
+    step  10000  tr 1.0000  te 0.4385  Hf 4.176  Hs 4.103  Hc 4.169  (297s)
+    step  11000  tr 1.0000  te 0.4758  Hf 4.075  Hs 4.048  Hc 3.747  (343s)
+    TIME CAP at step 11477 (360s)
+    key freqs [17, 7, 5, 3, 6, 9] (65.2% of embedding power); replayed 115 checkpoints
+    -> final test_acc 0.5242 after 11477 steps; memorized at 199.8241745316887, test50 at 11221.153818524886
+run: train_frac=0.3 cap=90s
+  data: p=59, frac=0.3, 1044 train / 2437 test
+    step      0  tr 0.0144  te 0.0172  Hf 4.848  Hs 5.193  Hc 4.144  (0s)
+    step   1000  tr 1.0000  te 0.0246  Hf 4.779  Hs 4.566  Hc 4.508  (18s)
+    step   2000  tr 1.0000  te 0.0283  Hf 4.760  Hs 4.375  Hc 3.915  (42s)
+    step   3000  tr 1.0000  te 0.0250  Hf 4.746  Hs 4.316  Hc 4.659  (63s)
+    step   4000  tr 1.0000  te 0.0267  Hf 4.728  Hs 4.207  Hc 4.555  (82s)
+    TIME CAP at step 4388 (90s)
+    key freqs [22, 6, 26, 8, 12, 7] (35.9% of embedding power); replayed 44 checkpoints
+    -> final test_acc 0.0283 after 4388 steps; memorized at 198.46753111362534, test50 at None
+headline: p=59, primary run train_frac=0.5 (grokked fully: final test acc 1.000): memorized at step 220, test acc 50% at 863 -> grok delay 642 steps. Lead over test-acc-50% (+ = fires first): H_fourier -936, H_svd -876, H_cov -571, restricted_loss +351, excluded_loss +562. Same run re-analysed as if STOPPED at the jump flips them to H_fourier +298, H_svd +386, H_cov +146 (normalization artifact). FALSE-POSITIVE control (train_frac=0.3, test acc 0.028 vs chance 0.017 after 4388 steps): H_fourier still fell 0.12 bits and H_svd 0.98 bits with zero generalization
+{
+  "id": "2026-07-25_grokking-modular-addition",
+  "duration_sec": 618.81,
+  "status": "done"
+}
