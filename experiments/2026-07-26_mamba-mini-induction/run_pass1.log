@@ -1,0 +1,203 @@
+[  48.4s] full         nb=1 L= 32 k=4 seed=0 p= 60538 w=  86 tok=0.800 exact=0.381 rec=0.2866 (44.5s)
+[  86.8s] delta        nb=1 L= 32 k=4 seed=0 p= 60538 w=  86 tok=0.538 exact=0.017 rec=0.3882 (37.6s)
+[ 122.7s] bc           nb=1 L= 32 k=4 seed=0 p= 60840 w=  88 tok=0.743 exact=0.257 rec=0.2822 (34.9s)
+[ 157.5s] lti          nb=1 L= 32 k=4 seed=0 p= 60840 w=  88 tok=0.599 exact=0.062 rec=0.376 (34.0s)
+[ 170.9s] gru          nb=1 L= 32 k=4 seed=0 p= 60852 w=  52 tok=1.000 exact=1.000 rec=0.0 (13.3s)
+[ 202.4s] full         nb=1 L= 32 k=8 seed=0 p= 60252 w=  84 tok=0.504 exact=0.001 rec=0.5062 (30.5s)
+[ 236.2s] delta        nb=1 L= 32 k=8 seed=0 p= 60252 w=  84 tok=0.367 exact=0.000 rec=0.6748 (33.0s)
+[ 272.7s] bc           nb=1 L= 32 k=8 seed=0 p= 60554 w=  86 tok=0.479 exact=0.000 rec=0.3706 (35.5s)
+[ 311.3s] lti          nb=1 L= 32 k=8 seed=0 p= 60554 w=  86 tok=0.379 exact=0.000 rec=0.4831 (36.2s)
+[ 329.8s] gru          nb=1 L= 32 k=8 seed=0 p= 58674 w=  50 tok=0.709 exact=0.032 rec=0.3672 (18.4s)
+[ 363.1s] full         nb=1 L= 32 k=8 seed=1 p= 60252 w=  84 tok=0.490 exact=0.000 rec=0.4845 (32.3s)
+[ 397.0s] delta        nb=1 L= 32 k=8 seed=1 p= 60252 w=  84 tok=0.440 exact=0.001 rec=0.6714 (33.0s)
+[ 434.0s] bc           nb=1 L= 32 k=8 seed=1 p= 60554 w=  86 tok=0.485 exact=0.000 rec=0.4082 (36.0s)
+[ 469.4s] lti          nb=1 L= 32 k=8 seed=1 p= 60554 w=  86 tok=0.368 exact=0.000 rec=0.4821 (34.3s)
+[ 483.6s] gru          nb=1 L= 32 k=8 seed=1 p= 58674 w=  50 tok=0.692 exact=0.019 rec=0.3787 (14.1s)
+[ 519.0s] full_noconv  nb=1 L= 32 k=4 seed=0 p= 59678 w=  86 tok=0.572 exact=0.036 rec=0.4146 (34.5s)
+[ 550.4s] full_noconv  nb=1 L= 32 k=8 seed=0 p= 59412 w=  84 tok=0.401 exact=0.000 rec=0.5697 (30.5s)
+[ 636.3s] full         nb=1 L= 64 k=4 seed=0 p= 60538 w=  86 tok=0.533 exact=0.023 rec=0.4375 (84.2s)
+[ 712.9s] delta        nb=1 L= 64 k=4 seed=0 p= 60538 w=  86 tok=0.653 exact=0.085 rec=0.4595 (75.0s)
+{
+  "headline": {
+    "L32_k4": {
+      "full": 0.3809,
+      "delta": 0.0166,
+      "bc": 0.2568,
+      "lti": 0.0625,
+      "gru": 1.0,
+      "gain_from_delta_only": -0.0459,
+      "gain_from_bc_only": 0.1943,
+      "gain_from_full": 0.3184,
+      "full_minus_delta": 0.3643,
+      "full_minus_gru": -0.6191
+    },
+    "L32_k8": {
+      "full": 0.001,
+      "delta": 0.0,
+      "bc": 0.0,
+      "lti": 0.0,
+      "gru": 0.0322,
+      "gain_from_delta_only": 0.0,
+      "gain_from_bc_only": 0.0,
+      "gain_from_full": 0.001,
+      "full_minus_delta": 0.001,
+      "full_minus_gru": -0.0312
+    }
+  },
+  "probes": {
+    "conv_control": {
+      "L32_k4": {
+        "full": {
+          "exact": 0.3809,
+          "token": 0.7996,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.7432,
+            0.5693,
+            0.8916,
+            0.9941
+          ],
+          "recency_index": 0.2866
+        },
+        "full_noconv": {
+          "exact": 0.0361,
+          "token": 0.572,
+          "n_params": 59678,
+          "width": 86,
+          "slot_acc": [
+            0.3467,
+            0.3828,
+            0.5693,
+            0.9893
+          ],
+          "recency_index": 0.4146
+        },
+        "conv_contribution_exact": 0.3448
+      },
+      "L32_k8": {
+        "full": {
+          "exact": 0.001,
+          "token": 0.5037,
+          "n_params": 60252,
+          "width": 84,
+          "slot_acc": [
+            0.3809,
+            0.375,
+            0.3564,
+            0.3594,
+            0.3701,
+            0.4209,
+            0.7734,
+            0.9932
+          ],
+          "recency_index": 0.5062
+        },
+        "full_noconv": {
+          "exact": 0.0,
+          "token": 0.4009,
+          "n_params": 59412,
+          "width": 84,
+          "slot_acc": [
+            0.208,
+            0.2373,
+            0.2227,
+            0.25,
+            0.293,
+            0.3398,
+            0.6562,
+            1.0
+          ],
+          "recency_index": 0.5697
+        },
+        "conv_contribution_exact": 0.001
+      }
+    },
+    "span_control": {
+      "L64_k4": {
+        "full": {
+          "exact": 0.0234,
+          "token": 0.5327,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.2939,
+            0.334,
+            0.5059,
+            0.9971
+          ],
+          "recency_index": 0.4375,
+          "delta_stats": {
+            "dt_noise": 0.037,
+            "dt_data": 1.0841,
+            "dt_ratio_data_over_noise": 29.322,
+            "A_slowest": -0.2853,
+            "A_fastest": -10.3407,
+            "retention_noise_slowest_state": 0.9895,
+            "retention_data_slowest_state": 0.734,
+            "retention_noise_fastest_state": 0.682289
+          }
+        },
+        "delta": {
+          "exact": 0.085,
+          "token": 0.6526,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.4053,
+            0.4404,
+            0.7646,
+            1.0
+          ],
+          "recency_index": 0.4595,
+          "delta_stats": {
+            "dt_noise": 0.2379,
+            "dt_data": 0.8853,
+            "dt_ratio_data_over_noise": 3.722,
+            "A_slowest": -0.2638,
+            "A_fastest": -11.6662,
+            "retention_noise_slowest_state": 0.9392,
+            "retention_data_slowest_state": 0.7917,
+            "retention_noise_fastest_state": 0.06236
+          }
+        }
+      }
+    },
+    "depth_control": {
+      "L32_k4": {
+        "delta_1blk": {
+          "exact": 0.0166,
+          "token": 0.5378,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.3154,
+            0.3721,
+            0.4658,
+            0.998
+          ],
+          "recency_index": 0.3882
+        }
+      }
+    }
+  },
+  "wall_clock_s": 712.9,
+  "skipped": [
+    {
+      "arm": "gru",
+      "L": 64,
+      "k": 4,
+      "n_blocks": 1,
+      "steps": 600,
+      "seed": 0
+    },
+    {
+      "arm": "delta",
+      "L": 32,
+      "k": 4,
+      "n_blocks": 2,
+      "steps": 600,
+      "seed": 0
+    }
+  ]
+}

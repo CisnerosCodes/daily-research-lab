@@ -1,0 +1,52 @@
+id: "2026-07-26_mamba-mini-induction"
+title: "Is Delta-selectivity the load-bearing part of Mamba? A minimal selective SSM ablated on selective copy"
+hypothesis: "Mamba (arXiv:2312.00752) attributes its advantage on selective copy to input-dependent state updates, and singles out the step size Delta as the mechanism that generalises RNN gating. But Delta is a function of the CURRENT INPUT ONLY - it cannot see the hidden state - which is exactly the property our 2026-07-25_minrnn-selcopy row showed costs minGRU the ORDERING of stored items (per-slot accuracy collapses to the last ~2). So either (a) Delta-selectivity hits the same ordering wall and full Mamba's advantage must come from the input-dependent B/C (which route content into specific state dimensions) plus the depthwise conv, or (b) the SSM's structured N-dimensional state, whose per-(channel,state) decay rates exp(Delta*A) form a spectrum of timescales rather than a single leak rate, encodes order as a multi-timescale trace and escapes the wall. We predict (b) partially: Delta-only should beat a fully LTI S4-lite baseline and beat minGRU's recency profile, but still lose to a GRU whose gates see the state, with the gap widening in k."
+seed: 0
+dataset:
+  name: "synthetic selective copy (Mamba-style), generator reused verbatim from 2026-07-25_minrnn-selcopy: L-token sequence of a single blank token (id 0) with k data tokens (ids 1..v_data) at uniformly random positions; target = the k data values in order of appearance"
+  source: "generated in run.py (torch.Generator; train seed 1000+seed, eval seed 999999 - disjoint)"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  v_data: 8               # data-token alphabet (matches minrnn-selcopy); noise/blank token id 0
+  d_state: 8              # SSM state size N per channel
+  expand: 2               # d_inner = expand * d_model (Mamba default); GRU hidden = expand*d_model
+  d_conv: 4               # depthwise causal conv width (Mamba default); identical in every SSM arm
+  d_read: 64              # shared readout bottleneck width
+  target_params: 60000    # every arm's d_model is fitted so TOTAL params ~= this
+  steps: 600
+  batch_size: 32
+  lr: 0.008               # chosen by the documented pre-sweep below: best or tied-best for EVERY arm
+  weight_decay: 0.01      # applied to 2-D weights only; never to A_log, D, dt bias or norms
+  grad_clip: 1.0
+  warmup_frac: 0.1        # OneCycleLR pct_start
+  eval_n: 1024            # fixed held-out eval examples per cell
+  arms: ["full", "delta", "bc", "lti", "gru"]
+  cells:                  # core difficulty sweep: [L, k]
+    - [32, 4]
+    - [32, 8]
+  probe_cells:            # conv control (full vs full_noconv)
+    - [32, 4]
+    - [32, 8]
+  seeds: [0, 1]
+  seed_cells:             # seed-1 repeat of the whole arm set on the harder cell
+    - [32, 8]
+  seed_arms: ["full", "delta", "bc", "lti", "gru"]
+  span_cells:             # span control: does doubling L change the ranking?
+    - [64, 4]
+  span_arms: ["gru", "full", "delta"]
+  depth_cells:            # depth probe: does a 2nd block substitute for state-dependent gating?
+    - [32, 4]
+  depth_arms: ["delta"]
+  depth_probe_blocks: 2
+  time_cap_s: 820         # hard wall-clock guard; queued runs past this are skipped and recorded
+  lr_pre_sweep:           # run before the experiment to pick a single fair lr; L=32 k=4, 600 steps,
+                          # 60k params, seed 0. exact-match accuracy. 8e-3 is best or tied for ALL
+                          # five arms, so the shared lr does not favour any one arm.
+    lr_0.003: {full: 0.103, delta: 0.019, bc: 0.163, lti: 0.022, gru: 0.999}
+    lr_0.008: {full: 0.381, delta: 0.017, bc: 0.257, lti: 0.062, gru: 1.0}
+  reference_row:          # 2026-07-25_minrnn-selcopy, seed 0, same task/generator
+    note: "exact-match accuracy from registry row 2026-07-25_minrnn-selcopy (60k params, 600 steps, 1 layer, no conv) - different budget, so indicative only"
+    gru: {L32_k4: 1.0, L64_k4: 1.0, L32_k8: 0.382, L64_k8: 0.357}
+    mingru_matched_params: {L32_k4: 0.389, L64_k4: 0.356, L32_k8: 0.001, L64_k8: 0.0}
+    mingru_slot_acc_L64_k8: [0.31, 0.34, 0.35, 0.39, 0.38, 0.41, 0.9, 1.0]

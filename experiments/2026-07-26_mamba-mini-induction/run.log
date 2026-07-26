@@ -1,0 +1,235 @@
+[  29.9s] gru          nb=1 L= 64 k=4 seed=0 p= 60852 w=  52 tok=1.000 exact=1.000 rec=0.0 (26.7s)
+[  80.3s] delta        nb=2 L= 32 k=4 seed=0 p= 59444 w=  60 tok=0.671 exact=0.065 rec=0.6523 (49.4s)
+{
+  "headline": {
+    "L32_k4": {
+      "full": 0.3809,
+      "delta": 0.0166,
+      "bc": 0.2568,
+      "lti": 0.0625,
+      "gru": 1.0,
+      "token_acc": {
+        "full": 0.7996,
+        "delta": 0.5378,
+        "bc": 0.7432,
+        "lti": 0.5991,
+        "gru": 1.0
+      },
+      "recency_index": {
+        "full": 0.2866,
+        "delta": 0.3882,
+        "bc": 0.2822,
+        "lti": 0.376,
+        "gru": 0.0
+      },
+      "gain_from_delta_only": -0.0459,
+      "gain_from_delta_only_token": -0.0613,
+      "gain_from_bc_only": 0.1943,
+      "gain_from_bc_only_token": 0.1441,
+      "gain_from_full": 0.3184,
+      "gain_from_full_token": 0.2005,
+      "full_minus_delta": 0.3643,
+      "full_minus_delta_token": 0.2618,
+      "full_minus_gru": -0.6191,
+      "full_minus_gru_token": -0.2004
+    },
+    "L32_k8": {
+      "full": 0.001,
+      "delta": 0.0,
+      "bc": 0.0,
+      "lti": 0.0,
+      "gru": 0.0322,
+      "token_acc": {
+        "full": 0.5037,
+        "delta": 0.3669,
+        "bc": 0.4794,
+        "lti": 0.3794,
+        "gru": 0.709
+      },
+      "recency_index": {
+        "full": 0.5062,
+        "delta": 0.6748,
+        "bc": 0.3706,
+        "lti": 0.4831,
+        "gru": 0.3672
+      },
+      "gain_from_delta_only": 0.0,
+      "gain_from_delta_only_token": -0.0125,
+      "gain_from_bc_only": 0.0,
+      "gain_from_bc_only_token": 0.1,
+      "gain_from_full": 0.001,
+      "gain_from_full_token": 0.1243,
+      "full_minus_delta": 0.001,
+      "full_minus_delta_token": 0.1368,
+      "full_minus_gru": -0.0312,
+      "full_minus_gru_token": -0.2053
+    }
+  },
+  "probes": {
+    "conv_control": {
+      "L32_k4": {
+        "full": {
+          "exact": 0.3809,
+          "token": 0.7996,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.7432,
+            0.5693,
+            0.8916,
+            0.9941
+          ],
+          "recency_index": 0.2866
+        },
+        "full_noconv": {
+          "exact": 0.0361,
+          "token": 0.572,
+          "n_params": 59678,
+          "width": 86,
+          "slot_acc": [
+            0.3467,
+            0.3828,
+            0.5693,
+            0.9893
+          ],
+          "recency_index": 0.4146
+        },
+        "conv_contribution_exact": 0.3448
+      },
+      "L32_k8": {
+        "full": {
+          "exact": 0.001,
+          "token": 0.5037,
+          "n_params": 60252,
+          "width": 84,
+          "slot_acc": [
+            0.3809,
+            0.375,
+            0.3564,
+            0.3594,
+            0.3701,
+            0.4209,
+            0.7734,
+            0.9932
+          ],
+          "recency_index": 0.5062
+        },
+        "full_noconv": {
+          "exact": 0.0,
+          "token": 0.4009,
+          "n_params": 59412,
+          "width": 84,
+          "slot_acc": [
+            0.208,
+            0.2373,
+            0.2227,
+            0.25,
+            0.293,
+            0.3398,
+            0.6562,
+            1.0
+          ],
+          "recency_index": 0.5697
+        },
+        "conv_contribution_exact": 0.001
+      }
+    },
+    "span_control": {
+      "L64_k4": {
+        "gru": {
+          "exact": 1.0,
+          "token": 1.0,
+          "n_params": 60852,
+          "width": 52,
+          "slot_acc": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "recency_index": 0.0,
+          "delta_stats": null
+        },
+        "full": {
+          "exact": 0.0234,
+          "token": 0.5327,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.2939,
+            0.334,
+            0.5059,
+            0.9971
+          ],
+          "recency_index": 0.4375,
+          "delta_stats": {
+            "dt_noise": 0.037,
+            "dt_data": 1.0841,
+            "dt_ratio_data_over_noise": 29.322,
+            "A_slowest": -0.2853,
+            "A_fastest": -10.3407,
+            "retention_noise_slowest_state": 0.9895,
+            "retention_data_slowest_state": 0.734,
+            "retention_noise_fastest_state": 0.682289
+          }
+        },
+        "delta": {
+          "exact": 0.085,
+          "token": 0.6526,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.4053,
+            0.4404,
+            0.7646,
+            1.0
+          ],
+          "recency_index": 0.4595,
+          "delta_stats": {
+            "dt_noise": 0.2379,
+            "dt_data": 0.8853,
+            "dt_ratio_data_over_noise": 3.722,
+            "A_slowest": -0.2638,
+            "A_fastest": -11.6662,
+            "retention_noise_slowest_state": 0.9392,
+            "retention_data_slowest_state": 0.7917,
+            "retention_noise_fastest_state": 0.06236
+          }
+        }
+      }
+    },
+    "depth_control": {
+      "L32_k4": {
+        "delta_1blk": {
+          "exact": 0.0166,
+          "token": 0.5378,
+          "n_params": 60538,
+          "width": 86,
+          "slot_acc": [
+            0.3154,
+            0.3721,
+            0.4658,
+            0.998
+          ],
+          "recency_index": 0.3882
+        },
+        "delta_2blk": {
+          "exact": 0.0654,
+          "token": 0.6709,
+          "n_params": 59444,
+          "width": 60,
+          "slot_acc": [
+            0.2988,
+            0.3906,
+            0.9951,
+            0.999
+          ],
+          "recency_index": 0.6523
+        },
+        "delta_depth_gain_exact": 0.0488
+      }
+    }
+  },
+  "wall_clock_s": 793.2,
+  "skipped": []
+}

@@ -1,0 +1,381 @@
+{
+ "id": "2026-07-26_mamba-mini-induction",
+ "date": "2026-07-26",
+ "title": "Is Delta-selectivity the load-bearing part of Mamba? At 60k params on selective copy it buys NOTHING (-0.061 token acc vs an LTI baseline at k=4, +0.030 at k=8 inside its own 0.073 seed spread) while input-dependent B/C buys +0.144/+0.109 and the depthwise conv alone beats all selectivity combined - Mamba's own Table-7 ranking inverts on the task the paper invented to motivate selectivity",
+ "slug": "mamba-mini-induction",
+ "hypothesis": "Mamba (arXiv:2312.00752) motivates input-dependent state updates with the selective-copy task and its own Table 7 (350M params, LM perplexity) names the step size Delta 'the most important parameter'. But Delta is a function of the CURRENT INPUT ONLY - it cannot see the hidden state - which is exactly the property our 2026-07-25_minrnn-selcopy row showed costs minGRU the ORDERING of stored items (per-slot accuracy collapses to the last ~2). Either (a) Delta-selectivity hits the same ordering wall and full Mamba's advantage must come from input-dependent B/C (which route content into specific state dimensions) plus the depthwise conv, or (b) the SSM's structured N-dimensional state, whose per-(channel,state) decay rates exp(Delta*A) form a spectrum of timescales rather than a single leak rate, encodes order as a multi-timescale trace and escapes the wall. We predicted (b) partially: Delta-only beating a fully LTI S4-lite baseline and beating minGRU's recency profile, while still losing to a GRU whose gates see the state.",
+ "question": "At matched total parameters on selective copy, which component of Mamba's selectivity - the input-dependent step size Delta, or the input-dependent B and C - is load-bearing? Does Delta-selectivity reproduce the ordering failure that an input-only gate (minGRU) shows, and does a full selective SSM beat a GRU where minGRU failed?",
+ "method": "Hand-rolled minimal Mamba-style (S6) block in pure PyTorch, sequential scan, CPU only - no mamba.py, no state-spaces/mamba, no CUDA kernels. h_t = exp(dt_t*A) . h_{t-1} + (dt_t*B_t) . x_t per (channel,state) pair; y_t = sum_N (h_t . C_t) + D . x_t. d_inner = 2*d_model, N=8 states/channel, diagonal real A = -exp(A_log) with S4D-real init, Mamba's log-uniform dt-bias init, depthwise causal conv width 4, SiLU gating by z, pre-LN residual block, shared GELU bottleneck(64) -> k linear slot heads on the LAST position. FIVE ARMS differing ONLY in which of {dt,B,C} is a function of the current input, with embedding/conv/gate/readout/optimiser/data/seed byte-identical: full (dt,B,C selective = Mamba S6), delta (dt selective; B,C learned constants), bc (B,C selective; dt a learned constant), lti (nothing selective = S4-lite), gru (nn.GRU reference whose gates see x AND h). Each arm's d_model is fitted so TOTAL params ~= 60k (58,674-60,852 across all arms; the LTI arm gets the LARGEST state, so the design is conservative against the claim). TASK AND GENERATOR REUSED VERBATIM from 2026-07-25_minrnn-selcopy for cross-row comparability: length-L sequence of a blank token (id 0) with k data tokens (ids 1..8) at uniformly random positions, target = the k values in order of appearance; core cells L=32 x k in {4,8}, span control at L=64 k=4; fresh data every step, eval on 1024 held-out sequences from a disjoint seed (binomial SE ~0.016). Held fixed: 600 steps, batch 32, AdamW lr 8e-3 (OneCycle, 10% warmup), grad clip 1.0, weight decay 0.01 on 2-D weights ONLY - never on A_log, D, dt bias or norms, since decaying A_log would itself be an ablation. LR IS NOT A CONFOUND: a documented pre-sweep (metrics.lr_pre_sweep) ran all five arms at lr in {3e-3, 8e-3} and 8e-3 is best or tied-best for EVERY arm. CONTROLS/PROBES: full_noconv (depthwise conv removed, measured on the same scale as the selectivity terms); seed 1 for all five arms at L=32 k=8; span control at L=64 k=4; a 2-block delta depth probe. MECHANISM READOUTS: per-slot accuracy and a recency index (mean of last 2 slots minus mean of the rest, +1 = only the last two items readable) as the ordering measure; a retention spectrum reading exp(dt*A) per (channel,state) while the model idles on blank tokens, reported as median retention, median half-life in tokens, and the fraction of states with half-life > L; and mean dt on noise vs data tokens as the Mamba analogue of minGRU's input-gate statistic. 21 runs.",
+ "architecture": "hand-rolled minimal Mamba/S6 selective SSM, 1 block (2 for the depth probe), d_model 84-88, d_inner = 2*d_model, N=8 states/channel, depthwise causal conv width 4, SiLU gating, pre-LN residual; ~60k params in every arm; nn.GRU reference at matched params (d_model 50-52, hidden 100-104)",
+ "dataset": {
+  "name": "synthetic selective copy (Mamba-style); generator reused verbatim from 2026-07-25_minrnn-selcopy",
+  "source": "generated in run.py (torch.Generator; train seed 1000+seed, eval seed 999999 - disjoint)",
+  "license": "n/a (synthetic)"
+ },
+ "task": "selective copy: recover k data tokens hidden among blanks, IN ORDER OF APPEARANCE; headline = exact-sequence and per-token accuracy per arm per difficulty (k), plus the per-slot ordering profile",
+ "framework": "torch 2.13 (CPU, single thread)",
+ "seed": 0,
+ "compute": "CPU 1 thread, 795s (13.2 min) for 21 training runs + eval (first pass 713s under a 660s cap, 2 probe runs topped up via the RESUME path); a separate documented 10-run lr pre-sweep preceded it",
+ "metrics": {
+  "headline": "exact-match and per-token accuracy per arm per difficulty at matched params, decomposed into the gain over an LTI baseline attributable to dt-selectivity, to B/C-selectivity, and to the depthwise conv",
+  "n_params_by_arm_k4": {
+   "full": 60538,
+   "delta": 60538,
+   "bc": 60840,
+   "lti": 60840,
+   "gru": 60852,
+   "full_noconv": 59678
+  },
+  "n_params_by_arm_k8": {
+   "full": 60252,
+   "delta": 60252,
+   "bc": 60554,
+   "lti": 60554,
+   "gru": 58674,
+   "full_noconv": 59412
+  },
+  "n_runs": 21,
+  "steps": 600,
+  "batch_size": 32,
+  "lr": 0.008,
+  "d_state": 8,
+  "expand": 2,
+  "d_conv": 4,
+  "eval_n": 1024,
+  "eval_binomial_se_at_half": 0.0156,
+  "chance_token_acc": 0.125,
+  "exact_acc_L32_k4": {
+   "gru": 1.0,
+   "full": 0.3809,
+   "bc": 0.2568,
+   "lti": 0.0625,
+   "delta": 0.0166
+  },
+  "token_acc_L32_k4": {
+   "gru": 1.0,
+   "full": 0.7996,
+   "bc": 0.7432,
+   "lti": 0.5991,
+   "delta": 0.5378
+  },
+  "exact_acc_L32_k8_seed0": {
+   "gru": 0.0322,
+   "full": 0.001,
+   "bc": 0.0,
+   "lti": 0.0,
+   "delta": 0.0
+  },
+  "token_acc_L32_k8_seedmean": {
+   "gru": 0.7003,
+   "full": 0.4969,
+   "bc": 0.4824,
+   "delta": 0.4033,
+   "lti": 0.3737
+  },
+  "token_acc_L32_k8_per_seed": {
+   "gru": [
+    0.709,
+    0.6915
+   ],
+   "full": [
+    0.5037,
+    0.4901
+   ],
+   "bc": [
+    0.4794,
+    0.4854
+   ],
+   "delta": [
+    0.3669,
+    0.4398
+   ],
+   "lti": [
+    0.3794,
+    0.3679
+   ]
+  },
+  "seed_spread_token_L32_k8": {
+   "gru": 0.0175,
+   "full": 0.0136,
+   "bc": 0.006,
+   "delta": 0.0729,
+   "lti": 0.0115
+  },
+  "selectivity_decomposition_vs_lti_k4": {
+   "delta_only_exact": -0.0459,
+   "delta_only_token": -0.0613,
+   "bc_only_exact": 0.1943,
+   "bc_only_token": 0.1441,
+   "full_exact": 0.3184,
+   "full_token": 0.2005,
+   "conv_exact": 0.3448,
+   "conv_token": 0.2276
+  },
+  "selectivity_decomposition_vs_lti_k8_token": {
+   "delta_only_seed0": -0.0125,
+   "delta_only_seedmean": 0.0297,
+   "bc_only_seed0": 0.1,
+   "bc_only_seedmean": 0.1087,
+   "full_seed0": 0.1243,
+   "full_seedmean": 0.1232,
+   "conv_seed0": 0.1028
+  },
+  "delta_only_gain_is_within_seed_noise_at_k8": true,
+  "per_slot_acc_L32_k8": {
+   "gru": [
+    0.7373,
+    0.4102,
+    0.4229,
+    0.4619,
+    0.7422,
+    0.9287,
+    0.9697,
+    0.999
+   ],
+   "bc": [
+    0.3975,
+    0.374,
+    0.3799,
+    0.375,
+    0.3682,
+    0.4258,
+    0.5625,
+    0.9521
+   ],
+   "full": [
+    0.3809,
+    0.375,
+    0.3564,
+    0.3594,
+    0.3701,
+    0.4209,
+    0.7734,
+    0.9932
+   ],
+   "lti": [
+    0.1943,
+    0.1943,
+    0.1865,
+    0.2588,
+    0.3125,
+    0.4053,
+    0.5479,
+    0.9355
+   ],
+   "delta": [
+    0.1357,
+    0.1367,
+    0.1895,
+    0.2139,
+    0.2402,
+    0.2734,
+    0.7461,
+    1.0
+   ]
+  },
+  "recency_index_L32_k8": {
+   "gru": 0.3672,
+   "bc": 0.3706,
+   "lti": 0.4831,
+   "full": 0.5062,
+   "delta": 0.6748
+  },
+  "recency_index_L32_k4": {
+   "gru": 0.0,
+   "bc": 0.2822,
+   "full": 0.2866,
+   "lti": 0.376,
+   "delta": 0.3882
+  },
+  "retention_spectrum_L32_k4_noise_tokens": {
+   "lti": {
+    "median_retention": 0.9499,
+    "median_halflife_tokens": 13.5,
+    "frac_halflife_gt_L": 0.3097
+   },
+   "full": {
+    "median_retention": 0.9678,
+    "median_halflife_tokens": 21.15,
+    "frac_halflife_gt_L": 0.415
+   },
+   "bc": {
+    "median_retention": 0.9523,
+    "median_halflife_tokens": 14.18,
+    "frac_halflife_gt_L": 0.3324
+   },
+   "delta": {
+    "median_retention": 0.7003,
+    "median_halflife_tokens": 1.95,
+    "frac_halflife_gt_L": 0.1337
+   }
+  },
+  "conv_control": {
+   "L32_k4": {
+    "full_exact": 0.3809,
+    "full_noconv_exact": 0.0361,
+    "full_token": 0.7996,
+    "full_noconv_token": 0.572
+   },
+   "L32_k8": {
+    "full_token": 0.5037,
+    "full_noconv_token": 0.4009
+   }
+  },
+  "span_control_L64_k4": {
+   "gru_exact": 1.0,
+   "delta_exact": 0.085,
+   "full_exact": 0.0234,
+   "note": "ranking among SSM arms flips vs L=32; single seed, read as instability not as evidence for dt"
+  },
+  "depth_probe_delta_L32_k4": {
+   "blk1_exact": 0.0166,
+   "blk2_exact": 0.0654,
+   "blk1_token": 0.5378,
+   "blk2_token": 0.6709,
+   "blk2_slot_acc": [
+    0.2988,
+    0.3906,
+    0.9951,
+    0.999
+   ],
+   "n_params_2blk": 59444
+  },
+  "delta_gate_learned_but_unhelpful": {
+   "full_noconv_L32_k4_dt_ratio_data_over_noise": 38.781,
+   "full_noconv_L32_k4_exact": 0.0361,
+   "full_L32_k4_dt_ratio_data_over_noise": 1.617,
+   "full_L32_k4_exact": 0.3809,
+   "full_L64_k4_dt_ratio": 29.322,
+   "delta_L64_k4_dt_ratio": 3.722,
+   "note": "the arm with the MOST extreme learned dt-selectivity is far from the best; dt stats are channel-averaged and the width-4 conv blurs which positions are data, so treat the ratio as indicative"
+  },
+  "lr_pre_sweep_exact_L32_k4": {
+   "lr_0.003": {
+    "full": 0.103,
+    "delta": 0.019,
+    "bc": 0.163,
+    "lti": 0.022,
+    "gru": 0.999
+   },
+   "lr_0.008": {
+    "full": 0.381,
+    "delta": 0.017,
+    "bc": 0.257,
+    "lti": 0.062,
+    "gru": 1.0
+   }
+  },
+  "mamba_table7_prior_art_ppl_350M": {
+   "none": 10.93,
+   "B_only": 10.15,
+   "C_only": 9.98,
+   "delta_only": 9.81,
+   "all": 8.71
+  },
+  "minrnn_selcopy_reference_exact": {
+   "gru_L32_k4": 1.0,
+   "mingru_L32_k4": 0.389,
+   "gru_L32_k8": 0.382,
+   "mingru_L32_k8": 0.001
+  },
+  "wall_clock_s": 795.4
+ },
+ "result_summary": "THE MAMBA PAPER'S OWN SELECTIVITY RANKING INVERTS ON THE TASK IT INVENTED TO MOTIVATE SELECTIVITY. At 60k matched params on selective copy, decomposing against an LTI (nothing-selective) baseline: dt-only selectivity is worth -0.046 exact / -0.061 per-token at k=4 and +0.030 per-token at k=8 - a gain smaller than dt's OWN seed spread of 0.073, i.e. indistinguishable from zero - while B,C-only selectivity is worth +0.194 exact / +0.144 token at k=4 and +0.109 token at k=8 (9x the arm spreads). Full selectivity gives +0.318/+0.201. Mamba Table 7 (350M, Pile perplexity) reports the opposite ordering: dt-only recovers 1.12 of the 2.22 ppl that full selectivity gains, more than B-only (0.78) or C-only (0.95), and the paper states verbatim 'Delta is the most important parameter (Theorem 1)'. THE DEPTHWISE CONV BEATS ALL OF IT: removing it takes the full arm from 0.381 to 0.036 exact at k=4 (+0.228 per-token, versus +0.201 for all three selectivity mechanisms combined). MECHANISM 1 - dt IS LEARNED, AND THE LEARNING IS WHAT HURTS: reading the retention exp(dt*A) per (channel,state) while the model idles on blanks, the dt-only arm has median retention 0.700 / median half-life 1.95 tokens and only 13.4% of states with half-life > L, against the LTI baseline's 0.950 / 13.5 tokens / 31.0% and the full arm's 0.968 / 21.2 / 41.5%. Because Abar = exp(dt*A) with A<0, an input-dependent dt is a knob the optimiser pushes UP, so it buys a gate and pays with its memory - median half-life collapses 14 -> 2 tokens. Corroborating this, the arm with the MOST extreme learned dt-selectivity (full_noconv, dt ratio 38.8x data-over-noise) is one of the WORST performers (0.036), while the best SSM arm has a ratio of only 1.6x. MECHANISM 2 - dt HITS THE SAME ORDERING WALL AS minGRU, HARDER: per-slot accuracy at L=32 k=8 (chance 0.125) for the dt-only arm is [0.14, 0.14, 0.19, 0.21, 0.24, 0.27, 0.75, 1.00] - the last two items perfect, the first four at the chance floor - recency index 0.675, worse than minGRU's 0.375 in registry row 2026-07-25_minrnn-selcopy. The B,C-selective arm is the flattest SSM ([0.40, 0.37, 0.38, 0.38, 0.37, 0.43, 0.56, 0.95], recency 0.371, on par with the GRU's 0.367) and lifts slot 1 from 0.14 to 0.40. So the structured N-dimensional state does NOT rescue an input-only gate; the answer is the pessimistic branch. The split is mechanistically clean: dt is a scalar 'how fast do I forget right now' leak rate - exactly minGRU's z - whereas B is 'which state dimensions does this token write into', an ADDRESS, and ordering needs an address. NOBODY BEATS THE GRU: full Mamba reaches 0.381 exact at k=4 against the GRU's 1.000, and against minGRU's 0.389 at the same 60k params and 600 steps - so full Mamba does not even beat minGRU here; at k=8 the GRU is the only arm with non-trivial exact match (0.032) and leads on per-token accuracy 0.700 vs 0.497. PROBES: a 2-block dt-only model at the same params goes 0.017 -> 0.065 exact with slot 3 jumping 0.47 -> 0.995, so depth partially substitutes for the missing state-dependent gate (the same substitution the minGRU row found); the L=64 k=4 span control flips the SSM ranking (delta 0.085 > full 0.023) on a single seed and is read as instability, with the GRU still at 1.000. CAVEATS: 600 steps, 60k params (Mamba's ablation: 350M), 1 block, N=8, L<=64 (paper: 4096), vocab 8, 2 seeds at k=8 and 1 elsewhere; at k=8 exact match is on the floor for every SSM arm so that column rests on per-token accuracy; the lr was fixed at 8e-3 by a documented pre-sweep in which 8e-3 was best or tied-best for every one of the five arms, so it favours nobody; our bc arm turns B AND C on together whereas Table 7 reports them singly; and the contradicted ablation was measured on language-modelling perplexity, where aggressive forgetting is a feature and per-item ordering is never scored, so both findings can be true at once. The defensible claim is the negative one: at this scale dt-selectivity buys nothing measurable on selective copy, while B/C-selectivity and the depthwise conv each buy a lot.",
+ "status": "done",
+ "novelty_check": {
+  "checked_on": "2026-07-26",
+  "verdict": "partial-prior-art",
+  "sources": [
+   {
+    "name": "script",
+    "query": "scripts/novelty_check.py 'Mamba selective SSM ablation delta selectivity input-dependent B C selective copy'",
+    "hits": 2,
+    "note": "arXiv and OpenAlex both 403 from this environment; returned verdict 'unchecked'"
+   },
+   {
+    "name": "web",
+    "query": "Mamba ablation which selectivity component matters Delta vs B C input-dependent selective copy",
+    "hits": 8
+   },
+   {
+    "name": "web",
+    "query": "'selective copy' Mamba ablation delta selectivity load-bearing depthwise conv contribution",
+    "hits": 8
+   },
+   {
+    "name": "web",
+    "query": "Mamba selectivity ablation inverts on synthetic tasks delta not important B C matters selective copying small scale",
+    "hits": 9
+   },
+   {
+    "name": "web",
+    "query": "Mamba short convolution ablation removing conv1d hurts more than selectivity synthetic recall",
+    "hits": 6
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/pdf/2312.00752 - the selective-parameters ablation table: which of Delta/B/C, on what metric, at what scale",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2312.00752v2 - selection mechanism, selective copying setup, conv role",
+    "hits": 1
+   },
+   {
+    "name": "webfetch",
+    "query": "arxiv.org/html/2506.11891v1 - does it ablate Delta-selectivity separately from B/C? tasks, scales, conclusions",
+    "hits": 1
+   }
+  ],
+  "conclusion": "PARTIAL-PRIOR-ART. The ablation AXIS is squarely prior art and we found its exact numbers: Mamba (arXiv:2312.00752) Table 7, ~350M params on language-modelling perplexity, reports nothing-selective 10.93, B-only 10.15, C-only 9.98, Delta-only 9.81, all-three 8.71, and concludes verbatim 'Delta is the most important parameter (Theorem 1), but using multiple selective parameters together synergizes'. Its Table 1 reports selective copying (S6 97.0-99.8 vs S4 18.3) but there selectivity is ALL-OR-NOTHING - the per-parameter Delta/B/C ablation is never run on selective copy, only on perplexity. That gap is what this row fills, and the ranking inverts inside it. The other close paper, 'Understanding Input Selectivity in Mamba' (arXiv:2506.11891, ICML 2025), analyses a 'simplified S6 where the input-dependence only affects the state matrix via Delta(x)' and reports that a 1-layer Mamba can solve MQAR exactly WITHOUT input-dependence in its SSM, stressing 'the importance of convolution and gating' - which independently corroborates our conv-control finding - but it is theory-plus-MQAR and does not run a controlled matched-parameter Delta-vs-B/C accuracy ablation on selective copy. WHAT THIS ROW ADDS AND THE SEARCH DID NOT SURFACE: (a) the Delta/B/C ablation run on SELECTIVE COPY at matched total parameters, with the ranking inverted relative to Table 7; (b) a per-slot ORDERING readout (recency index) that connects the result to a previously isolated failure mode of input-only gates from our own registry (2026-07-25_minrnn-selcopy), showing Delta-only reproduces minGRU's recency signature MORE extremely (0.675 vs 0.375) than minGRU does; (c) a mechanism - the retention-spectrum measurement showing input-dependent Delta SHORTENS median memory half-life from ~14 to ~2 tokens, i.e. the gate is learned and the learning is what costs the ordering; (d) the depthwise conv quantified on the SAME scale as the selectivity terms, where it exceeds all of them combined at k=4; (e) a matched-parameter GRU reference, which neither the Mamba nor the minRNN paper runs on this task. The 'no published version of this specific ablation' claim is a negative search result over 4 web searches plus 3 direct paper fetches, not an exhaustive literature review; arXiv/OpenAlex APIs 403 from this environment.",
+  "sources_note": "arXiv/OpenAlex APIs 403 from this environment (scripts/novelty_check.py returned 'unchecked'). Verdict rests on 4 WebSearches plus direct fetches of arxiv.org/pdf/2312.00752, arxiv.org/html/2312.00752v2 and arxiv.org/html/2506.11891v1."
+ },
+ "prior_art": [
+  "https://arxiv.org/abs/2312.00752",
+  "https://arxiv.org/pdf/2312.00752",
+  "https://arxiv.org/abs/2506.11891",
+  "https://github.com/alxndrTL/mamba.py",
+  "https://arxiv.org/abs/2410.01201"
+ ],
+ "related_ids": [
+  "2026-07-25_minrnn-selcopy",
+  "2026-07-26_mqar-state-capacity",
+  "2026-07-25_zoology-mqar-recall",
+  "2026-07-26_retnet-nano-char",
+  "2026-07-25_esn-reservoir"
+ ],
+ "links": {
+  "folder": "experiments/2026-07-26_mamba-mini-induction",
+  "results_json": "experiments/2026-07-26_mamba-mini-induction/results.json",
+  "chart": "experiments/2026-07-26_mamba-mini-induction/chart.png",
+  "readme": "experiments/2026-07-26_mamba-mini-induction/README.md"
+ },
+ "tags": [
+  "non-transformer",
+  "state-space-model",
+  "mamba",
+  "s6",
+  "selective-ssm",
+  "s4",
+  "lti",
+  "selectivity-ablation",
+  "delta-selectivity",
+  "input-dependent-gating",
+  "selective-copy",
+  "ordering",
+  "recency",
+  "per-slot-accuracy",
+  "retention-spectrum",
+  "depthwise-conv",
+  "gru-baseline",
+  "iso-param",
+  "matched-params",
+  "hand-rolled",
+  "pure-pytorch",
+  "negative-result",
+  "rank-inversion",
+  "partial-prior-art",
+  "cpu-only"
+ ]
+}

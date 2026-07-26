@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**34 experiments logged.**
+**36 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -42,6 +42,8 @@ experiments/                one dated folder per experiment
 | 2026-07-26 | [SwiGLU vs GELU at equal parameters: the edge does NOT shrink - 78% of the folk margin survives the iso-param correction, and the extra 31% of params buys almost nothing](experiments/2026-07-26_swiglu-vs-gelu-isoparam) | ✅ done | HYPOTHESIS REFUTED - the iso-parameter control does not dissolve SwiGLU's advantage, it re |
 | 2026-07-26 | [Loops do NOT track parse depth: on length-matched ListOps-mini no arm's optimal loop count grows with nesting depth, and the stochastic-depth recipe that wins on serial tasks is the WORST arm here](experiments/2026-07-26_listops-recursion) | ✅ done | HYPOTHESIS REFUTED ON ALL THREE COUNTS, and the negative is clean because depth was decoup |
 | 2026-07-26 | [Data repetition at fixed compute, 0.17M params: the '4 epochs is free' knee is at R=1.7 with contiguous subsets - but 90% of that penalty is corpus coverage, not repetition, and the controlled knee is >8.6](experiments/2026-07-26_data-repetition-epochs) | ✅ done | THE KNEE IS NOWHERE NEAR 4 - and which side of 4 it falls on depends entirely on how the c |
+| 2026-07-26 | [Clock vs pizza on (a+b) mod 59: the attention-rate knob moves the model between the two published archetypes, but the field's two discriminators disagree by 2x about where the phase boundary is (r*=0.43-0.60 by gradient symmetricity, 0.84 by distance irrelevance)](experiments/2026-07-26_clock-vs-pizza) | ✅ done | THE KNOB WORKS, THE ENDPOINTS REPRODUCE THE PAPER, AND THE TWO CANONICAL DISCRIMINATORS TH |
+| 2026-07-26 | [Is Delta-selectivity the load-bearing part of Mamba? At 60k params on selective copy it buys NOTHING (-0.061 token acc vs an LTI baseline at k=4, +0.030 at k=8 inside its own 0.073 seed spread) while input-dependent B/C buys +0.144/+0.109 and the depthwise conv alone beats all selectivity combined - Mamba's own Table-7 ranking inverts on the task the paper invented to motivate selectivity](experiments/2026-07-26_mamba-mini-induction) | ✅ done | THE MAMBA PAPER'S OWN SELECTIVITY RANKING INVERTS ON THE TASK IT INVENTED TO MOTIVATE SELE |
 | 2026-07-25 | [NoPE vs RoPE vs ALiBi vs APE: does the length-generalization ranking survive at 0.1M params?](experiments/2026-07-25_pe-length-gen-tiny) | ✅ done | Hypothesis refuted: at 0.1M params and iso-compute the length-generalization ranking is AL |
 | 2026-07-25 | [Shadow E1: at iso-FLOPs on a 0.06-0.21M-param char LM, a weight-tied looped block loses to plain depth](experiments/2026-07-25_shadow-loop-vs-depth-isoflop) | ✅ done | Hypothesis supported. At iso-FLOPs the weight-tied loop never beats untied depth and the p |
 | 2026-07-25 | [Does the Game-of-Life capacity window transfer to language? Tied vs untied recursion across width](experiments/2026-07-25_shadow-recursion-capacity-window) | ✅ done | Hypothesis refuted - the Game-of-Life capacity window does not transfer to language. Weigh |

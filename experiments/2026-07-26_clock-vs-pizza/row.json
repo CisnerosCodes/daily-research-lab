@@ -1,0 +1,167 @@
+{
+  "id": "2026-07-26_clock-vs-pizza",
+  "date": "2026-07-26",
+  "title": "Clock vs pizza on (a+b) mod 59: the attention-rate knob moves the model between the two published archetypes, but the field's two discriminators disagree by 2x about where the phase boundary is (r*=0.43-0.60 by gradient symmetricity, 0.84 by distance irrelevance)",
+  "slug": "clock-vs-pizza",
+  "hypothesis": "Zhong et al. (arXiv:2306.17844) show a 1-layer transformer on (a+b) mod p implements either the 'clock' algorithm (attention multiplies rotations; the correct logit is independent of a-b) or the 'pizza' algorithm (operand embeddings are averaged, so the correct logit picks up an amplitude factor cos(pi*w*(a-b)/p)), and that the choice is set by an 'attention rate' alpha interpolating attention toward a constant matrix. Interpolating attention toward uniform with rate r = 1 - alpha should therefore drive the model from clock to pizza, and the paper's two discriminators - gradient symmetricity s_g (Def 4.1) and distance irrelevance q (Def 4.2) - should both move monotonically in r and locate the SAME phase boundary.",
+  "question": "As the attention matrix of a 1-layer modular-addition transformer is interpolated toward uniform, att = (1-r)*softmax + r*(1/T), where does the clock->pizza phase boundary sit, is the crossover sharp or gradual, and do the two canonical discriminators agree about its location - all while every arm still solves the task?",
+  "method": "1-layer LayerNorm-free, bias-free transformer over [a, b, '='], logits read from the last position only, on all 59^2 = 3481 pairs of (a+b) mod 59 with a deterministic random 50/50 split. p=59 is the paper's own modulus and is NOT shrunk; d_model=64 (the paper fixes width 128 for its attention-rate figure and sweeps 32-512 elsewhere), 4 heads, d_mlp=128, 40,576 params. Full-batch AdamW, lr 1e-3, weight decay 1.0, betas (0.9, 0.98), init std 0.8/sqrt(d) - the recipe already validated by the sibling rows 2026-07-25_grokking-modular-addition and 2026-07-25_grokking-weight-decay-phase. THE KNOB: att = (1-r)*softmax(QK^T/sqrt(d_head)) + r*(1/T), with r the uniform-attention mixing rate; r=0 is a standard transformer (the paper's alpha=1, predicted clock) and r=1 is constant attention (the paper's alpha=0, their 'Model A', predicted pizza); alpha = 1-r is reported alongside. We keep attention rows stochastic rather than using the paper's all-ONE matrix J, which is the same family up to a constant row scale the learnable W_O absorbs. ARMS: r in {0, 0.25, 0.375, 0.5, 0.625, 0.75, 1.0} x 2 seeds = 14 runs, all of which fit the budget (0 skipped); r=0.375 and 0.625 are boundary-refinement points. FAIRNESS: at equal seed every arm gets the IDENTICAL initialisation, the IDENTICAL data split and the IDENTICAL 1200 optimiser steps - 1200 is well past every arm's grokking point (600-950 steps), so all arms are read in the same grokked-and-consolidated state rather than at whatever step each happened to converge. DISCRIMINATORS, implemented verbatim from the paper: (1) gradient symmetricity s_g = mean over 400 random (a,b,c) triples of cos(dQ_abc/dE_a, dQ_abc/dE_b), with c sampled uniformly and NOT required to be the correct answer - under uniform attention the last-position stream depends on the operands only through (E_a+E_b)W_V/T, making the network an exactly symmetric function of the two embeddings, so s_g -> 1; (2) distance irrelevance q = mean_d std_i(L[i, i+d]) / std(L) on the correct-logit matrix L[i,j] = Q_{ij,i+j}, which holds the distance d = b-a fixed and asks how much the correct logit still varies as the SUM sweeps, so pizza -> 0 and clock -> 1. The paper's own reported values (pizza s_g 0.9937 / q 0.17; clock s_g 0.3336 / q 0.85, with bands pizza q in [0,0.4] and clock q in [0.4,1]) are used as FIXED reference thresholds, not fitted. Boundaries are located by linear interpolation of the seed-mean curves at two thresholds each: the sweep's own r=0/r=1 endpoint midpoint, and the paper-referenced threshold. VALIDITY CONTROL, the piece the naive design needs: mixing attention toward uniform makes the network a more symmetric function of its operands whether or not it has learned anything, so both discriminators are ALSO measured on the UNTRAINED model at the same r and seed, before a single gradient step, to separate an architectural ramp from a learned one. Supporting readouts: scale-free amplitude of the correct-logit distance modulation, embedding Fourier effective-frequency count (an algorithm-agnostic check that every arm learned a sparse Fourier solution), and realised attention L1 deviation from uniform (a check that the knob acts as intended).",
+  "architecture": "1-layer attention + ReLU MLP transformer, no LayerNorm, no biases; d_model=64, 4 heads (head_dim 16), d_mlp=128, n_ctx=3 ([a, b, '=']), vocab p+1=60, untied unembedding; 40,576 params; attention distribution interpolated toward uniform at rate r",
+  "dataset": {
+    "name": "all 59^2 = 3481 (a, b) pairs for (a+b) mod 59; one deterministic random 50/50 split per seed (1740 train / 1741 test)",
+    "source": "generated in run.py from the seed",
+    "license": "n/a (synthetic)"
+  },
+  "task": "modular addition (a+b) mod 59; algorithm identification (clock vs pizza) as a function of the uniform-attention mixing rate r",
+  "framework": "torch 2.13 (CPU, single thread)",
+  "seed": 0,
+  "compute": "CPU 1 thread, 606s (10.1 min) for 14 training runs + discriminator evaluation + untrained-init control",
+  "metrics": {
+    "headline": "distance irrelevance q and gradient symmetricity s_g (Zhong et al. Defs 4.2 / 4.1) vs the uniform-attention mixing rate r, with the clock->pizza phase boundary located by linear interpolation, plus test accuracy per r",
+    "n_params": 40576,
+    "p": 59,
+    "d_model": 64,
+    "d_mlp": 128,
+    "n_heads": 4,
+    "train_frac": 0.5,
+    "train_steps": 1200,
+    "n_arms_run": 14,
+    "n_arms_skipped": 0,
+    "seeds": [0, 1],
+    "r_values": [0.0, 0.25, 0.375, 0.5, 0.625, 0.75, 1.0],
+    "alpha_values_paper_convention": [1.0, 0.75, 0.625, 0.5, 0.375, 0.25, 0.0],
+    "distance_irrelevance_by_r": {"0.0": 0.8538, "0.25": 0.8736, "0.375": 0.8519, "0.5": 0.8751, "0.625": 0.8199, "0.75": 0.7804, "1.0": 0.521},
+    "distance_irrelevance_per_seed_by_r": {"0.0": [0.8812, 0.8264], "0.25": [0.8534, 0.8938], "0.375": [0.8466, 0.8573], "0.5": [0.8372, 0.913], "0.625": [0.7754, 0.8645], "0.75": [0.7249, 0.8359], "1.0": [0.4174, 0.6246]},
+    "grad_symmetricity_by_r": {"0.0": -0.1562, "0.25": 0.0267, "0.375": 0.3426, "0.5": 0.5208, "0.625": 0.7075, "0.75": 0.8411, "1.0": 1.0},
+    "grad_symmetricity_per_seed_by_r": {"0.0": [-0.0933, -0.2191], "0.25": [0.0937, -0.0403], "0.375": [0.2998, 0.3853], "0.5": [0.4772, 0.5643], "0.625": [0.7283, 0.6868], "0.75": [0.8664, 0.8159], "1.0": [1.0, 1.0]},
+    "dist_modulation_by_r": {"0.0": 0.049, "0.25": 0.0469, "0.375": 0.0589, "0.5": 0.0402, "0.625": 0.0421, "0.75": 0.0496, "1.0": 0.1451},
+    "phase_boundary": {
+      "r_star_grad_sym_internal_midpoint": 0.4306,
+      "alpha_star_grad_sym_internal_midpoint": 0.5694,
+      "grad_sym_internal_midpoint_value": 0.4219,
+      "r_star_grad_sym_paper_threshold": 0.5956,
+      "alpha_star_grad_sym_paper_threshold": 0.4044,
+      "grad_sym_paper_threshold": 0.6637,
+      "r_star_dist_irrel_internal_midpoint": 0.8396,
+      "alpha_star_dist_irrel_internal_midpoint": 0.1604,
+      "dist_irrel_internal_midpoint_value": 0.6874,
+      "r_star_dist_irrel_paper_threshold": null,
+      "dist_irrel_paper_threshold": 0.4,
+      "boundary_disagreement_factor": 1.95
+    },
+    "monotone_grad_symmetricity_increasing_in_r": true,
+    "monotone_dist_irrelevance_decreasing_in_r": false,
+    "total_swing_grad_sym": 1.1562,
+    "total_swing_dist_irrel": 0.3328,
+    "max_seed_spread_grad_sym": 0.134,
+    "max_seed_spread_dist_irrel": 0.2072,
+    "swing_over_seed_spread_grad_sym": 8.63,
+    "swing_over_seed_spread_dist_irrel": 1.61,
+    "sharpness_ratio_grad_sym": 1.639,
+    "sharpness_ratio_dist_irrel": 3.716,
+    "init_control_grad_symmetricity_by_r": {"0.0": 0.9998, "0.25": 0.9999, "0.375": 0.9999, "0.5": 0.9999, "0.625": 1.0, "0.75": 1.0, "1.0": 1.0},
+    "init_control_distance_irrelevance_by_r": {"0.0": 0.9994, "0.25": 0.9994, "0.375": 0.9994, "0.5": 0.9994, "0.625": 0.9994, "0.75": 0.9994, "1.0": 0.9994},
+    "init_swing_grad_sym": 0.0002,
+    "init_swing_dist_irrel": 0.0,
+    "trained_swing_over_init_swing_grad_sym": 5781.0,
+    "learned_minus_init_grad_sym_by_r": {"0.0": -1.156, "0.25": -0.9732, "0.375": -0.6573, "0.5": -0.4791, "0.625": -0.2925, "0.75": -0.1589, "1.0": 0.0},
+    "test_acc_by_r": {"0.0": 1.0, "0.25": 1.0, "0.375": 0.9722, "0.5": 1.0, "0.625": 1.0, "0.75": 1.0, "1.0": 0.9954},
+    "test_acc_per_seed_by_r": {"0.0": [1.0, 1.0], "0.25": [1.0, 1.0], "0.375": [1.0, 0.9443], "0.5": [1.0, 1.0], "0.625": [1.0, 1.0], "0.75": [1.0, 1.0], "1.0": [0.9943, 0.9966]},
+    "train_acc_by_r": {"0.0": 1.0, "0.25": 1.0, "0.375": 1.0, "0.5": 1.0, "0.625": 1.0, "0.75": 1.0, "1.0": 1.0},
+    "step_to_grok_by_r": {"0.0": [650, 900], "0.25": [650, 950], "0.375": [700, null], "0.5": [600, 800], "0.625": [650, 600], "0.75": [650, 650], "1.0": [800, 700]},
+    "n_censored": 1,
+    "censored_arms": ["r=0.375,seed=1"],
+    "censored_detail": "r=0.375 seed 1 reached train acc 1.0 but test acc 0.9443, just under the 0.95 grok threshold; its r=0.375 row is a mean over one grokked and one marginal run",
+    "attn_l1_dev_from_uniform_by_r": {"0.0": 0.9361, "0.25": 0.737, "0.375": 0.6088, "0.5": 0.4791, "0.625": 0.3629, "0.75": 0.2442, "1.0": 0.0},
+    "emb_effective_n_freqs_by_r": {"0.0": 5.429, "0.25": 5.897, "0.375": 6.066, "0.5": 5.108, "0.625": 5.141, "0.75": 5.356, "1.0": 6.068},
+    "paper_reference_values": {
+      "pizza_grad_symmetricity": 0.9937,
+      "clock_grad_symmetricity": 0.3336,
+      "pizza_distance_irrelevance": 0.17,
+      "clock_distance_irrelevance": 0.85,
+      "pizza_dist_irrel_band": [0.0, 0.4]
+    },
+    "endpoint_r0_vs_paper_clock": {"our_dist_irrel": 0.8538, "paper_clock_dist_irrel": 0.85, "our_grad_sym": -0.1562, "paper_clock_grad_sym": 0.3336},
+    "endpoint_r1_vs_paper_pizza": {"our_dist_irrel": 0.521, "paper_pizza_dist_irrel": 0.17, "our_grad_sym": 1.0, "paper_pizza_grad_sym": 0.9937, "reaches_paper_pizza_dist_irrel_band": false}
+  },
+  "result_summary": "THE KNOB WORKS, THE ENDPOINTS REPRODUCE THE PAPER, AND THE TWO CANONICAL DISCRIMINATORS THEN DISAGREE BY 2x ABOUT WHERE THE BOUNDARY IS. Interpolating attention toward uniform does carry a 1-layer transformer between the two published archetypes: at r=0 (standard attention) distance irrelevance is q=0.854, essentially the paper's clock value of 0.85, with gradient symmetricity s_g=-0.156, i.e. MORE clock-like than their clock model's 0.3336; at r=1 (constant attention) s_g=1.000 against their pizza's 0.9937. But the two metrics then locate the transition in different places. Gradient symmetricity rises monotonically across all SEVEN r values (-0.156, 0.027, 0.343, 0.521, 0.708, 0.841, 1.000) and crosses its own endpoint midpoint at r*=0.431 (alpha*=0.569) and the paper-referenced threshold 0.664 at r*=0.596 (alpha*=0.404). Distance irrelevance is NOT monotone (0.854, 0.874, 0.852, 0.875, 0.820, 0.780, 0.521), stays clock-like until r=0.75, crosses its own midpoint only at r*=0.840 (alpha*=0.160), and NEVER reaches the paper's pizza ceiling of q<=0.4 - even the fully-uniform-attention arm sits at q=0.521, so under the paper's own classification bands our maximally-pizza model would still be labelled CLOCK. SIGNAL-TO-NOISE IS THE DECIDING FACT: s_g swings 1.156 end-to-end against a worst seed spread of 0.134 (SNR 8.6), while q swings only 0.333 against a worst seed spread of 0.207 (SNR 1.6) - barely above the run-to-run noise floor, and at r=1 the two seeds give q=0.417 and q=0.625, one inside the paper's pizza band and one nowhere near it. So at this width s_g is the usable discriminator and q is not. SHAPE: the crossover is GRADUAL for s_g (sharpness ratio 1.64, i.e. nearly a straight ramp, not the sharp phase transition the paper describes) and ABRUPT for q (3.72, its entire movement concentrated in the final r: 0.75->1.0 interval). The mechanistic reading is that the metrics come apart because they measure different things: s_g probes the COMPUTATIONAL GRAPH (does the network treat its two operands symmetrically?) and moves smoothly and early, while q probes BEHAVIOUR (does the answer logit depend on b-a?) and only fires once the model is almost entirely attention-free - a model can be structurally symmetric long before that symmetry surfaces as distance-dependent logits. THE CONTROL THAT LICENSES THE s_g READING: because mixing attention toward uniform mechanically symmetrises the network, both metrics were also measured on the UNTRAINED model at each r. The untrained baseline is FLAT - s_g in [0.9998, 1.0] and q = 0.9994 at every r including r=0, because at initialisation the QK weights are small enough that softmax is already near-uniform - so the init swing is 0.0002 versus the trained swing of 1.156, a ratio of 5781x. None of the measured ramp is an artefact of the knob; training is what drives s_g down to -0.156 at r=0, i.e. low-r models LEARN to break the operand symmetry. Honest counter-caveat: s_g=1.000 exactly at r=1 IS architecturally forced (uniform attention makes the network a literally symmetric function of E_a and E_b), so that single endpoint is not evidence - the interior of the curve is. CONTROLS PASS: every arm reached train accuracy 1.000 and 13/14 reached test accuracy >=0.95, so the sweep compares algorithms rather than competence; the embedding effective-frequency count stays at 5.1-6.1 across all r, so every arm learned a sparse Fourier solution; realised attention L1 deviation from uniform falls monotonically 0.936 -> 0.000, confirming the knob acts as intended. ONE CENSORED ARM: r=0.375 seed 1 finished at test accuracy 0.9443, just under the 0.95 threshold, so that r's row mixes one grokked and one marginal run. NET: 'cannot cleanly locate a single phase boundary at this scale and budget' - the endpoints are cleanly discriminated, the boundary is not, and the disagreement between the field's two standard metrics (r*=0.43-0.60 vs 0.84 on identical runs) is itself the finding. Caveats: (1) width 64 with 2 seeds, versus the paper's width 128 and alpha sampled uniformly over [0,1] - the paper explicitly reports that the phase-change point MOVES with width, so r* here is not expected to match theirs numerically; (2) 1200 steps is past grokking but far from converged, and weight decay keeps reshaping the solution, so q may be measured on a still-drifting logit scale; (3) the interpolation keeps attention rows stochastic rather than using the paper's all-one matrix J; (4) two seeds cannot distinguish q's bimodality at r=1 from genuine algorithmic bistability.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "replication",
+    "sources": [
+      {
+        "name": "script",
+        "query": "scripts/novelty_check.py 'clock pizza algorithm phase transition attention rate modular addition gradient symmetricity distance irrelevance'",
+        "hits": 0,
+        "note": "arXiv and OpenAlex both 403 from this environment; returned verdict 'unchecked'"
+      },
+      {
+        "name": "web",
+        "query": "clock pizza algorithm modular addition attention rate phase transition Zhong 2306.17844",
+        "hits": 8
+      },
+      {
+        "name": "web",
+        "query": "gradient symmetricity distance irrelevance metrics clock pizza grokking modular addition sweep",
+        "hits": 7
+      },
+      {
+        "name": "web",
+        "query": "replication 'clock and pizza' attention rate sweep phase boundary reproduce modular addition small transformer",
+        "hits": 8
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/html/2306.17844v1 - exact definitions of gradient symmetricity and distance irrelevance, attention rate knob, swept values, p and model sizes",
+        "hits": 1
+      },
+      {
+        "name": "webfetch",
+        "query": "arxiv.org/pdf/2306.17844 - Definitions 4.1/4.2 verbatim, attention-rate phase-transition section, reported metric values for clock vs pizza models",
+        "hits": 1
+      }
+    ],
+    "conclusion": "REPLICATION. This is not adjacent prior art - it is the same experiment. Zhong, Liu, Andreas & Tegmark, 'The Clock and the Pizza' (arXiv:2306.17844, NeurIPS 2023) define the attention-rate interpolation M' = M*alpha + J*(1-alpha), define both discriminators used here (Definition 4.1 gradient symmetricity s_g = mean cos(dQ_abc/dE_a, dQ_abc/dE_b); Definition 4.2 distance irrelevance q = mean_d std(L_{i,i+d}) / std(L)), sample alpha uniformly in [0,1], and report 'a clear phase transition from the Pizza algorithm to the Clock algorithm' with 'an almost linear phase boundary with regards to both attention rate and layer width'. They use p=59, the same modulus used here, and report pizza s_g 0.9937 / q 0.17 and clock s_g 0.3336 / q 0.85 - values this run consumes as fixed reference thresholds rather than fitting. Both discriminators are therefore reimplemented, not invented. Also checked and adjacent but not duplicative: 'Algorithmic Capabilities of Random Transformers' (arXiv:2410.04368, same first author, reuses these metrics on frozen-embedding models) and 'Algorithmic Phase Transitions in Language Models' (arXiv:2412.07386). Registry siblings 2026-07-25_grokking-modular-addition, 2026-07-25_grokking-weight-decay-phase and 2026-07-25_sae-on-grokked-model share the task and training recipe but none touched clock-vs-pizza. WHAT THIS ROW ADDS ON TOP OF THE REPLICATION: (a) a ~40k-param, 10.7-minute, CPU-only reproduction at width 64, about half the width of the paper's attention-rate figure, showing the endpoint archetypes survive that shrink; (b) both discriminators reported on the SAME r axis WITH a per-r seed-spread noise floor, which is what surfaces their 2x disagreement about r* (0.43-0.60 vs 0.84) and q's signal-to-noise of only 1.6 - the paper reports the metrics but these searches did not surface a published head-to-head boundary comparison or a noise floor for them; (c) the untrained-initialisation control for both metrics (init swing 0.0002 vs trained swing 1.156), which we did not find in the paper and which is what licenses reading the s_g ramp as learned rather than as a mechanical consequence of the knob. The 'not in the paper' claims are negative results from three web searches plus two full-text fetches, not an exhaustive reading of the appendices; arXiv and OpenAlex APIs 403 from this environment."
+  },
+  "prior_art": [
+    "https://arxiv.org/abs/2306.17844",
+    "https://proceedings.neurips.cc/paper_files/paper/2023/file/56cbfbf49937a0873d451343ddc8c57d-Paper-Conference.pdf",
+    "https://arxiv.org/html/2410.04368v1",
+    "https://arxiv.org/html/2412.07386v1",
+    "https://arxiv.org/abs/2301.05217"
+  ],
+  "related_ids": [
+    "2026-07-25_grokking-modular-addition",
+    "2026-07-25_grokking-weight-decay-phase",
+    "2026-07-25_sae-on-grokked-model",
+    "2026-07-25_induction-heads-emergence",
+    "2026-07-26_head-dim-vs-count-isoparam"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-26_clock-vs-pizza",
+    "results_json": "experiments/2026-07-26_clock-vs-pizza/results.json",
+    "chart": "experiments/2026-07-26_clock-vs-pizza/chart.png",
+    "readme": "experiments/2026-07-26_clock-vs-pizza/README.md"
+  },
+  "tags": [
+    "interpretability",
+    "mechanistic-interpretability",
+    "clock-vs-pizza",
+    "modular-addition",
+    "grokking",
+    "algorithmic-phase-transition",
+    "phase-boundary",
+    "attention-rate",
+    "gradient-symmetricity",
+    "distance-irrelevance",
+    "fourier-features",
+    "discriminator-disagreement",
+    "metric-validity",
+    "init-control",
+    "signal-to-noise",
+    "replication",
+    "tiny-transformer",
+    "cpu-only"
+  ]
+}

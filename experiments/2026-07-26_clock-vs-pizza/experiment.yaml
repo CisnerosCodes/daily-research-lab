@@ -1,0 +1,54 @@
+# Clock vs Pizza: mapping the algorithmic phase boundary with an attention-rate knob.
+id: "2026-07-26_clock-vs-pizza"
+title: "Clock vs pizza on (a+b) mod 59: where is the phase boundary when attention is interpolated toward uniform?"
+hypothesis: "A 1-layer transformer on (a+b) mod 59 whose attention matrix is interpolated toward uniform, att = (1-r)*softmax + r*(1/T), will switch from the 'clock' algorithm (r=0) to the 'pizza' algorithm (r=1); Zhong et al.'s two canonical discriminators - gradient symmetricity and distance irrelevance - will both move monotonically in r and will locate the same phase boundary."
+seed: 0
+dataset:
+  name: "all 59^2 = 3481 (a, b) pairs for (a+b) mod 59; one deterministic random 50/50 split per seed"
+  source: "generated in run.py from the seed"
+  license: "n/a (synthetic)"
+# --- hyperparameters ---
+params:
+  # --- task / architecture. Reuses the recipe proven by the sibling rows
+  #     2026-07-25_grokking-modular-addition and 2026-07-25_grokking-weight-decay-phase
+  #     (p=59, d_model=64, full-batch AdamW, wd=1.0, train_frac 0.5), except d_mlp which
+  #     is SHRUNK 256 -> 128 for the time-box (measured: groks at ~650 steps instead of ~1850).
+  p: 59                     # modulus (prime). Same as Zhong et al. 2306.17844, which also uses p=59.
+  d_model: 64               # SHRUNK from the paper's width 128 (they sweep width 32-512).
+  n_heads: 4
+  d_mlp: 128                # SHRUNK from the siblings' 256 for the time-box.
+  n_ctx: 3                  # [a, b, "="]
+  init_std_scale: 0.8       # weight std = init_std_scale / sqrt(d_model)
+  train_frac: 0.5           # 1740 train / 1741 test
+  lr: 0.001
+  weight_decay: 1.0
+  beta1: 0.9
+  beta2: 0.98
+
+  # --- the swept variable: uniform-attention mixing rate r ---
+  # att = (1-r) * softmax(QK/sqrt(dh)) + r * (1/n_ctx).
+  # Zhong et al. call the opposite quantity the ATTENTION RATE alpha; alpha = 1 - r.
+  # r=0 (alpha=1) is a standard transformer -> predicted CLOCK.
+  # r=1 (alpha=0) is constant/uniform attention (their "Model A") -> predicted PIZZA.
+  attention_rates_r: [0.0, 0.25, 0.5, 0.75, 1.0]
+  refine_rates_r: [0.625, 0.375]   # extra points to resolve the boundary, run only if budget allows
+  seeds: [0, 1]
+
+  # --- training protocol: every arm gets the SAME number of steps and, at equal seed,
+  #     the SAME initialisation and the SAME data split. Only r differs.
+  train_steps: 1200         # all arms grok well before this (measured: 600-800 steps)
+  eval_every: 50
+  grok_threshold: 0.95      # test acc at/after which an arm counts as grokked
+  total_train_budget_s: 700 # hard wall-clock budget across ALL arms; unrun arms are reported
+
+  # --- discriminator settings (definitions from Zhong et al. 2306.17844) ---
+  grad_sym_samples: 400     # |S| random (a,b,c) triples for Definition 4.1
+  grad_sym_seed: 12345
+  emb_fourier_share: 0.9    # key frequencies = smallest set holding this share of W_E power
+  emb_fourier_max_k: 6
+  # Paper-reported reference values, used as classification thresholds (not fitted here):
+  ref_pizza_grad_sym: 0.9937      # their Model A (constant attention)
+  ref_clock_grad_sym: 0.3336      # their Model B (standard attention)
+  ref_pizza_dist_irrel: 0.17
+  ref_clock_dist_irrel: 0.85
+  dist_irrel_pizza_ceiling: 0.4   # paper: pizza typically 0-0.4, clock 0.4-1.0
