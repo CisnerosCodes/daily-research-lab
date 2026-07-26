@@ -1,0 +1,120 @@
+{
+  "id": "2026-07-26_quantized-coconut",
+  "date": "2026-07-26",
+  "title": "Quantized Coconut: a continuous thought survives being squeezed to 2 bits - accuracy vs codebook size is flat from K=inf down to K=4",
+  "slug": "quantized-coconut",
+  "hypothesis": "Putting a VQ-VAE-style vector-quantization bottleneck on each continuous thought of a nano-Coconut model degrades held-out DAG-reachability accuracy as the codebook shrinks, with a knee at some K* above which quantized thoughts match the unquantized continuous baseline (0.873 in the sibling run 2026-07-25_coconut-toy-graph); and the surviving discrete codes carry readable structure (code identity correlates with hop count / reachability).",
+  "question": "How discrete can a continuous thought be before accuracy drops? Sweep a VQ bottleneck's codebook size K on Coconut's fed-back hidden state and find the K at which quantized thoughts stop matching the continuous baseline - or establish honestly that quantization hurts everywhere / nowhere.",
+  "method": "Direct follow-up to 2026-07-25_coconut-toy-graph, whose task generator, model skeleton, forward pass and staged curriculum are REUSED VERBATIM (the K=inf arm reproduces the sibling's coconut arm bit-identically, per-seed 0.8350/0.9107, mean 0.8728, which validates the reuse). One 2-layer pre-norm decoder-only transformer (d_model=64, 4 heads, FFN 256, 103,168 params) on synthetic DAG reachability (N=8 nodes, out-degree<=2, E=10 edges, adjacency-slot encoding, 21 prefix tokens; 'is dst reachable from src within 3 hops?', 50/50 balanced, positives stratified over path length 1/2/3), H=3 latent thought slots, Coconut curriculum k=0->1->2 over the first 60% of steps then k=3, AdamW lr 2e-3 (50-step warmup), wd 0.01, grad-clip 1.0, batch 64, 1100 steps, 2 seeds. THE ONE CHANGE: a VQ-VAE bottleneck (arXiv:1711.00937) on every fed-back thought vector - hard argmin nearest-neighbour forward, straight-through estimator backward, codebook loss ||sg[h]-e||^2 + 0.25*||h-sg[e]||^2 at weight 1.0, codebook init N(0,1) per dim and excluded from weight decay, plus dead-code restarts every 100 steps (a code unused since the last restart is reset to a thought vector from the current batch + 0.01 noise) so that large-K arms are not silently small-K arms. VQ was stable in every arm, so the Gumbel-softmax fallback the backlog allowed was not needed. Arms: K in {4,16,64,256} plus unquantized K=inf; 5 arms x 2 seeds = 10 runs. Readability analysis on the 3000 held-out graphs: per-slot codebook usage perplexity 2^H(code), plus normalized mutual information between the emitted code and (a) the YES/NO label, (b) the hop count, (c) the ground-truth BFS path node, each MINUS an identically-computed label-shuffled control that measures the finite-sample MI bias (raw bias up to 0.078 at K=256). Because seed variance (0.038) exceeds every arm effect, the headline statistic is the PAIRED delta - each quantized run minus the continuous run at the same seed - computed from metrics.per_run.",
+  "architecture": "2-layer decoder-only transformer, d_model=64, 4 heads, FFN 256, 103,168 params, identical in all five arms; Coconut continuous thought = last hidden state fed back as next input embedding; VQ bottleneck adds K x 64 codebook params (256 at K=4 up to 16,384 at K=256) used only on the 3 fed-back thought vectors",
+  "dataset": {
+    "name": "synthetic random DAGs, N=8 nodes, out-degree <= 2, exactly E=10 edges, fixed-width adjacency-slot encoding; yes/no reachability-within-3-hops queries balanced 50/50 and stratified by shortest-path length 1/2/3; 20,000 train / 3,000 held-out graphs from disjoint seeded streams (generator identical to 2026-07-25_coconut-toy-graph)",
+    "source": "generated in run.py (numpy PCG64, seeds 1234 / 777001)",
+    "license": "n/a (synthetic)"
+  },
+  "task": "multi-hop DAG reachability (binary: is dst reachable from src within 3 hops?); negatives are unreachable OR further than 3 hops, so depth must be tracked",
+  "framework": "torch 2.13",
+  "seed": 0,
+  "compute": "CPU single-threaded, 594.3s for all 10 training runs + eval + code-usage analysis",
+  "metrics": {
+    "acc_continuous_Kinf": 0.8728,
+    "acc_K256": 0.8582,
+    "acc_K64": 0.8263,
+    "acc_K16": 0.8638,
+    "acc_K4": 0.8595,
+    "delta_vs_continuous": {
+      "256": -0.0146,
+      "64": -0.0465,
+      "16": -0.009,
+      "4": -0.0133
+    },
+    "note_on_pairing": "every arm uses the same two seeds, so the same-seed paired mean equals the difference of means; pairing changes the error bar, not the point estimate",
+    "paired_delta_all_K_mean": -0.0209,
+    "paired_delta_all_K_sd": 0.0242,
+    "paired_delta_all_K_range": [0.0073, -0.0717],
+    "K_star_matches_continuous": 4,
+    "match_tolerance_one_seed_std": 0.0378,
+    "max_drop_from_quantization": 0.0465,
+    "seed_std_max": 0.0378,
+    "bits_per_thought_at_K_star": 2.0,
+    "bits_in_whole_latent_chain_at_K_star": 6.0,
+    "acc_by_hop_Kinf": {"1": 0.8211, "2": 0.8839, "3": 0.934, "nopath": 0.8651},
+    "acc_by_hop_K4": {"1": 0.7751, "2": 0.8717, "3": 0.9534, "nopath": 0.8508},
+    "acc_by_hop_K16": {"1": 0.7781, "2": 0.8839, "3": 0.9583, "nopath": 0.8528},
+    "acc_by_hop_K64": {"1": 0.7311, "2": 0.8198, "3": 0.8981, "nopath": 0.8349},
+    "acc_by_hop_K256": {"1": 0.7955, "2": 0.8849, "3": 0.9563, "nopath": 0.8362},
+    "codebook_perplexity_mean": {"256": 50.02, "64": 16.98, "16": 6.15, "4": 2.75},
+    "codebook_perplexity_by_slot": {
+      "256": [9.3, 57.99, 82.77],
+      "64": [3.14, 24.03, 23.76],
+      "16": [2.2, 7.23, 9.01],
+      "4": [1.46, 3.41, 3.37]
+    },
+    "distinct_codes_ever_used": {"256": 187.0, "64": 57.5, "16": 15.5, "4": 4.0},
+    "dead_code_restarts_mean": {"256": 1387.0, "64": 299.5, "16": 62.5, "4": 13.0},
+    "nmi_code_vs_label_shuffle_corrected": {"256": 0.5255, "64": 0.4457, "16": 0.5468, "4": 0.5006},
+    "nmi_code_vs_hop_shuffle_corrected": {"256": 0.3098, "64": 0.2639, "16": 0.3331, "4": 0.295},
+    "nmi_code_vs_bfs_pathnode_shuffle_corrected": {"256": 0.2374, "64": 0.176, "16": 0.2183, "4": 0.1743},
+    "first_thought_min_perplexity_K4": 1.0,
+    "sibling_reference_same_task_same_steps": {"coconut": 0.873, "cot": 0.937, "pause": 0.687, "nocot": 0.6},
+    "n_params": 103168,
+    "training_steps_all_arms": 1100,
+    "headline": "held-out acc vs codebook size: K=inf 0.873, K=256 0.858, K=64 0.826, K=16 0.864, K=4 0.860; the curve is FLAT (paired cost of quantization -0.021 +- 0.024 across 8 comparisons, non-monotone in K), so K* = 4, the smallest codebook swept; a 2-bit thought still beats pause tokens (0.687) and no-CoT (0.600) by +0.17/+0.26; code usage saturates at ~50 effective codes when 256 are offered, and the FIRST thought collapses to 1-3 codes (zero bits in one seed) with no accuracy cost"
+  },
+  "result_summary": "Refuted, and cleanly. The hypothesis predicted a knee: a codebook size below which discretizing Coconut's continuous thought costs accuracy. There is no knee anywhere in the swept range. Held-out accuracy is 0.873 (K=inf, a bit-identical replication of the sibling's coconut arm), 0.858 (K=256), 0.826 (K=64), 0.864 (K=16), 0.860 (K=4). Seed variance (0.038) exceeds every arm effect, so the paired statistic carries the claim: across all 8 same-seed comparisons quantization costs -0.021 accuracy on average (sd 0.024, range +0.007 to -0.072) and the cost is NOT monotone in K - K=64 is the worst arm and K=16 the best quantized one, the signature of noise rather than of an information bottleneck. K* (smallest K matching the continuous baseline within one seed-std) is 4, the smallest codebook swept: two bits per thought, six bits for the entire latent reasoning chain, and a 2-bit thought retains essentially the whole Coconut advantage established by the sibling (0.860 vs 0.687 for compute-matched pause tokens and 0.600 for no-CoT). The codebook statistics say the model never wanted the bandwidth: given 256 codes it uses ~50 effectively (187 ever emitted) and usage perplexity tracks K sublinearly all the way down; the FIRST of the three thoughts is nearly contentless at every K (perplexity 9.3 of 256, 1.5 of 4) and in one K=4 seed collapsed to a single code - literally zero bits - while that run still scored 0.877, i.e. thought 1 is functioning as a pause token and the information lives in thoughts 2 and 3. On the 'readable thoughts' bonus the codes are partially readable but mostly of the ANSWER, not the search state: shuffle-corrected normalized MI is 0.45-0.55 with the YES/NO label, 0.26-0.33 with the hop count, and only 0.17-0.24 with the BFS path node (itself inflated by NONE-padding leakage), consistently across K. Taken with the sibling's finding that the thought is not a linearly-readable BFS frontier, the picture is that Coconut's latent step at this scale is a low-bandwidth commitment signal ('which branch, found it yet') rather than a rich continuous superposition of reasoning paths - good news for interpretability, since a 2-bit thought is enumerable. Practical corollary: the large codebooks used in the literature (64-1024 in Token Assorted, 2.5k-40k in DLR) may be far more than latent reasoning needs; start small and check whether the model asks for more. Caveats: the VQ bottlenecks the thought CHANNEL only - the final thought position still attends to the whole prefix through the KV cache, so the model can re-read the graph, which is why 'K=4 is fine' is less surprising than it sounds; 2 seeds; 103k params, 1100 steps, one task; dead-code restarts (1387 fired at K=256) are load-bearing for the large-K arms and deviate from vanilla VQ-VAE; MI is a plug-in estimate with a first-order shuffle correction.",
+  "status": "done",
+  "novelty_check": {
+    "checked_on": "2026-07-26",
+    "verdict": "partial-prior-art",
+    "sources": [
+      {"name": "script", "query": "scripts/novelty_check.py 'vector quantization bottleneck continuous thought coconut latent reasoning codebook size'", "hits": 0, "note": "arXiv/OpenAlex 403 from this environment; returned verdict 'unchecked'"},
+      {"name": "web", "query": "vector quantization discrete bottleneck on continuous thought latent reasoning Coconut codebook", "hits": 7},
+      {"name": "web", "query": "discrete latent tokens chain-of-thought VQ-VAE codebook size accuracy latent reasoning transformer", "hits": 8},
+      {"name": "web", "query": "'codebook size' ablation quantized latent thoughts accuracy degrade Coconut continuous thought discrete bottleneck 2026", "hits": 8},
+      {"name": "webfetch", "query": "arxiv.org/pdf/2502.03275 (Token Assorted) - does it sweep codebook size K and compare to unquantized Coconut?", "hits": 1},
+      {"name": "webfetch", "query": "arxiv.org/html/2606.29712 (DLR) - does it sweep codebook size, and in what range?", "hits": 1}
+    ],
+    "conclusion": "VQ-on-latent-reasoning exists; the small-K end of the curve does not. Token Assorted / 'Mixing Latent and Text Tokens' (2502.03275) applies a VQ-VAE to reasoning traces but fixes the codebook per benchmark (64 ProntoQA/ProsQA, 512 maze, 1024 math) - the fetch confirmed it ablates the compression rate r instead of K, and never compares against unquantized COCONUT directly (only a 'Curriculum-Replace' proxy). DLR / 'Why Struggle with Continuous Latents?' (2606.29712) DOES sweep the codebook, K in {2.5k,5k,10k,20k,40k}, finding improvement to 10k then plateau - but it quantizes rendered-image OCR features of a textual CoT at LLM scale, and its smallest codebook is 2500, three orders of magnitude above the regime where we find the curve is already flat. To our search nobody has quantized Coconut's own fed-back hidden state directly and swept K down to 4 against a matched unquantized control on the same task, model, seeds and curriculum. The specific findings - flat accuracy from K=inf to K=4 (paired cost -0.021 +- 0.024), a 2-bit thought retaining the full +0.26 advantage over no-CoT, codebook usage saturating at ~50 effective codes when 256 are offered, and the first thought collapsing to 1-3 codes (zero bits in one seed) at no cost - are unreported to our search. arXiv/OpenAlex APIs 403 from this environment, so the verdict rests on WebSearch plus two direct paper fetches. Scale caveat: 103k params, 1100 steps, 2 seeds, one synthetic task.",
+    "sources_note": "scripts/novelty_check.py returned 'unchecked' (arXiv + OpenAlex both 403). Verdict rests on three WebSearch queries plus full fetches of arxiv.org/pdf/2502.03275 and arxiv.org/html/2606.29712."
+  },
+  "prior_art": [
+    "https://arxiv.org/abs/1711.00937",
+    "https://arxiv.org/abs/2412.06769",
+    "https://arxiv.org/pdf/2502.03275",
+    "https://arxiv.org/html/2606.29712",
+    "https://arxiv.org/abs/2202.01334",
+    "https://arxiv.org/pdf/2005.08520"
+  ],
+  "related_ids": [
+    "2026-07-25_coconut-toy-graph",
+    "2026-07-25_filler-vs-recur",
+    "2026-07-25_trm-nano-sudoku",
+    "2026-07-25_loop-test-time-compute"
+  ],
+  "links": {
+    "folder": "experiments/2026-07-26_quantized-coconut",
+    "results_json": "experiments/2026-07-26_quantized-coconut/results.json",
+    "chart": "experiments/2026-07-26_quantized-coconut/chart.png",
+    "readme": "experiments/2026-07-26_quantized-coconut/README.md"
+  },
+  "tags": [
+    "track-a",
+    "latent-reasoning",
+    "coconut",
+    "continuous-thought",
+    "vector-quantization",
+    "vq-vae",
+    "codebook",
+    "straight-through-estimator",
+    "discrete-bottleneck",
+    "information-bottleneck",
+    "interpretability",
+    "readable-thoughts",
+    "graph-reachability",
+    "curriculum",
+    "matched-compute",
+    "ablation",
+    "negative-result",
+    "cpu-only"
+  ]
+}

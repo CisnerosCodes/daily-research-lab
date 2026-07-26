@@ -1,0 +1,53 @@
+# run.py reads this. No magic constants in code.
+id: "2026-07-26_quantized-coconut"
+title: "Quantized Coconut: how discrete can a continuous thought be? A VQ bottleneck (K = 4/16/64/256/inf) on nano-Coconut DAG reachability"
+hypothesis: "Putting a VQ-VAE-style vector-quantization bottleneck on each continuous thought of a nano-Coconut model degrades held-out DAG-reachability accuracy as the codebook shrinks, with a knee at some K* above which quantized thoughts match the unquantized continuous baseline (0.873 in the sibling run 2026-07-25_coconut-toy-graph); and the surviving discrete codes carry readable structure (code identity correlates with hop count / reachability)."
+seed: 0
+dataset:
+  name: "synthetic random DAGs, N=8 nodes, out-degree <= 2, exactly E=10 edges, fixed-width adjacency-slot encoding; yes/no reachability-within-3-hops queries balanced 50/50 and stratified by shortest-path length 1/2/3 (IDENTICAL generator to 2026-07-25_coconut-toy-graph, reused verbatim)"
+  source: "generated in run.py (numpy PCG64, fixed seeds; train/test pools drawn from disjoint seeded streams)"
+  license: "n/a (synthetic)"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  # --- task (identical to the sibling 2026-07-25_coconut-toy-graph) ---
+  n_nodes: 8
+  n_edges: 10
+  max_out_degree: 2        # fixes the adjacency-slot width; prefix length is constant
+  max_hops: 3              # positive queries have shortest path length 1..3
+  n_thoughts: 3            # H latent slots before the answer
+  n_train: 20000           # training pool of graphs (batches sampled from it)
+  n_test: 3000             # held-out eval graphs (disjoint generator stream)
+  # --- model (identical to the sibling) ---
+  n_layers: 2
+  d_model: 64
+  n_heads: 4
+  d_ff: 256
+  # --- optimisation (identical to the sibling) ---
+  steps: 1100
+  warmup: 50
+  batch_size: 64
+  lr: 0.002
+  weight_decay: 0.01
+  grad_clip: 1.0
+  seeds: [0, 1]
+  curriculum_frac: 0.6      # coconut: k=0,1,2 stages fill the first 60% of steps, then k=3
+  time_cap_s_per_run: 220   # honest time-box safety net: training stops early if hit.
+                            # A full run measures 63 s on an idle box and ~99 s when the 2 shared
+                            # cores are busy, so this must NOT fire: an early break would give the
+                            # arms unequal step counts and wreck the K sweep.
+  # --- the sweep: codebook size K on the continuous thought (null = unquantized) ---
+  codebook_sizes: [null, 256, 64, 16, 4]
+  # --- VQ bottleneck ---
+  vq_beta: 0.25             # commitment weight (VQ-VAE, arXiv:1711.00937)
+  vq_weight: 1.0            # weight of the total VQ loss in the objective
+  vq_init_std: 1.0          # codebook init ~ N(0,1) per dim: matches the LayerNorm'd hidden
+  vq_restart_every: 100     # dead-code restart interval (steps); 0 disables
+  # --- code-readability analysis ---
+  mi_shuffle_seed: 4242     # label-shuffled control for the finite-sample MI bias
+  # --- reference numbers from the sibling run (same task, same model, same steps) ---
+  sibling_reference:
+    id: "2026-07-25_coconut-toy-graph"
+    coconut: 0.873
+    cot: 0.937
+    pause: 0.687
+    nocot: 0.600

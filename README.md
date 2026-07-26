@@ -28,7 +28,7 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**28 experiments logged.**
+**30 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
@@ -36,6 +36,8 @@ experiments/                one dated folder per experiment
 | 2026-07-26 | [RetNet retention at nano scale: parallel == recurrent to 3e-7, and the decay schedule is worth 12.7x the seed noise](experiments/2026-07-26_retnet-nano-char) | ✅ done | Two of three hypotheses held; the third was refuted hard. (1) DUALITY CONFIRMED and it is  |
 | 2026-07-26 | [Nano CTM parity: the synchronization readout wins, but a single-tick pair-product control takes most of the win](experiments/2026-07-26_ctm-parity-sync) | ✅ done | The pre-registered null was refuted and then the win was re-attributed. (1) SYNC IS NOT DE |
 | 2026-07-26 | [Weight tying at nano scale: the benefit-of-tying curve has the wrong sign - tying's cost GROWS with embedding fraction, and untying beats 37% more width](experiments/2026-07-26_weight-tying-tiny) | ✅ done | REFUTED, with the sign reversed. Across an embedding fraction of 0.07 -> 0.82 built on two |
+| 2026-07-26 | [Quantized Coconut: a continuous thought survives being squeezed to 2 bits - accuracy vs codebook size is flat from K=inf down to K=4](experiments/2026-07-26_quantized-coconut) | ✅ done | Refuted, and cleanly. The hypothesis predicted a knee: a codebook size below which discret |
+| 2026-07-26 | [Head dim vs head count at fixed d_model: no U-curve - val bpc is perfectly monotone in head_dim, one giant head ties the best, and tiny heads go DIFFUSE not sharp](experiments/2026-07-26_head-dim-vs-count-isoparam) | ✅ done | REFUTED - there is no U-curve and no interior optimum. Across the exactly-iso-parameter fa |
 | 2026-07-25 | [NoPE vs RoPE vs ALiBi vs APE: does the length-generalization ranking survive at 0.1M params?](experiments/2026-07-25_pe-length-gen-tiny) | ✅ done | Hypothesis refuted: at 0.1M params and iso-compute the length-generalization ranking is AL |
 | 2026-07-25 | [Shadow E1: at iso-FLOPs on a 0.06-0.21M-param char LM, a weight-tied looped block loses to plain depth](experiments/2026-07-25_shadow-loop-vs-depth-isoflop) | ✅ done | Hypothesis supported. At iso-FLOPs the weight-tied loop never beats untied depth and the p |
 | 2026-07-25 | [Does the Game-of-Life capacity window transfer to language? Tied vs untied recursion across width](experiments/2026-07-25_shadow-recursion-capacity-window) | ✅ done | Hypothesis refuted - the Game-of-Life capacity window does not transfer to language. Weigh |

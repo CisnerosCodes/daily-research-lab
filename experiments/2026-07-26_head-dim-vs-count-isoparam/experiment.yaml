@@ -1,0 +1,43 @@
+# Config for 2026-07-26_head-dim-vs-count-isoparam. run.py reads it. No magic constants in code.
+id: "2026-07-26_head-dim-vs-count-isoparam"
+title: "Head dim vs head count at fixed d_model: is there an iso-parameter U-curve?"
+hypothesis: >-
+  At fixed d_model=128 the attention parameter count is identical for every
+  (n_head, head_dim) split with n_head * head_dim = d_model, so a val-bpc-vs-head_dim
+  curve isolates the split itself; we expect an interior optimum (moderate head_dim
+  beats both 1 giant head and 32 tiny heads), i.e. a U-curve.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters ---
+params:
+  # (n_head, head_dim) pairs; n_head * head_dim must equal d_model for every entry
+  configs:
+    - [1, 128]
+    - [2, 64]
+    - [4, 32]
+    - [8, 16]
+    - [16, 8]
+    - [32, 4]
+  seeds: [0, 1]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # attention-entropy probe (mechanistic hint)
+  entropy_batches: 4
+  entropy_min_pos: 8
