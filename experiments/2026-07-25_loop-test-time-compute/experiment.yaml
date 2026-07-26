@@ -1,0 +1,60 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-25_loop-test-time-compute"
+title: "Trading test-time compute for accuracy in a 0.06M-param weight-tied loop: does running MORE loop iterations than you trained on solve harder instances?"
+hypothesis: "A weight-tied looped block trained at K=3 loop iterations on a task whose difficulty is exactly the number of required sequential steps (prefix-parity under a 2-token attention window, where position i needs K >= i-1 loops) learns a REUSABLE one-step propagation rule, so running K > 3 at test time monotonically raises accuracy on harder (deeper) instances instead of degrading it - and an untied depth-3 baseline with 2.6x the parameters cannot extend at all."
+seed: 0
+dataset:
+  name: "synthetic prefix-parity (cumulative XOR): input BOS x_1..x_L with x_i in {0,1}, target y_i = XOR(x_1..x_i)"
+  source: "generated in run.py from the seed (torch.Generator, no external data)"
+  license: "n/a (synthetic)"
+# --- hyperparameters (add whatever the experiment needs) ---
+params:
+  # --- model ---
+  d_model: 64
+  n_heads: 2
+  d_ff: 256
+  attn_window: 1          # each position attends to itself and the ONE previous token
+  # (window 1 => after K block applications position i knows bits [i-K, i],
+  #  so difficulty d = position index is solvable iff K >= d - 1. This is the whole point:
+  #  required sequential steps == difficulty, so extra test-time loops are the only way up.)
+  vocab: 3                # 0, 1, BOS
+  # --- training ---
+  k_train: 3              # trained loop iterations for the fixed-K arms
+  train_len_min: 1
+  train_len_max: 4        # = k_train + 1, the deepest instance K=3 loops can solve
+  steps: 1500
+  batch_size: 256
+  lr: 0.002
+  weight_decay: 0.01
+  warmup: 100
+  grad_clip: 1.0
+  seeds: [0, 1, 2]
+  time_cap_s_per_run: 60  # honest time-box: training stops early if hit
+  # --- evaluation ---
+  test_k_values: [1, 2, 3, 4, 5, 6, 7, 8]
+  test_len: 9             # = max(test_k) + 1; per-position accuracy gives every difficulty at once
+  eval_n: 1024
+  eval_seed: 12345
+  solve_threshold: 0.95   # accuracy bar for "difficulty d is solved"
+  # --- arms ---
+  arms:
+    - name: "tied_fixK3_inj"
+      tied: true
+      inject: true
+      k_schedule: "fixed"
+      note: "the backlog's literal spec + recurrent-depth-style per-iteration input injection"
+    - name: "tied_fixK3_noinj"
+      tied: true
+      inject: false
+      k_schedule: "fixed"
+      note: "vanilla loop, no input injection (the variant 2026-07-25_shadow-loop-vs-depth-isoflop flagged as a caveat)"
+    - name: "tied_randK_inj"
+      tied: true
+      inject: true
+      k_schedule: "random"
+      note: "stochastic depth schedule: sample k ~ U{1,2,3} per batch and set L = k+1 so every supervised position is computable at that depth"
+    - name: "untied_d3"
+      tied: false
+      inject: false
+      k_schedule: "fixed"
+      note: "control: 3 independent blocks, 2.6x the parameters, evaluated once - it structurally cannot extend"

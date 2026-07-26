@@ -1,0 +1,4 @@
+numpy==2.4.4
+torch==2.13.0
+matplotlib
+pyyaml

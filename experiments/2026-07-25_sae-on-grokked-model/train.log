@@ -1,0 +1,22 @@
+p=59  d_mlp=256  N=3481 inputs
+all-pair accuracy: grokked 1.0000  memorized 0.4576  random 0.0161
+grokked ckpt: step 4056, train 1.000, test 1.000, key_freqs [24, 17, 5, 3, 6, 25]
+memorized ckpt: step 200, train 0.991, test 0.102 (train_frac 0.4)
+[neurons/grokked] alive 256/256  mean purity 0.827  frac_pure 0.75  freqs [3, 5, 17, 24]
+[neurons/memorized] alive 256/256  mean purity 0.1372  frac_pure 0.0  freqs []
+[neurons/random_init] alive 174/256  mean purity 0.1309  frac_pure 0.0  freqs []
+null (random directions): {'grokked': {'mean_purity': 0.4824, 'p99_purity': 0.8013, 'frac_pure': 0.0117}, 'memorized': {'mean_purity': 0.1393, 'p99_purity': 0.314, 'frac_pure': 0.0}, 'random_init': {'mean_purity': 0.1376, 'p99_purity': 0.2535, 'frac_pure': 0.0}}
+null (random sparse indicator maps): {'0.02': {'mean_purity': 0.0052, 'p99_purity': 0.0076}, '0.05': {'mean_purity': 0.0052, 'p99_purity': 0.008}, '0.15': {'mean_purity': 0.0053, 'p99_purity': 0.0084}}
+[sae/grokked] lam=0.3 x4: FVU 0.0089 L0 31.6 dead 0.46 alive 473/1024 | act purity mean 0.1199 frac_pure 0.0 | dec purity mean 0.5477 frac_pure 0.0338 | 41.6s
+[sae/grokked] lam=1.0 x4: FVU 0.0676 L0 11.2 dead 0.83 alive 67/1024 | act purity mean 0.3338 frac_pure 0.1045 | dec purity mean 0.6377 frac_pure 0.3134 | 44.0s
+[sae/grokked] lam=3.0 x4: FVU 0.9901 L0 0.7 dead 0.97 alive 1/1024 | act purity mean 0.9169 frac_pure 1.0 | dec purity mean 0.9519 frac_pure 1.0 | 46.4s
+[sae/memorized] lam=0.3 x4: FVU 0.0160 L0 35.2 dead 0.00 alive 997/1024 | act purity mean 0.0277 frac_pure 0.0 | dec purity mean 0.1743 frac_pure 0.0 | 39.4s
+[sae/memorized] lam=1.0 x4: FVU 0.0544 L0 14.8 dead 0.64 alive 265/1024 | act purity mean 0.037 frac_pure 0.0 | dec purity mean 0.1817 frac_pure 0.0 | 40.9s
+[sae/memorized] lam=3.0 x4: FVU 0.3156 L0 4.8 dead 0.89 alive 23/1024 | act purity mean 0.0919 frac_pure 0.0 | dec purity mean 0.1905 frac_pure 0.0 | 45.8s
+[sae/random_init] lam=0.3 x4: FVU 0.1381 L0 11.0 dead 0.57 alive 55/1024 | act purity mean 0.0666 frac_pure 0.0 | dec purity mean 0.1413 frac_pure 0.0 | 47.6s
+[sae/random_init] lam=1.0 x4: FVU 0.2684 L0 3.9 dead 0.91 alive 39/1024 | act purity mean 0.0537 frac_pure 0.0 | dec purity mean 0.1426 frac_pure 0.0 | 44.5s
+[sae/random_init] lam=3.0 x4: FVU 0.9476 L0 0.2 dead 0.96 alive 3/1024 | act purity mean 0.0389 frac_pure 0.0 | dec purity mean 0.15 frac_pure 0.0 | 41.8s
+[sae/grokked] lam=1.0 x8: FVU 0.0649 L0 9.8 dead 0.91 alive 44/2048 | act purity mean 0.5155 frac_pure 0.3182 | dec purity mean 0.7461 frac_pure 0.5682 | 90.8s
+HEADLINE {"usable_arm_criteria": "fvu<=0.25 and n_alive>=10", "neuron_frac_pure_grokked": 0.75, "neuron_mean_purity_grokked": 0.827, "neuron_freqs_claimed_grokked": [3, 5, 17, 24], "sae_best_frac_pure_grokked": 0.3182, "sae_best_arm": "lambda=1.0 x8", "sae_best_mean_purity_grokked": 0.5155, "sae_best_dec_frac_pure_grokked": 0.5682, "sae_best_freqs_claimed": [5, 17, 24], "sae_best_4x_frac_pure": 0.1045, "sae_best_4x_arm": "lambda=1.0 x4", "sae_best_dead_fraction": 0.9106, "key_freqs": [24, 17, 5, 3, 6, 25], "key_freqs_recovered_by_sae": false, "key_freqs_recovered_by_neurons": false, "null_frac_pure_random_dirs_grokked": 0.0117, "null_mean_purity_random_dirs_grokked": 0.4824, "n_collapsed_arms": 4}
+
+wrote results.json + chart.png in 486.75s

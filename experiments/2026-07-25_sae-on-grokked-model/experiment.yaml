@@ -1,0 +1,41 @@
+# SAEs vs a provable ground truth: do sparse autoencoders recover the known
+# Fourier features of a grokked (a+b) mod 59 transformer?
+id: "2026-07-25_sae-on-grokked-model"
+title: "SAEs on a grokked modular-addition transformer: do they recover the KNOWN Fourier features?"
+hypothesis: >-
+  A small overcomplete L1 sparse autoencoder trained on the MLP hidden activations of a
+  fully grokked (a+b) mod 59 transformer will recover the model's known Fourier structure:
+  a large fraction of its alive features will be frequency-pure (>=80% of their 2D Fourier
+  power on a single frequency k) and the set of frequencies claimed by those features will
+  match the model's key frequencies.
+seed: 0
+dataset:
+  name: "all 59^2 = 3481 (a,b) pairs of (a+b) mod 59; activations of a pre-trained grokked transformer"
+  source: "generated in run.py; checkpoints from experiments/2026-07-25_grokking-modular-addition"
+  license: "n/a (synthetic)"
+
+params:
+  # ---- where the activations come from ----
+  grokked_ckpt: "../2026-07-25_grokking-modular-addition/model.pt"
+  memorized_ckpt: "../2026-07-25_grokking-modular-addition/model_mid.pt"
+  random_seed_model: 1234          # seed for the random-init control transformer
+  site: "mlp_hidden"               # post-ReLU MLP hidden layer, d_mlp = 256
+
+  # ---- SAE ----
+  expansion: 4                     # 4x  -> 1024 features on d_mlp = 256
+  expansion_extra: 8               # one extra grokked arm at 8x, middle lambda
+  l1_coeffs: [0.3, 1.0, 3.0]       # 3 sparsity coefficients (activations are norm-scaled)
+  sae_steps: 2500
+  sae_batch: 256
+  sae_lr: 0.003
+  resample_at: [0.4, 0.7]          # dead-feature resampling points (fraction of steps)
+  resample_n_err: 512              # candidate pool size for resampling
+
+  # ---- scoring ----
+  alive_min_fire_frac: 0.01        # feature must fire on >=1% of the 3481 inputs to be "alive"
+  purity_threshold: 0.8            # >=80% of non-DC 2D Fourier power on ONE frequency
+  purity_threshold_loose: 0.5
+  n_null_dirs: 512                 # random-direction null for the decoder-purity metric
+
+  # ---- budget ----
+  time_budget_s: 640               # hard cap on SAE training (12 min box, minus scoring+chart)
