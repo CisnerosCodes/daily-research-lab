@@ -1,0 +1,41 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-27_mqar-feature-map-vs-width"
+title: "MQAR feature map vs width: does the Taylor-exp map unpin the linear-attention recall cliff, and is the elu+1 failure slow-to-learn or cannot-represent?"
+hypothesis: "On the 2026-07-26 mqar-state-capacity harness, swapping the elu+1 feature map for a BASED-style second-order Taylor-exp kernel (score = 1 + s + s^2/2) at identical 2000-step budget moves the linear-attention recall cliff from N~8 out past N=16 AND makes the frontier finally respond to width; and giving the failing elu+1 N=8 cells a 10x step budget does NOT rescue them, i.e. the pinned cliff was a feature-map limit, not slow learning."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order); identical generator seeds to 2026-07-26_mqar-state-capacity"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # per-mixer N cells (2-core CPU time-box):
+  #   taylor  - the experiment: full N sweep
+  #   linattn - replication anchor only (full elu+1 grid is in 2026-07-26_mqar-state-capacity)
+  #   attn    - reference at the one N the prior run did not cover
+  grid:
+    taylor: [4, 8, 16, 32]
+    linattn: [4, 8]
+    attn: [32]
+  num_pairs: [4, 8, 16, 32]      # chart x-axis + max_len sizing
+  d_model: [32, 64, 128]
+  seeds: [0]
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  train_steps: 2000
+  eval_every: 250
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
+  # phase 2: 10x budget on failing elu+1 cells (d=128 dropped for the CPU time-box;
+  # the 2026-07-26 run showed N=8 accuracy is width-invariant 0.166/0.170/0.176)
+  long_mixer: linattn
+  long_cells: [[32, 8], [64, 8]]
+  long_train_steps: 20000
+  long_eval_every: 500

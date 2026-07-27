@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**44 experiments logged.**
+**45 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-07-27 | [MQAR feature map vs width: the Taylor-exp kernel unpins the recall cliff into a clean budget-conditional capacity law (N*=d_head/4, frontier 4/8/16 at d=32/64/128 vs elu+1's pinned 2/4/4) - and the elu+1 cliff itself dissolves into an optimization plateau (d=64 escapes at ~8x budget to 0.82, d=128 flips 0.176 -> 0.975 on an init change), so fixed-step MQAR frontiers measure plateau escape time, not capacity](experiments/2026-07-27_mqar-feature-map-vs-width) | ✅ done | Hypothesis half-confirmed, half-refuted, and the refuted half takes the 2026-07-26 headlin |
 | 2026-07-26 | [MQAR at nano scale: the linear-attention recall cliff is pinned at N~8 across a 4x width sweep (state-size story refuted at fixed budget), and a scalar forget gate is a no-op](experiments/2026-07-26_mqar-state-capacity) | ✅ done | Frontier (max N with acc>=0.9, d=32/64/128): attn 8/16/16, linattn 2/4/4, gla 2/4/4. The l |
 | 2026-07-26 | [RetNet retention at nano scale: parallel == recurrent to 3e-7, and the decay schedule is worth 12.7x the seed noise](experiments/2026-07-26_retnet-nano-char) | ✅ done | Two of three hypotheses held; the third was refuted hard. (1) DUALITY CONFIRMED and it is  |
 | 2026-07-26 | [Nano CTM parity: the synchronization readout wins, but a single-tick pair-product control takes most of the win](experiments/2026-07-26_ctm-parity-sync) | ✅ done | The pre-registered null was refuted and then the win was re-attributed. (1) SYNC IS NOT DE |
