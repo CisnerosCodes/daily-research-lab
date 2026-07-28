@@ -1,0 +1,41 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-28_mqar-min-selectivity"
+title: "MQAR minimum selectivity: what is the cheapest gate that beats vanilla linear attention?"
+hypothesis: "On the mqar-state-capacity harness at d=64 (the cell where vanilla elu+1 linear attention fails N=8 inside the 2000-step budget), input-dependent PER-CHANNEL forget gates rescue recall and the required gate rank is small (rank 1-4 suffices, matching dense), while the two cheaper points on the selectivity axis - a learned but input-INDEPENDENT per-channel decay, and the input-dependent scalar gate already shown to be a no-op on 2026-07-26 - do not beat vanilla."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # selectivity axis, ordered by gate parameter budget / expressiveness:
+  #   none   - vanilla elu+1 linear attention (g=1, 0 gate params)
+  #   static - learned per-channel decay, input-INDEPENDENT (dh params/head)  [RetNet-style control]
+  #   scalar - input-dependent scalar gate per head (2026-07-26 'gla' arm, replicated)
+  #   rank1  - input-dependent per-channel gate, rank-1 bottleneck (LoRA-style U@V, U zero-init)
+  #   rank4  - same, rank-4 bottleneck
+  #   dense  - input-dependent per-channel gate, full d_model -> h*dh linear (GLA-style upper bound)
+  arms: [none, static, scalar, rank1, rank4, dense]
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  # cells: N=8 is the decisive cell (vanilla scores ~0.17 there at 2000 steps, twice replicated);
+  # N=4 sanity (everything should solve), N=16 stretch (run only for arms that solved N=8, + none anchor)
+  num_pairs_main: 8
+  seeds_main: [0, 1]
+  num_pairs_sanity: 4
+  num_pairs_stretch: 16
+  seeds_extra: [0]
+  train_steps: 2000
+  eval_every: 250
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
+  gate_bias_init: 3.0   # all gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla
