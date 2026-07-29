@@ -1,0 +1,13 @@
+[   25.8s] none       N=  8 seed=0 acc=0.174 esc=None steps=2000 gate_params=0 (25.8s)
+[   51.9s] none       N=  8 seed=1 acc=0.177 esc=None steps=2000 gate_params=0 (26.0s)
+[  151.2s] noisegate  N=  8 seed=0 acc=0.170 esc=None steps=2000 gate_params=128 (99.3s)
+[  243.0s] noisegate  N=  8 seed=1 acc=0.176 esc=None steps=2000 gate_params=128 (91.8s)
+[  334.4s] shufgate   N=  8 seed=0 acc=0.176 esc=None steps=2000 gate_params=8320 (91.4s)
+[  436.3s] shufgate   N=  8 seed=1 acc=0.175 esc=None steps=2000 gate_params=8320 (101.9s)
+[  523.4s] frozen1000 N=  8 seed=0 acc=0.860 esc=1000 steps=2000 gate_params=8320 (87.1s)
+[  620.3s] frozen1000 N=  8 seed=1 acc=0.930 esc=750 steps=2000 gate_params=8320 (96.9s)
+[  727.0s] dense      N=  8 seed=0 acc=0.767 esc=1250 steps=2000 gate_params=8320 (106.7s)
+[  828.8s] dense      N=  8 seed=1 acc=0.885 esc=1000 steps=2000 gate_params=8320 (101.8s)
+[  863.4s] noisegate  N=  4 seed=0 acc=0.969 esc=1750 steps=2000 gate_params=128 (34.6s)
+[  892.9s] shufgate   N=  4 seed=0 acc=0.996 esc=1250 steps=1750 gate_params=8320 (29.5s)
+N=8 escapes (of 2 seeds): dense 2, frozen@1k 2, shuffled-input 0, noise 0, vanilla 0

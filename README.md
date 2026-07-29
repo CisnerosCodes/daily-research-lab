@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**46 experiments logged.**
+**47 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-07-29 | [MQAR gate noise control: the dense gate's win is routing on the RIGHT input - the identical gate fed batch-shuffled (wrong-sequence) content and a train-time-only random gate are both exact no-ops on the vanilla plateau (delta <= 0.002), while freezing the dense gate at step 1000 (post-breakout) costs nothing (0.895 vs 0.826 mean) - selectivity is information routing, not optimization conditioning or noise-assisted escape](experiments/2026-07-29_mqar-gate-noise-control) | ✅ done | Confirms the hypothesis on all three controls: the dense gate's advantage is content-based |
 | 2026-07-28 | [MQAR minimum selectivity: the gate-rank axis is a cliff, not a ramp - static/scalar/rank-4 gates are exact no-ops on the vanilla plateau (delta <= 0.005), rank-1 is an init coin-flip (0.603 vs 0.178 across seeds), and only the full-rank per-channel gate reliably beats vanilla (0.767/0.885, breakout ~750-1000 steps, ~10-20x earlier than ungated) - yet even it fails the 0.9 fixed-budget 'solved' criterion, so selectivity acts as a plateau-escape accelerant, not capacity](experiments/2026-07-28_mqar-min-selectivity) | ✅ done | Refutes the hypothesis: the rank axis is a cliff, not a ramp. Input-independence controls  |
 | 2026-07-27 | [MQAR feature map vs width: the Taylor-exp kernel unpins the recall cliff into a clean budget-conditional capacity law (N*=d_head/4, frontier 4/8/16 at d=32/64/128 vs elu+1's pinned 2/4/4) - and the elu+1 cliff itself dissolves into an optimization plateau (d=64 escapes at ~8x budget to 0.82, d=128 flips 0.176 -> 0.975 on an init change), so fixed-step MQAR frontiers measure plateau escape time, not capacity](experiments/2026-07-27_mqar-feature-map-vs-width) | ✅ done | Hypothesis half-confirmed, half-refuted, and the refuted half takes the 2026-07-26 headlin |
 | 2026-07-26 | [MQAR at nano scale: the linear-attention recall cliff is pinned at N~8 across a 4x width sweep (state-size story refuted at fixed budget), and a scalar forget gate is a no-op](experiments/2026-07-26_mqar-state-capacity) | ✅ done | Frontier (max N with acc>=0.9, d=32/64/128): attn 8/16/16, linattn 2/4/4, gla 2/4/4. The l |

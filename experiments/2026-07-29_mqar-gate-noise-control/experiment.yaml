@@ -1,0 +1,43 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-07-29_mqar-gate-noise-control"
+title: "MQAR gate noise control: is the dense gate's win input-dependence or optimization conditioning?"
+hypothesis: "On the mqar-min-selectivity harness (d=64, N=8, 2000 steps - the cell where the dense per-channel gate reliably escapes the vanilla plateau ~750-1000 steps), the dense gate's advantage is input-dependent routing per se: a gate with identical parametrization and gradient dimensionality but fed the WRONG sequence's content (batch-shuffled input) and a train-time-only random per-channel gate (pure decay-path noise) both stay on the vanilla plateau, while freezing the dense gate at step 1000 (post-breakout) keeps most of the win."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity / 2026-07-28_mqar-min-selectivity)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # arms - all share the exact decay-masked linear-attention code path of 2026-07-28:
+  #   none       - vanilla elu+1 linear attention (g=1), plateau anchor        [replication]
+  #   noisegate  - learned per-channel bias + train-time-only Gaussian logit noise (no input;
+  #                eval uses bias alone) -> pure stochastic perturbation of the decay path
+  #   shufgate   - dense gate, but its input is the BATCH-SHUFFLED activations (detached):
+  #                identical parametrization, gradients, and input statistics, wrong content
+  #   frozen1000 - dense gate trained normally, gate params frozen at step 1000 (post-breakout)
+  #   dense      - full input-dependent per-channel gate (2026-07-28 winner)   [replication]
+  arms: [none, noisegate, shufgate, frozen1000, dense]
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  num_pairs_main: 8
+  seeds_main: [0, 1]
+  num_pairs_sanity: 4
+  sanity_arms: [noisegate, shufgate]   # new mechanisms only; the rest solved N=4 on 2026-07-28
+  seeds_extra: [0]
+  train_steps: 2000
+  eval_every: 250
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
+  escape_threshold: 0.5   # escape step = first eval crossing this (2026-07-28 lesson: endpoints near a plateau are init-noise-ordered; report the escape event too)
+  gate_bias_init: 3.0     # all gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla
+  noise_sigma: 1.0        # noisegate: logit = bias + sigma*eps, eps ~ N(0,1) fresh per (step, pos, channel)
+  freeze_step: 1000       # frozen1000: gate params requires_grad=False from this step on
