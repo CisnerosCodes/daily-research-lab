@@ -1,0 +1,2696 @@
+{
+  "id": "2026-07-30_qknorm-head-dim",
+  "git_commit": "123419848768a5949e48fd2464096eacbae42101",
+  "seed": 0,
+  "duration_sec": 584.18,
+  "metrics": {
+    "headline": "val bpc vs head_dim at fixed d_model=128, baseline vs QK-norm",
+    "iso_param_exact_within_arm": true,
+    "n_params_by_arm": {
+      "baseline": 423424,
+      "qknorm": 423936
+    },
+    "identical_shared_init_per_seed": true,
+    "shared_batch_stream": true,
+    "baseline": {
+      "shape_verdict": "monotone in head_dim",
+      "best_head_dim": 128,
+      "best_val_bpc_mean": 2.87585,
+      "worst_head_dim": 4,
+      "worst_val_bpc_mean": 3.09291,
+      "config_spread_bpc": 0.21706,
+      "mean_seed_spread_bpc": 0.02362,
+      "spread_ratio_config_over_seed": 9.19,
+      "spearman_bpc_vs_log2_head_dim": -1.0,
+      "interior_optimum": false
+    },
+    "qknorm": {
+      "shape_verdict": "U-curve (interior optimum, both edges outside seed spread)",
+      "best_head_dim": 32,
+      "best_val_bpc_mean": 2.82678,
+      "worst_head_dim": 4,
+      "worst_val_bpc_mean": 3.2359,
+      "config_spread_bpc": 0.40912,
+      "mean_seed_spread_bpc": 0.01433,
+      "spread_ratio_config_over_seed": 28.55,
+      "spearman_bpc_vs_log2_head_dim": -0.3,
+      "interior_optimum": true
+    },
+    "logit_std_spread_ratio_baseline": 1.68,
+    "logit_std_spread_ratio_qknorm": 2.3,
+    "fraction_of_head_dim_tax_removed_by_qknorm": -0.8848,
+    "paired_effect_of_qknorm": [
+      {
+        "head_dim": 128,
+        "qknorm_minus_baseline_bpc": 0.03282
+      },
+      {
+        "head_dim": 64,
+        "qknorm_minus_baseline_bpc": -0.04069
+      },
+      {
+        "head_dim": 32,
+        "qknorm_minus_baseline_bpc": -0.09859
+      },
+      {
+        "head_dim": 16,
+        "qknorm_minus_baseline_bpc": -0.1462
+      },
+      {
+        "head_dim": 4,
+        "qknorm_minus_baseline_bpc": 0.14299
+      }
+    ],
+    "by_config": {
+      "baseline": [
+        {
+          "arm": "baseline",
+          "n_head": 1,
+          "head_dim": 128,
+          "val_bpc_per_seed": [
+            2.86663,
+            2.88507
+          ],
+          "val_bpc_mean": 2.87585,
+          "val_bpc_min": 2.86663,
+          "val_bpc_max": 2.88507,
+          "logit_std_mean": 2.225,
+          "logit_std_min_head": 1.387,
+          "logit_std_max_head": 3.1514,
+          "entropy_norm_mean": 0.662,
+          "top1_weight_mean": 0.3213,
+          "train_seconds_mean": 22.3
+        },
+        {
+          "arm": "baseline",
+          "n_head": 2,
+          "head_dim": 64,
+          "val_bpc_per_seed": [
+            2.85489,
+            2.91863
+          ],
+          "val_bpc_mean": 2.88676,
+          "val_bpc_min": 2.85489,
+          "val_bpc_max": 2.91863,
+          "logit_std_mean": 3.0663,
+          "logit_std_min_head": 1.9508,
+          "logit_std_max_head": 4.618,
+          "entropy_norm_mean": 0.6241,
+          "top1_weight_mean": 0.3349,
+          "train_seconds_mean": 22.2
+        },
+        {
+          "arm": "baseline",
+          "n_head": 4,
+          "head_dim": 32,
+          "val_bpc_per_seed": [
+            2.91031,
+            2.94042
+          ],
+          "val_bpc_mean": 2.92537,
+          "val_bpc_min": 2.91031,
+          "val_bpc_max": 2.94042,
+          "logit_std_mean": 3.5453,
+          "logit_std_min_head": 1.8693,
+          "logit_std_max_head": 5.9688,
+          "entropy_norm_mean": 0.6401,
+          "top1_weight_mean": 0.3068,
+          "train_seconds_mean": 22.9
+        },
+        {
+          "arm": "baseline",
+          "n_head": 8,
+          "head_dim": 16,
+          "val_bpc_per_seed": [
+            3.02645,
+            3.02092
+          ],
+          "val_bpc_mean": 3.02368,
+          "val_bpc_min": 3.02092,
+          "val_bpc_max": 3.02645,
+          "logit_std_mean": 3.733,
+          "logit_std_min_head": 1.8197,
+          "logit_std_max_head": 6.4851,
+          "entropy_norm_mean": 0.6871,
+          "top1_weight_mean": 0.2671,
+          "train_seconds_mean": 25.0
+        },
+        {
+          "arm": "baseline",
+          "n_head": 32,
+          "head_dim": 4,
+          "val_bpc_per_seed": [
+            3.09304,
+            3.09277
+          ],
+          "val_bpc_mean": 3.09291,
+          "val_bpc_min": 3.09277,
+          "val_bpc_max": 3.09304,
+          "logit_std_mean": 3.1038,
+          "logit_std_min_head": 0.2233,
+          "logit_std_max_head": 9.2429,
+          "entropy_norm_mean": 0.7421,
+          "top1_weight_mean": 0.2324,
+          "train_seconds_mean": 38.8
+        }
+      ],
+      "qknorm": [
+        {
+          "arm": "qknorm",
+          "n_head": 1,
+          "head_dim": 128,
+          "val_bpc_per_seed": [
+            2.91841,
+            2.89892
+          ],
+          "val_bpc_mean": 2.90867,
+          "val_bpc_min": 2.89892,
+          "val_bpc_max": 2.91841,
+          "logit_std_mean": 2.9108,
+          "logit_std_min_head": 2.4808,
+          "logit_std_max_head": 4.0571,
+          "entropy_norm_mean": 0.5703,
+          "top1_weight_mean": 0.3876,
+          "train_seconds_mean": 26.0
+        },
+        {
+          "arm": "qknorm",
+          "n_head": 2,
+          "head_dim": 64,
+          "val_bpc_per_seed": [
+            2.83668,
+            2.85546
+          ],
+          "val_bpc_mean": 2.84607,
+          "val_bpc_min": 2.83668,
+          "val_bpc_max": 2.85546,
+          "logit_std_mean": 2.5518,
+          "logit_std_min_head": 1.9158,
+          "logit_std_max_head": 3.2265,
+          "entropy_norm_mean": 0.6467,
+          "top1_weight_mean": 0.3115,
+          "train_seconds_mean": 27.0
+        },
+        {
+          "arm": "qknorm",
+          "n_head": 4,
+          "head_dim": 32,
+          "val_bpc_per_seed": [
+            2.83013,
+            2.82343
+          ],
+          "val_bpc_mean": 2.82678,
+          "val_bpc_min": 2.82343,
+          "val_bpc_max": 2.83013,
+          "logit_std_mean": 2.0018,
+          "logit_std_min_head": 1.6654,
+          "logit_std_max_head": 2.6115,
+          "entropy_norm_mean": 0.7145,
+          "top1_weight_mean": 0.2663,
+          "train_seconds_mean": 26.5
+        },
+        {
+          "arm": "qknorm",
+          "n_head": 8,
+          "head_dim": 16,
+          "val_bpc_per_seed": [
+            2.87788,
+            2.87707
+          ],
+          "val_bpc_mean": 2.87748,
+          "val_bpc_min": 2.87707,
+          "val_bpc_max": 2.87788,
+          "logit_std_mean": 1.6822,
+          "logit_std_min_head": 0.8459,
+          "logit_std_max_head": 2.2118,
+          "entropy_norm_mean": 0.7996,
+          "top1_weight_mean": 0.1849,
+          "train_seconds_mean": 28.6
+        },
+        {
+          "arm": "qknorm",
+          "n_head": 32,
+          "head_dim": 4,
+          "val_bpc_per_seed": [
+            3.22297,
+            3.24883
+          ],
+          "val_bpc_mean": 3.2359,
+          "val_bpc_min": 3.22297,
+          "val_bpc_max": 3.24883,
+          "logit_std_mean": 1.2647,
+          "logit_std_min_head": 0.7766,
+          "logit_std_max_head": 2.1489,
+          "entropy_norm_mean": 0.9028,
+          "top1_weight_mean": 0.1074,
+          "train_seconds_mean": 42.5
+        }
+      ]
+    },
+    "train_steps": 600,
+    "tokens_per_run": 921600,
+    "seeds": [
+      0,
+      1
+    ],
+    "n_runs": 20,
+    "runs": [
+      {
+        "arm": "baseline",
+        "n_head": 1,
+        "head_dim": 128,
+        "seed": 0,
+        "n_params": 423424,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 22.0,
+        "final_train_loss_ma50": 1.904,
+        "train_loss_curve_ma25": [
+          3.4598,
+          2.694,
+          2.5684,
+          2.5261,
+          2.5076,
+          2.4719,
+          2.4582,
+          2.41,
+          2.3282,
+          2.282,
+          2.2088,
+          2.1875,
+          2.1299,
+          2.1027,
+          2.0784,
+          2.0513,
+          2.0092,
+          1.9859,
+          1.9613,
+          1.9515,
+          1.9338,
+          1.9081,
+          1.9001,
+          1.9079
+        ],
+        "val_bpc": 2.86663,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4699
+              ],
+              "top1_weight_per_head": [
+                0.4871
+              ],
+              "logit_std_per_head": [
+                2.9484
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8354
+              ],
+              "top1_weight_per_head": [
+                0.1714
+              ],
+              "logit_std_per_head": [
+                1.4133
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6526,
+          "top1_weight_mean": 0.3292,
+          "logit_std_mean": 2.1808,
+          "logit_std_min_head": 1.4133,
+          "logit_std_max_head": 2.9484
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 1,
+        "head_dim": 128,
+        "seed": 1,
+        "n_params": 423424,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 22.6,
+        "final_train_loss_ma50": 1.9195,
+        "train_loss_curve_ma25": [
+          3.4719,
+          2.6757,
+          2.5582,
+          2.5293,
+          2.4978,
+          2.4741,
+          2.447,
+          2.4146,
+          2.3581,
+          2.2902,
+          2.2413,
+          2.1865,
+          2.1601,
+          2.1216,
+          2.0823,
+          2.0547,
+          2.0344,
+          2.0066,
+          1.9646,
+          1.9708,
+          1.9612,
+          1.9517,
+          1.9317,
+          1.9073
+        ],
+        "val_bpc": 2.88507,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4818
+              ],
+              "top1_weight_per_head": [
+                0.4744
+              ],
+              "logit_std_per_head": [
+                3.1514
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8607
+              ],
+              "top1_weight_per_head": [
+                0.1522
+              ],
+              "logit_std_per_head": [
+                1.387
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6713,
+          "top1_weight_mean": 0.3133,
+          "logit_std_mean": 2.2692,
+          "logit_std_min_head": 1.387,
+          "logit_std_max_head": 3.1514
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 2,
+        "head_dim": 64,
+        "seed": 0,
+        "n_params": 423424,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 22.1,
+        "final_train_loss_ma50": 1.8926,
+        "train_loss_curve_ma25": [
+          3.4599,
+          2.6941,
+          2.5667,
+          2.5273,
+          2.5061,
+          2.4751,
+          2.4615,
+          2.4294,
+          2.3737,
+          2.3299,
+          2.2383,
+          2.2028,
+          2.139,
+          2.1029,
+          2.0822,
+          2.0488,
+          2.0049,
+          1.9778,
+          1.9523,
+          1.9407,
+          1.9263,
+          1.8985,
+          1.888,
+          1.8972
+        ],
+        "val_bpc": 2.85489,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.3652,
+                0.6257
+              ],
+              "top1_weight_per_head": [
+                0.6241,
+                0.2949
+              ],
+              "logit_std_per_head": [
+                3.8353,
+                3.5605
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.7294,
+                0.7627
+              ],
+              "top1_weight_per_head": [
+                0.2619,
+                0.2029
+              ],
+              "logit_std_per_head": [
+                1.9508,
+                2.0395
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6208,
+          "top1_weight_mean": 0.346,
+          "logit_std_mean": 2.8465,
+          "logit_std_min_head": 1.9508,
+          "logit_std_max_head": 3.8353
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 2,
+        "head_dim": 64,
+        "seed": 1,
+        "n_params": 423424,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 22.4,
+        "final_train_loss_ma50": 1.9465,
+        "train_loss_curve_ma25": [
+          3.4721,
+          2.6759,
+          2.5568,
+          2.5274,
+          2.4982,
+          2.4729,
+          2.4505,
+          2.4342,
+          2.3934,
+          2.34,
+          2.2924,
+          2.2412,
+          2.212,
+          2.1641,
+          2.1237,
+          2.092,
+          2.067,
+          2.0426,
+          1.9966,
+          1.9983,
+          1.9905,
+          1.9805,
+          1.9587,
+          1.9342
+        ],
+        "val_bpc": 2.91863,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.5916,
+                0.4569
+              ],
+              "top1_weight_per_head": [
+                0.3268,
+                0.4957
+              ],
+              "logit_std_per_head": [
+                3.8891,
+                4.618
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.7431,
+                0.7184
+              ],
+              "top1_weight_per_head": [
+                0.2609,
+                0.2121
+              ],
+              "logit_std_per_head": [
+                2.284,
+                2.3534
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6275,
+          "top1_weight_mean": 0.3239,
+          "logit_std_mean": 3.2861,
+          "logit_std_min_head": 2.284,
+          "logit_std_max_head": 4.618
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 4,
+        "head_dim": 32,
+        "seed": 0,
+        "n_params": 423424,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 23.5,
+        "final_train_loss_ma50": 1.9353,
+        "train_loss_curve_ma25": [
+          3.4601,
+          2.6941,
+          2.5642,
+          2.5259,
+          2.5036,
+          2.4758,
+          2.465,
+          2.4408,
+          2.4033,
+          2.3771,
+          2.3047,
+          2.2709,
+          2.2009,
+          2.1601,
+          2.137,
+          2.0962,
+          2.0482,
+          2.0247,
+          1.9999,
+          1.9884,
+          1.9725,
+          1.9434,
+          1.9312,
+          1.9394
+        ],
+        "val_bpc": 2.91031,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.637,
+                0.3881,
+                0.7117,
+                0.6554
+              ],
+              "top1_weight_per_head": [
+                0.3005,
+                0.5903,
+                0.2219,
+                0.3001
+              ],
+              "logit_std_per_head": [
+                3.9145,
+                4.0756,
+                3.2996,
+                2.7798
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.6984,
+                0.7926,
+                0.6505,
+                0.7349
+              ],
+              "top1_weight_per_head": [
+                0.2305,
+                0.1706,
+                0.3262,
+                0.2291
+              ],
+              "logit_std_per_head": [
+                2.6024,
+                1.8693,
+                2.8931,
+                2.6678
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6586,
+          "top1_weight_mean": 0.2962,
+          "logit_std_mean": 3.0128,
+          "logit_std_min_head": 1.8693,
+          "logit_std_max_head": 4.0756
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 4,
+        "head_dim": 32,
+        "seed": 1,
+        "n_params": 423424,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 22.4,
+        "final_train_loss_ma50": 1.9704,
+        "train_loss_curve_ma25": [
+          3.472,
+          2.6762,
+          2.5579,
+          2.5251,
+          2.4984,
+          2.4735,
+          2.4501,
+          2.4299,
+          2.3965,
+          2.3501,
+          2.3209,
+          2.2731,
+          2.2495,
+          2.2109,
+          2.1693,
+          2.1258,
+          2.0994,
+          2.0737,
+          2.027,
+          2.0271,
+          2.0187,
+          2.0044,
+          1.9803,
+          1.9606
+        ],
+        "val_bpc": 2.94042,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4928,
+                0.6294,
+                0.5987,
+                0.5763
+              ],
+              "top1_weight_per_head": [
+                0.4266,
+                0.2892,
+                0.3435,
+                0.3321
+              ],
+              "logit_std_per_head": [
+                5.9688,
+                4.7719,
+                4.7095,
+                5.7943
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.7354,
+                0.6326,
+                0.6845,
+                0.6222
+              ],
+              "top1_weight_per_head": [
+                0.2662,
+                0.3324,
+                0.2753,
+                0.2737
+              ],
+              "logit_std_per_head": [
+                2.4276,
+                3.1926,
+                2.5079,
+                3.249
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6215,
+          "top1_weight_mean": 0.3174,
+          "logit_std_mean": 4.0777,
+          "logit_std_min_head": 2.4276,
+          "logit_std_max_head": 5.9688
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 8,
+        "head_dim": 16,
+        "seed": 0,
+        "n_params": 423424,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 25.5,
+        "final_train_loss_ma50": 2.0438,
+        "train_loss_curve_ma25": [
+          3.4601,
+          2.6943,
+          2.5671,
+          2.5233,
+          2.5032,
+          2.4769,
+          2.4628,
+          2.4497,
+          2.4151,
+          2.3998,
+          2.3563,
+          2.3456,
+          2.29,
+          2.2631,
+          2.2412,
+          2.2124,
+          2.1595,
+          2.1335,
+          2.1098,
+          2.101,
+          2.0829,
+          2.0544,
+          2.0398,
+          2.0479
+        ],
+        "val_bpc": 3.02645,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.7161,
+                0.7632,
+                0.8363,
+                0.5865,
+                0.7714,
+                0.7789,
+                0.8644,
+                0.7055
+              ],
+              "top1_weight_per_head": [
+                0.235,
+                0.1945,
+                0.1526,
+                0.3351,
+                0.1774,
+                0.1764,
+                0.1416,
+                0.2388
+              ],
+              "logit_std_per_head": [
+                3.3478,
+                4.5002,
+                1.8852,
+                5.6205,
+                3.4536,
+                2.8261,
+                1.9021,
+                4.2657
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.6854,
+                0.6925,
+                0.6883,
+                0.6502,
+                0.8265,
+                0.573,
+                0.67,
+                0.63
+              ],
+              "top1_weight_per_head": [
+                0.2709,
+                0.2591,
+                0.2781,
+                0.3049,
+                0.1685,
+                0.4114,
+                0.2805,
+                0.3108
+              ],
+              "logit_std_per_head": [
+                2.4835,
+                3.7291,
+                2.9459,
+                3.022,
+                2.0126,
+                3.8734,
+                3.1158,
+                3.1388
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.7149,
+          "top1_weight_mean": 0.246,
+          "logit_std_mean": 3.2576,
+          "logit_std_min_head": 1.8852,
+          "logit_std_max_head": 5.6205
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 8,
+        "head_dim": 16,
+        "seed": 1,
+        "n_params": 423424,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 24.5,
+        "final_train_loss_ma50": 2.0373,
+        "train_loss_curve_ma25": [
+          3.472,
+          2.6762,
+          2.5581,
+          2.5261,
+          2.4957,
+          2.4715,
+          2.4515,
+          2.4381,
+          2.4139,
+          2.3796,
+          2.3461,
+          2.3113,
+          2.2909,
+          2.2537,
+          2.2131,
+          2.1854,
+          2.1546,
+          2.1345,
+          2.0962,
+          2.0918,
+          2.0797,
+          2.0667,
+          2.0484,
+          2.0262
+        ],
+        "val_bpc": 3.02092,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.639,
+                0.8,
+                0.6655,
+                0.6469,
+                0.6808,
+                0.6559,
+                0.853,
+                0.857
+              ],
+              "top1_weight_per_head": [
+                0.2749,
+                0.1556,
+                0.2522,
+                0.2624,
+                0.2674,
+                0.2655,
+                0.1335,
+                0.1259
+              ],
+              "logit_std_per_head": [
+                5.0913,
+                2.8874,
+                4.505,
+                6.4851,
+                5.8217,
+                5.2402,
+                2.2921,
+                1.8197
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.5592,
+                0.6478,
+                0.3934,
+                0.5757,
+                0.6299,
+                0.6724,
+                0.6476,
+                0.6251
+              ],
+              "top1_weight_per_head": [
+                0.3652,
+                0.3412,
+                0.5807,
+                0.3612,
+                0.3059,
+                0.2872,
+                0.3062,
+                0.3261
+              ],
+              "logit_std_per_head": [
+                5.0879,
+                3.6752,
+                4.4859,
+                5.0197,
+                4.2107,
+                3.9232,
+                3.0605,
+                3.7304
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6593,
+          "top1_weight_mean": 0.2882,
+          "logit_std_mean": 4.2085,
+          "logit_std_min_head": 1.8197,
+          "logit_std_max_head": 6.4851
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 32,
+        "head_dim": 4,
+        "seed": 0,
+        "n_params": 423424,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 38.9,
+        "final_train_loss_ma50": 2.0964,
+        "train_loss_curve_ma25": [
+          3.46,
+          2.6941,
+          2.5664,
+          2.5203,
+          2.4976,
+          2.468,
+          2.457,
+          2.4489,
+          2.4125,
+          2.3963,
+          2.3473,
+          2.3469,
+          2.2952,
+          2.2741,
+          2.2627,
+          2.2385,
+          2.1944,
+          2.178,
+          2.1582,
+          2.1446,
+          2.1319,
+          2.1079,
+          2.0904,
+          2.1024
+        ],
+        "val_bpc": 3.09304,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.893,
+                0.9439,
+                0.9319,
+                0.9789,
+                0.9247,
+                0.8675,
+                0.9153,
+                0.9789,
+                0.9859,
+                0.635,
+                0.8928,
+                0.7203,
+                0.8739,
+                0.8824,
+                0.721,
+                0.8952,
+                0.7852,
+                0.9543,
+                0.8108,
+                0.911,
+                0.8758,
+                0.7825,
+                0.8969,
+                0.9467,
+                0.9413,
+                0.7368,
+                0.8587,
+                0.7397,
+                0.9573,
+                0.8438,
+                0.9327,
+                0.9917
+              ],
+              "top1_weight_per_head": [
+                0.1191,
+                0.0773,
+                0.0927,
+                0.056,
+                0.0941,
+                0.1301,
+                0.1077,
+                0.0572,
+                0.05,
+                0.2894,
+                0.1076,
+                0.2153,
+                0.1233,
+                0.1176,
+                0.2126,
+                0.1056,
+                0.1849,
+                0.0821,
+                0.1492,
+                0.1046,
+                0.1145,
+                0.1743,
+                0.1113,
+                0.0842,
+                0.092,
+                0.2022,
+                0.1153,
+                0.2157,
+                0.0687,
+                0.1446,
+                0.0883,
+                0.0457
+              ],
+              "logit_std_per_head": [
+                1.3701,
+                0.8192,
+                0.8994,
+                0.419,
+                1.0674,
+                1.8174,
+                1.0463,
+                0.3994,
+                0.3511,
+                4.5319,
+                1.3929,
+                4.2939,
+                1.7483,
+                1.646,
+                3.9478,
+                1.7875,
+                2.9728,
+                0.6555,
+                3.3583,
+                1.0836,
+                1.6103,
+                2.8955,
+                1.5507,
+                0.754,
+                0.7458,
+                3.4385,
+                2.3034,
+                4.4844,
+                0.7441,
+                2.0166,
+                0.8779,
+                0.2708
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.545,
+                0.2348,
+                0.7862,
+                0.4686,
+                0.266,
+                0.6861,
+                0.5579,
+                0.6975,
+                0.6207,
+                0.5245,
+                0.4741,
+                0.5716,
+                0.6209,
+                0.5225,
+                0.5249,
+                0.6602,
+                0.472,
+                0.5643,
+                0.6605,
+                0.8208,
+                0.5863,
+                0.6191,
+                0.6903,
+                0.6573,
+                0.5166,
+                0.4703,
+                0.912,
+                0.6703,
+                0.7062,
+                0.4971,
+                0.7512,
+                0.4832
+              ],
+              "top1_weight_per_head": [
+                0.3948,
+                0.7488,
+                0.2046,
+                0.4611,
+                0.7105,
+                0.2711,
+                0.389,
+                0.2508,
+                0.2599,
+                0.3813,
+                0.4526,
+                0.4061,
+                0.3182,
+                0.396,
+                0.3793,
+                0.3353,
+                0.4889,
+                0.3889,
+                0.3121,
+                0.1535,
+                0.3565,
+                0.3295,
+                0.271,
+                0.2652,
+                0.4291,
+                0.4438,
+                0.0952,
+                0.2931,
+                0.2304,
+                0.4306,
+                0.2098,
+                0.4271
+              ],
+              "logit_std_per_head": [
+                4.8541,
+                9.2429,
+                2.2667,
+                8.0263,
+                5.1716,
+                3.2906,
+                4.5378,
+                4.0086,
+                2.9198,
+                4.6271,
+                5.8595,
+                4.5533,
+                3.7603,
+                5.5967,
+                5.5686,
+                3.5035,
+                6.844,
+                4.6939,
+                3.345,
+                1.7258,
+                4.0865,
+                4.5548,
+                2.7517,
+                4.3728,
+                4.7519,
+                5.692,
+                1.1651,
+                2.7598,
+                2.9436,
+                6.6576,
+                2.7971,
+                5.7235
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.7319,
+          "top1_weight_mean": 0.2409,
+          "logit_std_mean": 3.1243,
+          "logit_std_min_head": 0.2708,
+          "logit_std_max_head": 9.2429
+        }
+      },
+      {
+        "arm": "baseline",
+        "n_head": 32,
+        "head_dim": 4,
+        "seed": 1,
+        "n_params": 423424,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 38.8,
+        "final_train_loss_ma50": 2.1005,
+        "train_loss_curve_ma25": [
+          3.4721,
+          2.6764,
+          2.5587,
+          2.5244,
+          2.4911,
+          2.469,
+          2.4456,
+          2.431,
+          2.4061,
+          2.3714,
+          2.3473,
+          2.3123,
+          2.3043,
+          2.2717,
+          2.2432,
+          2.2171,
+          2.1907,
+          2.1782,
+          2.1438,
+          2.1479,
+          2.1352,
+          2.1302,
+          2.1075,
+          2.0935
+        ],
+        "val_bpc": 3.09277,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.8693,
+                0.898,
+                0.961,
+                0.8131,
+                0.8737,
+                0.9937,
+                0.8384,
+                0.829,
+                0.9695,
+                0.6085,
+                0.9458,
+                0.9417,
+                0.7847,
+                0.9138,
+                0.8091,
+                0.8946,
+                0.7843,
+                0.902,
+                0.8751,
+                0.9063,
+                0.8533,
+                0.887,
+                0.9067,
+                0.7625,
+                0.7779,
+                0.7826,
+                0.9744,
+                0.9558,
+                0.9761,
+                0.8801,
+                0.8639,
+                0.9489
+              ],
+              "top1_weight_per_head": [
+                0.1321,
+                0.1127,
+                0.0644,
+                0.1554,
+                0.1218,
+                0.0416,
+                0.173,
+                0.1583,
+                0.0627,
+                0.3185,
+                0.0839,
+                0.0787,
+                0.1758,
+                0.0931,
+                0.1504,
+                0.1044,
+                0.1677,
+                0.1047,
+                0.1304,
+                0.0955,
+                0.1279,
+                0.1321,
+                0.1074,
+                0.1854,
+                0.1785,
+                0.197,
+                0.0577,
+                0.0699,
+                0.0544,
+                0.1112,
+                0.1286,
+                0.0759
+              ],
+              "logit_std_per_head": [
+                1.8133,
+                1.2543,
+                0.7055,
+                2.3014,
+                1.7071,
+                0.2233,
+                1.8264,
+                1.7364,
+                0.5581,
+                5.423,
+                0.7462,
+                0.8299,
+                2.9744,
+                1.6197,
+                2.7017,
+                1.3998,
+                3.95,
+                1.5203,
+                1.6057,
+                1.476,
+                1.8181,
+                1.3433,
+                1.4003,
+                3.2905,
+                3.1812,
+                3.4413,
+                0.5621,
+                0.8438,
+                0.5466,
+                2.3853,
+                1.6959,
+                0.9114
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.58,
+                0.748,
+                0.588,
+                0.5377,
+                0.5295,
+                0.6667,
+                0.9039,
+                0.5734,
+                0.6954,
+                0.7323,
+                0.5909,
+                0.4247,
+                0.7669,
+                0.5658,
+                0.5299,
+                0.6469,
+                0.4467,
+                0.6273,
+                0.5319,
+                0.6338,
+                0.6973,
+                0.6965,
+                0.669,
+                0.4992,
+                0.8663,
+                0.5591,
+                0.5588,
+                0.742,
+                0.4887,
+                0.6651,
+                0.7198,
+                0.6835
+              ],
+              "top1_weight_per_head": [
+                0.3741,
+                0.2287,
+                0.2991,
+                0.3833,
+                0.4579,
+                0.2957,
+                0.1243,
+                0.3858,
+                0.2635,
+                0.2375,
+                0.3119,
+                0.5571,
+                0.2188,
+                0.3758,
+                0.4213,
+                0.3022,
+                0.5232,
+                0.325,
+                0.3769,
+                0.3063,
+                0.2596,
+                0.276,
+                0.2897,
+                0.4233,
+                0.1435,
+                0.3554,
+                0.3502,
+                0.2463,
+                0.4533,
+                0.2895,
+                0.2525,
+                0.2733
+              ],
+              "logit_std_per_head": [
+                3.9397,
+                3.3115,
+                5.3948,
+                6.1045,
+                5.5144,
+                4.3889,
+                1.0207,
+                3.7149,
+                3.6176,
+                3.9387,
+                6.187,
+                4.3626,
+                2.6883,
+                6.6869,
+                5.8468,
+                3.4935,
+                6.3917,
+                4.2019,
+                4.7603,
+                4.4871,
+                3.5261,
+                2.4792,
+                3.8692,
+                5.8189,
+                1.9925,
+                6.2206,
+                5.5256,
+                2.2251,
+                6.9759,
+                3.5462,
+                3.0063,
+                4.3041
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.7523,
+          "top1_weight_mean": 0.2239,
+          "logit_std_mean": 3.0833,
+          "logit_std_min_head": 0.2233,
+          "logit_std_max_head": 6.9759
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 1,
+        "head_dim": 128,
+        "seed": 0,
+        "n_params": 423936,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 25.6,
+        "final_train_loss_ma50": 1.9368,
+        "train_loss_curve_ma25": [
+          3.4618,
+          2.7071,
+          2.5783,
+          2.5365,
+          2.5143,
+          2.4935,
+          2.4862,
+          2.4702,
+          2.417,
+          2.3663,
+          2.2745,
+          2.2266,
+          2.1608,
+          2.1285,
+          2.1124,
+          2.0837,
+          2.0439,
+          2.0224,
+          1.9965,
+          1.9853,
+          1.965,
+          1.9391,
+          1.9326,
+          1.9409
+        ],
+        "val_bpc": 2.91841,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4531
+              ],
+              "top1_weight_per_head": [
+                0.5084
+              ],
+              "logit_std_per_head": [
+                2.5973
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.7334
+              ],
+              "top1_weight_per_head": [
+                0.1942
+              ],
+              "logit_std_per_head": [
+                4.0571
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.5933,
+          "top1_weight_mean": 0.3513,
+          "logit_std_mean": 3.3272,
+          "logit_std_min_head": 2.5973,
+          "logit_std_max_head": 4.0571
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 1,
+        "head_dim": 128,
+        "seed": 1,
+        "n_params": 423936,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 26.4,
+        "final_train_loss_ma50": 1.9223,
+        "train_loss_curve_ma25": [
+          3.472,
+          2.6873,
+          2.5726,
+          2.5445,
+          2.5155,
+          2.49,
+          2.4638,
+          2.4258,
+          2.3453,
+          2.2731,
+          2.2262,
+          2.1765,
+          2.1513,
+          2.12,
+          2.0814,
+          2.0527,
+          2.0315,
+          2.0089,
+          1.9719,
+          1.9704,
+          1.9622,
+          1.9518,
+          1.9351,
+          1.9094
+        ],
+        "val_bpc": 2.89892,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4244
+              ],
+              "top1_weight_per_head": [
+                0.5408
+              ],
+              "logit_std_per_head": [
+                2.4808
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.6699
+              ],
+              "top1_weight_per_head": [
+                0.3073
+              ],
+              "logit_std_per_head": [
+                2.5078
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.5472,
+          "top1_weight_mean": 0.424,
+          "logit_std_mean": 2.4943,
+          "logit_std_min_head": 2.4808,
+          "logit_std_max_head": 2.5078
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 2,
+        "head_dim": 64,
+        "seed": 0,
+        "n_params": 423936,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 27.3,
+        "final_train_loss_ma50": 1.8709,
+        "train_loss_curve_ma25": [
+          3.4581,
+          2.7046,
+          2.5718,
+          2.5248,
+          2.5006,
+          2.451,
+          2.406,
+          2.3219,
+          2.2441,
+          2.2091,
+          2.1534,
+          2.1355,
+          2.0849,
+          2.0536,
+          2.0369,
+          2.0154,
+          1.9692,
+          1.9477,
+          1.9228,
+          1.9147,
+          1.8993,
+          1.8711,
+          1.8668,
+          1.875
+        ],
+        "val_bpc": 2.83668,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4475,
+                0.5215
+              ],
+              "top1_weight_per_head": [
+                0.5165,
+                0.4422
+              ],
+              "logit_std_per_head": [
+                2.4296,
+                2.2531
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8395,
+                0.6076
+              ],
+              "top1_weight_per_head": [
+                0.1309,
+                0.26
+              ],
+              "logit_std_per_head": [
+                2.7272,
+                3.2265
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.604,
+          "top1_weight_mean": 0.3374,
+          "logit_std_mean": 2.6591,
+          "logit_std_min_head": 2.2531,
+          "logit_std_max_head": 3.2265
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 2,
+        "head_dim": 64,
+        "seed": 1,
+        "n_params": 423936,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 26.7,
+        "final_train_loss_ma50": 1.8882,
+        "train_loss_curve_ma25": [
+          3.4707,
+          2.6817,
+          2.5627,
+          2.5365,
+          2.5023,
+          2.469,
+          2.3982,
+          2.3248,
+          2.2418,
+          2.1977,
+          2.1737,
+          2.1304,
+          2.108,
+          2.0822,
+          2.0473,
+          2.016,
+          1.9994,
+          1.9733,
+          1.9308,
+          1.9355,
+          1.9262,
+          1.9187,
+          1.9002,
+          1.8762
+        ],
+        "val_bpc": 2.85546,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.4128,
+                0.7737
+              ],
+              "top1_weight_per_head": [
+                0.5598,
+                0.2025
+              ],
+              "logit_std_per_head": [
+                2.2445,
+                1.9158
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8813,
+                0.6904
+              ],
+              "top1_weight_per_head": [
+                0.1171,
+                0.2635
+              ],
+              "logit_std_per_head": [
+                2.9638,
+                2.6538
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.6895,
+          "top1_weight_mean": 0.2857,
+          "logit_std_mean": 2.4445,
+          "logit_std_min_head": 1.9158,
+          "logit_std_max_head": 2.9638
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 4,
+        "head_dim": 32,
+        "seed": 0,
+        "n_params": 423936,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 26.4,
+        "final_train_loss_ma50": 1.8506,
+        "train_loss_curve_ma25": [
+          3.4587,
+          2.6984,
+          2.5637,
+          2.5257,
+          2.4983,
+          2.4613,
+          2.427,
+          2.3429,
+          2.251,
+          2.2126,
+          2.1541,
+          2.1358,
+          2.0806,
+          2.0461,
+          2.0275,
+          2.0018,
+          1.9536,
+          1.9299,
+          1.9024,
+          1.8943,
+          1.8793,
+          1.8536,
+          1.8474,
+          1.8537
+        ],
+        "val_bpc": 2.83013,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.8291,
+                0.4027,
+                0.7637,
+                0.5502
+              ],
+              "top1_weight_per_head": [
+                0.1723,
+                0.6657,
+                0.2222,
+                0.4065
+              ],
+              "logit_std_per_head": [
+                1.7394,
+                1.8751,
+                1.8569,
+                2.2243
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.7264,
+                0.7304,
+                0.8424,
+                0.7801
+              ],
+              "top1_weight_per_head": [
+                0.1741,
+                0.2626,
+                0.1467,
+                0.1642
+              ],
+              "logit_std_per_head": [
+                2.5577,
+                2.1167,
+                1.7246,
+                2.6115
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.7031,
+          "top1_weight_mean": 0.2768,
+          "logit_std_mean": 2.0883,
+          "logit_std_min_head": 1.7246,
+          "logit_std_max_head": 2.6115
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 4,
+        "head_dim": 32,
+        "seed": 1,
+        "n_params": 423936,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 26.7,
+        "final_train_loss_ma50": 1.8732,
+        "train_loss_curve_ma25": [
+          3.4705,
+          2.6807,
+          2.5555,
+          2.5269,
+          2.4984,
+          2.4625,
+          2.4163,
+          2.3552,
+          2.2772,
+          2.2207,
+          2.1884,
+          2.141,
+          2.1163,
+          2.0803,
+          2.0409,
+          2.0086,
+          1.9895,
+          1.9621,
+          1.9158,
+          1.9222,
+          1.9148,
+          1.9059,
+          1.8828,
+          1.8635
+        ],
+        "val_bpc": 2.82343,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.469,
+                0.6191,
+                0.8341,
+                0.6522
+              ],
+              "top1_weight_per_head": [
+                0.5201,
+                0.3559,
+                0.1592,
+                0.3183
+              ],
+              "logit_std_per_head": [
+                1.9649,
+                1.8147,
+                1.6654,
+                1.821
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8188,
+                0.804,
+                0.7787,
+                0.8304
+              ],
+              "top1_weight_per_head": [
+                0.1495,
+                0.1654,
+                0.2199,
+                0.158
+              ],
+              "logit_std_per_head": [
+                2.0242,
+                2.1484,
+                1.7934,
+                2.0904
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.7258,
+          "top1_weight_mean": 0.2558,
+          "logit_std_mean": 1.9153,
+          "logit_std_min_head": 1.6654,
+          "logit_std_max_head": 2.1484
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 8,
+        "head_dim": 16,
+        "seed": 0,
+        "n_params": 423936,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 28.2,
+        "final_train_loss_ma50": 1.9152,
+        "train_loss_curve_ma25": [
+          3.4587,
+          2.6963,
+          2.5603,
+          2.5209,
+          2.4969,
+          2.4676,
+          2.451,
+          2.4175,
+          2.341,
+          2.2939,
+          2.2184,
+          2.1895,
+          2.1316,
+          2.1092,
+          2.0889,
+          2.0609,
+          2.0185,
+          1.9933,
+          1.9691,
+          1.9628,
+          1.9462,
+          1.915,
+          1.9116,
+          1.9188
+        ],
+        "val_bpc": 2.87788,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.8489,
+                0.9448,
+                0.8716,
+                0.7784,
+                0.7753,
+                0.896,
+                0.5024,
+                0.8806
+              ],
+              "top1_weight_per_head": [
+                0.1627,
+                0.0878,
+                0.1437,
+                0.2101,
+                0.217,
+                0.1203,
+                0.5205,
+                0.1327
+              ],
+              "logit_std_per_head": [
+                1.5797,
+                0.8459,
+                1.4687,
+                1.6547,
+                1.5951,
+                1.5747,
+                1.887,
+                1.4473
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8101,
+                0.8462,
+                0.8015,
+                0.8242,
+                0.8035,
+                0.7737,
+                0.8886,
+                0.8104
+              ],
+              "top1_weight_per_head": [
+                0.1306,
+                0.1812,
+                0.19,
+                0.1535,
+                0.1639,
+                0.1476,
+                0.1081,
+                0.1302
+              ],
+              "logit_std_per_head": [
+                1.9251,
+                1.313,
+                2.0368,
+                1.5845,
+                1.68,
+                2.2118,
+                1.6949,
+                1.8336
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.816,
+          "top1_weight_mean": 0.175,
+          "logit_std_mean": 1.6458,
+          "logit_std_min_head": 0.8459,
+          "logit_std_max_head": 2.2118
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 8,
+        "head_dim": 16,
+        "seed": 1,
+        "n_params": 423936,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 29.0,
+        "final_train_loss_ma50": 1.9226,
+        "train_loss_curve_ma25": [
+          3.4685,
+          2.6814,
+          2.554,
+          2.5272,
+          2.4933,
+          2.4643,
+          2.4338,
+          2.4093,
+          2.3603,
+          2.3082,
+          2.2593,
+          2.2121,
+          2.1751,
+          2.1331,
+          2.091,
+          2.0585,
+          2.0407,
+          2.0126,
+          1.9693,
+          1.9718,
+          1.9637,
+          1.9524,
+          1.9327,
+          1.9125
+        ],
+        "val_bpc": 2.87707,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.5469,
+                0.6302,
+                0.8127,
+                0.7741,
+                0.7867,
+                0.8095,
+                0.8394,
+                0.824
+              ],
+              "top1_weight_per_head": [
+                0.4894,
+                0.3276,
+                0.1778,
+                0.1995,
+                0.1884,
+                0.1788,
+                0.1603,
+                0.167
+              ],
+              "logit_std_per_head": [
+                1.8378,
+                1.8677,
+                1.3766,
+                1.6428,
+                1.8182,
+                1.4871,
+                1.4297,
+                1.7228
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8199,
+                0.7746,
+                0.8013,
+                0.7773,
+                0.8371,
+                0.8471,
+                0.8252,
+                0.827
+              ],
+              "top1_weight_per_head": [
+                0.1485,
+                0.1533,
+                0.1585,
+                0.1394,
+                0.1345,
+                0.1647,
+                0.1835,
+                0.1437
+              ],
+              "logit_std_per_head": [
+                1.8309,
+                1.8862,
+                1.7163,
+                2.2087,
+                1.6076,
+                1.7496,
+                1.3625,
+                1.9514
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.7833,
+          "top1_weight_mean": 0.1947,
+          "logit_std_mean": 1.7185,
+          "logit_std_min_head": 1.3625,
+          "logit_std_max_head": 2.2087
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 32,
+        "head_dim": 4,
+        "seed": 0,
+        "n_params": 423936,
+        "shared_init_signature": 6066.452891,
+        "train_seconds": 42.3,
+        "final_train_loss_ma50": 2.1855,
+        "train_loss_curve_ma25": [
+          3.4572,
+          2.6967,
+          2.5616,
+          2.5165,
+          2.4968,
+          2.4696,
+          2.457,
+          2.4436,
+          2.4143,
+          2.4091,
+          2.3791,
+          2.3807,
+          2.3365,
+          2.3153,
+          2.3131,
+          2.2895,
+          2.2539,
+          2.2426,
+          2.2232,
+          2.2192,
+          2.2108,
+          2.1913,
+          2.1786,
+          2.1923
+        ],
+        "val_bpc": 3.22297,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.928,
+                0.9201,
+                0.8934,
+                0.944,
+                0.925,
+                0.9303,
+                0.9031,
+                0.9315,
+                0.933,
+                0.9406,
+                0.9497,
+                0.9335,
+                0.9343,
+                0.9345,
+                0.9186,
+                0.9314,
+                0.9188,
+                0.8943,
+                0.8839,
+                0.9284,
+                0.9275,
+                0.9275,
+                0.9317,
+                0.9231,
+                0.9223,
+                0.9248,
+                0.9165,
+                0.9391,
+                0.9204,
+                0.9254,
+                0.9216,
+                0.9321
+              ],
+              "top1_weight_per_head": [
+                0.0913,
+                0.0966,
+                0.0817,
+                0.0775,
+                0.0917,
+                0.0852,
+                0.0948,
+                0.0826,
+                0.0824,
+                0.08,
+                0.0795,
+                0.0827,
+                0.0945,
+                0.0805,
+                0.0924,
+                0.0836,
+                0.0915,
+                0.1146,
+                0.1125,
+                0.0847,
+                0.092,
+                0.082,
+                0.0875,
+                0.1008,
+                0.0867,
+                0.0875,
+                0.0989,
+                0.0837,
+                0.0943,
+                0.0821,
+                0.0917,
+                0.0844
+              ],
+              "logit_std_per_head": [
+                1.1548,
+                1.2068,
+                1.3589,
+                1.0016,
+                0.9571,
+                1.0029,
+                1.6678,
+                1.0253,
+                1.1153,
+                1.1534,
+                0.9262,
+                0.7846,
+                0.9894,
+                1.2924,
+                1.0917,
+                1.2185,
+                1.3518,
+                1.1677,
+                1.3527,
+                1.1702,
+                0.9977,
+                0.937,
+                1.0919,
+                1.0189,
+                1.3062,
+                1.3002,
+                1.2058,
+                1.2582,
+                1.0913,
+                1.214,
+                1.0148,
+                1.1342
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8555,
+                0.9022,
+                0.8273,
+                0.8899,
+                0.871,
+                0.9057,
+                0.9253,
+                0.8862,
+                0.9433,
+                0.8589,
+                0.8219,
+                0.7845,
+                0.9217,
+                0.8576,
+                0.8976,
+                0.9238,
+                0.8988,
+                0.7969,
+                0.9279,
+                0.8918,
+                0.864,
+                0.8503,
+                0.8952,
+                0.9017,
+                0.8894,
+                0.8739,
+                0.8803,
+                0.8288,
+                0.9054,
+                0.9129,
+                0.8711,
+                0.9199
+              ],
+              "top1_weight_per_head": [
+                0.1383,
+                0.0869,
+                0.1545,
+                0.1102,
+                0.1102,
+                0.1049,
+                0.0865,
+                0.1213,
+                0.0709,
+                0.1189,
+                0.1711,
+                0.2306,
+                0.1114,
+                0.1344,
+                0.1192,
+                0.1003,
+                0.12,
+                0.2481,
+                0.0759,
+                0.1195,
+                0.1152,
+                0.1304,
+                0.1572,
+                0.142,
+                0.0844,
+                0.1234,
+                0.0875,
+                0.153,
+                0.0992,
+                0.0758,
+                0.1239,
+                0.0744
+              ],
+              "logit_std_per_head": [
+                1.2476,
+                1.1559,
+                1.8973,
+                1.4163,
+                1.3889,
+                1.0767,
+                1.0627,
+                1.2362,
+                1.2368,
+                1.3131,
+                1.2595,
+                1.2537,
+                1.5761,
+                2.0442,
+                1.2279,
+                1.0871,
+                1.4364,
+                1.1529,
+                1.4006,
+                1.4878,
+                1.3645,
+                1.3026,
+                1.7178,
+                1.5758,
+                1.269,
+                2.0217,
+                1.5459,
+                1.8716,
+                1.0517,
+                1.1407,
+                1.7152,
+                1.3536
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.9026,
+          "top1_weight_mean": 0.1055,
+          "logit_std_mean": 1.2726,
+          "logit_std_min_head": 0.7846,
+          "logit_std_max_head": 2.0442
+        }
+      },
+      {
+        "arm": "qknorm",
+        "n_head": 32,
+        "head_dim": 4,
+        "seed": 1,
+        "n_params": 423936,
+        "shared_init_signature": 6067.748311,
+        "train_seconds": 42.8,
+        "final_train_loss_ma50": 2.2051,
+        "train_loss_curve_ma25": [
+          3.47,
+          2.6777,
+          2.5544,
+          2.5243,
+          2.4867,
+          2.4632,
+          2.4507,
+          2.4345,
+          2.4164,
+          2.4028,
+          2.3851,
+          2.3743,
+          2.3547,
+          2.3376,
+          2.3068,
+          2.2878,
+          2.2719,
+          2.2631,
+          2.2354,
+          2.2435,
+          2.2392,
+          2.2338,
+          2.2146,
+          2.1955
+        ],
+        "val_bpc": 3.24883,
+        "eval_chars": 46080,
+        "attention": {
+          "per_layer": [
+            {
+              "layer": 0,
+              "entropy_norm_per_head": [
+                0.9407,
+                0.9258,
+                0.9243,
+                0.9426,
+                0.9301,
+                0.9593,
+                0.8954,
+                0.9369,
+                0.9206,
+                0.9034,
+                0.9116,
+                0.9325,
+                0.9415,
+                0.937,
+                0.93,
+                0.9213,
+                0.9339,
+                0.9167,
+                0.9398,
+                0.9206,
+                0.9411,
+                0.9292,
+                0.9113,
+                0.9235,
+                0.9382,
+                0.9198,
+                0.9364,
+                0.9484,
+                0.9335,
+                0.9161,
+                0.9346,
+                0.9466
+              ],
+              "top1_weight_per_head": [
+                0.0805,
+                0.0895,
+                0.0788,
+                0.0789,
+                0.0782,
+                0.0705,
+                0.1071,
+                0.0822,
+                0.0924,
+                0.0908,
+                0.0993,
+                0.0813,
+                0.0801,
+                0.0842,
+                0.0923,
+                0.0884,
+                0.0876,
+                0.0877,
+                0.0785,
+                0.0955,
+                0.0821,
+                0.0821,
+                0.1114,
+                0.0939,
+                0.09,
+                0.0952,
+                0.0893,
+                0.0731,
+                0.0833,
+                0.0978,
+                0.0774,
+                0.0694
+              ],
+              "logit_std_per_head": [
+                1.0046,
+                1.1683,
+                1.1786,
+                0.9945,
+                1.3827,
+                0.8694,
+                1.1753,
+                0.9149,
+                0.9254,
+                1.0946,
+                1.13,
+                1.1937,
+                1.001,
+                0.9589,
+                1.1748,
+                1.2419,
+                1.0691,
+                1.0301,
+                0.7766,
+                1.1514,
+                1.079,
+                1.1232,
+                1.1609,
+                1.2414,
+                1.1487,
+                1.436,
+                1.3781,
+                0.9288,
+                1.1665,
+                0.9885,
+                0.9302,
+                0.7815
+              ]
+            },
+            {
+              "layer": 1,
+              "entropy_norm_per_head": [
+                0.8644,
+                0.8759,
+                0.8201,
+                0.8575,
+                0.8472,
+                0.8296,
+                0.939,
+                0.8865,
+                0.8419,
+                0.9128,
+                0.9274,
+                0.8921,
+                0.9159,
+                0.9004,
+                0.8493,
+                0.9294,
+                0.8276,
+                0.8537,
+                0.8161,
+                0.8808,
+                0.8496,
+                0.8421,
+                0.8244,
+                0.8689,
+                0.8596,
+                0.9274,
+                0.9185,
+                0.8947,
+                0.943,
+                0.9031,
+                0.8859,
+                0.8681
+              ],
+              "top1_weight_per_head": [
+                0.1327,
+                0.1205,
+                0.1605,
+                0.1229,
+                0.1633,
+                0.222,
+                0.0711,
+                0.1143,
+                0.1375,
+                0.1007,
+                0.1156,
+                0.1198,
+                0.0848,
+                0.1145,
+                0.1595,
+                0.0812,
+                0.1814,
+                0.1634,
+                0.1502,
+                0.1328,
+                0.1572,
+                0.1447,
+                0.2411,
+                0.1576,
+                0.1411,
+                0.1266,
+                0.1044,
+                0.1295,
+                0.091,
+                0.0929,
+                0.0963,
+                0.1043
+              ],
+              "logit_std_per_head": [
+                1.6276,
+                1.8001,
+                2.0511,
+                1.5856,
+                1.1298,
+                1.0672,
+                1.2866,
+                2.1489,
+                1.8561,
+                0.954,
+                1.1239,
+                1.6573,
+                1.1882,
+                1.2299,
+                1.1766,
+                0.9843,
+                1.3878,
+                1.354,
+                1.8674,
+                1.7438,
+                1.1231,
+                1.7131,
+                1.3773,
+                1.1244,
+                1.3482,
+                1.4142,
+                1.2531,
+                1.4189,
+                1.2555,
+                1.4737,
+                1.5237,
+                1.392
+              ]
+            }
+          ],
+          "entropy_norm_mean": 0.9031,
+          "top1_weight_mean": 0.1094,
+          "logit_std_mean": 1.2568,
+          "logit_std_min_head": 0.7766,
+          "logit_std_max_head": 2.1489
+        }
+      }
+    ]
+  },
+  "env": {
+    "python": "3.11.15",
+    "torch_threads": 2,
+    "numpy": "2.4.4",
+    "torch": "2.13.0+cu130",
+    "matplotlib": "3.10.9"
+  },
+  "status": "done"
+}

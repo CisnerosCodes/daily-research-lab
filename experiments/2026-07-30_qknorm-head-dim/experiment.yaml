@@ -1,0 +1,46 @@
+# Config for 2026-07-30_qknorm-head-dim. run.py reads it. No magic constants in code.
+id: "2026-07-30_qknorm-head-dim"
+title: "Does the head-dim tax survive QK-norm? Removing the attention-temperature confound from the iso-param head-split sweep"
+hypothesis: >-
+  2026-07-26_head-dim-vs-count-isoparam found val bpc perfectly monotone in head_dim at
+  fixed d_model=128 but flagged a confound: the effective attention temperature (pre-softmax
+  logit scale) varied ~5.7x across the sweep because 1/sqrt(head_dim) only controls the
+  logit scale at init. If the tiny-head tax is mostly that mis-set temperature, per-head
+  RMS-normalising q and k (QK-norm, iso-param across configs by construction) should
+  flatten the curve; if the tax is intrinsic (rank-head_dim attention expressivity), the
+  monotone ordering should survive with the logit scale equalised.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters ---
+params:
+  # (n_head, head_dim) pairs; n_head * head_dim must equal d_model for every entry
+  configs:
+    - [1, 128]
+    - [2, 64]
+    - [4, 32]
+    - [8, 16]
+    - [32, 4]
+  arms: ["baseline", "qknorm"]
+  seeds: [0, 1]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # attention probes (mechanistic): entropy + measured pre-softmax logit std
+  entropy_batches: 4
+  entropy_min_pos: 8
