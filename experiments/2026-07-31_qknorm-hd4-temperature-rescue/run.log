@@ -1,0 +1,27 @@
+data: 1003854 train chars, 111540 val chars, vocab 65
+  [baseline    hd= 32 nh= 4 seed=0] P=423424 bpc=2.9103 logit_std=3.013 entN=0.659 top1=0.296 (29.0s)
+  [baseline    hd= 32 nh= 4 seed=1] P=423424 bpc=2.9404 logit_std=4.078 entN=0.622 top1=0.317 (29.5s)
+  [baseline    hd= 32 nh= 4 seed=2] P=423424 bpc=2.9337 logit_std=2.856 entN=0.695 top1=0.271 (29.3s)
+  [baseline    hd=  4 nh=32 seed=0] P=423424 bpc=3.0930 logit_std=3.124 entN=0.732 top1=0.241 (46.9s)
+  [baseline    hd=  4 nh=32 seed=1] P=423424 bpc=3.0928 logit_std=3.083 entN=0.752 top1=0.224 (43.1s)
+  [baseline    hd=  4 nh=32 seed=2] P=423424 bpc=3.0854 logit_std=3.550 entN=0.724 top1=0.252 (43.1s)
+  [qknorm      hd= 32 nh= 4 seed=0] P=423936 bpc=2.8301 logit_std=2.088 entN=0.703 top1=0.277 (31.3s)
+  [qknorm      hd= 32 nh= 4 seed=1] P=423936 bpc=2.8234 logit_std=1.915 entN=0.726 top1=0.256 (30.8s)
+  [qknorm      hd= 32 nh= 4 seed=2] P=423936 bpc=2.8452 logit_std=2.129 entN=0.707 top1=0.255 (30.2s)
+  [qknorm      hd=  4 nh=32 seed=0] P=423936 bpc=3.2230 logit_std=1.273 entN=0.903 top1=0.105 (54.0s)
+  [qknorm      hd=  4 nh=32 seed=1] P=423936 bpc=3.2488 logit_std=1.257 entN=0.903 top1=0.109 (53.1s)
+  [qknorm      hd=  4 nh=32 seed=2] P=423936 bpc=3.1897 logit_std=1.270 entN=0.901 top1=0.110 (52.5s)
+  [qknorm_temp hd= 32 nh= 4 seed=0] P=423944 bpc=2.8303 logit_std=2.130 entN=0.701 top1=0.278 tau=[0.8645,1.201] (33.8s)
+  [qknorm_temp hd= 32 nh= 4 seed=1] P=423944 bpc=2.8206 logit_std=1.912 entN=0.716 top1=0.263 tau=[0.8144,1.141] (35.0s)
+  [qknorm_temp hd= 32 nh= 4 seed=2] P=423944 bpc=2.8373 logit_std=2.083 entN=0.707 top1=0.256 tau=[0.8648,1.1747] (34.5s)
+  [qknorm_temp hd=  4 nh=32 seed=0] P=424000 bpc=3.2273 logit_std=1.342 entN=0.894 top1=0.111 tau=[0.8496,1.3643] (57.1s)
+  [qknorm_temp hd=  4 nh=32 seed=1] P=424000 bpc=3.2447 logit_std=1.321 entN=0.892 top1=0.118 tau=[0.7708,1.3798] (54.0s)
+  [qknorm_temp hd=  4 nh=32 seed=2] P=424000 bpc=3.1814 logit_std=1.306 entN=0.894 top1=0.115 tau=[0.725,1.3266] (52.7s)
+
+=== summary ===
+shared init identical per seed: True
+hd=4  baseline 3.0904 | qknorm 3.2205 | qknorm+tau 3.2178
+hd=32 baseline 2.9281 | qknorm 2.8329 | qknorm+tau 2.8294
+cliff +0.1301 bpc, rescued +0.0027 -> rescue fraction 0.021
+temp - baseline at hd=4: +0.1274 bpc; do-no-harm at hd=32 (temp - qknorm): -0.0035 bpc
+total 779s

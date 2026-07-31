@@ -1,0 +1,45 @@
+# Config for 2026-07-31_qknorm-hd4-temperature-rescue. run.py reads it. No magic constants in code.
+id: "2026-07-31_qknorm-hd4-temperature-rescue"
+title: "Per-head learnable temperature on top of QK-norm: the causal test of the hd=4 sharpness cap"
+hypothesis: >-
+  2026-07-30_qknorm-head-dim found QK-norm helps every head split except head_dim=4, where it
+  costs +0.143 bpc, and inferred from probes that unit-RMS 4-dim heads are sharpness-capped
+  (bounded cosine logits: entropy 0.90 vs 0.74, top-1 0.107 vs 0.232). That was an inference,
+  not an intervention. If the sharpness cap is THE mechanism, adding back a per-head learnable
+  temperature tau (logits scaled by exp(log_tau), init 1, no weight decay) on top of QK-norm
+  should restore sharpness AND close the hd=4 cliff back to the unnormalised baseline, while
+  leaving the hd=32 optimum (where QK-norm helps) intact; if the cliff persists with sharpness
+  restored, something beyond temperature (rank-4 score maps) is doing the damage.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30_qknorm-head-dim) ---
+params:
+  # (n_head, head_dim) pairs; n_head * head_dim must equal d_model for every entry.
+  # hd=4 is the cliff under test; hd=32 is the qknorm optimum (the "do no harm" control).
+  configs:
+    - [4, 32]
+    - [32, 4]
+  arms: ["baseline", "qknorm", "qknorm_temp"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # attention probes (mechanistic): entropy + measured pre-softmax logit std + learned taus
+  entropy_batches: 4
+  entropy_min_pos: 8
