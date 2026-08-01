@@ -1,0 +1,46 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-08-01_mqar-gate-freeze-before-breakout"
+title: "MQAR gate freeze before breakout: when must the gate learn?"
+hypothesis: "On the mqar-gate-noise-control harness (d=64, N=8, 2000 steps), the dense gate's causal work is concentrated at (or just before) the breakout window (~750-1250 steps): freezing the gate at step 750 should still allow escape, while freezing at 100-250 (when the gate has barely moved from its near-static init, a known no-op) should strand the model on the vanilla plateau - with the transition point revealing whether a partially-trained gate suffices to open the door or gate learning must span the whole pre-escape window."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity / 2026-07-28_mqar-min-selectivity / 2026-07-29_mqar-gate-noise-control)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # Arms - all share the exact decay-masked linear-attention code path of 2026-07-28/29.
+  # DESIGN UPGRADE over 2026-07-29: every dense-family arm (dense + all frozenK) uses the SAME
+  # init key ("dense") in the seed formula, so within a seed all freeze arms start byte-identical
+  # and see the identical data stream. Trajectories are identical up to the freeze step and any
+  # later divergence is caused by the freeze alone (paired comparison, zero init confound).
+  # 2026-07-29's frozen1000 arm could not do this (its arm name entered the init seed).
+  #   none      - vanilla elu+1 (g=1), plateau anchor                      [replication]
+  #   frozen0   - gate never trains: W=0, bias=3 static decay (known no-op regime, seed 0 only)
+  #   frozen100/250/500/750 - dense gate, params requires_grad=False after that many updates
+  #   dense     - right input throughout (= frozen at infinity)            [replication seeds 0,1]
+  arms:
+    - {name: none,      freeze_step: null, init_key: none,  seeds: [0, 1, 2]}
+    - {name: frozen0,   freeze_step: 0,    init_key: dense, seeds: [0]}
+    - {name: frozen100, freeze_step: 100,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: frozen250, freeze_step: 250,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: frozen500, freeze_step: 500,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: frozen750, freeze_step: 750,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: dense,     freeze_step: null, init_key: dense, seeds: [0, 1, 2]}
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  num_pairs_main: 8
+  train_steps: 2000
+  eval_every: 250
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
+  escape_threshold: 0.5   # escape step = first eval crossing this (eval grid = 250, same as parents)
+  gate_bias_init: 3.0     # gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla

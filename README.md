@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**49 experiments logged.**
+**50 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-08-01 | [MQAR gate freeze before breakout: no early sufficiency - freezing the dense gate at 250 steps (37% of its final weight-norm travel) is an exact no-op on the vanilla plateau, frozen@500 lifts off but escapes 1/3, frozen@750 escapes 3/3 but delayed +250-750 steps and 0.13-0.24 lower, all monotone in freeze step on byte-identical paired inits - combined with 2026-07-29's free post-breakout freeze, the gate's critical window ends exactly at breakout: gate learning is rate-limiting right up to the escape it causes](experiments/2026-08-01_mqar-gate-freeze-before-breakout) | ✅ done | Partially confirms and sharpens the hypothesis: frozen750 escapes 3/3 and frozen100/250 ar |
 | 2026-07-31 | [The hd=4 sharpness-cap story fails its causal test: a per-head learnable temperature on top of QK-norm rescues only 2% of the +0.130 bpc cliff, and the optimizer leaves the free dial at tau~1 (0.73-1.38, needs ~2.6) - low sharpness is a symptom, not the disease; the suspect is query-dependent (per-token) logit magnitude that RMS-norm destroys](experiments/2026-07-31_qknorm-hd4-temperature-rescue) | ✅ done | Negative result that overturns our own mechanism story: the cliff replicates (+0.130 bpc,  |
 | 2026-07-30 | [The head-dim tax is two taxes: QK-norm deletes the mid-range penalty and flips the iso-param head-split curve from monotone (Spearman -1.00) to a U with an interior optimum at head_dim=32 that beats every unnormalised split (2.827 vs 2.876 bpc) - but the tiny-head cliff is intrinsic and gets 0.143 bpc WORSE because unit-RMS 4-dim heads cap attention sharpness (entropy 0.90, top-1 0.107)](experiments/2026-07-30_qknorm-head-dim) | ✅ done | Confound confirmed for the mid-range, refuted for the edge: QK-norm removes the head-split |
 | 2026-07-29 | [MQAR gate noise control: the dense gate's win is routing on the RIGHT input - the identical gate fed batch-shuffled (wrong-sequence) content and a train-time-only random gate are both exact no-ops on the vanilla plateau (delta <= 0.002), while freezing the dense gate at step 1000 (post-breakout) costs nothing (0.895 vs 0.826 mean) - selectivity is information routing, not optimization conditioning or noise-assisted escape](experiments/2026-07-29_mqar-gate-noise-control) | ✅ done | Confirms the hypothesis on all three controls: the dense gate's advantage is content-based |
