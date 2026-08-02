@@ -1,0 +1,30 @@
+data: 1003854 train chars, 111540 val chars, vocab 65
+  [baseline     hd= 32 nh= 4 seed=0] P=423424 bpc=2.9103 logit_std=3.013 entN=0.659 top1=0.296 (27.2s)
+  [baseline     hd= 32 nh= 4 seed=1] P=423424 bpc=2.9404 logit_std=4.078 entN=0.622 top1=0.317 (25.3s)
+  [baseline     hd= 32 nh= 4 seed=2] P=423424 bpc=2.9337 logit_std=2.856 entN=0.695 top1=0.271 (26.5s)
+  [baseline     hd=  4 nh=32 seed=0] P=423424 bpc=3.0930 logit_std=3.124 entN=0.732 top1=0.241 (46.0s)
+  [baseline     hd=  4 nh=32 seed=1] P=423424 bpc=3.0928 logit_std=3.083 entN=0.752 top1=0.224 (44.1s)
+  [baseline     hd=  4 nh=32 seed=2] P=423424 bpc=3.0854 logit_std=3.550 entN=0.724 top1=0.252 (42.2s)
+  [qknorm       hd= 32 nh= 4 seed=0] P=423936 bpc=2.8301 logit_std=2.088 entN=0.703 top1=0.277 (29.0s)
+  [qknorm       hd= 32 nh= 4 seed=1] P=423936 bpc=2.8234 logit_std=1.915 entN=0.726 top1=0.256 (30.9s)
+  [qknorm       hd= 32 nh= 4 seed=2] P=423936 bpc=2.8452 logit_std=2.129 entN=0.707 top1=0.255 (30.2s)
+  [qknorm       hd=  4 nh=32 seed=0] P=423936 bpc=3.2230 logit_std=1.273 entN=0.903 top1=0.105 (49.6s)
+  [qknorm       hd=  4 nh=32 seed=1] P=423936 bpc=3.2488 logit_std=1.257 entN=0.903 top1=0.109 (47.2s)
+  [qknorm       hd=  4 nh=32 seed=2] P=423936 bpc=3.1897 logit_std=1.270 entN=0.901 top1=0.110 (48.3s)
+  [qknorm_dynq  hd= 32 nh= 4 seed=0] P=423944 bpc=2.8451 logit_std=2.233 entN=0.715 top1=0.251 alpha=[0.685,0.7935] tauStd=0.169 (29.6s)
+  [qknorm_dynq  hd= 32 nh= 4 seed=1] P=423944 bpc=2.8451 logit_std=2.179 entN=0.713 top1=0.259 alpha=[0.6497,0.8723] tauStd=0.168 (28.5s)
+  [qknorm_dynq  hd= 32 nh= 4 seed=2] P=423944 bpc=2.8407 logit_std=2.351 entN=0.709 top1=0.247 alpha=[0.5792,0.7844] tauStd=0.188 (28.7s)
+  [qknorm_dynq  hd=  4 nh=32 seed=0] P=424000 bpc=3.1503 logit_std=1.372 entN=0.896 top1=0.105 alpha=[0.7423,1.1775] tauStd=0.340 (48.3s)
+  [qknorm_dynq  hd=  4 nh=32 seed=1] P=424000 bpc=3.1819 logit_std=1.335 entN=0.891 top1=0.108 alpha=[0.7194,1.1283] tauStd=0.322 (51.5s)
+  [qknorm_dynq  hd=  4 nh=32 seed=2] P=424000 bpc=3.1201 logit_std=1.317 entN=0.901 top1=0.105 alpha=[0.7451,1.2345] tauStd=0.323 (49.2s)
+  [qknorm_dynqk hd=  4 nh=32 seed=0] P=424064 bpc=3.2011 logit_std=1.521 entN=0.882 top1=0.119 alpha=[0.6752,1.1271] tauStd=0.312 beta=[0.7478,1.026] (50.8s)
+  [qknorm_dynqk hd=  4 nh=32 seed=1] P=424064 bpc=3.1797 logit_std=1.549 entN=0.880 top1=0.121 alpha=[0.6219,1.1671] tauStd=0.306 beta=[0.7388,1.088] (49.4s)
+  [qknorm_dynqk hd=  4 nh=32 seed=2] P=424064 bpc=3.1850 logit_std=1.513 entN=0.883 top1=0.120 alpha=[0.6576,1.0681] tauStd=0.306 beta=[0.7574,1.0031] (50.1s)
+
+=== summary ===
+shared init identical per seed: True
+hd=4  baseline 3.0904 | qknorm 3.2205 | +dynq 3.1508 | +dynqk 3.1886
+hd=32 baseline 2.9281 | qknorm 2.8329 | +dynq 2.8436
+cliff +0.1301 bpc | rescue fraction: dynq 0.54, dynqk 0.25 (static-tau ref 0.02)
+do-no-harm at hd=32 (dynq - qknorm): +0.0107 bpc
+total 874s

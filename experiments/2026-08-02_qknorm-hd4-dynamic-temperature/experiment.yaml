@@ -1,0 +1,56 @@
+# Config for 2026-08-02_qknorm-hd4-dynamic-temperature. run.py reads it. No magic constants in code.
+id: "2026-08-02_qknorm-hd4-dynamic-temperature"
+title: "Query-dependent (per-token) temperature on top of QK-norm: the dynamic-temperature test of the hd=4 cliff"
+hypothesis: >-
+  2026-07-31_qknorm-hd4-temperature-rescue eliminated STATIC per-head temperature causally: a free
+  learnable tau refunds 2% of the +0.130-bpc hd=4 qknorm cliff and the optimizer leaves it at ~1.
+  The named next suspect is what RMS-norm destroys and a static scalar cannot restore: per-token
+  (query-dependent) logit magnitude — the unnormalised baseline's heads can modulate sharpness
+  token-by-token via ||q_t||. This experiment restores exactly that dial on top of QK-norm:
+  tau_{t,h} = (r_{t,h} / EMA_h)^alpha_h where r is the DETACHED pre-norm q-RMS of token t in head h
+  and alpha_h is a per-head learnable exponent (init 1 = dial fully on; alpha -> 0 recovers plain
+  qknorm). A second arm restores key-side magnitude the same way. If dynamic temperature rescues
+  the cliff where static could not, the load-bearing quantity is per-token sharpness modulation;
+  if it also fails, the remaining suspect is per-channel magnitude structure inside the 4-dim head.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30 / 2026-07-31) ---
+params:
+  # (n_head, head_dim) pairs; n_head * head_dim must equal d_model for every entry.
+  # hd=4 is the cliff under test; hd=32 is the qknorm optimum (the "do no harm" control).
+  configs:
+    - [4, 32]
+    - [32, 4]
+  # arm -> list of head_dims it runs at (dynqk runs at the cliff only, to keep 21 runs)
+  arms: ["baseline", "qknorm", "qknorm_dynq", "qknorm_dynqk"]
+  arm_head_dims:
+    baseline: [32, 4]
+    qknorm: [32, 4]
+    qknorm_dynq: [32, 4]
+    qknorm_dynqk: [4]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dynamic-temperature machinery
+  ema_momentum: 0.99      # running per-head EMA of the pre-norm q/k RMS (train-time only)
+  ratio_clamp: 8.0        # r/EMA clamped to [1/8, 8] before the alpha power (early-step safety)
+  # attention probes (mechanistic): entropy + pre-softmax logit std + learned alphas + tau_t spread
+  entropy_batches: 4
+  entropy_min_pos: 8
