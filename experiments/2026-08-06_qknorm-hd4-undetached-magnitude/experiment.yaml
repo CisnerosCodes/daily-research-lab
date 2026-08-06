@@ -1,0 +1,55 @@
+# Config for 2026-08-06_qknorm-hd4-undetached-magnitude. run.py reads it. No magic constants in code.
+id: "2026-08-06_qknorm-hd4-undetached-magnitude"
+title: "Opening the gradient path through per-token query magnitude: the last component of the QK-norm hd=4 cliff"
+hypothesis: >-
+  2026-08-02_qknorm-hd4-dynamic-temperature restored the pre-norm query RMS as a DETACHED per-token
+  feature (tau = (r_t/EMA)^alpha) and refunded 54% of the +0.130-bpc hd=4 qknorm cliff. But the
+  unnormalised baseline does not merely READ its query magnitudes — it gets to LEARN where to place
+  large ||q_t|| via the gradient path through the magnitude, which detaching severs. Tonight's
+  single-variable test: rerun the dynq arm with the gradient path through r_t OPEN (undetached),
+  vs the byte-identical detached arm on paired inits and a shared batch stream. A third arm applies
+  tau = r_t raw (undetached, no EMA, no clamp, no alpha) — algebraically ~ the baseline with
+  per-channel gains — to kill the exact-form confound of the (r/EMA)^alpha parametrisation.
+  If undetached closes the remaining 46%, the cliff story ends as: QK-norm severs a LEARNABLE
+  per-token sharpness channel. If it does not, the residual is per-channel structure inside the
+  4-dim head, not magnitude at all.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30/31 and 2026-08-02) ---
+params:
+  # (n_head, head_dim) pairs; the cliff config only — do-no-harm at hd=32 was settled 2026-08-02.
+  configs:
+    - [32, 4]
+  # dyn modes: detached = exact 2026-08-02 arm (replication anchor); undetached = same tau with the
+  # gradient path through r_t open; raw = tau = r_t (undetached, no EMA/clamp/alpha).
+  arms: ["baseline", "qknorm", "dynq_detached", "dynq_undetached", "dynq_raw"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dynamic-temperature machinery (identical to 2026-08-02 where it applies)
+  ema_momentum: 0.99      # running per-head EMA of the pre-norm q RMS (train-time only)
+  ratio_clamp: 8.0        # r/EMA clamped to [1/8, 8] before the alpha power (early-step safety)
+  # attention probes (mechanistic): entropy + pre-softmax logit std + learned alphas + tau_t spread
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # parent reference numbers (for the chart and rescue-fraction context)
+  parent_cliff_bpc_2026_08_02: 0.13008
+  parent_detached_rescue_fraction_2026_08_02: 0.5361
+  parent_static_tau_rescue_fraction_2026_07_31: 0.021

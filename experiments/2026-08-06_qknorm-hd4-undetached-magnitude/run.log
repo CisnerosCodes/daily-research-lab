@@ -1,0 +1,23 @@
+data: 1003854 train chars, 111540 val chars, vocab 65
+  [baseline         hd=  4 seed=0] P=423424 bpc=3.0930 logit_std=3.124 entN=0.732 top1=0.241 qCV=0.437 (49.3s)
+  [baseline         hd=  4 seed=1] P=423424 bpc=3.0928 logit_std=3.083 entN=0.752 top1=0.224 qCV=0.467 (44.5s)
+  [baseline         hd=  4 seed=2] P=423424 bpc=3.0854 logit_std=3.550 entN=0.724 top1=0.252 qCV=0.468 (44.6s)
+  [qknorm           hd=  4 seed=0] P=423936 bpc=3.2230 logit_std=1.273 entN=0.903 top1=0.105 qCV=0.320 (53.7s)
+  [qknorm           hd=  4 seed=1] P=423936 bpc=3.2488 logit_std=1.257 entN=0.903 top1=0.109 qCV=0.326 (54.6s)
+  [qknorm           hd=  4 seed=2] P=423936 bpc=3.1897 logit_std=1.270 entN=0.901 top1=0.110 qCV=0.321 (54.1s)
+  [dynq_detached    hd=  4 seed=0] P=424000 bpc=3.1503 logit_std=1.372 entN=0.896 top1=0.105 qCV=0.366 alpha=[0.7423,1.1775] tauStd=0.340 (53.7s)
+  [dynq_detached    hd=  4 seed=1] P=424000 bpc=3.1819 logit_std=1.335 entN=0.891 top1=0.108 qCV=0.348 alpha=[0.7194,1.1283] tauStd=0.322 (49.9s)
+  [dynq_detached    hd=  4 seed=2] P=424000 bpc=3.1201 logit_std=1.317 entN=0.901 top1=0.105 qCV=0.349 alpha=[0.7451,1.2345] tauStd=0.323 (51.5s)
+  [dynq_undetached  hd=  4 seed=0] P=424000 bpc=3.0789 logit_std=1.470 entN=0.885 top1=0.112 qCV=0.414 alpha=[0.7951,1.3407] tauStd=0.451 (57.8s)
+  [dynq_undetached  hd=  4 seed=1] P=424000 bpc=3.1245 logit_std=1.355 entN=0.882 top1=0.115 qCV=0.414 alpha=[0.7771,1.2522] tauStd=0.432 (50.8s)
+  [dynq_undetached  hd=  4 seed=2] P=424000 bpc=3.0768 logit_std=1.369 entN=0.889 top1=0.112 qCV=0.417 alpha=[0.7743,1.3864] tauStd=0.437 (51.0s)
+  [dynq_raw         hd=  4 seed=0] P=423936 bpc=3.2272 logit_std=2.014 entN=0.830 top1=0.157 qCV=0.413 tauStd=0.618 (54.7s)
+  [dynq_raw         hd=  4 seed=1] P=423936 bpc=3.2280 logit_std=2.149 entN=0.816 top1=0.168 qCV=0.428 tauStd=0.659 (55.3s)
+  [dynq_raw         hd=  4 seed=2] P=423936 bpc=3.1926 logit_std=2.018 entN=0.823 top1=0.161 qCV=0.431 tauStd=0.628 (56.0s)
+
+=== summary ===
+shared init identical per seed: True
+bpc: baseline 3.0904 | qknorm 3.2205 | dynq_detached 3.1508 | dynq_undetached 3.0934 | dynq_raw 3.2159
+cliff +0.1301 bpc | rescue: detached 0.54, undetached 0.98, raw 0.04
+q-RMS token CV: baseline 0.457 | qknorm 0.322 | dynq_detached 0.355 | dynq_undetached 0.415 | dynq_raw 0.424
+total 835s
