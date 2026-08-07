@@ -1,0 +1,42 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-08-07_mqar-qkv-lr-ratio"
+title: "MQAR backbone LR ratio: is the qkv circuit the clock that gates breakout?"
+hypothesis: "On the mqar-gate-lr-ratio harness (d=64, N=8, 2000 steps), 2026-08-03 found that for gate-LR multipliers m >= 1 the escape step pins to ~1000 regardless of gate speed, and inferred the binding constraint is the backbone (qkv/out/MLP/emb), not the gate. Causal test of that inference in the complementary direction: fix the gate LR at 1x and multiply ONLY the backbone LR by {0.25, 1, 4}. If the backbone is the clock, escape step should track backbone LR (roughly inverse scaling: much later or censored at 0.25x, materially earlier at 4x) where it was flat in gate LR; a flat curve would revise the 2026-08-03 story; 4x may instead destabilize the plateau itself (the backlog flag)."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity / 2026-07-28_mqar-min-selectivity / 2026-07-29_mqar-gate-noise-control / 2026-08-01_mqar-gate-freeze-before-breakout / 2026-08-03_mqar-gate-lr-ratio)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # Arms - byte-identical decay-masked linear-attention code path of 2026-07-28/29/08-01/08-03.
+  # The LR multiplier is optimizer-side only, so ALL gated arms share the same init key
+  # ("dense") and the same data stream: within a seed every blr* run starts byte-identical
+  # and any divergence is caused by the backbone LR alone (the 2026-08-01/08-03 pairing
+  # design, applied to the complementary parameter group).
+  #   none  - vanilla elu+1 (g=1), plateau anchor                          [replication]
+  #   blr025 / blr1 / blr4 - dense per-channel gate at 1x LR; backbone LR = mult x base
+  #   blr1 is an exact replication of 2026-08-03's "glr1" (= 2026-08-01 "dense"; same
+  #   seeds, same inits, same data stream).
+  arms:
+    - {name: none,   backbone_lr_mult: null, init_key: none,  seeds: [0]}
+    - {name: blr025, backbone_lr_mult: 0.25, init_key: dense, seeds: [0, 1, 2]}
+    - {name: blr1,   backbone_lr_mult: 1.0,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: blr4,   backbone_lr_mult: 4.0,  init_key: dense, seeds: [0, 1, 2]}
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  num_pairs_main: 8
+  train_steps: 2000
+  eval_every: 100        # escape STEP is the primary metric (2026-08-03 grid)
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
+  escape_threshold: 0.5  # escape step = first eval crossing this (eval grid = 100)
+  gate_bias_init: 3.0    # gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla

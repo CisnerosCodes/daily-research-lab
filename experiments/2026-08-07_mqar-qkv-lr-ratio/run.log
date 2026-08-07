@@ -1,0 +1,11 @@
+[   40.7s] none    seed=0 acc=0.174 esc=None steps=2000 nan=False travel@esc=None bb_travel@end=[52.9399, 152.4555] (40.7s)
+[  172.4s] blr025  seed=0 acc=0.185 esc=None steps=2000 nan=False travel@esc=None bb_travel@end=[34.4234, 93.2081] (131.6s)
+[  319.3s] blr025  seed=1 acc=0.172 esc=None steps=2000 nan=False travel@esc=None bb_travel@end=[34.3564, 91.7855] (147.0s)
+[  454.6s] blr025  seed=2 acc=0.207 esc=None steps=2000 nan=False travel@esc=None bb_travel@end=[35.2667, 93.5118] (135.2s)
+[  602.6s] blr1    seed=0 acc=0.767 esc=1200 steps=2000 nan=False travel@esc={'gate_W': 21.4221, 'gate_b': 4.3857, 'attn': 49.2908, 'backbone': 135.2425} bb_travel@end=[53.3242, 155.0425] (148.0s)
+[  762.7s] blr1    seed=1 acc=0.885 esc=1000 steps=2000 nan=False travel@esc={'gate_W': 22.6146, 'gate_b': 4.5939, 'attn': 49.6325, 'backbone': 131.9786} bb_travel@end=[56.402, 158.1513] (160.1s)
+[  899.1s] blr1    seed=2 acc=0.873 esc=1100 steps=2000 nan=False travel@esc={'gate_W': 20.8167, 'gate_b': 4.6146, 'attn': 49.288, 'backbone': 133.7959} bb_travel@end=[54.4391, 156.2674] (136.4s)
+[ 1040.9s] blr4    seed=0 acc=0.916 esc=700 steps=2000 nan=False travel@esc={'gate_W': 12.2712, 'gate_b': 1.8541, 'attn': 74.2509, 'backbone': 207.4057} bb_travel@end=[85.4428, 254.9434] (141.8s)
+[ 1188.8s] blr4    seed=1 acc=0.958 esc=400 steps=2000 nan=False travel@esc={'gate_W': 10.9899, 'gate_b': 1.2361, 'attn': 68.8847, 'backbone': 177.7202} bb_travel@end=[82.574, 243.9874] (147.8s)
+[ 1338.6s] blr4    seed=2 acc=0.936 esc=500 steps=2000 nan=False travel@esc={'gate_W': 10.7095, 'gate_b': 1.5643, 'attn': 71.3015, 'backbone': 190.2683} bb_travel@end=[82.506, 245.6643] (149.8s)
+escape step at N=8 (paired seeds): blr025 [None, None, None], blr1 [1200, 1000, 1100], blr4 [700, 400, 500]
