@@ -1,0 +1,41 @@
+data: 1003854 train / 111540 val chars, vocab=65
+  [baseline  hd=  4 seed=0] P=423424 bpc=3.0930 logit_std=3.124 entN=0.732 top1=0.241 qCV=0.437 (44.3s)
+  [qknorm    hd=  4 seed=0] P=423936 bpc=3.2230 logit_std=1.273 entN=0.903 top1=0.105 qCV=0.320 (48.8s)
+  [composite hd=  4 seed=0] P=424000 bpc=3.0789 logit_std=1.470 entN=0.885 top1=0.112 qCV=0.414 alpha=[0.7951,1.3407] tauStd=0.451 (54.1s)
+  [baseline  hd=  4 seed=1] P=423424 bpc=3.0928 logit_std=3.083 entN=0.752 top1=0.224 qCV=0.467 (42.7s)
+  [qknorm    hd=  4 seed=1] P=423936 bpc=3.2488 logit_std=1.257 entN=0.903 top1=0.109 qCV=0.326 (49.9s)
+  [composite hd=  4 seed=1] P=424000 bpc=3.1245 logit_std=1.355 entN=0.882 top1=0.115 qCV=0.414 alpha=[0.7771,1.2522] tauStd=0.432 (51.4s)
+  [baseline  hd= 16 seed=0] P=423424 bpc=3.0265 logit_std=3.258 entN=0.715 top1=0.246 qCV=0.359 (29.6s)
+  [qknorm    hd= 16 seed=0] P=423936 bpc=2.8779 logit_std=1.646 entN=0.816 top1=0.175 qCV=0.262 (35.2s)
+  [composite hd= 16 seed=0] P=423952 bpc=2.8514 logit_std=2.007 entN=0.768 top1=0.209 qCV=0.323 alpha=[0.7061,1.2516] tauStd=0.304 (36.5s)
+  [baseline  hd= 16 seed=1] P=423424 bpc=3.0209 logit_std=4.208 entN=0.659 top1=0.288 qCV=0.367 (37.5s)
+  [qknorm    hd= 16 seed=1] P=423936 bpc=2.8771 logit_std=1.718 entN=0.783 top1=0.195 qCV=0.250 (36.0s)
+  [composite hd= 16 seed=1] P=423952 bpc=2.8403 logit_std=2.057 entN=0.773 top1=0.205 qCV=0.300 alpha=[0.7957,1.248] tauStd=0.296 (37.4s)
+  [baseline  hd= 32 seed=0] P=423424 bpc=2.9103 logit_std=3.013 entN=0.659 top1=0.296 qCV=0.266 (27.9s)
+  [qknorm    hd= 32 seed=0] P=423936 bpc=2.8301 logit_std=2.088 entN=0.703 top1=0.277 qCV=0.236 (32.3s)
+  [composite hd= 32 seed=0] P=423944 bpc=2.8290 logit_std=2.509 entN=0.680 top1=0.292 qCV=0.256 alpha=[0.7301,1.1203] tauStd=0.230 (33.8s)
+  [baseline  hd= 32 seed=1] P=423424 bpc=2.9404 logit_std=4.078 entN=0.622 top1=0.317 qCV=0.294 (28.3s)
+  [qknorm    hd= 32 seed=1] P=423936 bpc=2.8234 logit_std=1.915 entN=0.726 top1=0.256 qCV=0.224 (35.9s)
+  [composite hd= 32 seed=1] P=423944 bpc=2.8284 logit_std=2.651 entN=0.699 top1=0.260 qCV=0.279 alpha=[0.715,1.0749] tauStd=0.238 (34.9s)
+  [baseline  hd= 64 seed=0] P=423424 bpc=2.8549 logit_std=2.846 entN=0.621 top1=0.346 qCV=0.244 (29.6s)
+  [qknorm    hd= 64 seed=0] P=423936 bpc=2.8367 logit_std=2.659 entN=0.604 top1=0.337 qCV=0.222 (33.7s)
+  [composite hd= 64 seed=0] P=423940 bpc=2.7964 logit_std=2.902 entN=0.563 top1=0.409 qCV=0.222 alpha=[0.7481,0.8756] tauStd=0.178 (35.0s)
+  [baseline  hd= 64 seed=1] P=423424 bpc=2.9186 logit_std=3.286 entN=0.627 top1=0.324 qCV=0.225 (29.9s)
+  [qknorm    hd= 64 seed=1] P=423936 bpc=2.8555 logit_std=2.445 entN=0.690 top1=0.286 qCV=0.234 (31.5s)
+  [composite hd= 64 seed=1] P=423940 bpc=2.8635 logit_std=3.134 entN=0.609 top1=0.346 qCV=0.237 alpha=[0.6766,0.9169] tauStd=0.192 (34.7s)
+  [baseline  hd=128 seed=0] P=423424 bpc=2.8666 logit_std=2.181 entN=0.653 top1=0.329 qCV=0.230 (29.2s)
+  [qknorm    hd=128 seed=0] P=423936 bpc=2.9184 logit_std=3.327 entN=0.593 top1=0.351 qCV=0.208 (33.1s)
+  [composite hd=128 seed=0] P=423938 bpc=2.9113 logit_std=3.483 entN=0.556 top1=0.402 qCV=0.197 alpha=[0.607,0.7305] tauStd=0.137 (35.3s)
+  [baseline  hd=128 seed=1] P=423424 bpc=2.8851 logit_std=2.269 entN=0.671 top1=0.313 qCV=0.228 (28.3s)
+  [qknorm    hd=128 seed=1] P=423936 bpc=2.8989 logit_std=2.494 entN=0.547 top1=0.424 qCV=0.238 (32.5s)
+  [composite hd=128 seed=1] P=423938 bpc=2.9151 logit_std=3.118 entN=0.486 top1=0.458 qCV=0.170 alpha=[0.5962,0.6937] tauStd=0.110 (40.8s)
+paired-init check passed: identical shared weights across arms at every (config, seed)
+
+QK-norm + undetached dyn q-temp vs both parents across head splits: NOT strictly better; hd4 rescue 0.9387
+  hd=  4: base 3.0929  qknorm 3.2359 (+0.1430)  composite 3.1017 (+0.0088 vs base, -0.1342 vs qknorm) OK
+  hd= 16: base 3.0237  qknorm 2.8775 (-0.1462)  composite 2.8458 (-0.1778 vs base, -0.0316 vs qknorm) OK
+  hd= 32: base 2.9254  qknorm 2.8268 (-0.0986)  composite 2.8287 (-0.0967 vs base, +0.0019 vs qknorm) OK
+  hd= 64: base 2.8868  qknorm 2.8461 (-0.0407)  composite 2.8300 (-0.0568 vs base, -0.0161 vs qknorm) OK
+  hd=128: base 2.8758  qknorm 2.9087 (+0.0328)  composite 2.9132 (+0.0373 vs base, +0.0045 vs qknorm) FAILS
+
+wrote results.json + chart.png in 1128.79s

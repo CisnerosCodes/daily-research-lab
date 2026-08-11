@@ -1,0 +1,63 @@
+# Config for 2026-08-11_qknorm-dyntemp-composite-sweep. run.py reads it. No magic constants in code.
+id: "2026-08-11_qknorm-dyntemp-composite-sweep"
+title: "Is QK-norm + undetached dynamic query temperature a strictly better parametrisation? The full head-split sweep"
+hypothesis: >-
+  2026-08-06 closed the hd=4 QK-norm cliff (98% rescue) with an UNDETACHED per-token query
+  temperature tau = clamp(r_t/EMA)^alpha, but only at the cliff config. "Strictly better
+  parametrisation" needs the whole curve: 2026-07-30 showed QK-norm helps at hd=16..64,
+  is a small tax at hd=128, and is a big tax at hd=4 — and detached dynq cost +0.011 at
+  hd=32 (2026-08-02), so undetached do-no-harm is genuinely open. Tonight: rerun the full
+  2026-07-30 head-split sweep (hd 4/16/32/64/128 at d_model=128, paired inits, shared batch
+  stream, 2 seeds) with three arms — baseline (no norm), plain qknorm, and the composite
+  (qknorm + undetached dynq). Predictions if "strictly better" is true: composite matches
+  or beats BOTH parents at every split, keeps the hd=4 closure, keeps qknorm's mid-range
+  win, and the U-curve's interior optimum stays (or moves left); if the composite instead
+  pays a mid-range tax, the 08-06 rescue is cliff-specific machinery, not a better
+  parametrisation.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30/31, 2026-08-02, 2026-08-06) ---
+params:
+  # (n_head, head_dim) pairs — the exact 2026-07-30 sweep
+  configs:
+    - [32, 4]
+    - [8, 16]
+    - [4, 32]
+    - [2, 64]
+    - [1, 128]
+  # composite = qknorm + undetached dynq, the winning arm of 2026-08-06
+  arms: ["baseline", "qknorm", "composite"]
+  seeds: [0, 1]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dynamic-temperature machinery (identical to 2026-08-02/06)
+  ema_momentum: 0.99      # running per-head EMA of the pre-norm q RMS (train-time only)
+  ratio_clamp: 8.0        # r/EMA clamped to [1/8, 8] before the alpha power (early-step safety)
+  # attention probes (mechanistic): entropy + pre-softmax logit std + learned alphas + tau_t spread
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # parent reference numbers (2-seed means from 2026-07-30 results.json, for chart overlays +
+  # replication checks; 08-06 numbers are 3-seed at hd=4)
+  parent_2026_07_30_baseline_bpc: {4: 3.09291, 16: 3.02368, 32: 2.92537, 64: 2.88676, 128: 2.87585}
+  parent_2026_07_30_qknorm_bpc: {4: 3.2359, 16: 2.87748, 32: 2.82678, 64: 2.84607, 128: 2.90867}
+  parent_2026_08_06_undetached_rescue_fraction: 0.98
+  # strictly-better test: composite must beat/match min(baseline, qknorm) within this tolerance,
+  # set to the parent sweep's mean seed spread (qknorm arm, 2026-07-30)
+  tolerance_bpc: 0.015
