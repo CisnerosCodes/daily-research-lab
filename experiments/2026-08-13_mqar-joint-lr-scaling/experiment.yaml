@@ -1,0 +1,41 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-08-13_mqar-joint-lr-scaling"
+title: "MQAR joint LR scaling: is the residual sublinearity the gate lagging, or the optimizer?"
+hypothesis: "2026-08-07 found escape tracks backbone LR causally but SUBLINEARLY (backbone x4 moves mean escape 1100 -> 533, not the ~275 exact inverse scaling predicts), with the gate only half-traveled at escape (||W|| ~11 vs ~21.6) - suggesting the gate LAGS the circuit it serves when only the backbone speeds up. Decisive test: scale gate AND backbone LR together by 4 on the same paired inits. If joint x4 escapes ~exactly inversely (~275-300 on the eval grid), the residual sublinearity at fixed gate LR is the gate lagging; if joint x4 still lands ~533 (= backbone-only x4), the sublinearity is optimizer/curvature-side (Adam's time-reparametrization broken by weight decay or gradient noise) and the gate LR is irrelevant even at matched speeds - consistent with 2026-08-03's flatness. Secondary: does the eerie within-arm constancy of attention-travel-at-escape (49.29/49.63/49.29 at 1x) survive joint scaling?"
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity / 2026-07-28 / 2026-07-29 / 2026-08-01 / 2026-08-03 / 2026-08-07)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # Arms - byte-identical decay-masked linear-attention code path of 2026-07-28/29/08-01/08-03/08-07.
+  # Both LR multipliers are optimizer-side only, so ALL gated arms share the same init key
+  # ("dense") and the same data stream: within a seed every run is byte-identical at step 0
+  # and any divergence is caused by the (gate_lr_mult, backbone_lr_mult) pair alone.
+  #   none - vanilla elu+1 (g=1), plateau anchor                            [replication]
+  #   j1   - gate 1x, backbone 1x: exact replication of 08-07 blr1 (= 08-03 glr1 = 08-01 dense)
+  #   b4   - gate 1x, backbone 4x: exact replication of 08-07 blr4 (in-run comparator)
+  #   j4   - gate 4x, backbone 4x: the new arm (equivalently: base LR 4e-3 everywhere)
+  arms:
+    - {name: none, gate_lr_mult: null, backbone_lr_mult: null, init_key: none,  seeds: [0]}
+    - {name: j1,   gate_lr_mult: 1.0,  backbone_lr_mult: 1.0,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: b4,   gate_lr_mult: 1.0,  backbone_lr_mult: 4.0,  init_key: dense, seeds: [0, 1, 2]}
+    - {name: j4,   gate_lr_mult: 4.0,  backbone_lr_mult: 4.0,  init_key: dense, seeds: [0, 1, 2]}
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  num_pairs_main: 8
+  train_steps: 2000
+  eval_every: 100        # escape STEP is the primary metric (2026-08-03/08-07 grid, kept for comparability)
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  weight_decay: 0.01
+  solve_threshold: 0.9
+  escape_threshold: 0.5  # escape step = first eval crossing this (eval grid = 100)
+  gate_bias_init: 3.0    # gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla
