@@ -46,7 +46,7 @@ If round-1 class counts differ between arms by more than 2 sigma, the manipulati
 
 ## Novelty check
 
-A dedicated prior-art audit (to be recorded in `docs/self-improvement-loops/03_novelty_audit.md`, claims 5 and 6) is running before the first generation call; the generation run is gated on its verdict, and the verdict will be recorded here and in the registry row before results are added. Expected nearest neighbours: iterative "avoid what you already said" prompting in fragments; the differentiator under test is the rate-versus-asymptote decomposition of the intervention's effect.
+Completed before the first generation call; full report in `docs/self-improvement-loops/03_novelty_audit.md` (claims 5 and 6). **Verdict: partial-prior-art, and the differentiator is confirmed live.** Archive-conditioned generation is a claimed *mechanism* — NoveltyBench's in-context regeneration (arXiv 2504.05228), Denial Prompting (arXiv 2407.09007), Nova (arXiv 2410.14255), and "Anchorless Diversification" (arXiv 2605.30150) names it "population-referential divergence" and calls it a strong baseline. But every published result reports gains at fixed budget — a rate claim; the audit found **no work that measures whether archive conditioning moves the accumulation-curve asymptote versus the rate**, which is exactly what this experiment tests. Likewise no found work operationalizes negation of the assumptions *invariant across the whole generated set* (Denial Prompting bans the last solution's techniques; arm C bans what every idea shares). This experiment therefore claims no mechanism: it is the first application of the asymptote classifier — the programme's strongest surviving claim per the audit — to a mechanism the literature already owns.
 
 ---
 
