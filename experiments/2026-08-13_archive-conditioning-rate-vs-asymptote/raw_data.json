@@ -1,0 +1,4702 @@
+{
+ "problem": "Public library systems permanently lose a meaningful fraction of circulating items: books and media are borrowed and never returned, replacement consumes budget, and heavy-handed collection tactics drive patrons away.",
+ "ideas": [
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 1,
+   "idx": 0,
+   "title": "Graduated Late Fees with Amnesty Window",
+   "mechanism": "Fees escalate over time but amnesty window lets borrowers return overdue items penalty-free if returned by deadline.",
+   "blind_id": "I36"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 1,
+   "idx": 1,
+   "title": "Auto-Hold System Blocks Checkout",
+   "mechanism": "Overdue items trigger automatic hold on borrower account, preventing new checkouts until return, creating motivation through checkout friction.",
+   "blind_id": "I33"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 1,
+   "idx": 2,
+   "title": "Refundable Item Condition Deposit",
+   "mechanism": "Upfront deposit makes non-return salient as immediate monetary loss versus abstract cost; returned items trigger full refund.",
+   "blind_id": "I41"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 1,
+   "idx": 3,
+   "title": "Personal Librarian Outreach",
+   "mechanism": "Named librarian sends personalized messages to overdue patrons, creating direct social obligation and accountability that automated notices cannot.",
+   "blind_id": "I47"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 1,
+   "idx": 4,
+   "title": "Behavior-Based Borrowing Limits",
+   "mechanism": "System flags repeat non-returners for shorter loan periods, making continued high-frequency borrowing inconvenient until return behavior improves.",
+   "blind_id": "I66"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 1,
+   "idx": 5,
+   "title": "Public Missing Items Registry",
+   "mechanism": "Display high-value unreturned items in library with photographs, creating community awareness and reputational pressure that motivates voluntary returns.",
+   "blind_id": "I22"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 2,
+   "idx": 0,
+   "title": "Refundable Deposit System",
+   "mechanism": "Borrowers post collateral deposits that return upon item return, creating direct financial incentive for retrieval.",
+   "blind_id": "I23"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 2,
+   "idx": 1,
+   "title": "SMS/App Escalation Reminders",
+   "mechanism": "Progressive notifications (3/1/0 days before due) nudge memory and behavioral action before due date passes.",
+   "blind_id": "I37"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 2,
+   "idx": 2,
+   "title": "Peer Accountability Networks",
+   "mechanism": "Small neighborhood groups share borrowing responsibility and social standing, leveraging informal peer monitoring enforcement.",
+   "blind_id": "I11"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 2,
+   "idx": 3,
+   "title": "Predictive Risk Intervention",
+   "mechanism": "Analytics identify at-risk borrowers early; staff offer support (locating items, transportation) before non-return occurs.",
+   "blind_id": "I45"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 2,
+   "idx": 4,
+   "title": "Item Replacement-as-Purchase",
+   "mechanism": "Borrowers can buy permanent ownership instead of facing fines, converting non-returns to revenue and improving retention.",
+   "blind_id": "I21"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 2,
+   "idx": 5,
+   "title": "Tiered Privilege System",
+   "mechanism": "Borrower tiers based on return track record determine borrow limits/duration; reliable borrowers gain benefits, incentivizing returns.",
+   "blind_id": "I42"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 3,
+   "idx": 0,
+   "title": "Escalating Replacement-Cost Fees",
+   "mechanism": "Overdue fees increase with item value ($0.10/day for $5 book, $1/day for $50 electronics), raising financial cost of retention.",
+   "blind_id": "I07"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 3,
+   "idx": 1,
+   "title": "Tiered Loan Terms by Return Rate",
+   "mechanism": "Borrowers with 95%+ on-time return history receive 4-week loans; below 70% receive 2 weeks, creating urgency incentive for consistent returners.",
+   "blind_id": "I38"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 3,
+   "idx": 2,
+   "title": "Predictive Non-Return Intervention",
+   "mechanism": "Algorithm identifies at-risk non-returns 3 days pre-due-date; library staff proactively offers pickup service or quick renewal to prevent abandonment.",
+   "blind_id": "I57"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 3,
+   "idx": 3,
+   "title": "Refundable Deposit on Premium Items",
+   "mechanism": "Popular titles and electronics require $5-10 refundable deposits, triggering sunk-cost psychology that motivates return over replacement.",
+   "blind_id": "I46"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 3,
+   "idx": 4,
+   "title": "On-Time Return Reward Points",
+   "mechanism": "Award points per on-time return, redeemable for fee waivers and extended-loan vouchers, directly rewarding compliance behavior.",
+   "blind_id": "I55"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 3,
+   "idx": 5,
+   "title": "Automatic Replacement Billing",
+   "mechanism": "Items become 'charged' 2 days post-due-date with replacement cost notification, converting vague overdue status into clear financial obligation.",
+   "blind_id": "I01"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 4,
+   "idx": 0,
+   "title": "Dynamic Late Fee Escalation",
+   "mechanism": "Exponentially escalating daily fees after 60 days create acute financial pain, driving return behavior far more effectively than flat-rate overdue charges.",
+   "blind_id": "I03"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 4,
+   "idx": 1,
+   "title": "Borrowing Suspension at Overdue Threshold",
+   "mechanism": "Auto-suspending new borrowing privileges when patron has 45+ day overdue items forces return action before accessing desired new books.",
+   "blind_id": "I32"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 4,
+   "idx": 2,
+   "title": "Personal Impact Accountability Display",
+   "mechanism": "Showing borrowers the replacement cost and availability impact of their unreturned items triggers guilt and personal responsibility more than abstract fees.",
+   "blind_id": "I02"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 4,
+   "idx": 3,
+   "title": "Upfront Replacement Cost Deposit",
+   "mechanism": "Requiring prepaid deposits for high-loss-risk items (electronics, rare books) increases psychological sunk-cost investment, driving returns.",
+   "blind_id": "I71"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 4,
+   "idx": 4,
+   "title": "Condition Verification Return Incentive",
+   "mechanism": "Offering fine waivers for overdue items returned in good condition with verification photos incentivizes returns over abandonment.",
+   "blind_id": "I16"
+  },
+  {
+   "seed": 0,
+   "arm": "A",
+   "round": 4,
+   "idx": 5,
+   "title": "Predictive Risk Intervention & Rewards",
+   "mechanism": "Using borrowing patterns to identify at-risk items, then sending targeted incentive offers (fine waivers, account credit) before permanent loss.",
+   "blind_id": "I67"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 1,
+   "idx": 0,
+   "title": "Escalating Digital Reminders",
+   "mechanism": "Repeated notifications via email/SMS/app activate attention to due dates. Reduces non-return by lowering forgetfulness rate.",
+   "blind_id": "I27"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 1,
+   "idx": 1,
+   "title": "Instant Renewal System",
+   "mechanism": "Auto-renewal unless on hold reframes keeping as default behavior. Reduces non-return by eliminating deadline as avoidance trigger.",
+   "blind_id": "I40"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 1,
+   "idx": 2,
+   "title": "Distributed Return Points",
+   "mechanism": "Transit/business/school return bins reduce travel friction. Borrowers return more often because returns fit daily routines.",
+   "blind_id": "I56"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 1,
+   "idx": 3,
+   "title": "Loss Forgiveness Insurance",
+   "mechanism": "Micro-insurance ($0.25) provides amnesty for lost items. Borrowers report losses instead of keeping items, reducing non-return.",
+   "blind_id": "I34"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 1,
+   "idx": 4,
+   "title": "Consistent Returner Recognition",
+   "mechanism": "Public recognition and badges for perfect returns activate social motivation. Borrowers return items to maintain public reputation.",
+   "blind_id": "I62"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 1,
+   "idx": 5,
+   "title": "Damage Amnesty Program",
+   "mechanism": "No-penalty acceptance of damaged returns removes shame barrier. Borrowers return damaged items instead of abandoning them.",
+   "blind_id": "I18"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 2,
+   "idx": 0,
+   "title": "Checkout Commitment Verification",
+   "mechanism": "Borrowers must confirm return understanding at checkout, creating psychological commitment through explicit consent before receiving items.",
+   "blind_id": "I25"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 2,
+   "idx": 1,
+   "title": "Peer Return Accountability Groups",
+   "mechanism": "Library matches borrowers with accountability partners who monitor each other's return status, leveraging social bonds for enforcement.",
+   "blind_id": "I49"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 2,
+   "idx": 2,
+   "title": "Early Return Incentive Points",
+   "mechanism": "Borrowers earn redeemable points for returning items early, incentivizing proactive returns and offsetting overdue costs.",
+   "blind_id": "I29"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 2,
+   "idx": 3,
+   "title": "Predictive Non-Return Targeting",
+   "mechanism": "AI identifies at-risk non-returns and triggers early intervention outreach to borrowers most likely to default.",
+   "blind_id": "I70"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 2,
+   "idx": 4,
+   "title": "Hold-Return Contingency System",
+   "mechanism": "Borrowers cannot place new holds until resolving all prior checkouts, creating immediate structural incentive to return.",
+   "blind_id": "I68"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 2,
+   "idx": 5,
+   "title": "Borrowed Item Stewardship Routing",
+   "mechanism": "Notify borrowers about the next patron waiting for items, personalizing impact by showing direct community dependence.",
+   "blind_id": "I13"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 3,
+   "idx": 0,
+   "title": "Borrowed Item Deposit Matching",
+   "mechanism": "Small refundable deposit per item leverages loss aversion, motivating returns through personal financial stake recovery.",
+   "blind_id": "I58"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 3,
+   "idx": 1,
+   "title": "Return Status Dashboard Visibility",
+   "mechanism": "Real-time dashboard compares individual return status to library average, triggering social comparison and compliance.",
+   "blind_id": "I15"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 3,
+   "idx": 2,
+   "title": "Flexible Duration Loan Negotiation",
+   "mechanism": "Borrowers propose custom return dates matching personal schedules, increasing ownership and deadline commitment.",
+   "blind_id": "I04"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 3,
+   "idx": 3,
+   "title": "Recipient Fulfillment Promise System",
+   "mechanism": "Display waiting patrons for borrowed items, inducing reciprocity urgency through awareness of downstream patron need.",
+   "blind_id": "I51"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 3,
+   "idx": 4,
+   "title": "Progressive Borrowing Privilege Expansion",
+   "mechanism": "New borrowers start with single items, quarterly doubling with clean returns, removing all-or-nothing penalty structures.",
+   "blind_id": "I14"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 3,
+   "idx": 5,
+   "title": "Penalty Severity Regression Model",
+   "mechanism": "Fines decline as borrower's return record improves, penalizing non-return relatively not absolutely, rewarding history.",
+   "blind_id": "I54"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 4,
+   "idx": 0,
+   "title": "Calendar Sync Checkout System",
+   "mechanism": "Embeds return deadlines in phone calendars borrowers check daily, automating return attention without separate library reminders.",
+   "blind_id": "I10"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 4,
+   "idx": 1,
+   "title": "Item Return Rate Visibility",
+   "mechanism": "Displays each title's return rate, creating social reputation pressure that normalizes prompt return behavior.",
+   "blind_id": "I26"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 4,
+   "idx": 2,
+   "title": "Return History Checkout Acceleration",
+   "mechanism": "Skips checkout friction for returners, reducing future transaction cost and immediately rewarding return completion.",
+   "blind_id": "I05"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 4,
+   "idx": 3,
+   "title": "Successful Returner Recruiter Bonus",
+   "mechanism": "Rewards top returners when referred friends return, transforming them into peer advocates who socially enforce returns.",
+   "blind_id": "I53"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 4,
+   "idx": 4,
+   "title": "Auto-Return Default System",
+   "mechanism": "Items auto-return unless actively renewed, reversing default psychology from passive non-return to active renewal choice.",
+   "blind_id": "I08"
+  },
+  {
+   "seed": 0,
+   "arm": "B",
+   "round": 4,
+   "idx": 5,
+   "title": "Checkout Condition Photo Registry",
+   "mechanism": "Photographing items at checkout eliminates damage-fee disputes, removing uncertainty that prevents return.",
+   "blind_id": "I31"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 1,
+   "idx": 0,
+   "title": "Overdue Fee Reinvestment Transparency",
+   "mechanism": "Showing borrowers how replacement fees fund new acquisitions activates reciprocity norms, increasing non-return's perceived social cost.",
+   "blind_id": "I17"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 1,
+   "idx": 1,
+   "title": "Library-Managed Pickup Service",
+   "mechanism": "Free home collection of overdue items removes logistical friction, converting intention-behavior gap into automatic compliance.",
+   "blind_id": "I65"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 1,
+   "idx": 2,
+   "title": "Peer Accountability Network Notification",
+   "mechanism": "Notifying a borrower's social network about overdue items leverages reputation concerns and shame to compel return.",
+   "blind_id": "I50"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 1,
+   "idx": 3,
+   "title": "Predictive Non-Returner Early Contact",
+   "mechanism": "Machine learning identifies likely non-returners; proactive outreach before due dates shifts intervention from punishment to prevention.",
+   "blind_id": "I63"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 1,
+   "idx": 4,
+   "title": "Scalable Deposit System by Item Value",
+   "mechanism": "Requiring refundable deposits scaled to item cost activates loss aversion; borrowers face financial penalty if items aren't returned.",
+   "blind_id": "I28"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 1,
+   "idx": 5,
+   "title": "Dynamic Checkout Limits by Return History",
+   "mechanism": "Restricting borrowing quotas for repeat non-returners increases violation costs through reduced library access, conditioning privileges on compliance.",
+   "blind_id": "I60"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "idx": 0,
+   "title": "Community Borrower Collectives",
+   "mechanism": "Borrowers form 8-12 person neighborhood groups self-managing shared checkout pool. Peer enforcement replaces library staff responsibility.",
+   "blind_id": "I12"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "idx": 1,
+   "title": "Geofenced Auto-Return Alerts",
+   "mechanism": "RF-tagged items trigger audible alert if outside checkout zone 72+ hours. Passive tech deterrent replaces behavioral consequences.",
+   "blind_id": "I19"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "idx": 2,
+   "title": "Permanent Possession Tier Program",
+   "mechanism": "Long-term borrowers convert frequently-used items to permanent ownership after two-year history. Removes return obligation entirely.",
+   "blind_id": "I69"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "idx": 3,
+   "title": "Retail Partner Drop-Off Network",
+   "mechanism": "Return bins installed at grocery stores and transit hubs near borrowers. Third-party infrastructure reduces library collection burden.",
+   "blind_id": "I61"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "idx": 4,
+   "title": "Extended Checkout for Housing Instability",
+   "mechanism": "Borrowers with unstable employment/housing receive 120-day periods versus standard 30. Addresses systemic access barriers directly.",
+   "blind_id": "I39"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "idx": 5,
+   "title": "Publisher-Guaranteed Item Recovery",
+   "mechanism": "Publisher-embedded serial IDs enable manufacturers to recover items through retail networks. Transfers accountability to content creators.",
+   "blind_id": "I24"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "idx": 0,
+   "title": "Family Co-Signer Liability Agreement",
+   "mechanism": "A household adult co-signs checkout and becomes jointly liable for replacement costs, shifting enforcement from library to intimate family relationship dynamics.",
+   "blind_id": "I59"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "idx": 1,
+   "title": "Automatic Item Degradation Timer",
+   "mechanism": "High-value items include time-limited electronic components that render them unusable after checkout period expires, eliminating return choice.",
+   "blind_id": "I30"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "idx": 2,
+   "title": "Employer Workplace Return Integration",
+   "mechanism": "Employers sponsor library drop-off points at worksites, embedding return into workplace commute and institutional workflow rather than individual choice.",
+   "blind_id": "I44"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "idx": 3,
+   "title": "Peer Marketplace Lending Algorithm",
+   "mechanism": "Library becomes matchmaker; peer-lenders directly manage accountability via marketplace reputation scores and financial consequences, bypassing library enforcement.",
+   "blind_id": "I64"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "idx": 4,
+   "title": "Housing-Contingent Return Requirement",
+   "mechanism": "Public housing authorities condition tenancy on signed library return agreements, embedding return obligation into housing lease law.",
+   "blind_id": "I09"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "idx": 5,
+   "title": "Perpetual Access Subscription Model",
+   "mechanism": "Library charges ongoing access fees instead of expecting return; borrower keeps items indefinitely while maintaining subscription, removing return requirement.",
+   "blind_id": "I43"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "idx": 0,
+   "title": "Item Owner Name Marking",
+   "mechanism": "Borrower's name permanently printed inside item creates psychological identification with caretaking responsibility. Leverages internal identity rather than external enforcement.",
+   "blind_id": "I35"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "idx": 1,
+   "title": "Trusted Lender Circulation Network",
+   "mechanism": "Active borrowers become stewards circulating items to peers; peer reputation damage prevents non-return. Shifts enforcement from library to borrower networks.",
+   "blind_id": "I06"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "idx": 2,
+   "title": "Auto-Donation Social Credit Conversion",
+   "mechanism": "Unreturned items auto-convert to donations after threshold, crediting borrower as library supporter. Removes shame barrier preventing return by reframing as gift-giving.",
+   "blind_id": "I20"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "idx": 3,
+   "title": "Zero-Friction 24-Hour Return Chutes",
+   "mechanism": "Unmanned RFID-equipped stations operate 24/7 with zero staff interaction. Eliminates shame and timing barriers preventing physical returns.",
+   "blind_id": "I52"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "idx": 4,
+   "title": "Replacement Adoption Community Program",
+   "mechanism": "Good-history borrowers earn recognition by adopting lost items\u2014donating replacements for supporter status. Shifts non-return problem from library to community solutions.",
+   "blind_id": "I72"
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "idx": 5,
+   "title": "Direct Peer-to-Peer Item Circulation",
+   "mechanism": "Borrowers nominate next reader before deadline; items transfer directly P2P, eliminating library return requirement. Transforms obligation into active gifting.",
+   "blind_id": "I48"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 1,
+   "idx": 0,
+   "title": "Dynamic Fine Escalation",
+   "mechanism": "Escalating fines after grace period incentivize return by making delayed items increasingly expensive, shifting borrower decision-making from 'I'll return it eventually' to 'I must act now.'",
+   "blind_id": "I72"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 1,
+   "idx": 1,
+   "title": "Deposit-Based Borrowing",
+   "mechanism": "Upfront deposits create financial stake in item return; refund immediately upon return, leveraging loss aversion psychology to reduce non-returns.",
+   "blind_id": "I40"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 1,
+   "idx": 2,
+   "title": "Peer Accountability Networks",
+   "mechanism": "Social accountability groups leverage peer pressure and community identity to motivate return behavior, bypassing institutional friction that some borrowers resist.",
+   "blind_id": "I21"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 1,
+   "idx": 3,
+   "title": "Variable Loan Terms by Track Record",
+   "mechanism": "Differentiated loan terms based on return history incentivize compliance by rewarding good behavior with privileges, making delinquency carry reputational cost.",
+   "blind_id": "I12"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 1,
+   "idx": 4,
+   "title": "Item-Tracking Technology",
+   "mechanism": "Passive tracking creates objective proof of non-return, enabling graduated automated alerts that reduce social friction from collection enforcement.",
+   "blind_id": "I29"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 1,
+   "idx": 5,
+   "title": "Replacement Co-Ownership Model",
+   "mechanism": "Allowing overdue borrowers to purchase items at discount converts involuntary non-return into voluntary ownership, recovering partial value while respecting borrower autonomy.",
+   "blind_id": "I07"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 2,
+   "idx": 0,
+   "title": "Escalating Notification Protocol",
+   "mechanism": "Progressive messaging (email \u2192 SMS \u2192 phone) triggered before due dates reduces unconscious delay through graduated salience and recall prompts.",
+   "blind_id": "I41"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 2,
+   "idx": 1,
+   "title": "Refundable Checkout Deposit",
+   "mechanism": "Small upfront deposit per item leverages loss-aversion psychology to motivate returns without penalizing honest late charges.",
+   "blind_id": "I22"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 2,
+   "idx": 2,
+   "title": "Distributed Return Network",
+   "mechanism": "24/7 return kiosks at convenience/transit venues eliminate the return-trip friction that causes physical abandonment of items.",
+   "blind_id": "I02"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 2,
+   "idx": 3,
+   "title": "Community Return Leaderboards",
+   "mechanism": "Neighborhood-level return rate transparency creates peer accountability and reputational incentives deterring habitual non-return.",
+   "blind_id": "I60"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 2,
+   "idx": 4,
+   "title": "Amnesty Period with Item Swap",
+   "mechanism": "Overdue items swappable for new copies after 30 days removes loss-avoidance barrier that causes borrowers to abandon damaged items.",
+   "blind_id": "I70"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 2,
+   "idx": 5,
+   "title": "Risk-Based Borrowing Tiers",
+   "mechanism": "Checkout limits scale with return history; proven returners access higher limits, conditioning expanded access on demonstrated reliability.",
+   "blind_id": "I68"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 3,
+   "idx": 0,
+   "title": "Refundable Item Deposits",
+   "mechanism": "Small upfront deposit returned on return; sunk cost psychology incentivizes recovery of money rather than forfeiture.",
+   "blind_id": "I20"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 3,
+   "idx": 1,
+   "title": "Public Borrower Reputation Index",
+   "mechanism": "Visible return history creates social accountability; worse scores reduce borrowing limits, incentivizing timely returns.",
+   "blind_id": "I39"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 3,
+   "idx": 2,
+   "title": "Proximity-Triggered Reminders",
+   "mechanism": "Geofence notifications alert patrons when near library; location-based cues reduce cognitive friction of remembering.",
+   "blind_id": "I03"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 3,
+   "idx": 3,
+   "title": "Late Fee Amnesty Program",
+   "mechanism": "Periodic waiver of overdue fees removes financial barrier; eliminates shame-driven avoidance preventing library re-entry.",
+   "blind_id": "I65"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 3,
+   "idx": 4,
+   "title": "Graduated Consequence Timeline",
+   "mechanism": "Extended grace period before suspension allows life circumstance flexibility; maintains accountability without triggering avoidance.",
+   "blind_id": "I25"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 3,
+   "idx": 5,
+   "title": "Neighborhood Return Kiosks",
+   "mechanism": "24/7 drop boxes in transit hubs reduce transportation barriers; proximity convenience dramatically increases return completion.",
+   "blind_id": "I23"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 4,
+   "idx": 0,
+   "title": "Dynamic Late Fee Escalation",
+   "mechanism": "Progressive fee increases after due date make non-return economically irrational compared to returning item or paying replacement cost.",
+   "blind_id": "I63"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 4,
+   "idx": 1,
+   "title": "Privilege Removal Gating",
+   "mechanism": "Blocks new holds and checkouts until unreturned items settled, creating operational friction that motivates prompt returns over losing access.",
+   "blind_id": "I42"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 4,
+   "idx": 2,
+   "title": "Public Return Rate Leaderboard",
+   "mechanism": "Displays patron return compliance publicly, leveraging social recognition and shame to increase psychological cost of serial non-return behavior.",
+   "blind_id": "I06"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 4,
+   "idx": 3,
+   "title": "Proactive SMS Reminders Plus Location",
+   "mechanism": "Sends personalized due-date reminders with nearest library location details, reducing forgetfulness and lowering friction to timely compliance.",
+   "blind_id": "I19"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 4,
+   "idx": 4,
+   "title": "Upfront Borrowing Deposit",
+   "mechanism": "Requires refundable collateral per item, making non-return immediately painful versus spread-out fines, aligning incentive structure with psychology.",
+   "blind_id": "I47"
+  },
+  {
+   "seed": 1,
+   "arm": "A",
+   "round": 4,
+   "idx": 5,
+   "title": "Automated Home Pickup Service",
+   "mechanism": "Offers free courier retrieval of overdue items, eliminating effort barrier that enables procrastination-to-permanent-loss pipeline.",
+   "blind_id": "I24"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 1,
+   "idx": 0,
+   "title": "Escalating Pre-Due Reminders",
+   "mechanism": "Sending notifications at 7-day, 3-day, and 1-day intervals via multiple channels increases salience and creates decision points before deadline stress triggers avoidance.",
+   "blind_id": "I08"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 1,
+   "idx": 1,
+   "title": "Automatic Renewal as Default",
+   "mechanism": "Auto-renewing items unless holds exist eliminates perceived deadline pressure; borrowers intervene only when necessary, shifting from failure-prone to proactive decision-making.",
+   "blind_id": "I18"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 1,
+   "idx": 2,
+   "title": "Reward-Based Return System",
+   "mechanism": "Offering library credits for on-time returns shifts borrower psychology from punishment-avoidance to positive reward-seeking, increasing compliance through direct financial incentive alignment.",
+   "blind_id": "I32"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 1,
+   "idx": 3,
+   "title": "Risk-Based Targeted Outreach",
+   "mechanism": "Machine learning identifies high-risk non-return borrower-item pairs; intensive outreach (calls, visits) to flagged cases prevents loss by addressing specific barriers proactively.",
+   "blind_id": "I26"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 1,
+   "idx": 4,
+   "title": "Graduated Consequence Progression",
+   "mechanism": "Waiving initial late fees and offering cost-free extensions reduces shame-based avoidance; financial penalties only apply after multiple warnings, lowering permanent non-return.",
+   "blind_id": "I35"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 1,
+   "idx": 5,
+   "title": "Community Accountability Circles",
+   "mechanism": "Peer groups with shared return check-ins and visible status boards leverage social norms and mutual commitment, increasing compliance compared to anonymous systems.",
+   "blind_id": "I13"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 2,
+   "idx": 0,
+   "title": "Multi-Point Return System",
+   "mechanism": "Enable returns at retail partners and secure drop-boxes, eliminates travel time as barrier to return.",
+   "blind_id": "I57"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 2,
+   "idx": 1,
+   "title": "Trust-Based Progressive Lending",
+   "mechanism": "New borrowers limited to 1 item/week; limits automatically increase per 3 consecutive on-time returns, mitigates loss risk.",
+   "blind_id": "I55"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 2,
+   "idx": 2,
+   "title": "Collective Loss Coverage",
+   "mechanism": "Participating borrowers contribute to community pool covering loss/damage costs, distributes financial burden.",
+   "blind_id": "I27"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 2,
+   "idx": 3,
+   "title": "Transparent Insurance Option",
+   "mechanism": "Optional per-checkout damage coverage converts ambiguous liability into predictable small fee, reduces abandonment.",
+   "blind_id": "I04"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 2,
+   "idx": 4,
+   "title": "Mid-Month Return Synchronization",
+   "mechanism": "Standardize return dates around mid-month, leveraging temporal psychology for coordinated return behavior.",
+   "blind_id": "I69"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 2,
+   "idx": 5,
+   "title": "Narrative Item Reminders",
+   "mechanism": "Checkout confirmations include book cover images and plot summaries, fostering psychological attachment to items.",
+   "blind_id": "I16"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 3,
+   "idx": 0,
+   "title": "Deposit Escrow System",
+   "mechanism": "Borrowers deposit refundable collateral per item; return triggers automatic refund, creating direct financial incentive for compliance.",
+   "blind_id": "I10"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 3,
+   "idx": 1,
+   "title": "Preemptive Collection Service",
+   "mechanism": "Library staff schedules pickup of items 3-4 days before due date, eliminating borrower deadline responsibility and logistics burden.",
+   "blind_id": "I17"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 3,
+   "idx": 2,
+   "title": "Discounted Replacement Buyout",
+   "mechanism": "Borrowers can purchase overdue items at 40% of replacement cost instead of accruing debt, converting sunk loss to revenue.",
+   "blind_id": "I54"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 3,
+   "idx": 3,
+   "title": "Return Rate Transparency Display",
+   "mechanism": "Library publicly displays borrower return rate on account page, creating soft shame incentive and accountability through personal visibility.",
+   "blind_id": "I15"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 3,
+   "idx": 4,
+   "title": "Volunteer Peer Courier Network",
+   "mechanism": "Community volunteers collect items weekly from borrowers' homes and batch-return to library, eliminating personal transportation barrier.",
+   "blind_id": "I50"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 3,
+   "idx": 5,
+   "title": "Adaptive Loan Period Shortening",
+   "mechanism": "System automatically reduces lending period for future borrows after missed due dates, aligning constraints to demonstrated reliability.",
+   "blind_id": "I71"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 4,
+   "idx": 0,
+   "title": "Borrower Status Tier System",
+   "mechanism": "Maintain public tiered status (Gold/Silver/Bronze) based on return rate; high-tier borrowers get expanded borrowing limits. Status loss drives compliance through identity investment.",
+   "blind_id": "I48"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 4,
+   "idx": 1,
+   "title": "Automatic Item Resale Program",
+   "mechanism": "Unreturned items listed on library marketplace 5 days after due date; proceeds fund replacement purchases. Creates urgency before formal collection efforts.",
+   "blind_id": "I34"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 4,
+   "idx": 2,
+   "title": "Borrowing Capacity by Item Value",
+   "mechanism": "System enforces maximum concurrent replacement-value per borrower. Non-returners hit ceiling, preventing new checkouts until items returned. Applies friction without penalty.",
+   "blind_id": "I38"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 4,
+   "idx": 3,
+   "title": "Risk-Adjusted Borrowing Fees",
+   "mechanism": "Borrowing costs vary by individual return history: excellent returners borrow free; repeat non-returners pay small micro-fee. Direct economic signal for behavior.",
+   "blind_id": "I31"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 4,
+   "idx": 4,
+   "title": "Appointment-Based Pickup System",
+   "mechanism": "Staff schedules 48-hour collection appointment 3 days before due date; borrower confirms or reschedules. Accountability moment eliminates 'forgot' excuse.",
+   "blind_id": "I01"
+  },
+  {
+   "seed": 1,
+   "arm": "B",
+   "round": 4,
+   "idx": 5,
+   "title": "Location-Triggered Return Alerts",
+   "mechanism": "Borrowers receive return reminders only when within 1 mile of library during business hours in final week. Removes friction via convenience.",
+   "blind_id": "I62"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 1,
+   "idx": 0,
+   "title": "Predictive Reminder Before Due Date",
+   "mechanism": "System triggers notifications before due date passes, converting default forgetting behavior into active return engagement through timed automation.",
+   "blind_id": "I51"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 1,
+   "idx": 1,
+   "title": "Extended Grace Period with Progressive Fees",
+   "mechanism": "Eliminates immediate fines, reducing psychological shame barrier that prevents non-returners from admitting loss and attempting return.",
+   "blind_id": "I64"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 1,
+   "idx": 2,
+   "title": "Donation-Based Loss Recovery",
+   "mechanism": "Lets patrons donate items from library's needed-list instead of cash payment, converting financial barrier into community contribution incentive.",
+   "blind_id": "I43"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 1,
+   "idx": 3,
+   "title": "Instant Return Reward Notifications",
+   "mechanism": "Sends immediate digital rewards upon return confirmation, creating positive reinforcement loop that increases intrinsic motivation for compliance.",
+   "blind_id": "I59"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 1,
+   "idx": 4,
+   "title": "Distributed Community Return Boxes",
+   "mechanism": "Places secure drop-boxes in neighborhood convenience locations, removing travel friction and converting returns into default behavior patterns.",
+   "blind_id": "I14"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 1,
+   "idx": 5,
+   "title": "Visible Return Reliability Scores",
+   "mechanism": "Displays patron return-rate percentages publicly on library cards, leveraging social proof and status-seeking to increase return compliance.",
+   "blind_id": "I05"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "idx": 0,
+   "title": "Borrower-Initiated Auto-Return Subscriptions",
+   "mechanism": "Borrowers opt into automatic retrieval service where community members collect items at scheduled intervals, eliminating individual return trips.",
+   "blind_id": "I58"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "idx": 1,
+   "title": "Peer Accountability Circles",
+   "mechanism": "Small borrower groups form circles where members remind each other to return items, leveraging peer social pressure over institutional notification.",
+   "blind_id": "I67"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "idx": 2,
+   "title": "Shared Collections Model",
+   "mechanism": "Multiple families share books through collective accounts; any member's non-return becomes group problem, creating peer accountability pressure.",
+   "blind_id": "I30"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "idx": 3,
+   "title": "Employer Partnership Returns",
+   "mechanism": "Employers provide on-site library return lockers where employees return items during work, embedding return into existing daily routine at workplace.",
+   "blind_id": "I52"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "idx": 4,
+   "title": "Automatic Loss Credit Debit",
+   "mechanism": "Unreturned items trigger quarterly account charges that grow over time, making non-return increasingly costly and incentivizing eventual return.",
+   "blind_id": "I61"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "idx": 5,
+   "title": "Borrowed-Item Insurance Premium",
+   "mechanism": "Borrowers pay quarterly insurance fee covering losses; normalizes non-return as pooled risk, reducing guilt and defensive behavior.",
+   "blind_id": "I36"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "idx": 0,
+   "title": "Geofence Auto-Retrieval",
+   "mechanism": "Library logs borrower address at signup; automated courier retrieves unreturned items from borrower's location on due date, charging borrower a retrieval fee, eliminating need for borrower to choose to return.",
+   "blind_id": "I66"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "idx": 1,
+   "title": "Third-Party Debt Escalation",
+   "mechanism": "Library transfers unpaid item loss to debt collection agency 30 days after due date; agency pursues borrower via credit report impact and collection calls, creating financial consequence beyond library's relationships.",
+   "blind_id": "I49"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "idx": 2,
+   "title": "Collective Group Liability Loan",
+   "mechanism": "Library lends items to registered community groups rather than individuals; group is collectively liable for non-return; group reputation and funding affected, incentivizing self-policing among members.",
+   "blind_id": "I46"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "idx": 3,
+   "title": "Progressive Item Decay Function",
+   "mechanism": "Borrowed items have embedded time-decay mechanisms; digital access gradually restricts, physical material weakens; degradation reverses only upon timely return, making retention progressively costlier.",
+   "blind_id": "I11"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "idx": 4,
+   "title": "Crowdsourced Finder's Fee Network",
+   "mechanism": "Library app alerts nearby residents of unreturned items, offering finder's fee for retrieval from borrower's location; borrower incentivized to cooperate to avoid stranger home visits.",
+   "blind_id": "I37"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "idx": 5,
+   "title": "Physical Return-Required Account Lock",
+   "mechanism": "Borrower's library app and checkout privileges automatically lock on due date if item unreturned; only in-person return AND physical re-authentication restores access, compelling return.",
+   "blind_id": "I33"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "idx": 0,
+   "title": "Permanent Donation Conversion Program",
+   "mechanism": "Non-returned items after 24 months auto-convert to tax-deductible donation; borrower receives receipt, eliminating debt and moral obligation.",
+   "blind_id": "I28"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "idx": 1,
+   "title": "Municipal Asset Redistribution",
+   "mechanism": "Unreturned items after 18 months transfer to city schools/shelters; borrower debt cleared, item continues circulation under community ownership.",
+   "blind_id": "I44"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "idx": 2,
+   "title": "Community-Pooled Replacement Fund",
+   "mechanism": "All borrowers pay $5 annual loss insurance; unreturned items covered from collective pool without individual penalty tracking or accountability.",
+   "blind_id": "I53"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "idx": 3,
+   "title": "Shame-Free Anonymous Returns",
+   "mechanism": "Permanent no-questions-asked drop boxes accept overdue items with zero fines/records/notation; eliminates staff confrontation barrier to returning.",
+   "blind_id": "I45"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "idx": 4,
+   "title": "Library-Managed Replacement Purchase",
+   "mechanism": "Library absorbs replacement cost for unreturned items; borrower pays discounted rate or installments; loss becomes budgeted operational expense.",
+   "blind_id": "I09"
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "idx": 5,
+   "title": "Quarterly Amnesty Debt Resets",
+   "mechanism": "Four times yearly, all late fees and records cleared; borrowers restart with zero penalties; breaks shame-stigma cycle preventing library return.",
+   "blind_id": "I56"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 1,
+   "idx": 0,
+   "title": "Graduated Fine Structure",
+   "mechanism": "Making non-return increasingly costly through escalating fines, creating economic incentive for return and converting invisible problem into salient financial consequence.",
+   "blind_id": "I64"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 1,
+   "idx": 1,
+   "title": "Predictive Pickup Booking",
+   "mechanism": "Assigns specific return dates at checkout with escalating reminders, creating behavioral checkpoints and leveraging commitment-consistency effect to trigger return.",
+   "blind_id": "I33"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 1,
+   "idx": 2,
+   "title": "Distributed Return Network",
+   "mechanism": "Expands return locations beyond library building, reducing friction and hassle cost of returning items, converting barrier that enables non-return.",
+   "blind_id": "I08"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 1,
+   "idx": 3,
+   "title": "Escalating Contact Protocol",
+   "mechanism": "Personalized reminders at escalating intervals invoke social responsibility norms and community impact messaging, activating guilt-based motivation for return.",
+   "blind_id": "I23"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 1,
+   "idx": 4,
+   "title": "Refundable Deposit System",
+   "mechanism": "Requires small refundable deposit upfront for high-loss items, making consequence immediately salient and leveraging loss aversion to drive return.",
+   "blind_id": "I03"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 1,
+   "idx": 5,
+   "title": "Automatic Renewal Default",
+   "mechanism": "Converts non-return from passive neglect into active choice by auto-renewing items, removing default non-return pathway and reducing forgetting-driven non-returns.",
+   "blind_id": "I45"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 2,
+   "idx": 0,
+   "title": "Deposit-Backed Borrowing",
+   "mechanism": "Loss aversion psychology\u2014borrowers prioritize recovering monetary deposits over avoiding abstract fines, triggering return behavior.",
+   "blind_id": "I36"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 2,
+   "idx": 1,
+   "title": "Graduated Escalating Fees",
+   "mechanism": "Cost avoidance threshold\u2014accelerating weekly fees create financial penalty windows, prompting early returns before costs peak.",
+   "blind_id": "I70"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 2,
+   "idx": 2,
+   "title": "24-Hour Return Kiosks",
+   "mechanism": "Friction elimination\u2014removing staff-presence and operating-hour requirements converts return procrastination into impulsive compliance.",
+   "blind_id": "I62"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 2,
+   "idx": 3,
+   "title": "Borrowing-Privilege Suspension",
+   "mechanism": "Present benefit loss\u2014non-returnees forfeit future borrowing access immediately, making return preferable to perpetual ban.",
+   "blind_id": "I24"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 2,
+   "idx": 4,
+   "title": "Amnesty Weeks Program",
+   "mechanism": "Penalty removal window\u2014periodic fee-free return periods eliminate debt barriers preventing lapsed borrowers from returning items.",
+   "blind_id": "I05"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 2,
+   "idx": 5,
+   "title": "Social Notification Escalation",
+   "mechanism": "Reputation risk\u2014multi-week overdue notices escalate to family/community contacts, triggering social pressure compliance.",
+   "blind_id": "I63"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 3,
+   "idx": 0,
+   "title": "Dynamic Late Fee Escalation",
+   "mechanism": "Borrowers face exponentially increasing fees after 30 days, creating urgency to return or renew before costs become punitive compared to replacement value.",
+   "blind_id": "I10"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 3,
+   "idx": 1,
+   "title": "Loyalty Rewards for Returns",
+   "mechanism": "Borrowers earn points for on-time returns redeemable for fee waivers and free items, making compliance rewarding rather than punitive.",
+   "blind_id": "I11"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 3,
+   "idx": 2,
+   "title": "Automatic Renewal Opt-Out",
+   "mechanism": "Items default to non-renewable after first loan period, requiring active borrower choice to extend, catching items at renewal checkpoints.",
+   "blind_id": "I04"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 3,
+   "idx": 3,
+   "title": "Community Accountability Circles",
+   "mechanism": "Organized borrower groups meet monthly to share reading experiences and encourage mutual return commitments, leveraging social norms.",
+   "blind_id": "I25"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 3,
+   "idx": 4,
+   "title": "Item Condition-Deposit System",
+   "mechanism": "Borrowers pay small, refundable deposits for high-demand items, making them personally accountable for return completion.",
+   "blind_id": "I15"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 3,
+   "idx": 5,
+   "title": "SMS/App Milestone Reminders",
+   "mechanism": "Graduated notifications at 50%, 75%, 90% of loan period trigger returns before psychological commitment to keeping items grows.",
+   "blind_id": "I66"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 4,
+   "idx": 0,
+   "title": "Dynamic late fee escalation",
+   "mechanism": "Late fees increase exponentially after extended overdues, making retention economically irrational for borrowers.",
+   "blind_id": "I02"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 4,
+   "idx": 1,
+   "title": "Lending access suspension at threshold",
+   "mechanism": "Blocking new borrowing privileges once patron reaches 3+ unreturned items forces resolution before accessing more services.",
+   "blind_id": "I34"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 4,
+   "idx": 2,
+   "title": "Professional gentle collection partnership",
+   "mechanism": "Contract non-profit collectors for empathetic follow-up with payment plans, avoiding staff burnout and library alienation.",
+   "blind_id": "I32"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 4,
+   "idx": 3,
+   "title": "Graduated micro-penalties with extensions",
+   "mechanism": "At 50% loan period offer extension; at 80% offer extension with 50-cent fee, creating decision points before abandonment.",
+   "blind_id": "I48"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 4,
+   "idx": 4,
+   "title": "Variable loan periods by return history",
+   "mechanism": "Perfect-history patrons get 4 weeks; those with losses get 2 weeks, reducing time window for accidental non-returns.",
+   "blind_id": "I22"
+  },
+  {
+   "seed": 2,
+   "arm": "A",
+   "round": 4,
+   "idx": 5,
+   "title": "Community service debt conversion",
+   "mechanism": "Allow patrons to earn off lost-item write-offs through 4-hour library service shifts, maintaining relationship while recovering value.",
+   "blind_id": "I39"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 1,
+   "idx": 0,
+   "title": "Refundable Item Deposit",
+   "mechanism": "Borrowers pay $3-5 refundable deposit per item, returned upon timely return. Loss aversion and immediate financial consequence make return a priority over library fines.",
+   "blind_id": "I21"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 1,
+   "idx": 1,
+   "title": "Escalating SMS Reminders",
+   "mechanism": "Tiered notifications sent at days 20, 25, and 27 of checkout period. Converts abstract due dates into concrete action triggers, reducing unintentional non-returns.",
+   "blind_id": "I09"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 1,
+   "idx": 2,
+   "title": "Community Return Leaderboard",
+   "mechanism": "App displays neighborhood/branch return rates and individual streaks publicly. Social comparison and reputation concerns activate borrower motivation to maintain standing.",
+   "blind_id": "I28"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 1,
+   "idx": 3,
+   "title": "Automatic Renewal Default",
+   "mechanism": "System auto-renews items unless holds exist, eliminating renewal deadline friction. Transforms absent-minded non-returners into compliant borrowers by removing decision burden.",
+   "blind_id": "I37"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 1,
+   "idx": 4,
+   "title": "Checkout Commitment Declaration",
+   "mechanism": "Borrowers verbally confirm or digitally state intended return date at checkout. Pre-commitment device increases internal consistency motivation to honor stated intention.",
+   "blind_id": "I55"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 1,
+   "idx": 5,
+   "title": "Visible Replacement Cost",
+   "mechanism": "Receipt or checkout screen displays each item's replacement cost. Psychological reframing from 'free borrow' to 'borrowed asset' activates protective return obligation.",
+   "blind_id": "I68"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 2,
+   "idx": 0,
+   "title": "Peer Return Accountability Partners",
+   "mechanism": "Nominate friend as accountability partner who receives overdue notifications. Creates social accountability and peer pressure to return items on time.",
+   "blind_id": "I65"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 2,
+   "idx": 1,
+   "title": "Progressive Borrowing Tier System",
+   "mechanism": "Earn borrowing capacity through on-time returns: bronze (2 items), silver (5), gold (15). Late returns drop tier level, restricting access.",
+   "blind_id": "I61"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 2,
+   "idx": 2,
+   "title": "Distributed Return Collection Network",
+   "mechanism": "Install secure drop-off boxes at grocery stores, transit hubs, community centers. Reduces friction and convenience barriers to returning.",
+   "blind_id": "I54"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 2,
+   "idx": 3,
+   "title": "Personal Return Streak Gamification",
+   "mechanism": "Display consecutive on-time return streak on patron dashboard. Visible reset on late return creates loss aversion motivating streak maintenance.",
+   "blind_id": "I01"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 2,
+   "idx": 4,
+   "title": "Escalating Renewal Cost Structure",
+   "mechanism": "First renewal free; second $0.50; third $1.00, then return required. Escalating cost creates urgency as deadline approaches.",
+   "blind_id": "I14"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 2,
+   "idx": 5,
+   "title": "Community Resource Stewardship Pledge",
+   "mechanism": "Brief pledge acknowledging library invested community funds in item; unreturned items reduce future acquisition budget for all patrons.",
+   "blind_id": "I58"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 3,
+   "idx": 0,
+   "title": "Borrower-Chosen Loan Duration",
+   "mechanism": "Borrowers select checkout period matching predicted use. Explicit commitment to self-chosen deadline increases return compliance.",
+   "blind_id": "I41"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 3,
+   "idx": 1,
+   "title": "Fines-to-Community-Causes Redirect",
+   "mechanism": "Overdue fines donated to selected charities. Frames payment as social good, replacing punishment resentment with intrinsic motivation.",
+   "blind_id": "I35"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 3,
+   "idx": 2,
+   "title": "Predictive Risk-Based Outreach",
+   "mechanism": "System analyzes patterns to identify items borrower likely keeps too long. Sends personalized early reminders before actual overdue.",
+   "blind_id": "I17"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 3,
+   "idx": 3,
+   "title": "Return-as-Civic-Duty Messaging",
+   "mechanism": "Overdue notices display waiting list showing borrower's return enables specific patrons' access. Reframes identity from rule-breaker to helper.",
+   "blind_id": "I43"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 3,
+   "idx": 4,
+   "title": "Mid-Loan Purchase Option",
+   "mechanism": "Borrowers can buy item mid-loan at reduced cost. Converts intended retention into revenue while satisfying ownership desire.",
+   "blind_id": "I60"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 3,
+   "idx": 5,
+   "title": "First-Return Condition Amnesty",
+   "mechanism": "Forgive minor damage only on first overdue return. Reduces anxiety about condition, encouraging return over hiding/permanent loss.",
+   "blind_id": "I26"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 4,
+   "idx": 0,
+   "title": "Library Advocates Sponsorship Program",
+   "mechanism": "Community members vouch for borrowers, creating social reputation risk that motivates return to avoid disappointing their advocate.",
+   "blind_id": "I19"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 4,
+   "idx": 1,
+   "title": "Mandatory Receipt Confirmation",
+   "mechanism": "Borrowers confirm receipt within 48 hours via app/SMS, creating early engagement friction preventing passive non-engagement.",
+   "blind_id": "I42"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 4,
+   "idx": 2,
+   "title": "Progressive Deposit Escalation",
+   "mechanism": "Security deposits increase with each unreturned item, creating escalating financial disincentive for repeated non-return behavior.",
+   "blind_id": "I38"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 4,
+   "idx": 3,
+   "title": "Neighborhood Convenience Return",
+   "mechanism": "Fast local return options (kiosks, stores) available only to timely returners, making delays costly through lost convenience.",
+   "blind_id": "I13"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 4,
+   "idx": 4,
+   "title": "Family Borrowing Account Linking",
+   "mechanism": "Dependent's unreturned items reduce parent/guardian's borrowing limit, creating family-level accountability for timely returns.",
+   "blind_id": "I44"
+  },
+  {
+   "seed": 2,
+   "arm": "B",
+   "round": 4,
+   "idx": 5,
+   "title": "Librarian Relationship Call Program",
+   "mechanism": "Personal librarian calls one week before due date build social obligation reducing willingness to disappoint their lender.",
+   "blind_id": "I20"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 1,
+   "idx": 0,
+   "title": "Dynamic Late Fees by Replacement Value",
+   "mechanism": "Late fees scale with item replacement cost, making expensive items costlier to lose, motivating return behavior.",
+   "blind_id": "I50"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 1,
+   "idx": 1,
+   "title": "Predictive Return Prompts",
+   "mechanism": "ML predicts likely non-returns before due date, auto-sending renewal reminders or escalating notifications to trigger action.",
+   "blind_id": "I31"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 1,
+   "idx": 2,
+   "title": "Peer Recovery Incentives",
+   "mechanism": "Reward borrowers for returning overdue items (their own or others'), activating social networks to retrieve lost materials.",
+   "blind_id": "I29"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 1,
+   "idx": 3,
+   "title": "Capped Item Renewals",
+   "mechanism": "Limit each item to 2-3 renewals maximum, forcing borrower decision between returning or accepting escalating fees.",
+   "blind_id": "I27"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 1,
+   "idx": 4,
+   "title": "Photo-Verified Checkout",
+   "mechanism": "Mobile app requires photo evidence of item condition at checkout and return, creating documented accountability trail.",
+   "blind_id": "I06"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 1,
+   "idx": 5,
+   "title": "Refundable Item Deposit",
+   "mechanism": "High-risk items require refundable deposits, making non-return directly costly, creating strong financial incentive to return.",
+   "blind_id": "I57"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "idx": 0,
+   "title": "Auto-Return Defaults",
+   "mechanism": "Items automatically return after 21 days unless actively renewed, shifting inertia from keeping to returning and requiring conscious commitment to extend.",
+   "blind_id": "I67"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "idx": 1,
+   "title": "Neighborhood Return Kiosks",
+   "mechanism": "24/7 unmanned return boxes at transit stops, shops, and laundromats eliminate access barriers for relocated or mobility-limited borrowers unable to reach libraries.",
+   "blind_id": "I51"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "idx": 2,
+   "title": "High-Value Item Holds-Only",
+   "mechanism": "High non-return items (bestsellers, DVDs) move to holds-only circulation, removed from shelves, requiring deliberate commitment and staff checkout conversation.",
+   "blind_id": "I40"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "idx": 3,
+   "title": "Empathetic Barrier Outreach",
+   "mechanism": "Trained staff contact chronic non-returners (60+ days) using supportive conversation to identify actual barriers\u2014loss, relocation, shame\u2014and problem-solve collaboratively.",
+   "blind_id": "I53"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "idx": 4,
+   "title": "Pre-Checkout Reality Check",
+   "mechanism": "System displays borrower's actual return rate and asks 'Will you return this by [date]?' pre-checkout, triggering reflection on realistic capacity before commitment.",
+   "blind_id": "I16"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "idx": 5,
+   "title": "Loss-Insurance vs. Replacement",
+   "mechanism": "Borrowers select $2 loss insurance or full-replacement at checkout, enabling differentiated recovery for accidental loss versus intentional hoarding patterns.",
+   "blind_id": "I07"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "idx": 0,
+   "title": "Peer Collective Lending Model",
+   "mechanism": "Small groups share borrowing privileges; non-return by one suspends all, leveraging peer enforcement over individual incentives.",
+   "blind_id": "I71"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "idx": 1,
+   "title": "Trusted Community Proxy Returns",
+   "mechanism": "Authorized community partners borrow and return items on behalf of clients, taking collective responsibility for compliance.",
+   "blind_id": "I49"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "idx": 2,
+   "title": "Logistics Partner Return Routes",
+   "mechanism": "Library partners with delivery services to collect returns during existing neighborhood routes, removing trip dependency.",
+   "blind_id": "I52"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "idx": 3,
+   "title": "Household Collection Rotation",
+   "mechanism": "Loan entire rotating collections to households rather than items to individuals, reducing tracking burden and return friction.",
+   "blind_id": "I72"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "idx": 4,
+   "title": "Workplace Return Integration",
+   "mechanism": "Return items at work/school mailrooms instead of libraries, embedding returns into existing commute and institutional routines.",
+   "blind_id": "I12"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "idx": 5,
+   "title": "Donor Item Sponsorship Program",
+   "mechanism": "Book sponsors receive non-return alerts and assume collection/replacement responsibility, creating distributed accountability network.",
+   "blind_id": "I69"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "idx": 0,
+   "title": "Workplace Employer Item Accountability",
+   "mechanism": "Employers verify employee item returns; library invoices employers, not patrons, making non-returns organizational and financial liability.",
+   "blind_id": "I30"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "idx": 1,
+   "title": "Neighborhood Guardian Recovery Program",
+   "mechanism": "Trained neighborhood volunteers collect items from borrowers; guardian compensation/reputation depends on recovery rate, creating local accountability.",
+   "blind_id": "I56"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "idx": 2,
+   "title": "Automatic Community Redistribution",
+   "mechanism": "Unreturned items auto-transfer to community nonprofits/schools after X days; borrower notified item redistributed, eliminating permanent-loss frame.",
+   "blind_id": "I46"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "idx": 3,
+   "title": "Used Market Buyback Integration",
+   "mechanism": "Library partners with used-book resellers; unreturned items enter resale, library receives recovery proceeds, aligning incentives across stakeholders.",
+   "blind_id": "I18"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "idx": 4,
+   "title": "Household Co-Signer Liability Model",
+   "mechanism": "Borrower names household co-signer as co-responsible; shared financial liability for non-return creates household-level accountability and enforcement.",
+   "blind_id": "I47"
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "idx": 5,
+   "title": "Consumption-Based Circulation Model",
+   "mechanism": "Borrowers can purchase discounted, lightly-used items instead of returning; library sources inventory replacement from proceeds revenue.",
+   "blind_id": "I59"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 1,
+   "idx": 0,
+   "title": "Progressive Late Fees",
+   "mechanism": "Financial penalty escalates daily, making return increasingly rational before replacement cost accumulates.",
+   "blind_id": "I71"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 1,
+   "idx": 1,
+   "title": "Auto-Renewal System",
+   "mechanism": "System automatically renews items if no holds exist, reducing borrower negligence from permanent loss while respecting holds.",
+   "blind_id": "I58"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 1,
+   "idx": 2,
+   "title": "Multi-Location Returns",
+   "mechanism": "Distributed return sites (grocery stores, pharmacies, transit hubs) lower inconvenience cost of returning items versus keeping them.",
+   "blind_id": "I60"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 1,
+   "idx": 3,
+   "title": "Return Rate Tiers",
+   "mechanism": "Borrowing privileges (quantity/duration) correlate with historical return rates, creating incentive for consistent return behavior.",
+   "blind_id": "I32"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 1,
+   "idx": 4,
+   "title": "Replacement Insurance Option",
+   "mechanism": "Upfront optional insurance purchase clarifies replacement cost and commitment level, self-selecting borrowers who want guilt-free keeps.",
+   "blind_id": "I66"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 1,
+   "idx": 5,
+   "title": "Digital Holds Queue Visibility",
+   "mechanism": "Borrowers see real-time demand for items (hold queue position), creating social obligation to return held items promptly.",
+   "blind_id": "I03"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 2,
+   "idx": 0,
+   "title": "Refundable Deposit Guarantee",
+   "mechanism": "Borrowers pay refundable deposits; loss aversion psychology motivates return behavior by tying money recovery to item return.",
+   "blind_id": "I57"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 2,
+   "idx": 1,
+   "title": "Exponential Late Fee Escalation",
+   "mechanism": "Late fees compound weekly; rising costs create psychological urgency to return items before fees approach replacement cost.",
+   "blind_id": "I34"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 2,
+   "idx": 2,
+   "title": "High-Value Item RFID Tracking",
+   "mechanism": "Valuable items tagged with RFID; surveillance effect deters loss while enabling recovery of misplaced items.",
+   "blind_id": "I62"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 2,
+   "idx": 3,
+   "title": "Public Return Rate Dashboard",
+   "mechanism": "Patron return rates displayed in accounts; social reputation effect motivates compliance through peer awareness and standing visibility.",
+   "blind_id": "I35"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 2,
+   "idx": 4,
+   "title": "Return Streak Rewards Program",
+   "mechanism": "Consecutive on-time returns unlock badges/discounts; positive reinforcement builds return habit through reward association instead of punishment.",
+   "blind_id": "I52"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 2,
+   "idx": 5,
+   "title": "On-Demand Mobile Returns",
+   "mechanism": "Mobile library stops and mail-in returns available; eliminating access barriers removes primary logistical excuses for non-return.",
+   "blind_id": "I09"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 3,
+   "idx": 0,
+   "title": "Graduated Soft Penalty System",
+   "mechanism": "Escalating soft penalties (reminders, holds, restricted borrowing) delay financial charges, breaking avoidance spirals that cause permanent non-return.",
+   "blind_id": "I36"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 3,
+   "idx": 1,
+   "title": "Ubiquitous Return Hubs",
+   "mechanism": "Distributed return locations at pharmacies, grocery stores, and community centers near homes eliminate travel friction that prevents returns.",
+   "blind_id": "I15"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 3,
+   "idx": 2,
+   "title": "Pre-Checkout Loss Insurance",
+   "mechanism": "Optional per-item insurance purchased at checkout removes replacement-cost anxiety that triggers avoidance behavior for high-value materials.",
+   "blind_id": "I64"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 3,
+   "idx": 3,
+   "title": "Automatic Renewal System",
+   "mechanism": "Items auto-renew unless another patron placed a hold, eliminating surprise due dates that cause inadvertent non-return from forgetting.",
+   "blind_id": "I20"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 3,
+   "idx": 4,
+   "title": "Amnesty Window with Flat Fees",
+   "mechanism": "Time-limited penalty-free return period followed by flat replacement fees interrupts escalating-debt avoidance cycles that entrench non-return.",
+   "blind_id": "I33"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 3,
+   "idx": 5,
+   "title": "Multi-Touchpoint Reminder Campaigns",
+   "mechanism": "SMS/email/app reminders one week before due plus small rewards for on-time returns increase task salience and positive reinforcement.",
+   "blind_id": "I18"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 4,
+   "idx": 0,
+   "title": "Dynamic Escalating Fees",
+   "mechanism": "Overdue cost rises exponentially, creating increasing financial pressure to return items promptly.",
+   "blind_id": "I02"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 4,
+   "idx": 1,
+   "title": "Neighborhood Borrower Leaderboard",
+   "mechanism": "Public ranking of top returners creates status competition, leveraging social prestige as compliance driver.",
+   "blind_id": "I51"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 4,
+   "idx": 2,
+   "title": "Hold Queue Notifications",
+   "mechanism": "Displaying held items and waiting patrons triggers reciprocal obligation and social accountability.",
+   "blind_id": "I45"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 4,
+   "idx": 3,
+   "title": "Refundable Checkout Deposits",
+   "mechanism": "Upfront refundable deposit creates financial stake tied directly to return, increasing incentive.",
+   "blind_id": "I12"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 4,
+   "idx": 4,
+   "title": "Geofenced Return Reminders",
+   "mechanism": "Location-triggered notifications when patron enters library zone prompt immediate action without friction.",
+   "blind_id": "I30"
+  },
+  {
+   "seed": 3,
+   "arm": "A",
+   "round": 4,
+   "idx": 5,
+   "title": "Tiered Borrowing Privileges",
+   "mechanism": "Return rates determine checkout limits and loan periods; strong performers gain additional borrowing freedom.",
+   "blind_id": "I63"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 1,
+   "idx": 0,
+   "title": "Escalating Digital Reminders",
+   "mechanism": "Multiple pre-due notifications with increasing urgency create temporal cues, pushing returns from procrastination to action before deadlines.",
+   "blind_id": "I44"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 1,
+   "idx": 1,
+   "title": "Upfront Replacement Deposit Hold",
+   "mechanism": "Placing a temporary hold on borrower payment method for replacement cost creates immediate loss aversion, motivating return compliance.",
+   "blind_id": "I38"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 1,
+   "idx": 2,
+   "title": "Social Accountability Dashboard",
+   "mechanism": "Displaying neighborhood return rates and personal statistics leverages social comparison and reputation concerns to drive compliance.",
+   "blind_id": "I61"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 1,
+   "idx": 3,
+   "title": "Grace Period with Transparency",
+   "mechanism": "Clear grace periods and progressive penalty structure reduce shame-avoidance behavior that prevents returns, enabling straightforward interaction.",
+   "blind_id": "I43"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 1,
+   "idx": 4,
+   "title": "Gamified Loyalty Points",
+   "mechanism": "Cumulative rewards for timely returns build habit loops and identity as reliable borrower, competing against non-return norm.",
+   "blind_id": "I37"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 1,
+   "idx": 5,
+   "title": "Tiered Borrowing Limits",
+   "mechanism": "Return compliance determines checkout limits for next cycle, creating immediate consequence making default costly without being punitive.",
+   "blind_id": "I24"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 2,
+   "idx": 0,
+   "title": "Conditional Retail Partnerships",
+   "mechanism": "Partner retailers offer small discounts exclusively to patrons with clean return histories, leveraging external incentive for punctuality.",
+   "blind_id": "I68"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 2,
+   "idx": 1,
+   "title": "Predictive Risk Checkout Nudge",
+   "mechanism": "High non-return risk borrowers receive automatic 2-week loan terms instead of 4-week at checkout, reducing default likelihood structurally.",
+   "blind_id": "I26"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 2,
+   "idx": 2,
+   "title": "Community Service Debt Swap",
+   "mechanism": "Non-returns resolved via 4 hours library volunteering instead of fine, replacing punitive measure with productive community reintegration.",
+   "blind_id": "I48"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 2,
+   "idx": 3,
+   "title": "Peer Borrower Accountability",
+   "mechanism": "Borrowers nominate co-signer who receives reminders; peer relationship accountability and shared reputation motivate joint return behavior.",
+   "blind_id": "I39"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 2,
+   "idx": 4,
+   "title": "Flexible Replacement Installments",
+   "mechanism": "Non-returned items offered as $3/month purchase plan; financial accessibility removes barrier and creates incentive for completing cycle.",
+   "blind_id": "I40"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 2,
+   "idx": 5,
+   "title": "Community Item Sponsorship Drive",
+   "mechanism": "Unreturned items trigger public micro-donation campaign for replacement; shared community responsibility creates social pressure on borrower.",
+   "blind_id": "I53"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 3,
+   "idx": 0,
+   "title": "Automated Item Geo-Recovery",
+   "mechanism": "IoT tracking enables library to physically locate and retrieve non-returned items from borrower locations before legal loss occurs.",
+   "blind_id": "I17"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 3,
+   "idx": 1,
+   "title": "Return Verification Photo Receipt",
+   "mechanism": "Patrons photograph timestamped returns at kiosks; images serve as dispute-proof records, eliminating false non-return claims.",
+   "blind_id": "I67"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 3,
+   "idx": 2,
+   "title": "Borrower Protection Insurance Plans",
+   "mechanism": "Optional per-item loss/damage insurance makes protecting items economically rational for repeat borrowers, reducing guilt-driven returns.",
+   "blind_id": "I49"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 3,
+   "idx": 3,
+   "title": "Peer Borrowing Success Coaches",
+   "mechanism": "Trained volunteers contact borrowers during loan periods offering support, replacing algorithmic nudges with personal accountability relationships.",
+   "blind_id": "I46"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 3,
+   "idx": 4,
+   "title": "24/7 Autonomous Return Lockers",
+   "mechanism": "Secure outdoor pods enable after-hours returns with instant receipts, eliminating operational-hours friction driving unintentional retention.",
+   "blind_id": "I27"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 3,
+   "idx": 5,
+   "title": "Replacement Debt-as-Store-Credit",
+   "mechanism": "Non-returned items automatically convert to library-sale store credits rather than collection notices, reframing debt as economic opportunity.",
+   "blind_id": "I54"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 4,
+   "idx": 0,
+   "title": "Item Bundling Gate",
+   "mechanism": "Borrowers must return previously borrowed items before checking out new ones, creating access blocking based on prior accountability.",
+   "blind_id": "I16"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 4,
+   "idx": 1,
+   "title": "Item Cost Display",
+   "mechanism": "Show replacement cost during checkout and loan period, making financial loss consequence salient and triggering loss aversion behavior.",
+   "blind_id": "I59"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 4,
+   "idx": 2,
+   "title": "Borrower Certification Video",
+   "mechanism": "New/repeat non-returners complete mandatory item-care training video before borrowing, increasing cognitive commitment to return responsibility.",
+   "blind_id": "I10"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 4,
+   "idx": 3,
+   "title": "Unreturned Item Auction Alerts",
+   "mechanism": "Send photo and auction listing of borrower's unreturned item for resale, activating concrete loss visualization and regret response.",
+   "blind_id": "I04"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 4,
+   "idx": 4,
+   "title": "Return Witness Accountability",
+   "mechanism": "Require staff/volunteer confirmation at physical return, creating social accountability moment versus anonymous drop-off or self-checkout systems.",
+   "blind_id": "I05"
+  },
+  {
+   "seed": 3,
+   "arm": "B",
+   "round": 4,
+   "idx": 5,
+   "title": "Trusted Proxy Return Program",
+   "mechanism": "Enable borrowers to designate contacts who can return items on their behalf, reducing logistical friction while embedding reciprocal accountability.",
+   "blind_id": "I22"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 1,
+   "idx": 0,
+   "title": "Fee-Free Renewal Window",
+   "mechanism": "30-day automatic renewal with zero fees eliminates avoidance spiral where fear of late charges prevents return attempts.",
+   "blind_id": "I08"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 1,
+   "idx": 1,
+   "title": "Ambient Due-Date Reminders",
+   "mechanism": "Push notifications 7 days before due with one-tap renewal or nearby drop locations reduce cognitive load causing forgetfulness.",
+   "blind_id": "I21"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 1,
+   "idx": 2,
+   "title": "Tiered Deposit-Refund System",
+   "mechanism": "Refundable deposits on items over $20 create direct financial incentive for return without punitive fee language.",
+   "blind_id": "I41"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 1,
+   "idx": 3,
+   "title": "Ubiquitous Drop-off Points",
+   "mechanism": "Unmanned 24/7 return lockers in transit hubs and retail partners eliminate inconvenience friction that causes delays.",
+   "blind_id": "I50"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 1,
+   "idx": 4,
+   "title": "Privilege-Tier Incentives",
+   "mechanism": "Non-returners lose borrowing access; compliant patrons gain extended loans and item limits, motivating status-seeking behavior.",
+   "blind_id": "I06"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 1,
+   "idx": 5,
+   "title": "Loss Insurance Membership",
+   "mechanism": "Opt-in $0.75/month damage-loss coverage eliminates shame-anxiety barrier preventing damaged item returns.",
+   "blind_id": "I28"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "idx": 0,
+   "title": "Community Sweep Protocol",
+   "mechanism": "Quarterly volunteer-led book recovery drives retrieve unreturned items directly from patrons' homes and neighborhoods, converting non-returns to recovered inventory.",
+   "blind_id": "I19"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "idx": 1,
+   "title": "Self-Destructing Checkout Media",
+   "mechanism": "Circulating items embedded with temperature/humidity-triggered degradation that accelerates after loan period; physical decay makes retention pointless.",
+   "blind_id": "I42"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "idx": 2,
+   "title": "Family Account Collective Liability",
+   "mechanism": "Households share single borrowing account; loss on card affects entire family's borrowing privileges, creating internal social accountability pressure.",
+   "blind_id": "I31"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "idx": 3,
+   "title": "Automated GPS-Triggered Returns",
+   "mechanism": "Books with geo-fence tags auto-alert both borrower and library when items leave service area; system handles enforcement, not borrower.",
+   "blind_id": "I29"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "idx": 4,
+   "title": "Estate and Custody Recovery",
+   "mechanism": "Library monitors court records and public databases for deceased or incarcerated cardholders; staff retrieve books before property liquidation.",
+   "blind_id": "I55"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "idx": 5,
+   "title": "Institutional Tier Accountability",
+   "mechanism": "Partner institutions (schools, orgs) lose borrowing privileges if their members exceed non-return thresholds, shifting accountability upstream.",
+   "blind_id": "I25"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "idx": 0,
+   "title": "Life-Event Return Assistance",
+   "mechanism": "Detect borrower life events (relocation, hospitalization, account inactivity); proactively offer assisted return or item redemption before loss occurs.",
+   "blind_id": "I70"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "idx": 1,
+   "title": "Embedded Custodian Partnership Model",
+   "mechanism": "Library staff co-locate at partner sites (schools, workplaces, shelters) maintaining shared custody and facilitating returns throughout the active loan period.",
+   "blind_id": "I65"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "idx": 2,
+   "title": "Continuous Engagement Loan Extension",
+   "mechanism": "Items require weekly user interactions (read chapter, watch segment, rate item) to remain active; inactivity auto-returns item to library.",
+   "blind_id": "I14"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "idx": 3,
+   "title": "Early Intervention Risk Prediction",
+   "mechanism": "Machine learning predicts non-return risk; contact high-risk borrowers pre-due-date offering voluntary early return or digital-format transfer.",
+   "blind_id": "I23"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "idx": 4,
+   "title": "Mentor-Paired Lending Accountability",
+   "mechanism": "Pair high-risk borrowers with volunteer mentors who check in regularly; embedded relationship-based accountability replaces anonymous transactions.",
+   "blind_id": "I11"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "idx": 5,
+   "title": "Active Location Custody Monitoring",
+   "mechanism": "Passive beacon tracks item location; alert borrower when item leaves home; system intervenes if location suggests abandonment or theft.",
+   "blind_id": "I47"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "idx": 0,
+   "title": "Successor Estate Obligation Protocol",
+   "mechanism": "When borrower dies, library offers heirs 90-day amnesty for item return, forgives remaining debt. Addresses death-caused non-return without borrower intervention.",
+   "blind_id": "I13"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "idx": 1,
+   "title": "Manufacturer-Backed Item Recovery",
+   "mechanism": "Digital items auto-deactivate or disable post-deadline. Manufacturer remotely ensures return/deletion without borrower cooperation. External actor manages recovery.",
+   "blind_id": "I72"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "idx": 2,
+   "title": "Shame-Free Amnesty Surge Events",
+   "mechanism": "Bi-annual 2-week returns: no penalties or prior fines forgiven. Treats avoidance-blocking shame as root cause, not forgetfulness or inconvenience.",
+   "blind_id": "I01"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "idx": 3,
+   "title": "Custodial Return Point Network",
+   "mechanism": "Anonymous drop boxes at hospitals, shelters, prisons. No ID verification needed. Serves borrowers with structural barriers (homelessness, incarceration, hospitalization).",
+   "blind_id": "I56"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "idx": 4,
+   "title": "Institutional Co-Liability Loaning",
+   "mechanism": "Employers/schools co-sign loans, receive replacement fee if item unreturned. Shifts accountability from individual borrower to their institution.",
+   "blind_id": "I07"
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "idx": 5,
+   "title": "Durable Item Program for At-Risk",
+   "mechanism": "GPS-tagged, waterproof items for borrowers with non-return history. Library absorbs breakage cost; GPS enables recovery if unreturned.",
+   "blind_id": "I69"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 1,
+   "idx": 0,
+   "title": "Escalating Overdue Fee Structure",
+   "mechanism": "Charges low initial fees that spike after 30-60 days, making return economically rational before sunk-cost loss replaces item.",
+   "blind_id": "I50"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 1,
+   "idx": 1,
+   "title": "Automatic Smart Renewal System",
+   "mechanism": "Automatically renews unreserved items before due date, eliminating penalty surprise and resetting patron expectations without losing circulation data.",
+   "blind_id": "I30"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 1,
+   "idx": 2,
+   "title": "Community Partner Reminders",
+   "mechanism": "Partner with schools/employers to remind members about unreturned items through trusted channels, leveraging social proof and existing relationships.",
+   "blind_id": "I56"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 1,
+   "idx": 3,
+   "title": "Voluntary Loss Insurance Add-On",
+   "mechanism": "Patrons prepay small fee per checkout to waive replacement costs; reframes psychology from punishment to insurance, increasing return motivation.",
+   "blind_id": "I54"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 1,
+   "idx": 4,
+   "title": "Risk-Based Checkout Periods",
+   "mechanism": "High-value items receive shorter checkout windows or require advance reservation, reducing time unreturned items can remain away from library.",
+   "blind_id": "I01"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 1,
+   "idx": 5,
+   "title": "Proactive 20-Day Recovery Outreach",
+   "mechanism": "System contacts patrons at day 20 with free renewal offer before escalated fines, catching items before permanent loss occurs.",
+   "blind_id": "I49"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 2,
+   "idx": 0,
+   "title": "Grace Period Fine Amnesty",
+   "mechanism": "Waiving accumulating late fees for 14 days post-return eliminates financial barrier preventing borrowers from returning misplaced items.",
+   "blind_id": "I67"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 2,
+   "idx": 1,
+   "title": "Escalating Multi-Channel Reminders",
+   "mechanism": "Sending escalating reminders via email, SMS, and app 7 days before due date increases recall frequency and reduces tracking burden.",
+   "blind_id": "I43"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 2,
+   "idx": 2,
+   "title": "Voluntary Loss Coverage Plans",
+   "mechanism": "Low-cost borrower insurance transfers financial risk to patron, reducing shame-based avoidance of admitting items cannot be found.",
+   "blind_id": "I29"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 2,
+   "idx": 3,
+   "title": "Librarian Home Collection Route",
+   "mechanism": "Weekly staff home visits to frequent non-returners retrieve items, eliminating friction and normalizing retrieval without public embarrassment.",
+   "blind_id": "I03"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 2,
+   "idx": 4,
+   "title": "Co-Borrower Accountability Matching",
+   "mechanism": "Pairing borrowers as accountability partners for high-loss categories increases social obligation to return and enables peer reminders.",
+   "blind_id": "I14"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 2,
+   "idx": 5,
+   "title": "Automatic Pre-Due Extension Grants",
+   "mechanism": "System automatically extends due dates 14 days before expiration when no holds exist, eliminating deadline pressure causing abandonment.",
+   "blind_id": "I19"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 3,
+   "idx": 0,
+   "title": "Exponential Overdue Fees",
+   "mechanism": "Once items reach 30 days overdue, fees compound daily instead of remaining flat, making retention economically irrational through escalating cost.",
+   "blind_id": "I17"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 3,
+   "idx": 1,
+   "title": "Smart Borrower Reminders",
+   "mechanism": "ML identifies high-risk borrowers and sends SMS reminders 5 days before due date with return logistics, removing forgetfulness as barrier.",
+   "blind_id": "I31"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 3,
+   "idx": 2,
+   "title": "Refundable Item Deposits",
+   "mechanism": "Patrons with non-return history borrow with $10-20 per-item refundable deposit, activating loss aversion psychology and sunk cost awareness.",
+   "blind_id": "I26"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 3,
+   "idx": 3,
+   "title": "Community Return Circles",
+   "mechanism": "Micro-lending groups of 5-7 jointly track checkouts; all members lose borrowing privileges if any item goes unreturned, triggering peer accountability.",
+   "blind_id": "I10"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 3,
+   "idx": 4,
+   "title": "Forgiving Amnesty Periods",
+   "mechanism": "Waive all fines on items returned within 60 days post-due, lowering shame barriers for voluntary return, while permanent borrow-block kicks in at 120 days.",
+   "blind_id": "I35"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 3,
+   "idx": 5,
+   "title": "Points for On-Time Returns",
+   "mechanism": "Borrowers earn redeemable points for timely returns; exchange for waived fines or priority holds, replacing punishment with positive reinforcement.",
+   "blind_id": "I72"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 4,
+   "idx": 0,
+   "title": "Tiered Late Fee Escalation",
+   "mechanism": "Minimal initial fees escalate sharply only after 3 months past due, removing the psychological sunk-cost barrier that makes borrowers abandon items rather than face accumulated penalties.",
+   "blind_id": "I69"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 4,
+   "idx": 1,
+   "title": "Predictive Risk Reminders",
+   "mechanism": "Send targeted reminders at 50% of loan term for items matching patron non-return history, catching losses before they become permanent through timely behavioral nudges.",
+   "blind_id": "I38"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 4,
+   "idx": 2,
+   "title": "Partial Cost Buyout Option",
+   "mechanism": "Enable patrons to settle lost items at 20-30% cost, removing the financial barrier that causes account avoidance and permanent non-return cycles.",
+   "blind_id": "I71"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 4,
+   "idx": 3,
+   "title": "Return Achievement Gamification",
+   "mechanism": "Award redeemable points for on-time returns, converting compliance into a positive social game that leverages intrinsic motivation and social recognition over penalties and shame.",
+   "blind_id": "I61"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 4,
+   "idx": 4,
+   "title": "Friction-Free Micro-Returns",
+   "mechanism": "Place automated return kiosks at high-traffic locations (transit hubs, groceries), reducing forgotten returns by capturing items during routine errands before abandonment occurs.",
+   "blind_id": "I21"
+  },
+  {
+   "seed": 4,
+   "arm": "A",
+   "round": 4,
+   "idx": 5,
+   "title": "Automatic Loan Auto-Extension",
+   "mechanism": "Automatically extend loans multiple times if no holds exist and notifying patrons, eliminating the shame/fee barrier that causes borrowers to abandon items rather than return them.",
+   "blind_id": "I33"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 1,
+   "idx": 0,
+   "title": "Escalating Fees with Return Forgiveness",
+   "mechanism": "Fees increase daily but reset to zero upon return, making borrowers eager to return items before costs compound, eliminating sunk-cost abandonment.",
+   "blind_id": "I45"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 1,
+   "idx": 1,
+   "title": "Holds-Based Return Urgency Alerts",
+   "mechanism": "Alert borrowers when another patron requests their item, creating social obligation to return promptly without requiring fines.",
+   "blind_id": "I64"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 1,
+   "idx": 2,
+   "title": "Refundable Deposit on Lost-Prone Items",
+   "mechanism": "Require collateral deposits on frequently lost items, making borrowers psychologically treat them as personal property, driving careful handling.",
+   "blind_id": "I04"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 1,
+   "idx": 3,
+   "title": "Borrower Accountability Peer Groups",
+   "mechanism": "Small borrower groups collectively responsible for tracking shared items, using peer monitoring and mutual reputation to reduce individual loss.",
+   "blind_id": "I65"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 1,
+   "idx": 4,
+   "title": "Friction-Reducing Home Retrieval Service",
+   "mechanism": "Library staff retrieve unreturned items from borrowers' homes with friendly reminders before penalties apply, eliminating shame and logistical barriers.",
+   "blind_id": "I16"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 1,
+   "idx": 5,
+   "title": "Loyalty-Tiered Loan Duration System",
+   "mechanism": "Frequent returners earn longer loan periods while low-return borrowers get shorter windows, enabling earlier staff follow-up before abandonment occurs.",
+   "blind_id": "I06"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 2,
+   "idx": 0,
+   "title": "Charitable Pledge on Library Checkout",
+   "mechanism": "Borrower pledges small donation if unreturned; auto-deduction creates loss aversion without punitive framing, motivating timely return.",
+   "blind_id": "I22"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 2,
+   "idx": 1,
+   "title": "Item Personalization Through Engraving",
+   "mechanism": "Library engraves borrower's name on items; psychological ownership and social shame at loss increases accountability and return rates.",
+   "blind_id": "I60"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 2,
+   "idx": 2,
+   "title": "Escalating Visual Countdown Alerts",
+   "mechanism": "App shows vivid urgency visuals (progress bars, color change) as due date nears; psychological saliency breaks procrastination cycles.",
+   "blind_id": "I46"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 2,
+   "idx": 3,
+   "title": "Borrower Trust Score & Rewards",
+   "mechanism": "On-time returns build visible credit score unlocking perks; loss aversion over score maintains motivation for timely returns.",
+   "blind_id": "I48"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 2,
+   "idx": 4,
+   "title": "Peer-to-Peer Item Transfer Option",
+   "mechanism": "Borrowers transfer items to friends still active; creates accountability chain and shared social pressure extending item circulation life.",
+   "blind_id": "I51"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 2,
+   "idx": 5,
+   "title": "Risk-Based Predictive Incentives",
+   "mechanism": "Algorithm predicts high-risk non-returners; offers targeted return incentives (priority holds, extensions) early to prevent non-return patterns.",
+   "blind_id": "I59"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 3,
+   "idx": 0,
+   "title": "Household Accountability System",
+   "mechanism": "Link family members to single account; individual non-returns restrict household borrowing privileges, activating family peer accountability.",
+   "blind_id": "I47"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 3,
+   "idx": 1,
+   "title": "Digital Recovery Alternative",
+   "mechanism": "Convert unreturned items to permanent digital access, giving borrowers recovery path while library maintains engagement and value.",
+   "blind_id": "I18"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 3,
+   "idx": 2,
+   "title": "Environmental Memory Displays",
+   "mechanism": "Install displays showing recently-borrowed items in library to trigger borrower memory recall and social norm awareness.",
+   "blind_id": "I32"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 3,
+   "idx": 3,
+   "title": "Return Status Privilege Tier",
+   "mechanism": "On-time return streaks unlock exclusive privileges (reserved seating, priority holds), making punctuality a visible status.",
+   "blind_id": "I53"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 3,
+   "idx": 4,
+   "title": "Return-Triggered Library Credit",
+   "mechanism": "Each on-time return generates library credit toward paid services (printing, events), converting returns into economic value.",
+   "blind_id": "I44"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 3,
+   "idx": 5,
+   "title": "Loss-Prevention Insurance Option",
+   "mechanism": "Low-cost checkout insurance activates loss-aversion psychology, increasing commitment and return motivation among risk-conscious borrowers.",
+   "blind_id": "I23"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 4,
+   "idx": 0,
+   "title": "Personal Return Date Commitment",
+   "mechanism": "Borrowers select own return date at checkout. System reminds once before their chosen date, not library's official due date. Internalized deadlines increase follow-through.",
+   "blind_id": "I37"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 4,
+   "idx": 1,
+   "title": "Item Steward Sponsorship Program",
+   "mechanism": "Library volunteers adopt high-loss items and personally contact borrowers when due. Named relationship creates accountability through individual connection, not system enforcement.",
+   "blind_id": "I28"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 4,
+   "idx": 2,
+   "title": "Personalized Reminder Psychology Matching",
+   "mechanism": "System analyzes borrower's historical response patterns and customizes reminder strategy (early warning, urgency framing, peer comparison) to match individual psychology.",
+   "blind_id": "I13"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 4,
+   "idx": 3,
+   "title": "Borrowed Item Demand Transparency",
+   "mechanism": "Weekly updates show real-time count of borrowers waiting for that item. Queue visibility creates guilt about depriving others and social obligation to return.",
+   "blind_id": "I27"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 4,
+   "idx": 4,
+   "title": "Community Service Loss Replacement",
+   "mechanism": "Lost items replaced through library service hours (shelving, tutoring, cataloging) instead of fees. Visible community contribution builds internalized accountability through service.",
+   "blind_id": "I42"
+  },
+  {
+   "seed": 4,
+   "arm": "B",
+   "round": 4,
+   "idx": 5,
+   "title": "Ubiquitous Return Points with Bonuses",
+   "mechanism": "24/7 return boxes at transit hubs and retailers eliminate return friction. Remote returns earn browsing credit or bonus loans, rewarding proactive returns.",
+   "blind_id": "I58"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 1,
+   "idx": 0,
+   "title": "Progressive Overdue Fees",
+   "mechanism": "Escalating fees after 14 days create urgency without shock, reducing resentment-driven abandonment.",
+   "blind_id": "I68"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 1,
+   "idx": 1,
+   "title": "Auto-Renewal Unless Held",
+   "mechanism": "System renews unrequested items if unclaimed, eliminating guilt-driven non-returns from renewal friction.",
+   "blind_id": "I41"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 1,
+   "idx": 2,
+   "title": "Community Return Scorecards",
+   "mechanism": "Visible return history creates reputational cost for non-return, leveraging social accountability.",
+   "blind_id": "I05"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 1,
+   "idx": 3,
+   "title": "Deposit Pledge System",
+   "mechanism": "Refundable deposit creates mental link between item and money, increasing return salience and reducing forgetting.",
+   "blind_id": "I52"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 1,
+   "idx": 4,
+   "title": "Multi-Point SMS Reminders",
+   "mechanism": "Notifications at 3-day, 1-day, same-day overcome procrastination by reducing cognitive load at decision moments.",
+   "blind_id": "I57"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 1,
+   "idx": 5,
+   "title": "Neighborhood Return Drop-Boxes",
+   "mechanism": "Unmanned drop-points eliminate distance barrier, removing convenience excuses and enabling opportunistic returns.",
+   "blind_id": "I24"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "idx": 0,
+   "title": "Staff Recovery Bounties",
+   "mechanism": "Librarians earn $10-15 per physically retrieved overdue item via home visits; shifts recovery agency from borrower to incentivized staff.",
+   "blind_id": "I08"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "idx": 1,
+   "title": "Graduated Checkout Limits",
+   "mechanism": "Borrowers with <90% return history start at 2-item limit; earn +1 item per 10 on-time returns; restricts risky borrowers pre-checkout.",
+   "blind_id": "I36"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "idx": 2,
+   "title": "Peer Guarantee Circles",
+   "mechanism": "Borrowers form 4-person groups; each member guarantees others' returns via social obligation; peer pressure replaces library chasing.",
+   "blind_id": "I20"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "idx": 3,
+   "title": "Auto-Purchase Conversion",
+   "mechanism": "Items become borrower property after 120 days overdue; borrower must pay replacement cost or return; transfers ownership burden.",
+   "blind_id": "I55"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "idx": 4,
+   "title": "Donor-Led Recovery Program",
+   "mechanism": "Libraries return chronically overdue items to original donors for collection; shifts recovery work to publishers/sources, not library.",
+   "blind_id": "I09"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "idx": 5,
+   "title": "Time-Lock Item Tech",
+   "mechanism": "RFID/magnetic locks prevent items leaving borrower's space after due date; courier retrieves automatically; tech enforces return.",
+   "blind_id": "I40"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "idx": 0,
+   "title": "Borrower-Opt Return Bonuses",
+   "mechanism": "Borrowers self-claim loyalty rewards for on-time returns, replacing library-push reminders with borrower self-interest in earning incentives.",
+   "blind_id": "I25"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "idx": 1,
+   "title": "Institutional Collection Lending",
+   "mechanism": "Libraries deposit collections at community organizations (schools, shelters) as custodial assets; institutional staff accountability replaces individual borrower non-return.",
+   "blind_id": "I62"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "idx": 2,
+   "title": "Sliding-Scale Ownership Checkout",
+   "mechanism": "Borrowers select upfront: free 30-day checkout or $2 permanent ownership; removes return obligation for ownership-seekers via voluntary pricing model.",
+   "blind_id": "I63"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "idx": 3,
+   "title": "Peer-Coordinated Return Requests",
+   "mechanism": "System notifies next-in-line patrons to contact overdue item holder directly; direct peer request replaces institutional collection attempts.",
+   "blind_id": "I66"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "idx": 4,
+   "title": "Collective Accountability Pools",
+   "mechanism": "Borrower cohorts collectively guarantee returns; peer-determined consequences replace library penalties, leveraging group solidarity and internal enforcement.",
+   "blind_id": "I07"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "idx": 5,
+   "title": "Automatic Item Forgiveness",
+   "mechanism": "After 12 months without return, items auto-forgiven; eliminates perpetual debt and shame, reducing disengagement that triggers future non-return.",
+   "blind_id": "I70"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "idx": 0,
+   "title": "Pre-Checkout Return Booking",
+   "mechanism": "Borrowers select and confirm specific return date/location at checkout terminal before items leave library, making return commitment binding before psychological ownership forms.",
+   "blind_id": "I34"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "idx": 1,
+   "title": "Subscription Delivery Logistics",
+   "mechanism": "Library delivers items weekly with automatic staff pickup built into standing schedule; non-return becomes operational failure rather than voluntary choice.",
+   "blind_id": "I15"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "idx": 2,
+   "title": "Utility-Linked Item Holds",
+   "mechanism": "Unreturned items place holds on borrower's water/power utility account; holds release only upon item return, embedding library enforcement into essential services.",
+   "blind_id": "I12"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "idx": 3,
+   "title": "Home Accessibility Pickup",
+   "mechanism": "Free staff-conducted home pickup service for borrowers with mobility/transport barriers removes logistics constraints as a non-return excuse.",
+   "blind_id": "I02"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "idx": 4,
+   "title": "Multilingual Return Guides",
+   "mechanism": "Items include pictorial return labels plus QR-linked audio instructions in borrower's first language, eliminating non-return driven by language barriers.",
+   "blind_id": "I11"
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "idx": 5,
+   "title": "Family Access Co-Dependency",
+   "mechanism": "Child borrower checkout limits auto-freeze until parent's overdue items return, making non-return block entire family access rather than only individual penalty.",
+   "blind_id": "I39"
+  }
+ ],
+ "assumptions": [
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 2,
+   "stated": [
+    "The library system bears institutional responsibility and capacity for intervention\u2014all require active library management of technology, incentives, or outreach",
+    "Borrower behavior changes through financial or access consequences or convenience improvements\u2014all assume individuals modify conduct when facing fees, deposits, limits, or service improvements",
+    "Non-return is solved through individual transaction-level actions\u2014all target one borrower or cohort, assuming the problem is changeable behavior, not systemic barriers"
+   ]
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 3,
+   "stated": [
+    "Library system must directly create or facilitate mechanisms for item retrieval or accountability",
+    "Non-return is solved by modifying individual borrower motivation, capacity, or knowledge",
+    "Borrowed items enter exclusive borrower possession, requiring explicit return enforcement"
+   ]
+  },
+  {
+   "seed": 0,
+   "arm": "C",
+   "round": 4,
+   "stated": [
+    "The library must be the central authority making rules, tracking, and enforcing consequences",
+    "Borrowers respond to external incentives (fees, restrictions, convenience, or social pressure) rather than internal psychology",
+    "Items must physically return to library custody to solve the problem\u2014the goal is always institutional control of collection"
+   ]
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 2,
+   "stated": [
+    "The library (not borrowers or external partners) is the primary active agent designing and implementing the intervention",
+    "The barrier to return is borrower motivation or memory, not structural friction of making the return trip itself",
+    "Intervention works by influencing individual borrower choice at or before the return deadline"
+   ]
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 3,
+   "stated": [
+    "Borrowers have agency to choose return and respond to designed incentives (financial, social, or convenience-based)",
+    "Library or partnered system must actively monitor due dates and trigger institutional responses at those moments",
+    "Return is a discrete deadline-framed action; consequences cluster near or at due dates"
+   ]
+  },
+  {
+   "seed": 1,
+   "arm": "C",
+   "round": 4,
+   "stated": [
+    "Non-return is treated as a problem requiring active recovery or enforcement, never simply accepted as an unavoidable cost of operation.",
+    "Individual borrowers are the primary target of intervention; behavior change is sought at the borrower level, not library or community systems.",
+    "Borrower motivation is assumed to be economic (fees/rewards), social (reputation), or technological; not psychological (shame, attachment, capability-based)."
+   ]
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 2,
+   "stated": [
+    "Individual borrower behavior/motivation is the intervention target, not collection policies or system infrastructure.",
+    "Non-return stems from motivation gaps or memory, not structural barriers to physically returning items.",
+    "Uniform interventions apply to all non-returns regardless of underlying cause or borrower circumstance."
+   ]
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 3,
+   "stated": [
+    "Individual borrower behavior responds to personal incentives, friction, or information",
+    "The library system initiates and controls the intervention mechanism",
+    "Borrowers have stable contact information and can access return locations"
+   ]
+  },
+  {
+   "seed": 2,
+   "arm": "C",
+   "round": 4,
+   "stated": [
+    "The library system actively manages the intervention implementation and enforcement",
+    "Individual patron behavior is the primary locus of behavioral change targeted",
+    "Items circulate through standard library checkout-and-return-to-library workflow"
+   ]
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 2,
+   "stated": [
+    "Individual borrowers are the unit of accountability and must change their behavior to reduce non-return",
+    "Borrowers remain engaged with the library system and will respond to external prompts or incentives",
+    "The library solves non-return through system rules and incentives, not proactive item retrieval or item-level design changes"
+   ]
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 3,
+   "stated": [
+    "Non-return stems from borrower forgetfulness, lack of motivation, or financial constraint\u2014not from fundamental changes in the borrower's circumstances or life situation.",
+    "The library operates as a third party maintaining transactional relationships\u2014not embedding itself in the borrower's daily life or custody patterns.",
+    "Non-return is detected and addressed only at discrete moments (checkout, due date, post-loss)\u2014not monitored continuously during the loan period."
+   ]
+  },
+  {
+   "seed": 3,
+   "arm": "C",
+   "round": 4,
+   "stated": [
+    "The individual borrower bears primary accountability: all mechanisms assume borrowers can and should return items. Third-party involvement amplifies pressure on the borrower, not replacing their responsibility.",
+    "Non-return stems from behavior, not circumstances: all mechanisms treat non-return as intentional (hoarding, cost-avoidance) or careless (forgetfulness). None address non-return from borrower death, theft by non-borrowers, accidents, or changed life situations (homelessness, incarceration).",
+    "Intervention timing is near the loan period: all mechanisms act during or shortly after checkout (weeks/months). None pursue items after years or assume historical tracking across decades."
+   ]
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 2,
+   "stated": [
+    "Individual borrower behavior is the intervention target\u2014all assume changing borrower incentives, reminders, or convenience reduces non-return",
+    "Intervention occurs post-checkout\u2014all address items already borrowed; none restrict eligibility or what's available before lending",
+    "Library retains administrative responsibility\u2014all require library staff to manage enforcement, tracking, and collection"
+   ]
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 3,
+   "stated": [
+    "The library or library-mediated system is the active initiating agent; borrowers never self-initiate solutions",
+    "The individual borrower is the primary accountability unit, not groups or institutions",
+    "Borrowing follows a mandatory return-within-cycle model with no ownership or indefinite-lending options"
+   ]
+  },
+  {
+   "seed": 4,
+   "arm": "C",
+   "round": 4,
+   "stated": [
+    "Library-borrower independence: all existing mechanisms treat library and borrower as separate entities sending behavior-change signals, not embedded partners.",
+    "Post-checkout intervention timing: all existing mechanisms activate during or after checkout; none shift return commitment to the moment of checkout itself.",
+    "Assumed borrower capability and motivation: all mechanisms frame non-return as motivation or memory problem, not logistics, language, or access barrier."
+   ]
+  }
+ ],
+ "judges": [
+  {
+   "seed": 0,
+   "judge": 0,
+   "classes": [
+    {
+     "label": "Escalating fees / replacement billing (financial penalty for retention)",
+     "member_ids": [
+      "I01",
+      "I03",
+      "I07",
+      "I36"
+     ]
+    },
+    {
+     "label": "Refundable deposit / collateral (loss aversion on prepaid money)",
+     "member_ids": [
+      "I23",
+      "I28",
+      "I41",
+      "I46",
+      "I58",
+      "I71"
+     ]
+    },
+    {
+     "label": "Automated reminders and deadline prompts (reduce forgetting)",
+     "member_ids": [
+      "I10",
+      "I27",
+      "I37"
+     ]
+    },
+    {
+     "label": "Predictive risk analytics with pre-emptive staff outreach",
+     "member_ids": [
+      "I45",
+      "I57",
+      "I63",
+      "I67",
+      "I70"
+     ]
+    },
+    {
+     "label": "Account lockout: block new checkouts/holds until items returned",
+     "member_ids": [
+      "I32",
+      "I33",
+      "I68"
+     ]
+    },
+    {
+     "label": "Borrowing privileges/terms tiered on return track record",
+     "member_ids": [
+      "I05",
+      "I14",
+      "I38",
+      "I42",
+      "I54",
+      "I60",
+      "I66"
+     ]
+    },
+    {
+     "label": "Reward points/credits for on-time or early returns",
+     "member_ids": [
+      "I29",
+      "I55"
+     ]
+    },
+    {
+     "label": "Peer network enforcement and peer-to-peer circulation (accountability moved to borrower peers)",
+     "member_ids": [
+      "I06",
+      "I11",
+      "I12",
+      "I48",
+      "I49",
+      "I53",
+      "I64"
+     ]
+    },
+    {
+     "label": "Public visibility of return behavior (norm display, shaming, recognition)",
+     "member_ids": [
+      "I15",
+      "I22",
+      "I26",
+      "I50",
+      "I62"
+     ]
+    },
+    {
+     "label": "Personalized impact/reciprocity salience (guilt about cost and waiting patrons)",
+     "member_ids": [
+      "I02",
+      "I13",
+      "I17",
+      "I51"
+     ]
+    },
+    {
+     "label": "Reduce physical return friction (distributed drop-offs, pickup, 24/7 chutes)",
+     "member_ids": [
+      "I44",
+      "I52",
+      "I56",
+      "I61",
+      "I65"
+     ]
+    },
+    {
+     "label": "Amnesty / penalty-fear and shame removal so items come back",
+     "member_ids": [
+      "I16",
+      "I18",
+      "I31",
+      "I34"
+     ]
+    },
+    {
+     "label": "Waive the return obligation (convert loan to purchase, subscription, donation, ownership)",
+     "member_ids": [
+      "I20",
+      "I21",
+      "I43",
+      "I69"
+     ]
+    },
+    {
+     "label": "Longer or borrower-negotiated loan durations",
+     "member_ids": [
+      "I04",
+      "I39"
+     ]
+    },
+    {
+     "label": "Renewal-default restructuring (auto-return vs auto-renew defaults)",
+     "member_ids": [
+      "I08",
+      "I40"
+     ]
+    },
+    {
+     "label": "Checkout-time commitment and identity priming",
+     "member_ids": [
+      "I25",
+      "I35"
+     ]
+    },
+    {
+     "label": "Embedded technology that enforces or nullifies retention",
+     "member_ids": [
+      "I19",
+      "I30"
+     ]
+    },
+    {
+     "label": "Transfer liability/enforcement to an external institution or third party",
+     "member_ids": [
+      "I09",
+      "I24",
+      "I59"
+     ]
+    },
+    {
+     "label": "Named-librarian personal human outreach (relational obligation)",
+     "member_ids": [
+      "I47"
+     ]
+    },
+    {
+     "label": "Community donors adopt/replace lost items for supporter status",
+     "member_ids": [
+      "I72"
+     ]
+    }
+   ],
+   "incoherent_ids": []
+  },
+  {
+   "seed": 0,
+   "judge": 1,
+   "classes": [
+    {
+     "label": "Escalating monetary penalties for non-return",
+     "member_ids": [
+      "I01",
+      "I03",
+      "I07",
+      "I36"
+     ]
+    },
+    {
+     "label": "Refundable deposit / collateral at checkout (loss aversion)",
+     "member_ids": [
+      "I23",
+      "I28",
+      "I41",
+      "I46",
+      "I58",
+      "I71"
+     ]
+    },
+    {
+     "label": "Automated due-date reminders reducing forgetfulness",
+     "member_ids": [
+      "I10",
+      "I27",
+      "I37"
+     ]
+    },
+    {
+     "label": "Blocking further borrowing until outstanding items return",
+     "member_ids": [
+      "I32",
+      "I33",
+      "I68"
+     ]
+    },
+    {
+     "label": "Privileges and loan terms graduated by return history",
+     "member_ids": [
+      "I05",
+      "I14",
+      "I38",
+      "I42",
+      "I54",
+      "I60",
+      "I66"
+     ]
+    },
+    {
+     "label": "Reward points for on-time/early returns",
+     "member_ids": [
+      "I29",
+      "I55"
+     ]
+    },
+    {
+     "label": "Public visibility of return behavior (reputation / social norms)",
+     "member_ids": [
+      "I15",
+      "I22",
+      "I26",
+      "I50",
+      "I62"
+     ]
+    },
+    {
+     "label": "Peer groups and partners monitoring each other's returns",
+     "member_ids": [
+      "I11",
+      "I12",
+      "I49",
+      "I53"
+     ]
+    },
+    {
+     "label": "Peer-to-peer item handoff replacing library return",
+     "member_ids": [
+      "I06",
+      "I48",
+      "I64"
+     ]
+    },
+    {
+     "label": "Salience of harm to other patrons (guilt / reciprocity framing)",
+     "member_ids": [
+      "I02",
+      "I13",
+      "I17",
+      "I51"
+     ]
+    },
+    {
+     "label": "Removing penalty/shame barriers that deter returning",
+     "member_ids": [
+      "I16",
+      "I18",
+      "I31",
+      "I34"
+     ]
+    },
+    {
+     "label": "Dissolving the return obligation via ownership/subscription conversion",
+     "member_ids": [
+      "I20",
+      "I21",
+      "I43",
+      "I69"
+     ]
+    },
+    {
+     "label": "Community donors fund replacement of lost items",
+     "member_ids": [
+      "I72"
+     ]
+    },
+    {
+     "label": "Reducing logistical friction of physically returning items",
+     "member_ids": [
+      "I44",
+      "I52",
+      "I56",
+      "I61",
+      "I65"
+     ]
+    },
+    {
+     "label": "Predictive risk scoring with pre-emptive outreach",
+     "member_ids": [
+      "I45",
+      "I57",
+      "I63",
+      "I67",
+      "I70"
+     ]
+    },
+    {
+     "label": "Checkout-time psychological commitment / ownership identity",
+     "member_ids": [
+      "I04",
+      "I25",
+      "I35"
+     ]
+    },
+    {
+     "label": "Extending or auto-renewing loan periods to remove deadline pressure",
+     "member_ids": [
+      "I39",
+      "I40"
+     ]
+    },
+    {
+     "label": "Flipping the default so renewal requires active choice",
+     "member_ids": [
+      "I08"
+     ]
+    },
+    {
+     "label": "Item-embedded hardware enforcement/deterrence",
+     "member_ids": [
+      "I19",
+      "I30"
+     ]
+    },
+    {
+     "label": "Transferring liability to a third party with leverage over the borrower",
+     "member_ids": [
+      "I09",
+      "I59"
+     ]
+    },
+    {
+     "label": "Named-human personal outreach creating interpersonal obligation",
+     "member_ids": [
+      "I47"
+     ]
+    }
+   ],
+   "incoherent_ids": [
+    "I24"
+   ]
+  },
+  {
+   "seed": 0,
+   "judge": 2,
+   "classes": [
+    {
+     "label": "Escalating fees/replacement billing raise the cost of keeping the item",
+     "member_ids": [
+      "I01",
+      "I03",
+      "I07"
+     ]
+    },
+    {
+     "label": "Refundable deposit / collateral creates loss aversion",
+     "member_ids": [
+      "I23",
+      "I28",
+      "I41",
+      "I46",
+      "I58",
+      "I71"
+     ]
+    },
+    {
+     "label": "Positive rewards (points, perks) for on-time return",
+     "member_ids": [
+      "I05",
+      "I29",
+      "I55"
+     ]
+    },
+    {
+     "label": "Borrowing privileges tiered/graduated by return track record",
+     "member_ids": [
+      "I14",
+      "I38",
+      "I42",
+      "I54",
+      "I60",
+      "I66"
+     ]
+    },
+    {
+     "label": "Block new borrowing/holds until outstanding items are returned",
+     "member_ids": [
+      "I32",
+      "I33",
+      "I68"
+     ]
+    },
+    {
+     "label": "Automated reminders and deadline salience to defeat forgetting",
+     "member_ids": [
+      "I10",
+      "I27",
+      "I37"
+     ]
+    },
+    {
+     "label": "Predictive analytics flag at-risk loans for preemptive intervention",
+     "member_ids": [
+      "I45",
+      "I57",
+      "I63",
+      "I67",
+      "I70"
+     ]
+    },
+    {
+     "label": "Named-librarian personal contact creates relational obligation",
+     "member_ids": [
+      "I47"
+     ]
+    },
+    {
+     "label": "Make downstream community harm salient to trigger guilt/reciprocity",
+     "member_ids": [
+      "I02",
+      "I13",
+      "I17",
+      "I51"
+     ]
+    },
+    {
+     "label": "Public reputation exposure and social-norm comparison",
+     "member_ids": [
+      "I15",
+      "I22",
+      "I26",
+      "I50",
+      "I62"
+     ]
+    },
+    {
+     "label": "Peer group monitoring and mutual accountability among borrowers",
+     "member_ids": [
+      "I11",
+      "I12",
+      "I49",
+      "I53"
+     ]
+    },
+    {
+     "label": "Peer-to-peer circulation replaces library-mediated return",
+     "member_ids": [
+      "I06",
+      "I48",
+      "I64"
+     ]
+    },
+    {
+     "label": "Transfer liability/enforcement to an outside institution or co-signer",
+     "member_ids": [
+      "I09",
+      "I24",
+      "I59"
+     ]
+    },
+    {
+     "label": "Remove logistical friction of returning (drop-off points, pickup, 24/7 chutes)",
+     "member_ids": [
+      "I44",
+      "I52",
+      "I56",
+      "I61",
+      "I65"
+     ]
+    },
+    {
+     "label": "Amnesty / fee forgiveness removes shame and penalty fear blocking return",
+     "member_ids": [
+      "I16",
+      "I18",
+      "I31",
+      "I34",
+      "I36"
+     ]
+    },
+    {
+     "label": "Reframe loss as donation with supporter status / community-funded replacement",
+     "member_ids": [
+      "I20",
+      "I72"
+     ]
+    },
+    {
+     "label": "Convert the loan into ownership or subscription, eliminating return",
+     "member_ids": [
+      "I21",
+      "I43",
+      "I69"
+     ]
+    },
+    {
+     "label": "Embedded technology in the item enforces or forces return",
+     "member_ids": [
+      "I19",
+      "I30"
+     ]
+    },
+    {
+     "label": "Pre-commitment and identity priming at checkout",
+     "member_ids": [
+      "I25",
+      "I35"
+     ]
+    },
+    {
+     "label": "Loan durations adapted to borrower circumstances/schedule",
+     "member_ids": [
+      "I04",
+      "I39"
+     ]
+    },
+    {
+     "label": "Change the renewal default at the deadline",
+     "member_ids": [
+      "I08",
+      "I40"
+     ]
+    }
+   ],
+   "incoherent_ids": []
+  },
+  {
+   "seed": 1,
+   "judge": 0,
+   "classes": [
+    {
+     "label": "Proactive pre-due reminders / outreach (memory salience)",
+     "member_ids": [
+      "I03",
+      "I08",
+      "I19",
+      "I26",
+      "I41",
+      "I51",
+      "I62"
+     ]
+    },
+    {
+     "label": "Library-side retrieval: pickup/courier collects from borrower",
+     "member_ids": [
+      "I01",
+      "I17",
+      "I24",
+      "I37",
+      "I50",
+      "I58",
+      "I66"
+     ]
+    },
+    {
+     "label": "More return points: drop-boxes/kiosks near patrons (travel friction)",
+     "member_ids": [
+      "I02",
+      "I14",
+      "I23",
+      "I52",
+      "I57"
+     ]
+    },
+    {
+     "label": "Refundable deposit / collateral (loss aversion)",
+     "member_ids": [
+      "I10",
+      "I20",
+      "I22",
+      "I40",
+      "I47"
+     ]
+    },
+    {
+     "label": "Insurance / pooled loss coverage across borrowers",
+     "member_ids": [
+      "I04",
+      "I27",
+      "I36",
+      "I53"
+     ]
+    },
+    {
+     "label": "Public display of individual return record (social shame/status)",
+     "member_ids": [
+      "I05",
+      "I06",
+      "I15",
+      "I60"
+     ]
+    },
+    {
+     "label": "Borrowing privileges/terms conditioned on return track record",
+     "member_ids": [
+      "I12",
+      "I31",
+      "I39",
+      "I48",
+      "I55",
+      "I68",
+      "I71"
+     ]
+    },
+    {
+     "label": "Peer-group mutual accountability / collective group liability",
+     "member_ids": [
+      "I13",
+      "I21",
+      "I30",
+      "I46",
+      "I67"
+     ]
+    },
+    {
+     "label": "Escalating monetary penalties over time",
+     "member_ids": [
+      "I61",
+      "I63",
+      "I72"
+     ]
+    },
+    {
+     "label": "Penalty/shame removal: amnesty, grace periods, no-questions returns",
+     "member_ids": [
+      "I25",
+      "I35",
+      "I45",
+      "I56",
+      "I64",
+      "I65",
+      "I70"
+     ]
+    },
+    {
+     "label": "Account gating: block further borrowing until items settled",
+     "member_ids": [
+      "I33",
+      "I38",
+      "I42"
+     ]
+    },
+    {
+     "label": "Convert loss into settlement: discounted buyout or in-kind restitution",
+     "member_ids": [
+      "I07",
+      "I09",
+      "I43",
+      "I54"
+     ]
+    },
+    {
+     "label": "Time-limited write-off: ownership transfer/donation clears debt",
+     "member_ids": [
+      "I28",
+      "I44"
+     ]
+    },
+    {
+     "label": "Item-level tracking technology for detection/proof",
+     "member_ids": [
+      "I29"
+     ]
+    },
+    {
+     "label": "Positive rewards for on-time return",
+     "member_ids": [
+      "I32",
+      "I59"
+     ]
+    },
+    {
+     "label": "External debt enforcement (collections/credit impact)",
+     "member_ids": [
+      "I49"
+     ]
+    },
+    {
+     "label": "Emotional attachment to the borrowed item",
+     "member_ids": [
+      "I16"
+     ]
+    },
+    {
+     "label": "Eliminate the deadline via automatic renewal default",
+     "member_ids": [
+      "I18"
+     ]
+    },
+    {
+     "label": "Synchronize due dates to a common calendar point",
+     "member_ids": [
+      "I69"
+     ]
+    }
+   ],
+   "incoherent_ids": [
+    "I11",
+    "I34"
+   ]
+  },
+  {
+   "seed": 2,
+   "judge": 0,
+   "classes": [
+    {
+     "label": "Refundable deposit at stake (money returned on return)",
+     "member_ids": [
+      "I03",
+      "I15",
+      "I21",
+      "I36",
+      "I38",
+      "I57"
+     ]
+    },
+    {
+     "label": "Escalating / value-scaled late fines (economic penalty)",
+     "member_ids": [
+      "I02",
+      "I10",
+      "I50",
+      "I64",
+      "I70"
+     ]
+    },
+    {
+     "label": "Priced loss-risk transfer option at checkout (insurance)",
+     "member_ids": [
+      "I07"
+     ]
+    },
+    {
+     "label": "Limit or price loan extensions to force a return decision",
+     "member_ids": [
+      "I14",
+      "I27",
+      "I48"
+     ]
+    },
+    {
+     "label": "Auto-renewal default removes the deadline/forgetting failure",
+     "member_ids": [
+      "I37",
+      "I45"
+     ]
+    },
+    {
+     "label": "Return-by-default: extending requires deliberate opt-in action",
+     "member_ids": [
+      "I04",
+      "I67"
+     ]
+    },
+    {
+     "label": "Timed and predictive reminder nudges before due date",
+     "member_ids": [
+      "I09",
+      "I17",
+      "I31",
+      "I33",
+      "I66"
+     ]
+    },
+    {
+     "label": "Prosocial / community-impact reframing of notices and fines",
+     "member_ids": [
+      "I23",
+      "I35",
+      "I43"
+     ]
+    },
+    {
+     "label": "Pre-commitment declaration at checkout (self-set deadline, pledge, reflection)",
+     "member_ids": [
+      "I16",
+      "I41",
+      "I55",
+      "I58"
+     ]
+    },
+    {
+     "label": "Reduce return friction via distributed drop-off / pickup network",
+     "member_ids": [
+      "I08",
+      "I12",
+      "I51",
+      "I52",
+      "I54",
+      "I62"
+     ]
+    },
+    {
+     "label": "Gamified rewards and earned privilege tiers for on-time returns",
+     "member_ids": [
+      "I01",
+      "I11",
+      "I13",
+      "I61"
+     ]
+    },
+    {
+     "label": "Suspend borrowing privileges until items are resolved",
+     "member_ids": [
+      "I24",
+      "I34"
+     ]
+    },
+    {
+     "label": "Risk-based limits on loan exposure (patron history, high-loss items)",
+     "member_ids": [
+      "I22",
+      "I40"
+     ]
+    },
+    {
+     "label": "Social reputation exposure to named others / peer visibility",
+     "member_ids": [
+      "I19",
+      "I20",
+      "I25",
+      "I28",
+      "I63",
+      "I65"
+     ]
+    },
+    {
+     "label": "Empathetic human outreach to diagnose and remove barriers",
+     "member_ids": [
+      "I32",
+      "I53"
+     ]
+    },
+    {
+     "label": "Amnesty, forgiveness, and alternative repayment removing debt barriers",
+     "member_ids": [
+      "I05",
+      "I26",
+      "I39"
+     ]
+    },
+    {
+     "label": "Incentivized third-party recovery agents (bounty for retrieval)",
+     "member_ids": [
+      "I29",
+      "I56",
+      "I69"
+     ]
+    },
+    {
+     "label": "Shared liability across a group (household, employer, peer collective)",
+     "member_ids": [
+      "I30",
+      "I44",
+      "I47",
+      "I71"
+     ]
+    },
+    {
+     "label": "Shift borrowing unit to an institutional/household proxy",
+     "member_ids": [
+      "I49",
+      "I72"
+     ]
+    },
+    {
+     "label": "Ownership conversion: let the borrower buy the item",
+     "member_ids": [
+      "I59",
+      "I60"
+     ]
+    },
+    {
+     "label": "Recover value from unreturned items via resale partner",
+     "member_ids": [
+      "I18"
+     ]
+    },
+    {
+     "label": "Make replacement cost salient at checkout (no money moves)",
+     "member_ids": [
+      "I68"
+     ]
+    },
+    {
+     "label": "Verification/confirmation steps creating a documented accountability trail",
+     "member_ids": [
+      "I06",
+      "I42"
+     ]
+    }
+   ],
+   "incoherent_ids": [
+    "I46"
+   ]
+  },
+  {
+   "seed": 3,
+   "judge": 0,
+   "classes": [
+    {
+     "label": "Penalty forgiveness / amnesty removes shame-and-debt barrier to returning",
+     "member_ids": [
+      "I01",
+      "I08",
+      "I13",
+      "I33",
+      "I36",
+      "I43"
+     ]
+    },
+    {
+     "label": "Escalating monetary late fees create urgency to return",
+     "member_ids": [
+      "I02",
+      "I34",
+      "I71"
+     ]
+    },
+    {
+     "label": "Refundable deposit / prepaid collateral tied to return",
+     "member_ids": [
+      "I12",
+      "I38",
+      "I41",
+      "I57"
+     ]
+    },
+    {
+     "label": "Optional loss insurance removes replacement-cost anxiety",
+     "member_ids": [
+      "I28",
+      "I49",
+      "I64",
+      "I66"
+     ]
+    },
+    {
+     "label": "Borrowing privileges conditioned on return record (earn/lose access)",
+     "member_ids": [
+      "I06",
+      "I16",
+      "I24",
+      "I32",
+      "I63"
+     ]
+    },
+    {
+     "label": "Liability shifted to a co-signing third party or collective (institution, household, peer)",
+     "member_ids": [
+      "I07",
+      "I25",
+      "I31",
+      "I39"
+     ]
+    },
+    {
+     "label": "Assigned human relationship checks in during the loan",
+     "member_ids": [
+      "I11",
+      "I46",
+      "I65"
+     ]
+    },
+    {
+     "label": "Witnessed / documented return handoff",
+     "member_ids": [
+      "I05",
+      "I67"
+     ]
+    },
+    {
+     "label": "Public reputation and peer-comparison pressure",
+     "member_ids": [
+      "I35",
+      "I51",
+      "I53",
+      "I61"
+     ]
+    },
+    {
+     "label": "Visible waiting-patron demand triggers reciprocal obligation",
+     "member_ids": [
+      "I03",
+      "I45"
+     ]
+    },
+    {
+     "label": "Pre-due reminder cues reduce forgetting",
+     "member_ids": [
+      "I18",
+      "I21",
+      "I30",
+      "I44"
+     ]
+    },
+    {
+     "label": "Positive rewards/perks for on-time return behavior",
+     "member_ids": [
+      "I37",
+      "I52",
+      "I68"
+     ]
+    },
+    {
+     "label": "Automatic renewal eliminates the due date entirely",
+     "member_ids": [
+      "I20",
+      "I58"
+     ]
+    },
+    {
+     "label": "Reduced physical friction of returning (more places, hours, or proxies)",
+     "member_ids": [
+      "I09",
+      "I15",
+      "I22",
+      "I27",
+      "I50",
+      "I56",
+      "I60"
+     ]
+    },
+    {
+     "label": "Embedded location tracking for deterrence and recovery",
+     "member_ids": [
+      "I17",
+      "I29",
+      "I47",
+      "I62",
+      "I69"
+     ]
+    },
+    {
+     "label": "Item self-deactivates or degrades, making retention worthless",
+     "member_ids": [
+      "I14",
+      "I42",
+      "I72"
+     ]
+    },
+    {
+     "label": "Risk/life-event detection triggers preemptive assisted-return outreach",
+     "member_ids": [
+      "I23",
+      "I70"
+     ]
+    },
+    {
+     "label": "Shorter loan terms for high-risk borrowers shrink exposure window",
+     "member_ids": [
+      "I26"
+     ]
+    },
+    {
+     "label": "Library personnel go retrieve items in the field",
+     "member_ids": [
+      "I19",
+      "I55"
+     ]
+    },
+    {
+     "label": "Alternative, affordable debt settlement replaces punitive charges",
+     "member_ids": [
+      "I40",
+      "I48",
+      "I54"
+     ]
+    },
+    {
+     "label": "Salience of the loss/replacement cost triggers loss aversion",
+     "member_ids": [
+      "I04",
+      "I59"
+     ]
+    },
+    {
+     "label": "Pre-borrow training builds explicit return commitment",
+     "member_ids": [
+      "I10"
+     ]
+    }
+   ],
+   "incoherent_ids": []
+  },
+  {
+   "seed": 4,
+   "judge": 0,
+   "classes": [
+    {
+     "label": "Library-side physical retrieval / delivery logistics (library collects item, borrower need not act)",
+     "member_ids": [
+      "I02",
+      "I03",
+      "I08",
+      "I15",
+      "I16",
+      "I40"
+     ]
+    },
+    {
+     "label": "Distributed return points reduce travel/convenience friction",
+     "member_ids": [
+      "I21",
+      "I24",
+      "I58"
+     ]
+    },
+    {
+     "label": "Automated pre-due reminders / salience cues against forgetting",
+     "member_ids": [
+      "I13",
+      "I31",
+      "I32",
+      "I38",
+      "I43",
+      "I46",
+      "I49",
+      "I57"
+     ]
+    },
+    {
+     "label": "Outreach through a named human or trusted intermediary",
+     "member_ids": [
+      "I28",
+      "I56"
+     ]
+    },
+    {
+     "label": "Visible waiting-queue demand creates obligation to the next patron",
+     "member_ids": [
+      "I27",
+      "I64",
+      "I66"
+     ]
+    },
+    {
+     "label": "Collective/group liability: others' privileges hinge on this borrower's return",
+     "member_ids": [
+      "I07",
+      "I10",
+      "I14",
+      "I20",
+      "I39",
+      "I47",
+      "I65"
+     ]
+    },
+    {
+     "label": "Public reputational exposure of return history",
+     "member_ids": [
+      "I05"
+     ]
+    },
+    {
+     "label": "Upfront money at stake, refunded/forfeited on return (deposit or pledge)",
+     "member_ids": [
+      "I04",
+      "I22",
+      "I26",
+      "I52"
+     ]
+    },
+    {
+     "label": "Prepaid insurance transfers replacement liability off the borrower",
+     "member_ids": [
+      "I23",
+      "I29",
+      "I54"
+     ]
+    },
+    {
+     "label": "Escalating overdue fees make retention economically costly",
+     "member_ids": [
+      "I17",
+      "I45",
+      "I50",
+      "I68",
+      "I69"
+     ]
+    },
+    {
+     "label": "Fine/debt amnesty or reduction removes the barrier to returning and re-engaging",
+     "member_ids": [
+      "I35",
+      "I67",
+      "I70",
+      "I71"
+     ]
+    },
+    {
+     "label": "Automatic renewal / due-date extension removes the deadline event",
+     "member_ids": [
+      "I19",
+      "I30",
+      "I33",
+      "I41"
+     ]
+    },
+    {
+     "label": "Borrower self-set return commitment at checkout",
+     "member_ids": [
+      "I34",
+      "I37"
+     ]
+    },
+    {
+     "label": "Risk-calibrated loan terms and item limits cap exposure",
+     "member_ids": [
+      "I01",
+      "I06",
+      "I36"
+     ]
+    },
+    {
+     "label": "Positive rewards/points/status for on-time returns",
+     "member_ids": [
+      "I25",
+      "I44",
+      "I48",
+      "I53",
+      "I59",
+      "I61",
+      "I72"
+     ]
+    },
+    {
+     "label": "Convert the loan into a sale / transfer ownership",
+     "member_ids": [
+      "I55",
+      "I63"
+     ]
+    },
+    {
+     "label": "Digital substitute resolves the unreturned physical item",
+     "member_ids": [
+      "I18"
+     ]
+    },
+    {
+     "label": "Labor-based restitution instead of monetary penalty",
+     "member_ids": [
+      "I42"
+     ]
+    },
+    {
+     "label": "External-service leverage (utility account hold) coerces return",
+     "member_ids": [
+      "I12"
+     ]
+    },
+    {
+     "label": "Custodial placement with partner institutions replaces individual borrower liability",
+     "member_ids": [
+      "I62"
+     ]
+    },
+    {
+     "label": "Peer-to-peer handoff keeps items in an accountable chain instead of returning",
+     "member_ids": [
+      "I51"
+     ]
+    },
+    {
+     "label": "Remove comprehension/language barrier to knowing how to return",
+     "member_ids": [
+      "I11"
+     ]
+    },
+    {
+     "label": "Marking the item with borrower identity to induce ownership/shame",
+     "member_ids": [
+      "I60"
+     ]
+    }
+   ],
+   "incoherent_ids": [
+    "I09"
+   ]
+  }
+ ],
+ "generated_at": "2026-08-14T00:00:00Z (workflow wf_7fb79d11-fa5, 67 agents)"
+}
