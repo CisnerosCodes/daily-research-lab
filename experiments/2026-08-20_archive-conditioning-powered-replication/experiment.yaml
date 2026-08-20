@@ -1,0 +1,24 @@
+# Config for the powered archive-conditioning replication.
+# The "run" is a multi-agent generation/judging workflow (Claude subagents);
+# analyze.py consumes raw_data.json and writes results.json.
+id: "2026-08-20_archive-conditioning-powered-replication"
+title: "Archive conditioning, powered: n=10 replicates, 48 ideas/arm, estimator battery"
+hypothesis: "H1: archive feedback raises distinct classes per 48 ideas by >= 2x SD(paired) at n=10. H2 (two-sided): a ceiling carve-out is declared only if >= 2 of 3 estimators (Chao1-bc, ACE, jackknife-2) show B-A >= 2x SD(paired) positive; otherwise walks-faster stands. H3: assumption negation beats archive feedback on arm-unique classes by >= 2x SD(paired), else arm C is dropped from the programme."
+seed: 12345            # deterministic PRNG seed for blind-ID shuffling only
+dataset:
+  name: "1440 generated ideas, library permanent non-return problem (powered replication of 2026-08-13 pilot)"
+  source: "Claude Haiku subagents (generation), Claude Opus subagents (judging)"
+  license: "CC-BY-4.0 (this repo's notes license)"
+params:
+  arms: ["A_iid", "B_archive_feedback", "C_assumption_negation"]
+  rounds: 8
+  ideas_per_round: 6
+  replicates: 10
+  ideas_total: 1440
+  generator_model: "claude-haiku (subagent)"
+  judge_model: "claude-opus (subagent, high effort)"
+  judges_on_replicates_0_and_1: 3
+  judge_integrity_retry: 1
+  estimators: ["chao1_bc", "ace", "jackknife2"]
+  control: "iso-idea-budget; identical generator, schema, and round-1 prompt across arms; prompts byte-identical to the 2026-08-13 pilot"
+related: ["2026-08-13_archive-conditioning-rate-vs-asymptote"]
