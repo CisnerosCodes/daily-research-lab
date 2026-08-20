@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**57 experiments logged.**
+**58 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-08-20 | Archive conditioning, powered (n=10, 48 ideas/arm): the rate effect is real (3.0x paired SD, 10/10 replicates), no estimator detects a ceiling move, and assumption negation is dropped under the fixed bar | ✅ done | H1 supported cleanly where the pilot was marginal (3.0x paired SD, positive in all 10 repl |
 | 2026-08-13 | [MQAR joint LR scaling: is the residual sublinearity the gate lagging, or the optimizer?](experiments/2026-08-13_mqar-joint-lr-scaling) | ✅ done |  |
 | 2026-08-13 | Archive-conditioned generation: rate intervention or ceiling intervention? First application of the asymptote classifier | ✅ done | H1 (rate) directionally consistent in 5/5 replicates but below the strict 2-sigma paired b |
 | 2026-08-11 | [Is QK-norm + undetached dynamic query temperature a strictly better parametrisation? The full head-split sweep](experiments/2026-08-11_qknorm-dyntemp-composite-sweep) | ✅ done | NOT strictly better than both parents, but strictly dominates plain QK-norm: composite fix |
