@@ -28,13 +28,14 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**58 experiments logged.**
+**59 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
-| 2026-08-20 | Archive conditioning, powered (n=10, 48 ideas/arm): the rate effect is real (3.0x paired SD, 10/10 replicates), no estimator detects a ceiling move, and assumption negation is dropped under the fixed bar | ✅ done | H1 supported cleanly where the pilot was marginal (3.0x paired SD, positive in all 10 repl |
+| 2026-08-23 | [What does QK-norm break at a single head? The nh=1 tax half-dissolves into seed noise, each one-sided norm is a WIN (k-only -0.04 bpc, 3/3 seeds), and the cost is the q x k interaction - restoration machinery hurts](experiments/2026-08-23_qknorm-nh1-tax-mechanism) | ✅ done | The premise half-dissolves and the decomposition inverts. (1) At 3 seeds the nh=1 tax shri |
+| 2026-08-20 | [Archive conditioning, powered (n=10, 48 ideas/arm): the rate effect is real (3.0x paired SD, 10/10 replicates), no estimator detects a ceiling move, and assumption negation is dropped under the fixed bar](experiments/2026-08-20_archive-conditioning-powered-replication) | ✅ done | H1 supported cleanly where the pilot was marginal (3.0x paired SD, positive in all 10 repl |
 | 2026-08-13 | [MQAR joint LR scaling: is the residual sublinearity the gate lagging, or the optimizer?](experiments/2026-08-13_mqar-joint-lr-scaling) | ✅ done |  |
-| 2026-08-13 | Archive-conditioned generation: rate intervention or ceiling intervention? First application of the asymptote classifier | ✅ done | H1 (rate) directionally consistent in 5/5 replicates but below the strict 2-sigma paired b |
+| 2026-08-13 | [Archive-conditioned generation: rate intervention or ceiling intervention? First application of the asymptote classifier](experiments/2026-08-13_archive-conditioning-rate-vs-asymptote) | ✅ done | H1 (rate) directionally consistent in 5/5 replicates but below the strict 2-sigma paired b |
 | 2026-08-11 | [Is QK-norm + undetached dynamic query temperature a strictly better parametrisation? The full head-split sweep](experiments/2026-08-11_qknorm-dyntemp-composite-sweep) | ✅ done | NOT strictly better than both parents, but strictly dominates plain QK-norm: composite fix |
 | 2026-08-07 | [The backbone is the clock, causally: multiplying only the backbone (qkv/out/MLP/emb) LR by 4 pulls MQAR breakout 2.1x earlier (1100 -> 533, 3/3 paired seeds, higher final acc, no instability) and starving it at 0.25x censors all seeds on the vanilla plateau - exactly where the same dose on the gate was flat; within-arm, escape happens at near-identical attention-circuit travel (49.29/49.63/49.29) even as escape steps span 1000-1200](experiments/2026-08-07_mqar-qkv-lr-ratio) | ✅ done | Confirmed, causally: the backbone is the clock. Escape tracks backbone LR in BOTH directio |
 | 2026-08-06 | [Opening the gradient path through per-token query magnitude completes the QK-norm hd=4 cliff story - undetaching r_t in tau=(r_t/EMA)^alpha closes 98% of the +0.130-bpc cliff (detached: 54%, static: 2%), lands within baseline seed noise and beats the paired baseline in 2/3 seeds, while the raw undetached tau=r_t control refunds only 4% - the channel must be restored in relative, clamped, learnable-exponent form; QK-norm severs a LEARNABLE per-token sharpness channel](experiments/2026-08-06_qknorm-hd4-undetached-magnitude) | ✅ done | positive, arc-completing: the gradient path through per-token query magnitude is the missi |

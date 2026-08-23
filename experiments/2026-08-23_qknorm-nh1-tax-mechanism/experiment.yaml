@@ -1,0 +1,71 @@
+# Config for 2026-08-23_qknorm-nh1-tax-mechanism. run.py reads it. No magic constants in code.
+id: "2026-08-23_qknorm-nh1-tax-mechanism"
+title: "What does QK-norm break at a single head? Decomposing the nh=1 tax into q-side, k-side, and gain geometry"
+hypothesis: >-
+  2026-07-30 found QK-norm is a small but reproducible tax at nh=1 (hd=128): +0.033 bpc over
+  the no-norm baseline, and 2026-08-11 showed the per-token QUERY-magnitude channel cannot
+  fix it (composite inherits the full tax and its alpha disengages to 0.66) — so the nh=1
+  casualty is a different quantity than the hd=4 one. Tonight, six arms on byte-identical
+  paired inits at nh=1 decompose the tax into its three remaining suspects: q-side norm vs
+  k-side norm (qnorm_only / knorm_only), learnable full-width gain geometry
+  (qknorm_frozen_gain), and per-token KEY magnitude (qknorm_dynk, the undetached 08-06
+  machinery on the key path; qknorm_dynqk adds both channels). Predictions: if the tax is
+  key-side magnitude destruction, knorm_only carries most of it, qnorm_only is ~free, and
+  dynk rescues; if it is gain geometry at full width, freezing the gains at 1 removes (or
+  clearly moves) it; if no single arm recovers the baseline's 2.876, the tax is joint and
+  the "strictly better attention" claim stays blocked for single-head models.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30/31, 2026-08-02/06/11) ---
+params:
+  # single config: the failure case
+  n_head: 1
+  # arm -> [norm_q, norm_k, gains_learnable, dyn_q, dyn_k]; dyn modes: null | "undetached"
+  arms:
+    baseline:            [false, false, true,  null, null]
+    qknorm:              [true,  true,  true,  null, null]
+    qnorm_only:          [true,  false, true,  null, null]
+    knorm_only:          [false, true,  true,  null, null]
+    qknorm_frozen_gain:  [true,  true,  false, null, null]
+    qknorm_dynk:         [true,  true,  true,  null, "undetached"]
+    qknorm_dynqk:        [true,  true,  true,  "undetached", "undetached"]
+  arm_order: ["baseline", "qknorm", "qnorm_only", "knorm_only",
+              "qknorm_frozen_gain", "qknorm_dynk", "qknorm_dynqk"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dynamic-temperature machinery (identical to 2026-08-02/06/11, applied per side)
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  # attention probes
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # parent reference numbers at nh=1 (from 2026-08-11 results.json, seeds 0/1; deterministic
+  # harness, so baseline/qknorm at seeds 0/1 must replicate these to ~1e-5)
+  parent_nh1_per_seed:
+    baseline: {0: 2.86663, 1: 2.88507}
+    qknorm: {0: 2.91841, 1: 2.89892}
+    composite_dynq: {0: 2.91126, 1: 2.91511}
+  parent_nh1_baseline_mean: 2.87585
+  parent_nh1_qknorm_mean: 2.90867
+  parent_nh1_tax_bpc: 0.03282
+  # a component "recovers the baseline" if its mean lands within this of baseline
+  # (2026-07-30 qknorm-arm mean seed spread, same tolerance as 08-11)
+  tolerance_bpc: 0.015
