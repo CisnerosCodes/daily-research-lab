@@ -1,0 +1,38 @@
+data: 1003854 train / 111540 val chars, vocab=65
+  [baseline           seed=0] P=423424 bpc=2.8666 logit_std=2.181 entN=0.653 top1=0.329 qCV=0.230 kCV=0.263 (27.6s)
+  [qknorm             seed=0] P=423936 bpc=2.9184 logit_std=3.327 entN=0.593 top1=0.351 qCV=0.208 kCV=0.228 (32.6s)
+  [qnorm_only         seed=0] P=423680 bpc=2.8598 logit_std=2.066 entN=0.620 top1=0.366 qCV=0.195 kCV=0.230 (29.4s)
+  [knorm_only         seed=0] P=423680 bpc=2.8434 logit_std=2.753 entN=0.567 top1=0.357 qCV=0.219 kCV=0.156 (30.6s)
+  [qknorm_frozen_gain seed=0] P=423936 bpc=2.9591 logit_std=4.349 entN=0.533 top1=0.403 qCV=0.274 kCV=0.244 (32.1s)
+  [qknorm_dynk        seed=0] P=423938 bpc=2.9005 logit_std=3.644 entN=0.568 top1=0.396 qCV=0.192 kCV=0.236 a_k=0.72 tauStd_k=0.172 (36.1s)
+  [qknorm_dynqk       seed=0] P=423940 bpc=2.9649 logit_std=4.203 entN=0.514 top1=0.435 qCV=0.203 kCV=0.277 a_q=0.71 tauStd_q=0.143 a_k=0.68 tauStd_k=0.184 (36.9s)
+  [baseline           seed=1] P=423424 bpc=2.8851 logit_std=2.269 entN=0.671 top1=0.313 qCV=0.228 kCV=0.248 (26.9s)
+  [qknorm             seed=1] P=423936 bpc=2.8989 logit_std=2.494 entN=0.547 top1=0.424 qCV=0.238 kCV=0.185 (33.2s)
+  [qnorm_only         seed=1] P=423680 bpc=2.8621 logit_std=2.172 entN=0.595 top1=0.392 qCV=0.241 kCV=0.234 (30.0s)
+  [knorm_only         seed=1] P=423680 bpc=2.8375 logit_std=2.583 entN=0.526 top1=0.428 qCV=0.238 kCV=0.164 (30.4s)
+  [qknorm_frozen_gain seed=1] P=423936 bpc=2.9291 logit_std=3.248 entN=0.486 top1=0.457 qCV=0.251 kCV=0.171 (30.8s)
+  [qknorm_dynk        seed=1] P=423938 bpc=2.9540 logit_std=4.077 entN=0.409 top1=0.535 qCV=0.226 kCV=0.294 a_k=0.85 tauStd_k=0.247 (33.9s)
+  [qknorm_dynqk       seed=1] P=423940 bpc=2.9756 logit_std=4.179 entN=0.480 top1=0.464 qCV=0.231 kCV=0.259 a_q=0.57 tauStd_q=0.132 a_k=0.78 tauStd_k=0.198 (36.6s)
+  [baseline           seed=2] P=423424 bpc=2.8903 logit_std=2.240 entN=0.657 top1=0.328 qCV=0.222 kCV=0.259 (26.8s)
+  [qknorm             seed=2] P=423936 bpc=2.8680 logit_std=2.440 entN=0.529 top1=0.433 qCV=0.223 kCV=0.150 (33.0s)
+  [qnorm_only         seed=2] P=423680 bpc=2.8643 logit_std=2.184 entN=0.618 top1=0.369 qCV=0.221 kCV=0.253 (29.4s)
+  [knorm_only         seed=2] P=423680 bpc=2.8396 logit_std=2.094 entN=0.623 top1=0.359 qCV=0.225 kCV=0.166 (29.4s)
+  [qknorm_frozen_gain seed=2] P=423936 bpc=2.9077 logit_std=2.776 entN=0.449 top1=0.526 qCV=0.214 kCV=0.172 (30.8s)
+  [qknorm_dynk        seed=2] P=423938 bpc=2.9144 logit_std=3.084 entN=0.437 top1=0.533 qCV=0.230 kCV=0.239 a_k=0.77 tauStd_k=0.184 (35.7s)
+  [qknorm_dynqk       seed=2] P=423940 bpc=2.9465 logit_std=3.913 entN=0.365 top1=0.587 qCV=0.197 kCV=0.227 a_q=0.61 tauStd_q=0.122 a_k=0.65 tauStd_k=0.152 (37.1s)
+paired-init check passed: identical shared weights across all arms at every seed
+
+QK-norm nh=1 tax +0.0144 bpc — recovered by: qknorm, qnorm_only, knorm_only; q-only -0.0186, k-only -0.0405, frozen-gain +0.0369 vs qknorm, dynk rescue -1.929
+  qknorm             Δ=+0.01444 share=1.0 recovers=True
+  qnorm_only         Δ=-0.01860 share=-1.288 recovers=True
+  knorm_only         Δ=-0.04052 share=-2.806 recovers=True
+  qknorm_frozen_gain Δ=+0.05129 share=3.552 recovers=False
+  qknorm_dynk        Δ=+0.04230 share=2.929 recovers=False
+  qknorm_dynqk       Δ=+0.08168 share=5.657 recovers=False
+  additivity: q-only + k-only = -0.05912 vs qknorm Δ +0.01444
+  replication baseline seed 0: 2.86663 vs 2.86663 (Δ 0.0)
+  replication baseline seed 1: 2.88507 vs 2.88507 (Δ 0.0)
+  replication qknorm seed 0: 2.91841 vs 2.91841 (Δ 0.0)
+  replication qknorm seed 1: 2.89892 vs 2.89892 (Δ 0.0)
+
+wrote results.json + chart.png in 681.71s
