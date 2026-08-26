@@ -1,0 +1,42 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-08-26_mqar-joint-lr-wd-decouple"
+title: "MQAR joint-LR sublinearity: is the ~1.45x residual the weight-decay/LR coupling?"
+hypothesis: "2026-08-13 decomposed the sublinear escape scaling (backbone x4 gives 2.1x, not 4x): gate-lag explains ~43% (log), leaving a ~1.45x residual (j4 escapes 400/400/400 where exact inverse of j1's 1100 predicts ~275) that survives uniform x4. The named suspect is AdamW's LR-coupled decoupled weight decay: the per-step shrink is lr*wd*p, so at 4x LR every step decays weights 4x harder and the multiplier is NOT a pure time-rescaling of the drift. Causal test on byte-identical paired inits: j1 and j4 at wd=0.01 (in-run replication anchors), j1 and j4 at wd=0 (the decisive wd-free ratio: if escape(j1,wd0)/escape(j4,wd0) ~ 4, the residual was the decay term), and j4 at wd=0.0025 (per-step decay matched to j1's lr*wd). If j4 stays at ~400 with wd removed, weight decay is exonerated and the residual is gradient noise / plateau geometry; secondary: does the 400/400/400 step-determinism survive wd changes, and does wd=0 shift the 1x escape at all (grokking-style plateau dependence on wd)?"
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity / 2026-07-28 / 2026-07-29 / 2026-08-01 / 2026-08-03 / 2026-08-07 / 2026-08-13)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # Arms - byte-identical decay-masked linear-attention code path of 2026-07-28..2026-08-13.
+  # LR multipliers AND weight decay are optimizer-side only, so all gated arms share the same
+  # init key ("dense") and the same data stream: within a seed every run is byte-identical at
+  # step 0 and any divergence is caused by the (gate_lr_mult, backbone_lr_mult, wd) triple.
+  #   j1   - (1x, 1x, wd .01):    exact replication of 08-13 j1 (= 08-07 blr1)   [anchor]
+  #   j1w0 - (1x, 1x, wd 0):      does wd matter at base speed at all?
+  #   j4   - (4x, 4x, wd .01):    exact replication of 08-13 j4 (400/400/400)    [anchor]
+  #   j4w0 - (4x, 4x, wd 0):      decisive arm - wd-free uniform x4
+  #   j4wc - (4x, 4x, wd .0025):  per-step decay lr*wd matched to j1's
+  arms:
+    - {name: j1,   gate_lr_mult: 1.0, backbone_lr_mult: 1.0, weight_decay: 0.01,   init_key: dense, seeds: [0, 1, 2]}
+    - {name: j1w0, gate_lr_mult: 1.0, backbone_lr_mult: 1.0, weight_decay: 0.0,    init_key: dense, seeds: [0, 1, 2]}
+    - {name: j4,   gate_lr_mult: 4.0, backbone_lr_mult: 4.0, weight_decay: 0.01,   init_key: dense, seeds: [0, 1, 2]}
+    - {name: j4w0, gate_lr_mult: 4.0, backbone_lr_mult: 4.0, weight_decay: 0.0,    init_key: dense, seeds: [0, 1, 2]}
+    - {name: j4wc, gate_lr_mult: 4.0, backbone_lr_mult: 4.0, weight_decay: 0.0025, init_key: dense, seeds: [0, 1, 2]}
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  num_pairs_main: 8
+  train_steps: 2000
+  eval_every: 100        # escape STEP is the primary metric (2026-08-03..08-13 grid, kept for comparability)
+  early_stop_acc: 0.99
+  batch_size: 64
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  solve_threshold: 0.9
+  escape_threshold: 0.5  # escape step = first eval crossing this (eval grid = 100)
+  gate_bias_init: 3.0    # gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla
