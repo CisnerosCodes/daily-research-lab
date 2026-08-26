@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**59 experiments logged.**
+**60 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-08-26 | [Weight decay exonerated: the ~1.45x residual sublinearity of MQAR escape under joint x4 LR is NOT AdamW's LR-coupled decay term - escape timing is wd-invariant to the seed level (wd=0 is a per-seed exact no-op at 1x AND x4)](experiments/2026-08-26_mqar-joint-lr-wd-decouple) | ✅ done |  |
 | 2026-08-23 | [What does QK-norm break at a single head? The nh=1 tax half-dissolves into seed noise, each one-sided norm is a WIN (k-only -0.04 bpc, 3/3 seeds), and the cost is the q x k interaction - restoration machinery hurts](experiments/2026-08-23_qknorm-nh1-tax-mechanism) | ✅ done | The premise half-dissolves and the decomposition inverts. (1) At 3 seeds the nh=1 tax shri |
 | 2026-08-20 | [Archive conditioning, powered (n=10, 48 ideas/arm): the rate effect is real (3.0x paired SD, 10/10 replicates), no estimator detects a ceiling move, and assumption negation is dropped under the fixed bar](experiments/2026-08-20_archive-conditioning-powered-replication) | ✅ done | H1 supported cleanly where the pilot was marginal (3.0x paired SD, positive in all 10 repl |
 | 2026-08-13 | [MQAR joint LR scaling: is the residual sublinearity the gate lagging, or the optimizer?](experiments/2026-08-13_mqar-joint-lr-scaling) | ✅ done |  |
