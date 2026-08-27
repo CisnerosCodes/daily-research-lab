@@ -58,4 +58,69 @@ Computed by `analyze.py` from `raw_data.json`: distinct coherent classes per arm
 
 ## RESULTS (written by analyze.py after the pre-registration commit)
 
-Not yet run.
+Analyzed 1536 ideas; 8 replicates analyzed, 0 excluded. Run failed by exclusion rule: False.
+
+Manipulation check (round-1 exchangeability, pooled sigma): means {'A': 5.88, 'B': 5.88}, max pairwise gap 0.0 vs 2 x pooled SD = 0.684 — **PASS**.
+
+| Arm | Distinct /96 (mean ± SD) | Distinct /48 | Chao1-bc | ACE | Jackknife-2 | Incoherent (1st half / 2nd half) |
+|---|---|---|---|---|---|---|
+| A iid control | 24.62 ± 1.85 | 20 | 27.01 ± 2.9 | 28.32 ± 2.56 | 30.5 ± 4.97 | 1 (0 / 1) |
+| B archive feedback | 33.38 ± 2.92 | 26.38 | 36.94 ± 5.31 | 38.46 ± 6.39 | 39.92 ± 9.78 | 9 (4 / 5) |
+
+**Accumulation curves** (mean distinct classes after each round):
+
+| Round | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A iid | 5.88 | 9.5 | 12.75 | 14.75 | 16.12 | 17.25 | 18.62 | 20 | 20.75 | 22 | 22.38 | 22.75 | 23.38 | 23.88 | 24.38 | 24.62 |
+| B archive | 5.88 | 10.75 | 15.25 | 19 | 21.88 | 23.62 | 25.62 | 26.38 | 27.5 | 28.62 | 29.5 | 30.62 | 31 | 32.12 | 32.62 | 33.38 |
+| gap B−A | 0 | 1.25 | 2.5 | 4.25 | 5.75 | 6.38 | 7 | 6.38 | 6.75 | 6.62 | 7.12 | 7.88 | 7.62 | 8.25 | 8.25 | 8.75 |
+
+**H4 (primary, crossing test):** B's observed distinct classes at 96 ideas minus the maximum of arm A's three estimators, paired per replicate.
+
+| Quantity | n | Mean diff | x SD(paired) | replicates crossed |
+|---|---|---|---|---|
+| **vs max estimator (pre-registered bar)** | 8 | 2.668 | 0.48 | 6/8 |
+| vs Chao1-bc (secondary) | 8 | 6.361 | 1.51 | 7/8 |
+| vs ACE (secondary) | 8 | 5.051 | 1.37 | 7/8 |
+| vs jackknife-2 (secondary) | 8 | 2.88 | 0.49 | 6/8 |
+
+**H5 (gap curvature):** mean B−A gap at rounds 4/8/12/16 = 4.25 / 6.38 / 7.88 / 8.75. Turnover (peak minus final): 1 (0.84x paired SD, 1x bar). Growth (r16 − r8): 2.375 (0.74x paired SD, 2x bar).
+
+**H6 (estimator stability on arm A, self-audit):** each estimator at 48 vs 96 ideas.
+
+| Estimator | mean at 48 | mean at 96 | increase | x SD(paired) |
+|---|---|---|---|---|
+| Chao1-bc | 29.03 | 27.01 | -2.019 | -0.37 |
+| ACE | 27.9 | 28.32 | 0.423 | 0.15 |
+| Jackknife-2 | 33.79 | 30.5 | -3.292 | -0.69 |
+
+**Rate contrast carried forward** (B − A distinct classes at 96 ideas): 8.75 at 2.56x paired SD (4.74x the control arm's SD), paired diffs [15, 6, 10, 10, 10, 9, 4, 6].
+
+**Judge noise** (replicate 0, 3 independent judges): between-judge SD of per-arm distinct counts {'A': 0.0, 'B': 3.0}; pairwise ARI [0.871, 0.869, 0.855] (mean 0.865).
+
+**Judge noise** (replicate 1, 3 independent judges): between-judge SD of per-arm distinct counts {'A': 1.53, 'B': 0.58}; pairwise ARI [0.751, 0.829, 0.787] (mean 0.789).
+
+**Verdicts against the pre-registered criteria:**
+
+- H4 (crossing, primary): walks-faster survives: B's observed count minus A's maximum estimator is 2.668 (0.48x paired SD, below the 2x bar); crossed in 6/8 replicates
+- H5 (gap curvature): neither criterion fires (turnover 0.84x vs 1x bar; growth 0.74x vs 2x bar) — gap shape indeterminate at this n
+- H6 (estimator stability): stable: no estimator's 48-to-96 increase clears 2x paired SD
+
+
+## Takeaway (hand-written; every number above is from analyze.py)
+
+**Read the pre-registered verdicts and then read this paragraph, because the two do not say the same thing.** Under the rules fixed before the run, walks-faster survives: the crossing margin against arm A's maximum estimator is +2.67 classes at 0.48x the paired SD, nowhere near the 2x bar. But the direction has inverted since the powered replication, and three separate signals now point the same way. Arm B's mean observed count (33.4) sits above **all three** of arm A's mean estimates (Chao1-bc 27.0, ACE 28.3, jackknife-2 30.5). B crossed A's estimate in 6 of 8 replicates against the maximum estimator and in 7 of 8 against Chao1-bc and ACE. And the B−A gap never turned over: it ends at 8.75, the largest value on the whole 16-round curve. The claim that archive conditioning walks a fixed support faster is the weakest it has been since the programme started making it, and the lab should say that out loud rather than bank the technical pass.
+
+1. **What kept walks-faster alive was dispersion, not a comfortable margin.** The eight per-replicate crossing margins were +9.0, −2.9, +6.9, +8.2, +0.1, +5.9, −5.9, +0.0. Six positive, two negative, mean +2.67 against a paired SD of 5.59. Almost all of that spread comes from arm A's jackknife-2, which ranged from 22.1 to 35.9 across replicates — the estimator carrying the "maximum" role is also the noisiest, so the conservative choice made in the pre-registration is also the choice that made the test hardest to pass. That was the right trade to fix in advance and it is the reason the verdict reads as it does; it is not evidence that B stayed inside A's support.
+
+2. **The escape route the pre-registration reserved is narrower than expected, but it is not closed.** The pre-registration said crossing is necessary but not sufficient, because Chao1, ACE, and jackknife-2 are downward-biased. H6 was written to test whether that bias shrinks with budget, with the honest prediction that the estimators would climb from 48 to 96 ideas. **That prediction was wrong.** Arm A's estimates were stable or slightly lower at 96 than at 48 (Chao1-bc −2.0, ACE +0.4, jackknife-2 −3.3; none clears the 2x bar). Being wrong here matters in a specific direction: a ceiling estimate that stops moving while the other arm's observed count keeps climbing past it is what support extension looks like. The counter-argument that remains, and it is a real one, is that **a stable estimate is not necessarily an accurate one** — all three estimators are lower bounds, and a lower bound can be stably wrong. Stability rules out one explanation for the near-crossing; it does not establish that A's true support is 27 to 30 classes.
+
+3. **Neither arm saturated, so nothing here is an observed plateau.** Over the final five rounds arm A was still adding 0.37, 0.63, 0.50, 0.50, and 0.24 classes per round, and arm B 1.12, 0.38, 1.12, 0.50, and 0.76. Both accumulation curves are decelerating and neither is flat. Every ceiling number in this experiment is an estimate, not a measured asymptote, and the same is true of the E-series ~54. That distinction should be stated wherever those numbers appear.
+
+4. **The rate effect is now measured at three budgets and it keeps growing.** B − A on distinct classes: +2.4 per 24 ideas (pilot), +5.3 per 48 (powered replication), **+8.75 per 96 here, at 2.56x the paired SD and 4.74x the control arm's SD**, positive in 8 of 8 replicates. A rate mechanism operating inside a shared support must eventually give this back as the control arm catches up. Sixteen rounds produced no sign of that: the gap peaked at round 16 in the pooled curve, and in 4 of 8 replicates the final gap was the individual peak. H5 fired neither criterion at n = 8, so this is a shape observation and not a verdict, but the shape is the wrong one for the claim being defended.
+
+5. **The incoherence tax replicates and did not accelerate.** Arm B produced 9 incoherent items to arm A's 1, split 4 in the first half and 5 in the second. The powered replication saw 6 in B over 8 rounds; doubling the horizon did not double the rate. Conditioning pressure costs validity at a roughly constant per-round rate rather than a compounding one, which is a more benign trade than the earlier run suggested.
+
+6. **Judge noise rose and needs watching.** Between-judge SD on arm B reached 3.0 classes on replicate 0 — the largest judge dispersion the programme has measured — and mean pairwise ARI fell to 0.865 and 0.789, the lowest recorded. The 8.75-class effect is still roughly three times the judge-noise width, so the headline is not a partition artifact, but the margin has shrunk from about five times in the previous run. Clustering 192 items in one call is plausibly the cause; all 12 judges passed integrity on the first attempt, so this is dispersion in judgement, not in bookkeeping.
+
+**What this changes, and the next run.** The practical rule for loop builders is unaffected: archive conditioning buys a large and growing coverage advantage at a small validity cost, and any loop that generates without it is paying a duplicate tax that compounds with horizon. What is now in question is the *explanation* the programme has attached to that advantage. The decisive test is no longer another budget doubling on both arms — it is a test with no estimator in the loop at all: **run arm A alone to roughly four times the budget (384 ideas) and ask whether A's observed count ever reaches the 33.4 classes B reached at 96.** If A saturates below B's 96-idea count, walks-faster is dead on observed data and archive conditioning becomes a support-extending intervention, which would put a carve-out into the E-series conclusion exactly where its falsification clause anticipated one. If A climbs past B, the estimators were biased low, walks-faster is vindicated on the strongest possible evidence, and the programme learns that its own instrument understates ceilings at these budgets. That run is single-arm and therefore cheap. It should be next, and the programme should not publish the rate-versus-asymptote classifier as settled until it has been done.
