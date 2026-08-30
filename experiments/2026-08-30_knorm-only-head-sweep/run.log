@@ -1,0 +1,65 @@
+data: 1003854 train / 111540 val chars, vocab=65
+  [hd=  4 baseline   seed=0] P=423424 bpc=3.0930 logit_std=3.124 entN=0.732 top1=0.241 qCV=0.437 kCV=0.451 (27.4s)
+  [hd=  4 qknorm     seed=0] P=423936 bpc=3.2230 logit_std=1.273 entN=0.903 top1=0.105 qCV=0.320 kCV=0.337 (29.9s)
+  [hd=  4 qnorm_only seed=0] P=423680 bpc=3.1174 logit_std=2.356 entN=0.776 top1=0.203 qCV=0.330 kCV=0.464 (27.3s)
+  [hd=  4 knorm_only seed=0] P=423680 bpc=3.2260 logit_std=1.956 entN=0.831 top1=0.155 qCV=0.414 kCV=0.300 (28.4s)
+  [hd=  4 baseline   seed=1] P=423424 bpc=3.0928 logit_std=3.083 entN=0.752 top1=0.224 qCV=0.467 kCV=0.464 (27.8s)
+  [hd=  4 qknorm     seed=1] P=423936 bpc=3.2488 logit_std=1.257 entN=0.903 top1=0.109 qCV=0.326 kCV=0.339 (31.6s)
+  [hd=  4 qnorm_only seed=1] P=423680 bpc=3.1221 logit_std=2.173 entN=0.785 top1=0.197 qCV=0.326 kCV=0.456 (29.6s)
+  [hd=  4 knorm_only seed=1] P=423680 bpc=3.2339 logit_std=2.083 entN=0.820 top1=0.166 qCV=0.439 kCV=0.303 (29.3s)
+  [hd=  4 baseline   seed=2] P=423424 bpc=3.0854 logit_std=3.550 entN=0.724 top1=0.252 qCV=0.468 kCV=0.463 (26.8s)
+  [hd=  4 qknorm     seed=2] P=423936 bpc=3.1897 logit_std=1.270 entN=0.901 top1=0.110 qCV=0.321 kCV=0.336 (28.8s)
+  [hd=  4 qnorm_only seed=2] P=423680 bpc=3.1038 logit_std=2.553 entN=0.770 top1=0.205 qCV=0.321 kCV=0.471 (27.5s)
+  [hd=  4 knorm_only seed=2] P=423680 bpc=3.1934 logit_std=1.991 entN=0.821 top1=0.163 qCV=0.438 kCV=0.307 (28.5s)
+  [hd= 16 baseline   seed=0] P=423424 bpc=3.0265 logit_std=3.258 entN=0.715 top1=0.246 qCV=0.359 kCV=0.386 (18.2s)
+  [hd= 16 qknorm     seed=0] P=423936 bpc=2.8779 logit_std=1.646 entN=0.816 top1=0.175 qCV=0.262 kCV=0.238 (19.7s)
+  [hd= 16 qnorm_only seed=0] P=423680 bpc=2.9469 logit_std=2.417 entN=0.733 top1=0.235 qCV=0.241 kCV=0.368 (18.6s)
+  [hd= 16 knorm_only seed=0] P=423680 bpc=2.9133 logit_std=2.041 entN=0.769 top1=0.205 qCV=0.314 kCV=0.208 (17.9s)
+  [hd= 16 baseline   seed=1] P=423424 bpc=3.0209 logit_std=4.208 entN=0.659 top1=0.288 qCV=0.367 kCV=0.402 (16.3s)
+  [hd= 16 qknorm     seed=1] P=423936 bpc=2.8771 logit_std=1.718 entN=0.783 top1=0.195 qCV=0.250 kCV=0.214 (18.2s)
+  [hd= 16 qnorm_only seed=1] P=423680 bpc=2.9774 logit_std=2.637 entN=0.711 top1=0.252 qCV=0.238 kCV=0.380 (18.5s)
+  [hd= 16 knorm_only seed=1] P=423680 bpc=2.9625 logit_std=2.336 entN=0.740 top1=0.223 qCV=0.313 kCV=0.206 (17.7s)
+  [hd= 16 baseline   seed=2] P=423424 bpc=3.0184 logit_std=3.636 entN=0.689 top1=0.267 qCV=0.351 kCV=0.385 (16.4s)
+  [hd= 16 qknorm     seed=2] P=423936 bpc=2.8925 logit_std=1.674 entN=0.794 top1=0.188 qCV=0.252 kCV=0.220 (18.3s)
+  [hd= 16 qnorm_only seed=2] P=423680 bpc=2.9642 logit_std=2.529 entN=0.733 top1=0.230 qCV=0.254 kCV=0.396 (17.2s)
+  [hd= 16 knorm_only seed=2] P=423680 bpc=2.9510 logit_std=2.425 entN=0.723 top1=0.235 qCV=0.295 kCV=0.198 (17.6s)
+  [hd= 32 baseline   seed=0] P=423424 bpc=2.9103 logit_std=3.013 entN=0.659 top1=0.296 qCV=0.266 kCV=0.303 (15.8s)
+  [hd= 32 qknorm     seed=0] P=423936 bpc=2.8301 logit_std=2.088 entN=0.703 top1=0.277 qCV=0.236 kCV=0.193 (17.6s)
+  [hd= 32 qnorm_only seed=0] P=423680 bpc=2.8517 logit_std=2.486 entN=0.682 top1=0.287 qCV=0.219 kCV=0.333 (16.4s)
+  [hd= 32 knorm_only seed=0] P=423680 bpc=2.8534 logit_std=2.464 entN=0.712 top1=0.245 qCV=0.291 kCV=0.179 (16.2s)
+  [hd= 32 baseline   seed=1] P=423424 bpc=2.9404 logit_std=4.078 entN=0.622 top1=0.317 qCV=0.294 kCV=0.338 (15.5s)
+  [hd= 32 qknorm     seed=1] P=423936 bpc=2.8234 logit_std=1.915 entN=0.726 top1=0.256 qCV=0.224 kCV=0.196 (17.2s)
+  [hd= 32 qnorm_only seed=1] P=423680 bpc=2.8979 logit_std=2.475 entN=0.680 top1=0.282 qCV=0.218 kCV=0.313 (16.2s)
+  [hd= 32 knorm_only seed=1] P=423680 bpc=2.8653 logit_std=2.604 entN=0.691 top1=0.257 qCV=0.295 kCV=0.197 (16.3s)
+  [hd= 32 baseline   seed=2] P=423424 bpc=2.9337 logit_std=2.856 entN=0.695 top1=0.271 qCV=0.284 kCV=0.305 (15.3s)
+  [hd= 32 qknorm     seed=2] P=423936 bpc=2.8452 logit_std=2.129 entN=0.707 top1=0.255 qCV=0.264 kCV=0.210 (17.1s)
+  [hd= 32 qnorm_only seed=2] P=423680 bpc=2.8899 logit_std=2.470 entN=0.681 top1=0.280 qCV=0.208 kCV=0.300 (16.3s)
+  [hd= 32 knorm_only seed=2] P=423680 bpc=2.8626 logit_std=2.467 entN=0.694 top1=0.273 qCV=0.283 kCV=0.190 (16.1s)
+  [hd= 64 baseline   seed=0] P=423424 bpc=2.8549 logit_std=2.846 entN=0.621 top1=0.346 qCV=0.244 kCV=0.272 (15.1s)
+  [hd= 64 qknorm     seed=0] P=423936 bpc=2.8367 logit_std=2.659 entN=0.604 top1=0.337 qCV=0.222 kCV=0.196 (16.5s)
+  [hd= 64 qnorm_only seed=0] P=423680 bpc=2.8255 logit_std=2.478 entN=0.627 top1=0.363 qCV=0.232 kCV=0.282 (15.8s)
+  [hd= 64 knorm_only seed=0] P=423680 bpc=2.8108 logit_std=2.863 entN=0.615 top1=0.325 qCV=0.245 kCV=0.174 (16.0s)
+  [hd= 64 baseline   seed=1] P=423424 bpc=2.9186 logit_std=3.286 entN=0.627 top1=0.324 qCV=0.225 kCV=0.288 (15.4s)
+  [hd= 64 qknorm     seed=1] P=423936 bpc=2.8555 logit_std=2.445 entN=0.690 top1=0.286 qCV=0.234 kCV=0.218 (16.2s)
+  [hd= 64 qnorm_only seed=1] P=423680 bpc=2.8350 logit_std=2.406 entN=0.660 top1=0.314 qCV=0.191 kCV=0.291 (15.7s)
+  [hd= 64 knorm_only seed=1] P=423680 bpc=2.8240 logit_std=2.744 entN=0.610 top1=0.347 qCV=0.212 kCV=0.173 (15.7s)
+  [hd= 64 baseline   seed=2] P=423424 bpc=2.8781 logit_std=2.730 entN=0.644 top1=0.321 qCV=0.252 kCV=0.264 (14.9s)
+  [hd= 64 qknorm     seed=2] P=423936 bpc=2.8276 logit_std=2.404 entN=0.596 top1=0.390 qCV=0.251 kCV=0.177 (16.6s)
+  [hd= 64 qnorm_only seed=2] P=423680 bpc=2.8242 logit_std=2.397 entN=0.650 top1=0.328 qCV=0.226 kCV=0.291 (15.7s)
+  [hd= 64 knorm_only seed=2] P=423680 bpc=2.8086 logit_std=2.786 entN=0.592 top1=0.380 qCV=0.265 kCV=0.185 (16.7s)
+paired-init check passed: identical shared weights across all arms at every (hd, seed)
+
+verifying bit-exact replication of 2026-08-23 at hd=128 ...
+  [hd=128 baseline   seed=0] P=423424 bpc=2.8666 logit_std=2.181 entN=0.653 top1=0.329 qCV=0.230 kCV=0.263 (15.3s)
+    verify baseline seed 0: 2.86663 vs 2.86663 (Δ +0.00000)
+  [hd=128 knorm_only seed=0] P=423680 bpc=2.8434 logit_std=2.753 entN=0.567 top1=0.357 qCV=0.219 kCV=0.156 (15.7s)
+    verify knorm_only seed 0: 2.84339 vs 2.84339 (Δ +0.00000)
+
+k-norm-only strictly better than baseline AND qknorm at every split: False — hd4 cliffs qk +0.130 / q-only +0.024 / k-only +0.127; at qknorm's U-optimum hd32: k-only +0.0275 vs qknorm; global best: knorm_only@hd64 2.8145
+  hd=  4: base 3.0904  qk 3.2205 (+0.1301)  q-only 3.1144 (+0.0240)  k-only 3.2178 (+0.1274)  inter -0.0213 k>base 0/3 k>qk 1/3
+  hd= 16: base 3.0219  qk 2.8825 (-0.1394)  q-only 2.9628 (-0.0591)  k-only 2.9423 (-0.0796)  inter -0.0007 k>base 3/3 k>qk 0/3
+  hd= 32: base 2.9281  qk 2.8329 (-0.0952)  q-only 2.8799 (-0.0483)  k-only 2.8604 (-0.0677)  inter +0.0208 k>base 3/3 k>qk 0/3
+  hd= 64: base 2.8839  qk 2.8399 (-0.0440)  q-only 2.8282 (-0.0556)  k-only 2.8145 (-0.0694)  inter +0.0811 k>base 3/3 k>qk 3/3
+  hd=128: base 2.8807  qk 2.8951 (+0.0144)  q-only 2.8621 (-0.0186)  k-only 2.8401 (-0.0405)  inter +0.0736 k>base 3/3 k>qk 3/3
+
+wrote results.json + chart.png in 1014.37s
