@@ -1,0 +1,4 @@
+numpy
+matplotlib
+pyyaml
+# add per-experiment deps here, then `pip freeze > requirements.txt` when done

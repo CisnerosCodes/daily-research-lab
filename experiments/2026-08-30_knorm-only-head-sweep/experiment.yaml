@@ -1,0 +1,75 @@
+# Config for 2026-08-30_knorm-only-head-sweep. run.py reads it. No magic constants in code.
+id: "2026-08-30_knorm-only-head-sweep"
+title: "Is one-sided key-norm the strictly-better attention norm? k-norm-only vs QK-norm across the full head split"
+hypothesis: >-
+  2026-08-23 found that at nh=1, norming ONE side beats norming none and both: k-norm-only
+  -0.041 bpc vs baseline (3/3 seeds, 4-8x lower variance), q-norm-only -0.019, while full
+  QK-norm pays a +0.073 q x k interaction term. Nobody checked multi-head. Tonight the four
+  norm arms (baseline / qknorm / qnorm_only / knorm_only) run across the full iso-parameter
+  head-split family n_head x head_dim = 128 (hd 4/16/32/64 fresh, hd 128 imported from the
+  bit-exact 08-23 run after live verification), 3 seeds, byte-identical paired inits.
+  Predictions from the thread's mechanism story: (1) if the hd=4 cliff is q-side per-token
+  magnitude destruction (08-02/06), k-norm-only should show NO cliff at hd=4 while
+  qnorm_only inherits it; (2) if the q x k interaction term is the single-head
+  sharpness-stacking pathology, one-sided arms should converge toward full qknorm as heads
+  multiply and per-head dims shrink; (3) the open verdict: does k-norm-only beat full
+  qknorm at qknorm's own U-optimum (hd=32, 2.827) - if yes at every split, one-sided
+  key-norm is the first arm in this thread that is strictly better than BOTH parents
+  everywhere, the claim the 08-11 composite failed at nh=1.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30/31, 2026-08-02/06/11/23) ---
+params:
+  # iso-parameter head-split family: n_head x head_dim = d_model = 128
+  head_dims_fresh: [4, 16, 32, 64]
+  # arm -> [norm_q, norm_k, gains_learnable, dyn_q, dyn_k]  (same flag layout as 08-23)
+  arms:
+    baseline:   [false, false, true, null, null]
+    qknorm:     [true,  true,  true, null, null]
+    qnorm_only: [true,  false, true, null, null]
+    knorm_only: [false, true,  true, null, null]
+  arm_order: ["baseline", "qknorm", "qnorm_only", "knorm_only"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dyn machinery kept for byte-compat with the 08-23 Block (unused: all dyn flags null)
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  # attention probes
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # hd=128 (nh=1): all 4 arms x 3 seeds imported from 2026-08-23 results.json (identical
+  # deterministic harness + identical env: py 3.11.15 / torch 2.13.0+cu130 / numpy 2.4.4).
+  # Import is only legal if the live verification runs below replicate to <= rep_tol_bpc.
+  import_hd128_per_seed:
+    baseline:   {0: 2.86663, 1: 2.88507, 2: 2.89028}
+    qknorm:     {0: 2.91841, 1: 2.89892, 2: 2.86797}
+    qnorm_only: {0: 2.85981, 1: 2.86213, 2: 2.86425}
+    knorm_only: {0: 2.84339, 1: 2.83746, 2: 2.83958}
+  # live verification: rerun these (arm, seed) pairs at hd=128 tonight and demand bit-level
+  # agreement with the imported table; on failure the import is dropped and hd=128 runs fresh
+  verify_pairs: [["baseline", 0], ["knorm_only", 0]]
+  rep_tol_bpc: 0.0005
+  # parent reference numbers for context (2026-08-11 2-seed means at each head split)
+  parent_0811_means:
+    baseline: {4: 3.09291, 16: 3.02368, 32: 2.92537, 64: 2.88676, 128: 2.87585}
+    qknorm:   {4: 3.23590, 16: 2.87748, 32: 2.82678, 64: 2.84607, 128: 2.90867}
+  # do-no-harm / recovery tolerance, same as 07-30/08-11/08-23
+  tolerance_bpc: 0.015
