@@ -1,0 +1,79 @@
+# Config for 2026-08-31_hd4-kside-cliff-mechanism. run.py reads it. No magic constants in code.
+id: "2026-08-31_hd4-kside-cliff-mechanism"
+title: "What does the key norm destroy at hd=4 — per-token magnitude or direction? Decomposing the k-side cliff on paired inits"
+hypothesis: >-
+  2026-08-30 rewrote the thread's cliff story: at hd=4 the KEY norm pays essentially the
+  full qknorm cliff (k-norm-only +0.127 vs qknorm +0.130) while the query norm is nearly
+  free (+0.024) - contradicting 08-02/06, which had localized the cliff to q-side
+  per-token magnitude destruction because an undetached q-magnitude channel closed 98% of
+  it (but was only ever tested on top of FULL qknorm, where q-compensation exists).
+  Tonight decomposes what the key norm destroys at hd=4, on byte-identical paired inits:
+  the learnable gain (norm-without-gain / gain-without-norm), the per-token magnitude
+  VALUE (detached-magnitude-restore: normalize the direction but multiply back the
+  detached per-token k-RMS, making the forward pass equal to gain-only while gradients
+  still flow through the normalized geometry), and the magnitude GRADIENT channel
+  (undetached dynk on top of k-norm-only - the 08-06 machinery finally tested without a
+  free q-side). Predictions registered up front: P1 if the cliff is per-token key-magnitude
+  VALUE destruction, magrestore recovers most of it and gain-only stays at baseline; P2
+  the gain is not the cliff (nogain ~ knorm_only), per 08-23's frozen-gain result; P3 if
+  08-02's "key-side restoration hurts" was a full-qknorm artifact, undetached dynk should
+  now HELP on top of k-norm-only.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30/31, 2026-08-02/06/11/23/30) ---
+params:
+  # single split tonight: the cliff regime hd=4 (nh=32), iso-parameter with the thread
+  head_dim: 4
+  # arm -> k_mode; every arm touches ONLY the key side (q never normed)
+  #   none                 no k-touch (baseline anchor, replicates 08-30 hd4)
+  #   norm_gain            RMS-norm + learnable gain (knorm_only anchor, the cliff arm)
+  #   norm_nogain          RMS-norm, gain frozen at 1
+  #   gain_only            learnable per-channel gain, NO norm
+  #   norm_gain_magrestore RMS-norm + gain, then multiply back the DETACHED per-token
+  #                        per-head k-RMS (forward value == gain_only; gradient wrt k
+  #                        projects out the radial component)
+  #   norm_gain_dynk       knorm_only + undetached per-head tau = clamp(r/EMA,1/c,c)^alpha
+  #                        (the 08-06 magnitude-gradient channel, k-side, learnable alpha)
+  arms:
+    baseline: "none"
+    knorm_only: "norm_gain"
+    knorm_nogain: "norm_nogain"
+    kgain_only: "gain_only"
+    knorm_magrestore: "norm_gain_magrestore"
+    knorm_dynk: "norm_gain_dynk"
+  arm_order: ["baseline", "knorm_only", "knorm_nogain", "kgain_only", "knorm_magrestore", "knorm_dynk"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dyn machinery (same constants as 08-02/06)
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  # attention probes
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # in-run replication anchors: 2026-08-30 hd=4 per-seed val bpc (identical harness + env:
+  # py 3.11.15 / torch 2.13.0+cu130 / numpy 2.4.4). baseline and knorm_only tonight must
+  # match these to <= rep_tol_bpc or the run flags replication_ok: false.
+  expect_0830_hd4:
+    baseline: {0: 3.09304, 1: 3.09277, 2: 3.08542}
+    knorm_only: {0: 3.22604, 1: 3.23392, 2: 3.19338}
+  rep_tol_bpc: 0.0005
+  # do-no-harm / recovery tolerance, same as 07-30/08-11/08-23/08-30
+  tolerance_bpc: 0.015
