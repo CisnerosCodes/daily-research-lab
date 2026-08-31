@@ -1,0 +1,30 @@
+data: 1003854 train / 111540 val chars, vocab=65
+  [baseline         seed=0] P=423424 bpc=3.0930 logit_std=3.124 entN=0.732 top1=0.241 kCV=0.451 (46.8s)
+  [knorm_only       seed=0] P=423680 bpc=3.2260 logit_std=1.956 entN=0.831 top1=0.155 kCV=0.300 (46.8s)
+  [knorm_nogain     seed=0] P=423680 bpc=3.2216 logit_std=1.866 entN=0.834 top1=0.151 kCV=0.300 (48.4s)
+  [kgain_only       seed=0] P=423680 bpc=3.0951 logit_std=3.154 entN=0.734 top1=0.239 kCV=0.451 (45.3s)
+  [knorm_magrestore seed=0] P=423680 bpc=3.2302 logit_std=2.428 entN=0.805 top1=0.184 kCV=0.380 (49.4s)
+  [knorm_dynk       seed=0] P=423744 bpc=3.0167 logit_std=2.099 entN=0.814 top1=0.173 kCV=0.449 tauK=1.060±0.459 aK=0.954 (51.7s)
+  [baseline         seed=1] P=423424 bpc=3.0928 logit_std=3.083 entN=0.752 top1=0.224 kCV=0.464 (46.5s)
+  [knorm_only       seed=1] P=423680 bpc=3.2339 logit_std=2.083 entN=0.820 top1=0.166 kCV=0.303 (49.3s)
+  [knorm_nogain     seed=1] P=423680 bpc=3.2343 logit_std=2.032 entN=0.821 top1=0.163 kCV=0.308 (48.7s)
+  [kgain_only       seed=1] P=423680 bpc=3.0974 logit_std=3.140 entN=0.751 top1=0.225 kCV=0.464 (47.0s)
+  [knorm_magrestore seed=1] P=423680 bpc=3.2130 logit_std=2.541 entN=0.790 top1=0.194 kCV=0.385 (49.2s)
+  [knorm_dynk       seed=1] P=423744 bpc=3.0169 logit_std=2.095 entN=0.814 top1=0.171 kCV=0.453 tauK=1.059±0.462 aK=0.946 (52.0s)
+  [baseline         seed=2] P=423424 bpc=3.0854 logit_std=3.550 entN=0.724 top1=0.252 kCV=0.463 (44.6s)
+  [knorm_only       seed=2] P=423680 bpc=3.1934 logit_std=1.991 entN=0.821 top1=0.163 kCV=0.307 (45.1s)
+  [knorm_nogain     seed=2] P=423680 bpc=3.1930 logit_std=1.959 entN=0.823 top1=0.163 kCV=0.306 (48.4s)
+  [kgain_only       seed=2] P=423680 bpc=3.0857 logit_std=3.619 entN=0.724 top1=0.252 kCV=0.462 (48.5s)
+  [knorm_magrestore seed=2] P=423680 bpc=3.2182 logit_std=2.420 entN=0.799 top1=0.189 kCV=0.388 (50.7s)
+  [knorm_dynk       seed=2] P=423744 bpc=3.0267 logit_std=2.248 entN=0.809 top1=0.178 kCV=0.462 tauK=1.072±0.477 aK=0.956 (49.7s)
+paired-init check passed: identical shared weights across all arms at every seed
+
+hd=4 key-norm cliff +0.127 bpc decomposed: mag-restore recovers -0.02, gain-only Δ +0.002, no-gain Δvs-knorm -0.001, dynk recovers +1.55 (P1 False / P2 True / P3 True); replication vs 08-30: True
+  baseline         bpc=3.0904 spread=0.0076 Δ=+0.0000 rec=-
+  knorm_only       bpc=3.2178 spread=0.0405 Δ=+0.1274 rec=0.0
+  knorm_nogain     bpc=3.2163 spread=0.0413 Δ=+0.1259 rec=0.0116
+  kgain_only       bpc=3.0927 spread=0.0117 Δ=+0.0023 rec=0.9819
+  knorm_magrestore bpc=3.2204 spread=0.0172 Δ=+0.1300 rec=-0.0209
+  knorm_dynk       bpc=3.0201 spread=0.0100 Δ=-0.0703 rec=1.5522
+
+wrote results.json + chart.png in 929.06s

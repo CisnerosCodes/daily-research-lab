@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**62 experiments logged.**
+**63 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-08-31 | [The hd=4 key-norm cliff is a severed GRADIENT channel, not lost magnitude values: restoring the per-token k-RMS value recovers -2% while the undetached magnitude-gradient channel recovers 155% and beats the no-norm baseline (-0.070 bpc, 3/3 seeds, best hd=4 in the thread)](experiments/2026-08-31_hd4-kside-cliff-mechanism) | ✅ done | P1 refuted, decisively: knorm_magrestore has forward values identical to kgain_only (detac |
 | 2026-08-30 | [Is one-sided key-norm the strictly-better attention norm? k-norm-only vs QK-norm across the full head split](experiments/2026-08-30_knorm-only-head-sweep) | ✅ done | All three predictions miss: (P1) the tiny-head cliff swaps sides - at hd=4 k-norm-only pay |
 | 2026-08-27 | [Budget extension to 96 ideas: archive conditioning's observed count now sits above every estimate of the control arm's ceiling, and the pre-registered crossing test passes only on dispersion](experiments/2026-08-27_archive-conditioning-budget-extension) | ✅ done | Walks-faster survives the pre-registered bar and is weaker for it. Arm B's observed 33.4 c |
 | 2026-08-26 | [Weight decay exonerated: the ~1.45x residual sublinearity of MQAR escape under joint x4 LR is NOT AdamW's LR-coupled decay term - escape timing is wd-invariant to the seed level (wd=0 is a per-seed exact no-op at 1x AND x4)](experiments/2026-08-26_mqar-joint-lr-wd-decouple) | ✅ done |  |
