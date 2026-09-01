@@ -24,12 +24,11 @@ params:
   arms:
     baseline:    [false, false, null, null]
     qknorm:      [true,  true,  null, null]
-    qnorm_only:  [true,  false, null, null]
     knorm_only:  [false, true,  null, null]
     knorm_dynk:  [false, true,  null, "undetached"]
     k_emascale:  [false, true,  null, "alpha_fixed1"]
     qknorm_dynq: [true,  true,  "undetached", null]
-  arm_order: ["baseline", "qknorm", "qnorm_only", "knorm_only", "knorm_dynk", "qknorm_dynq", "k_emascale"]
+  arm_order: ["baseline", "qknorm", "knorm_only", "knorm_dynk", "qknorm_dynq", "k_emascale"]
   seeds: [0, 1, 2]
   d_model: 128
   n_layer: 2
