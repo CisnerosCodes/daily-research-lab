@@ -92,13 +92,15 @@ def fig_phase_diagram(theme, res, name="fig1_phase_diagram", arms=None,
             if str(hd) in by[a]:
                 ss = list(by[a][str(hd)]["val_bpc_per_seed"].values())
                 ax.plot([i] * len(ss), ss, ".", color=t[col], ms=3.5, alpha=0.55, zorder=1)
-    # selective direct label: FKN at its extremes
+    # selective direct labels: FKN at the first split and at its own best split
     if "knorm_dynk" in by:
-        for i, hd in enumerate(hds):
-            if str(hd) in by["knorm_dynk"] and hd in (hds[0], hds[-1]):
-                v = by["knorm_dynk"][str(hd)]["val_bpc_mean"]
-                ax.annotate(f"{v:.3f}", (i, v), textcoords="offset points", xytext=(0, -14 if hd == hds[0] else 9),
-                            ha="center", fontsize=8.5, color=t["text2"])
+        avail = [hd for hd in hds if str(hd) in by["knorm_dynk"]]
+        best = min(avail, key=lambda hd: by["knorm_dynk"][str(hd)]["val_bpc_mean"]) if avail else None
+        for hd in {avail[0] if avail else None, best} - {None}:
+            i = hds.index(hd)
+            v = by["knorm_dynk"][str(hd)]["val_bpc_mean"]
+            ax.annotate(f"FKN {v:.3f}", (i, v), textcoords="offset points", xytext=(0, -15),
+                        ha="center", fontsize=8.5, color=t["text2"])
     ax.set_xticks(x)
     ax.set_xticklabels([f"hd {hd}\n({128 // hd} heads)" for hd in hds])
     ax.set_ylabel("val bits per character  (lower is better)")
@@ -131,7 +133,7 @@ def fig_delta_bars(theme, res, name="fig2_delta_vs_baseline", arms=None,
     ax.set_xticklabels([f"hd {hd}" for hd in hds])
     ax.set_ylabel("Δ val bpc vs baseline  (negative = better)")
     ax.set_title(title)
-    ax.legend(loc="lower right", ncol=2)
+    ax.legend(loc="upper right", ncol=1)
     save(fig, name, theme)
 
 
