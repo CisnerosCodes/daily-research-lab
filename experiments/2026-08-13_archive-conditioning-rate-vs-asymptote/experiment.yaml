@@ -1,0 +1,21 @@
+# Config for the archive-conditioning rate-vs-asymptote experiment.
+# The "run" is a multi-agent generation/judging workflow (Claude subagents),
+# not a training script; analyze.py consumes raw_data.json and writes results.json.
+id: "2026-08-13_archive-conditioning-rate-vs-asymptote"
+title: "Archive-conditioned generation: rate intervention or ceiling intervention?"
+hypothesis: "In-context negative feedback (an archive of already-generated ideas with an avoid instruction) raises distinct-class yield per fixed idea budget by >= 2 sigma of replicate noise, but does NOT move the Chao1-estimated support (walks the same support faster); an assumption-negation operator on the same archive opens arm-unique territory at an incoherence cost."
+seed: 12345            # deterministic PRNG seed for blind-ID shuffling only
+dataset:
+  name: "generated ideas, library permanent non-return problem"
+  source: "Claude Haiku subagents (generation), Claude Opus subagents (judging)"
+  license: "CC-BY-4.0 (this repo's notes license)"
+params:
+  arms: ["A_iid", "B_archive_feedback", "C_assumption_negation"]
+  rounds: 4
+  ideas_per_round: 6
+  replicates: 5
+  ideas_total: 360
+  generator_model: "claude-haiku (subagent)"
+  judge_model: "claude-opus (subagent, high effort)"
+  judges_on_replicate_0: 3
+  control: "iso-idea-budget; identical generator, schema, and round-1 prompt across arms"

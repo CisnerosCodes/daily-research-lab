@@ -1,0 +1,26 @@
+# Config for the archive-conditioning budget-extension test.
+# The "run" is a multi-agent generation/judging workflow (Claude subagents);
+# analyze.py consumes raw_data.json and writes results.json.
+id: "2026-08-27_archive-conditioning-budget-extension"
+title: "Budget extension: does archive conditioning cross the control arm's estimated ceiling at 96 ideas?"
+hypothesis: "H4 (primary, crossing): walks-faster is falsified iff B's observed distinct classes at 96 ideas exceed the MAXIMUM of arm A's three richness estimators by >= 2x SD(paired differences); a crossing is necessary but not sufficient evidence of support extension because all three estimators are downward-biased. H5 (gap curvature): a rate mechanism on a common support predicts the B-A gap turns over by round 16; a support extension predicts monotone growth. H6 (estimator stability, self-audit): arm A's estimators computed at 48 and at 96 ideas are stable iff the mean paired increase is below 2x SD(paired); the honest prediction is that they are not, which would put a budget-dependence caveat on every estimated ceiling this lab has published."
+seed: 12345            # deterministic PRNG seed for blind-ID shuffling only
+dataset:
+  name: "1536 generated ideas, library permanent non-return problem (16-round extension of the 2026-08-20 powered replication)"
+  source: "Claude Haiku subagents (generation), Claude Opus subagents (judging)"
+  license: "CC-BY-4.0 (this repo's notes license)"
+params:
+  arms: ["A_iid", "B_archive_feedback"]
+  rounds: 16
+  ideas_per_round: 6
+  replicates: 8
+  ideas_total: 1536
+  generator_model: "claude-haiku (subagent)"
+  judge_model: "claude-opus (subagent, high effort)"
+  judges_on_replicates_0_and_1: 3
+  judge_integrity_retry: 1
+  judge_pool_size: 192
+  estimators: ["chao1_bc", "ace", "jackknife2"]
+  control: "iso-idea-budget; identical generator, schema, and round-1 prompt across arms; generation prompts byte-identical to the 2026-08-13 pilot and the 2026-08-20 replication"
+  dropped_arm: "C_assumption_negation, dropped by the 2026-08-20 H3 verdict (1.62x paired SD, below the pre-registered bar)"
+related: ["2026-08-13_archive-conditioning-rate-vs-asymptote", "2026-08-20_archive-conditioning-powered-replication"]

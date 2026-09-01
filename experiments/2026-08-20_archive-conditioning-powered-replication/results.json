@@ -1,0 +1,1004 @@
+{
+  "analyzed_at": "2026-08-20T19:17:06.828590+00:00",
+  "n_seeds_analyzed": 10,
+  "n_seeds_excluded": 0,
+  "exclusions": {},
+  "run_failed_by_exclusion_rule": false,
+  "n_ideas": 1440,
+  "partition_integrity": {
+    "0": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "1": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "2": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "3": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "4": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "5": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "6": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "7": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "8": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    },
+    "9": {
+      "n_dupes": 0,
+      "n_missing": 0,
+      "n_extra": 0,
+      "bad_fraction": 0.0
+    }
+  },
+  "per_seed": {
+    "0": {
+      "A": {
+        "distinct": 22,
+        "accumulation": {
+          "1": 6,
+          "2": 12,
+          "3": 15,
+          "4": 16,
+          "5": 18,
+          "6": 19,
+          "7": 21,
+          "8": 22
+        },
+        "chao1_bc": 38.5,
+        "ace": 36.634,
+        "jackknife2": 42.436,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 0
+      },
+      "B": {
+        "distinct": 28,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 17,
+          "4": 21,
+          "5": 24,
+          "6": 26,
+          "7": 27,
+          "8": 28
+        },
+        "chao1_bc": 41.125,
+        "ace": 40.966,
+        "jackknife2": 50.497,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 2
+      },
+      "C": {
+        "distinct": 27,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 16,
+          "4": 21,
+          "5": 23,
+          "6": 25,
+          "7": 26,
+          "8": 27
+        },
+        "chao1_bc": 47.0,
+        "ace": 46.073,
+        "jackknife2": 53.296,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 7
+      }
+    },
+    "1": {
+      "A": {
+        "distinct": 19,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 13,
+          "4": 15,
+          "5": 15,
+          "6": 19,
+          "7": 19,
+          "8": 19
+        },
+        "chao1_bc": 21.5,
+        "ace": 22.513,
+        "jackknife2": 25.935,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 0
+      },
+      "B": {
+        "distinct": 27,
+        "accumulation": {
+          "1": 5,
+          "2": 11,
+          "3": 15,
+          "4": 20,
+          "5": 23,
+          "6": 24,
+          "7": 27,
+          "8": 27
+        },
+        "chao1_bc": 32.5,
+        "ace": 36.0,
+        "jackknife2": 39.933,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 4
+      },
+      "C": {
+        "distinct": 28,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 15,
+          "4": 19,
+          "5": 22,
+          "6": 26,
+          "7": 26,
+          "8": 28
+        },
+        "chao1_bc": 41.333,
+        "ace": 46.772,
+        "jackknife2": 51.486,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 7
+      }
+    },
+    "2": {
+      "A": {
+        "distinct": 17,
+        "accumulation": {
+          "1": 6,
+          "2": 10,
+          "3": 14,
+          "4": 14,
+          "5": 14,
+          "6": 14,
+          "7": 16,
+          "8": 17
+        },
+        "chao1_bc": 31.0,
+        "ace": 26.078,
+        "jackknife2": 31.562,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 2
+      },
+      "B": {
+        "distinct": 22,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 12,
+          "4": 15,
+          "5": 17,
+          "6": 20,
+          "7": 21,
+          "8": 22
+        },
+        "chao1_bc": 26.5,
+        "ace": 29.295,
+        "jackknife2": 32.872,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 3
+      },
+      "C": {
+        "distinct": 20,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 13,
+          "4": 18,
+          "5": 18,
+          "6": 19,
+          "7": 20,
+          "8": 20
+        },
+        "chao1_bc": 21.875,
+        "ace": 23.343,
+        "jackknife2": 25.061,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 4
+      }
+    },
+    "3": {
+      "A": {
+        "distinct": 16,
+        "accumulation": {
+          "1": 6,
+          "2": 9,
+          "3": 11,
+          "4": 12,
+          "5": 14,
+          "6": 15,
+          "7": 15,
+          "8": 16
+        },
+        "chao1_bc": 16.6,
+        "ace": 17.256,
+        "jackknife2": 18.061,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 1
+      },
+      "B": {
+        "distinct": 21,
+        "accumulation": {
+          "1": 6,
+          "2": 10,
+          "3": 13,
+          "4": 15,
+          "5": 16,
+          "6": 17,
+          "7": 19,
+          "8": 21
+        },
+        "chao1_bc": 25.0,
+        "ace": 25.965,
+        "jackknife2": 30.867,
+        "incoherent": 2,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 2
+      },
+      "C": {
+        "distinct": 20,
+        "accumulation": {
+          "1": 5,
+          "2": 9,
+          "3": 12,
+          "4": 14,
+          "5": 17,
+          "6": 19,
+          "7": 20,
+          "8": 20
+        },
+        "chao1_bc": 27.0,
+        "ace": 25.226,
+        "jackknife2": 32.686,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 5
+      }
+    },
+    "4": {
+      "A": {
+        "distinct": 21,
+        "accumulation": {
+          "1": 6,
+          "2": 10,
+          "3": 13,
+          "4": 14,
+          "5": 16,
+          "6": 19,
+          "7": 20,
+          "8": 21
+        },
+        "chao1_bc": 27.0,
+        "ace": 28.475,
+        "jackknife2": 33.748,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 1
+      },
+      "B": {
+        "distinct": 23,
+        "accumulation": {
+          "1": 5,
+          "2": 10,
+          "3": 13,
+          "4": 15,
+          "5": 17,
+          "6": 18,
+          "7": 21,
+          "8": 23
+        },
+        "chao1_bc": 26.0,
+        "ace": 32.548,
+        "jackknife2": 30.123,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 2
+      },
+      "C": {
+        "distinct": 24,
+        "accumulation": {
+          "1": 6,
+          "2": 9,
+          "3": 13,
+          "4": 17,
+          "5": 19,
+          "6": 22,
+          "7": 23,
+          "8": 24
+        },
+        "chao1_bc": 46.0,
+        "ace": 33.248,
+        "jackknife2": 45.374,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 4
+      }
+    },
+    "5": {
+      "A": {
+        "distinct": 20,
+        "accumulation": {
+          "1": 6,
+          "2": 10,
+          "3": 14,
+          "4": 17,
+          "5": 19,
+          "6": 19,
+          "7": 20,
+          "8": 20
+        },
+        "chao1_bc": 24.667,
+        "ace": 26.655,
+        "jackknife2": 30.81,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 2
+      },
+      "B": {
+        "distinct": 25,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 16,
+          "4": 19,
+          "5": 21,
+          "6": 24,
+          "7": 25,
+          "8": 25
+        },
+        "chao1_bc": 31.111,
+        "ace": 32.523,
+        "jackknife2": 38.809,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 4
+      },
+      "C": {
+        "distinct": 22,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 16,
+          "4": 18,
+          "5": 20,
+          "6": 22,
+          "7": 22,
+          "8": 22
+        },
+        "chao1_bc": 25.111,
+        "ace": 26.803,
+        "jackknife2": 29.996,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 6
+      }
+    },
+    "6": {
+      "A": {
+        "distinct": 19,
+        "accumulation": {
+          "1": 5,
+          "2": 9,
+          "3": 10,
+          "4": 12,
+          "5": 14,
+          "6": 16,
+          "7": 18,
+          "8": 19
+        },
+        "chao1_bc": 46.5,
+        "ace": 34.389,
+        "jackknife2": 39.375,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 0
+      },
+      "B": {
+        "distinct": 25,
+        "accumulation": {
+          "1": 6,
+          "2": 12,
+          "3": 16,
+          "4": 20,
+          "5": 22,
+          "6": 23,
+          "7": 24,
+          "8": 25
+        },
+        "chao1_bc": 33.25,
+        "ace": 36.246,
+        "jackknife2": 41.684,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 2
+      },
+      "C": {
+        "distinct": 27,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 13,
+          "4": 19,
+          "5": 22,
+          "6": 23,
+          "7": 26,
+          "8": 27
+        },
+        "chao1_bc": 37.111,
+        "ace": 39.726,
+        "jackknife2": 46.621,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 8
+      }
+    },
+    "7": {
+      "A": {
+        "distinct": 21,
+        "accumulation": {
+          "1": 6,
+          "2": 10,
+          "3": 13,
+          "4": 16,
+          "5": 17,
+          "6": 20,
+          "7": 21,
+          "8": 21
+        },
+        "chao1_bc": 23.333,
+        "ace": 26.036,
+        "jackknife2": 27.059,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 0
+      },
+      "B": {
+        "distinct": 27,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 16,
+          "4": 20,
+          "5": 20,
+          "6": 24,
+          "7": 24,
+          "8": 27
+        },
+        "chao1_bc": 37.111,
+        "ace": 38.812,
+        "jackknife2": 46.605,
+        "incoherent": 2,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 1
+      },
+      "C": {
+        "distinct": 27,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 16,
+          "4": 18,
+          "5": 19,
+          "6": 24,
+          "7": 25,
+          "8": 27
+        },
+        "chao1_bc": 36.1,
+        "ace": 40.504,
+        "jackknife2": 45.677,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 4
+      }
+    },
+    "8": {
+      "A": {
+        "distinct": 19,
+        "accumulation": {
+          "1": 5,
+          "2": 8,
+          "3": 10,
+          "4": 12,
+          "5": 14,
+          "6": 15,
+          "7": 18,
+          "8": 19
+        },
+        "chao1_bc": 22.5,
+        "ace": 24.876,
+        "jackknife2": 27.873,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 0
+      },
+      "B": {
+        "distinct": 26,
+        "accumulation": {
+          "1": 6,
+          "2": 10,
+          "3": 14,
+          "4": 17,
+          "5": 19,
+          "6": 22,
+          "7": 25,
+          "8": 26
+        },
+        "chao1_bc": 43.5,
+        "ace": 44.174,
+        "jackknife2": 50.359,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 3
+      },
+      "C": {
+        "distinct": 21,
+        "accumulation": {
+          "1": 6,
+          "2": 11,
+          "3": 16,
+          "4": 17,
+          "5": 18,
+          "6": 20,
+          "7": 20,
+          "8": 21
+        },
+        "chao1_bc": 24.5,
+        "ace": 26.916,
+        "jackknife2": 29.931,
+        "incoherent": 2,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 3
+      }
+    },
+    "9": {
+      "A": {
+        "distinct": 18,
+        "accumulation": {
+          "1": 5,
+          "2": 8,
+          "3": 11,
+          "4": 13,
+          "5": 14,
+          "6": 16,
+          "7": 18,
+          "8": 18
+        },
+        "chao1_bc": 20.5,
+        "ace": 22.218,
+        "jackknife2": 24.935,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 2
+      },
+      "B": {
+        "distinct": 21,
+        "accumulation": {
+          "1": 5,
+          "2": 10,
+          "3": 13,
+          "4": 15,
+          "5": 18,
+          "6": 18,
+          "7": 19,
+          "8": 21
+        },
+        "chao1_bc": 26.143,
+        "ace": 29.998,
+        "jackknife2": 32.81,
+        "incoherent": 0,
+        "missing": 0,
+        "round1_distinct": 5,
+        "arm_unique": 2
+      },
+      "C": {
+        "distinct": 23,
+        "accumulation": {
+          "1": 6,
+          "2": 12,
+          "3": 16,
+          "4": 19,
+          "5": 19,
+          "6": 20,
+          "7": 22,
+          "8": 23
+        },
+        "chao1_bc": 39.5,
+        "ace": 34.569,
+        "jackknife2": 43.424,
+        "incoherent": 1,
+        "missing": 0,
+        "round1_distinct": 6,
+        "arm_unique": 6
+      }
+    }
+  },
+  "arms": {
+    "A": {
+      "distinct_mean": 19.2,
+      "distinct_sd": 1.87,
+      "chao1_mean": 27.21,
+      "chao1_sd": 9.12,
+      "ace_mean": 26.51,
+      "ace_sd": 5.69,
+      "jk2_mean": 30.18,
+      "jk2_sd": 7.13,
+      "arm_unique_mean": 0.8,
+      "incoherent_total": 0,
+      "round1_distinct_mean": 5.7,
+      "accumulation_mean": {
+        "1": 5.7,
+        "2": 9.7,
+        "3": 12.4,
+        "4": 14.1,
+        "5": 15.5,
+        "6": 17.2,
+        "7": 18.6,
+        "8": 19.2
+      }
+    },
+    "B": {
+      "distinct_mean": 24.5,
+      "distinct_sd": 2.59,
+      "chao1_mean": 32.22,
+      "chao1_sd": 6.61,
+      "ace_mean": 34.65,
+      "ace_sd": 5.65,
+      "jk2_mean": 39.46,
+      "jk2_sd": 7.79,
+      "arm_unique_mean": 2.5,
+      "incoherent_total": 6,
+      "round1_distinct_mean": 5.7,
+      "accumulation_mean": {
+        "1": 5.7,
+        "2": 10.7,
+        "3": 14.5,
+        "4": 17.7,
+        "5": 19.7,
+        "6": 21.6,
+        "7": 23.2,
+        "8": 24.5
+      }
+    },
+    "C": {
+      "distinct_mean": 23.9,
+      "distinct_sd": 3.14,
+      "chao1_mean": 34.55,
+      "chao1_sd": 9.27,
+      "ace_mean": 34.32,
+      "ace_sd": 8.67,
+      "jk2_mean": 40.36,
+      "jk2_sd": 10.01,
+      "arm_unique_mean": 5.4,
+      "incoherent_total": 8,
+      "round1_distinct_mean": 5.9,
+      "accumulation_mean": {
+        "1": 5.9,
+        "2": 10.7,
+        "3": 14.6,
+        "4": 18,
+        "5": 19.7,
+        "6": 22,
+        "7": 23,
+        "8": 23.9
+      }
+    }
+  },
+  "contrasts": {
+    "H1_B_minus_A_distinct": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        6,
+        8,
+        5,
+        5,
+        2,
+        5,
+        6,
+        6,
+        7,
+        3
+      ],
+      "mean_diff": 5.3,
+      "sd_paired": 1.767,
+      "sd_control_arm": 1.874,
+      "x_sd_paired": 3.0,
+      "x_sd_control": 2.83
+    },
+    "H2_B_minus_A_chao1_bc": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        2.625,
+        11.0,
+        -4.5,
+        8.4,
+        -1.0,
+        6.444,
+        -13.25,
+        13.778,
+        21.0,
+        5.643
+      ],
+      "mean_diff": 5.014,
+      "sd_paired": 9.707,
+      "sd_control_arm": 9.116,
+      "x_sd_paired": 0.52,
+      "x_sd_control": 0.55
+    },
+    "H2_B_minus_A_ace": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        4.332,
+        13.487,
+        3.217,
+        8.709,
+        4.073,
+        5.868,
+        1.857,
+        12.776,
+        19.298,
+        7.78
+      ],
+      "mean_diff": 8.14,
+      "sd_paired": 5.527,
+      "sd_control_arm": 5.692,
+      "x_sd_paired": 1.47,
+      "x_sd_control": 1.43
+    },
+    "H2_B_minus_A_jackknife2": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        8.061,
+        13.998,
+        1.31,
+        12.806,
+        -3.625,
+        7.999,
+        2.309,
+        19.546,
+        22.486,
+        7.875
+      ],
+      "mean_diff": 9.277,
+      "sd_paired": 8.153,
+      "sd_control_arm": 7.128,
+      "x_sd_paired": 1.14,
+      "x_sd_control": 1.3
+    },
+    "H3_C_minus_B_arm_unique": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        5,
+        3,
+        1,
+        3,
+        2,
+        2,
+        6,
+        3,
+        0,
+        4
+      ],
+      "mean_diff": 2.9,
+      "sd_paired": 1.792,
+      "sd_control_arm": 0.972,
+      "x_sd_paired": 1.62,
+      "x_sd_control": 2.98
+    },
+    "C_minus_A_distinct": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        5,
+        9,
+        3,
+        4,
+        3,
+        2,
+        8,
+        6,
+        2,
+        5
+      ],
+      "mean_diff": 4.7,
+      "sd_paired": 2.406,
+      "sd_control_arm": 1.874,
+      "x_sd_paired": 1.95,
+      "x_sd_control": 2.51
+    },
+    "C_minus_A_chao1_bc": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        8.5,
+        19.833,
+        -9.125,
+        10.4,
+        19.0,
+        0.444,
+        -9.389,
+        12.767,
+        2.0,
+        19.0
+      ],
+      "mean_diff": 7.343,
+      "sd_paired": 11.031,
+      "sd_control_arm": 9.116,
+      "x_sd_paired": 0.67,
+      "x_sd_control": 0.81
+    },
+    "C_minus_B_incoherent": {
+      "n_pairs": 10,
+      "paired_diffs": [
+        1,
+        1,
+        1,
+        -2,
+        -1,
+        1,
+        0,
+        -1,
+        1,
+        1
+      ],
+      "mean_diff": 0.2,
+      "sd_paired": 1.135,
+      "sd_control_arm": 0.843,
+      "x_sd_paired": 0.18,
+      "x_sd_control": 0.24
+    }
+  },
+  "manipulation_check_round1": {
+    "round1_means": {
+      "A": 5.7,
+      "B": 5.7,
+      "C": 5.9
+    },
+    "pooled_sd_all_cells": 0.43,
+    "max_pairwise_gap": 0.2,
+    "pass": true
+  },
+  "judge_noise": [
+    {
+      "seed": 0,
+      "per_judge_distinct": {
+        "0": {
+          "A": 22,
+          "B": 28,
+          "C": 27
+        },
+        "1": {
+          "A": 20,
+          "B": 29,
+          "C": 26
+        },
+        "2": {
+          "A": 20,
+          "B": 27,
+          "C": 28
+        }
+      },
+      "between_judge_sd": {
+        "A": 1.15,
+        "B": 1.0,
+        "C": 1.0
+      },
+      "pairwise_ari": [
+        0.84,
+        0.898,
+        0.868
+      ],
+      "mean_ari": 0.869
+    },
+    {
+      "seed": 1,
+      "per_judge_distinct": {
+        "0": {
+          "A": 19,
+          "B": 27,
+          "C": 28
+        },
+        "1": {
+          "A": 20,
+          "B": 26,
+          "C": 28
+        },
+        "2": {
+          "A": 18,
+          "B": 26,
+          "C": 29
+        }
+      },
+      "between_judge_sd": {
+        "A": 1.0,
+        "B": 0.58,
+        "C": 0.58
+      },
+      "pairwise_ari": [
+        0.838,
+        0.847,
+        0.788
+      ],
+      "mean_ari": 0.824
+    }
+  ],
+  "verdicts": {
+    "H1_rate": "supported (3.0x paired SD)",
+    "H2_asymptote": "walks-faster stands at doubled power (0/3 estimators clear the positive bar)",
+    "H3_operator": "not supported (1.62x paired SD) \u2014 ARM C IS DROPPED from the programme per the pilot's commitment"
+  }
+}
