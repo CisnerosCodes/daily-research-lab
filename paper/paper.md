@@ -118,7 +118,7 @@ a *fractional* RMS normalization: the key's own magnitude enters with exponent a
 
 Queries are untouched. The 1/sqrt(head_dim) scale is unchanged. Cost: one exponent per head, one gain per channel, and a per-head buffer; the forward adds one RMS, one division and one power per key. The clamp bounds the per-token rescale to [1/8, 8]; the theory of normalized attention (Mudarisov et al., 2025) gives the reason a bound is needed, since aggressive per-token scaling trades separability for gradient instability.
 
-**What the model chooses.** The learned exponent is the diagnostic (Figure 3). At head_dim 4 the key-side alpha sits at 0.95 (three seeds: 0.954/0.946/0.956): the model wants almost all of the magnitude back. On the query side of the 2026-08-11 composite, alpha fell monotonically from 0.98 at head_dim 4 to 0.66 at head_dim 128: the channel disengages where wide heads no longer need it. Section 7 reports the key-side curve.
+**What the model chooses.** The learned exponent is the diagnostic (Figure 3). At head_dim 4 the key-side alpha sits at 0.95 (three seeds: 0.954/0.946/0.956): the model wants almost all of the magnitude back. Across the sweep it falls monotonically, 0.95, 0.92, 0.87, 0.82, 0.69 at head_dim 4, 16, 32, 64, 128, mirroring the query-side channel of the 2026-08-11 composite (0.98 to 0.64). Narrow heads keep their key magnitudes; a single wide head gives a third of it up. Section 7.2 tests what the near-1 endpoint means.
 
 <!-- FIG3 -->
 
@@ -132,11 +132,35 @@ Every earlier "strictly better" candidate in this thread died one head width awa
 
 ### 7.1 The full head split
 
-<!-- E1_VERDICT -->
+Table 1 (Section 4) and Figures 1 and 2 hold the numbers; the verdicts are these.
+
+**FKN beats no normalization at every width, in every paired seed.** The margins are −0.070, <!-- HD8_FKN --> −0.142, −0.083, −0.077 and −0.030 bpc at head_dim 4, 8, 16, 32, 64 and 128, and the paired-seed count is 3 of 3 at each width (Table 1). No other arm in the thread has that property: QK-norm and key-only norm both lose at head_dim 4, and QK-norm loses at head_dim 128.
+
+**Against QK-norm it wins where QK-norm fails and ties where QK-norm is strongest.** FKN beats QK-norm by 0.200 bpc at head_dim 4 (3/3), by 0.033 at 64 (3/3) and by 0.044 at 128 (3/3). At head_dim 16 the two are within 0.003 (2/3 seeds for FKN), and at QK-norm's own optimum, head_dim 32, QK-norm is ahead by 0.013, inside the 0.015 tolerance (FKN wins 1/3 seeds). So the honest statement is: FKN is never worse than QK-norm by more than seed noise, and is better by 0.03 to 0.20 bpc at three of the six widths.
+
+**Against key-only norm the exponent pays at every width but the widest.** FKN beats plain key-only norm 3/3 at head_dim 4, 16, 32 and 64 (by 0.198, 0.063, 0.015 and 0.007); at head_dim 128 key-only norm is better by 0.011 (0/3), which is the single head, the one regime where a fully normalized key has no other head to compete with.
+
+**The best configuration in the thread moved.** FKN at head_dim 64 reaches 2.8073 bpc (seed spread 0.006), below the previous thread best of 2.8145 (key-only norm at the same split) and below QK-norm's optimum (2.8329 at head_dim 32).
+
+**The mid splits belong to a two-sided design.** At head_dim 16 and 32 the best arm is the 2026-08-11 composite, full QK-norm plus the query-side channel (−0.180 and −0.108 vs baseline; it beats FKN 3/3 at both). That composite fails at both edges (+0.003 at head_dim 4 and +0.031 at 128), so the phase diagram now reads: key-side fractional norm at the edges, both-sides at the middle. Section 7.5 tests whether one both-sides fractional norm can hold the whole curve.
+
+**Variance.** FKN's seed spread is 0.006 to 0.026 bpc across widths, against the baseline's 0.008 to 0.064 and QK-norm's 0.015 to 0.059. Normalizing the key scale removes the wide-head seed lottery the baseline suffers at head_dim 64.
+
+**Replication.** Every archived cell rerun tonight (73 arm x width x seed cells from 2026-07-26, 2026-08-11, 2026-08-30 and 2026-08-31) reproduced within 0.0005 bpc; most agree to all five decimals (Appendix A).
 
 ### 7.2 Is the exponent doing the work, or the running scale?
 
-<!-- E1_EMASCALE -->
+The learned exponent tells on itself (Table below and Figure 3): the key-side alpha is 0.95 at head_dim 4 and falls monotonically to 0.92, 0.87, 0.82 and 0.69 at 16, 32, 64 and 128, mirroring the query-side curve of the 2026-08-11 composite (0.98 to 0.64). Near alpha = 1 the per-token normalization is undone and what remains is k / s_h: the key divided by a per-head running scale. So the `k_emascale` arm asks the obvious question by freezing alpha at 1.
+
+<!-- E1_ALPHA -->
+
+**At head_dim 4 to 64 the running scale is the whole win.** The frozen-exponent arm lands within 0.006 bpc of FKN at every width up to 64 (3.0203 vs 3.0201 at head_dim 4; 2.8785 vs 2.8795 at 16; 2.8446 vs 2.8455 at 32; 2.8132 vs 2.8073 at 64) and beats the baseline 3/3 at each. **At head_dim 128 the exponent earns its keep**: the frozen arm is 0.007 worse than FKN and 0.018 worse than plain key-only norm, which is where alpha wanted to be 0.69.
+
+This reframes the mechanism. A learnable per-channel gain with no norm was free (+0.002, registry 2026-08-31), so the win is not "a better key scale the optimizer could have found". It is a scale the optimizer does *not* find on its own: a non-learned, per-head running estimate that tracks the key statistics during training, dividing every key by the same slowly moving number. The question that remains is whether that number matters because it *adapts* or because it starts in the right place, which is what the next experiment isolates.
+
+<!-- E4_SECTION -->
+
+<!-- FIG10 -->
 
 <!-- E4_SECTION -->
 
@@ -149,6 +173,10 @@ Every earlier "strictly better" candidate in this thread died one head width awa
 ### 7.4 Three times longer training
 
 <!-- E3_SECTION -->
+
+### 7.5 Which side, and both sides
+
+<!-- E5_SECTION -->
 
 ## 8. What we recommend
 
