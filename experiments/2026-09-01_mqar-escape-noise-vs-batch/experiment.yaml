@@ -1,0 +1,52 @@
+# Fill this in. run.py reads it. No magic constants in code.
+id: "2026-09-01_mqar-escape-noise-vs-batch"
+title: "MQAR escape sublinearity: gradient noise (batch size) as the residual suspect"
+hypothesis: "If the ~1.45x residual sublinearity of MQAR plateau escape under uniform x4 LR (2026-08-13, wd exonerated 2026-08-26) is stochastic-gradient diffusion, then escape time in drift units (step x lr_mult) should be a function of noise-per-unit-drift lr/B alone: the matched pair (1x, B=16) ~ (4x, B=64) should land on equal drift units, (4x, B=256) should restore the exact inverse of (1x, B=64) (~step 275), and the 9/9 step-400 determinism at x4 should break as B shrinks; if instead escape steps are B-invariant at fixed LR (as they were wd-invariant), noise is exonerated and curvature is the last suspect."
+seed: 0
+dataset:
+  name: "synthetic MQAR (multi-query associative recall), generated fresh every batch"
+  source: "generated in run.py (zoology-style: N key-value pairs, then all N keys queried in random order; byte-identical generators to 2026-07-26_mqar-state-capacity through 2026-08-26; NOTE: arms with the same batch size share an identical data stream per seed, arms with different batch sizes necessarily consume the stream differently)"
+  license: "n/a (synthetic)"
+params:
+  key_vocab: 64
+  val_vocab: 64
+  # Arms - byte-identical decay-masked linear-attention code path of 2026-07-28..2026-08-26.
+  # Batch size and LR multipliers are data/optimizer-side only, so all arms share the same
+  # init key ("dense"): within a seed every run is byte-identical at step 0.
+  # Noise-per-unit-drift ~ lr/B (drift per step ~ lr under Adam; diffusion per step ~ lr^2/B):
+  #   b64_1x  - (B=64,  1x): lr/B = 1/64  [anchor, = 08-26 j1, expect 1200/1000/1100]
+  #   b64_4x  - (B=64,  4x): lr/B = 1/16  [anchor, = 08-26 j4, expect 400/400/400]
+  #   b16_1x  - (B=16,  1x): lr/B = 1/16  noise-matched to b64_4x -> noise account predicts
+  #                          equal DRIFT units, i.e. escape ~ 4x b64_4x's step (~1600)
+  #   b256_4x - (B=256, 4x): lr/B = 1/64  noise-matched to b64_1x -> noise account predicts
+  #                          escape ~ b64_1x/4 (~275), restoring the exact inverse
+  #   b16_4x  - (B=16,  4x): lr/B = 1/4   most-noise arm; sharpest determinism-break test
+  # Caveat honored from 2026-07-25_zoology-mqar-recall: batch 16 prevented recall-circuit
+  # formation entirely in the MIXED-LOAD regime; this is the fixed-N regime, censoring at
+  # small B is an admissible (and informative) outcome.
+  # Cost control on this 2-core box (~0.61 s/step at B=256): b256_4x is capped at 1200 steps -
+  # its LR-mate b64_4x escapes at ~400, so failing to escape by 1200 is already a >=3x delay
+  # and decides the question; all other arms keep the 2000-step cap of 08-03..08-26.
+  arms:
+    - {name: b64_1x,  batch_size: 64,  gate_lr_mult: 1.0, backbone_lr_mult: 1.0, weight_decay: 0.01, init_key: dense, seeds: [0, 1, 2]}
+    - {name: b64_4x,  batch_size: 64,  gate_lr_mult: 4.0, backbone_lr_mult: 4.0, weight_decay: 0.01, init_key: dense, seeds: [0, 1, 2]}
+    - {name: b16_1x,  batch_size: 16,  gate_lr_mult: 1.0, backbone_lr_mult: 1.0, weight_decay: 0.01, init_key: dense, seeds: [0, 1, 2]}
+    - {name: b256_4x, batch_size: 256, gate_lr_mult: 4.0, backbone_lr_mult: 4.0, weight_decay: 0.01, init_key: dense, seeds: [0, 1, 2], train_steps: 1200}
+    - {name: b16_4x,  batch_size: 16,  gate_lr_mult: 4.0, backbone_lr_mult: 4.0, weight_decay: 0.01, init_key: dense, seeds: [0, 1, 2]}
+  d_model: 64
+  n_layers: 2
+  n_heads: 2
+  mlp_expansion: 2
+  num_pairs_main: 8
+  train_steps: 2000
+  eval_every: 100        # escape STEP is the primary metric (2026-08-03..08-26 grid, kept for comparability)
+  early_stop_acc: 0.99
+  post_escape_evals: 2   # NEW cost control: stop 2 evals (200 steps) after escape - the primary
+                         # metric is escape timing, not final acc; final accs are therefore NOT
+                         # comparable to prior rows and are reported as acc_at_stop
+  eval_sequences: 512
+  eval_chunk: 64
+  lr: 0.001
+  solve_threshold: 0.9
+  escape_threshold: 0.5  # escape step = first eval crossing this (eval grid = 100)
+  gate_bias_init: 3.0    # gated arms start at g = sigmoid(3) ~ 0.953 per channel, near-vanilla

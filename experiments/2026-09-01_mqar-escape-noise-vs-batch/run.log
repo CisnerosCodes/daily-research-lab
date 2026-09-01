@@ -1,0 +1,20 @@
+[  141.1s] b64_1x   seed=0 B=64 acc@stop=0.627 esc=1200 steps=1400 nan=False travel@esc={'gate_W': 21.4221, 'gate_b': 4.3857, 'attn': 49.2908, 'backbone': 135.2425, 'pnorm': 118.2318} (141.1s)
+[  264.3s] b64_1x   seed=1 B=64 acc@stop=0.752 esc=1000 steps=1200 nan=False travel@esc={'gate_W': 22.6146, 'gate_b': 4.5939, 'attn': 49.6325, 'backbone': 131.9786, 'pnorm': 118.5915} (123.2s)
+[  410.4s] b64_1x   seed=2 B=64 acc@stop=0.742 esc=1100 steps=1300 nan=False travel@esc={'gate_W': 20.8167, 'gate_b': 4.6146, 'attn': 49.288, 'backbone': 133.7959, 'pnorm': 118.6244} (146.0s)
+[  473.7s] b64_4x   seed=0 B=64 acc@stop=0.737 esc=400 steps=600 nan=False travel@esc={'gate_W': 25.1438, 'gate_b': 5.1352, 'attn': 65.5449, 'backbone': 168.9053, 'pnorm': 122.3699} (63.3s)
+[  539.2s] b64_4x   seed=1 B=64 acc@stop=0.852 esc=400 steps=600 nan=False travel@esc={'gate_W': 24.8387, 'gate_b': 3.905, 'attn': 68.3438, 'backbone': 173.2494, 'pnorm': 123.5983} (65.4s)
+[  604.3s] b64_4x   seed=2 B=64 acc@stop=0.842 esc=400 steps=600 nan=False travel@esc={'gate_W': 24.8246, 'gate_b': 5.1013, 'attn': 67.1966, 'backbone': 171.984, 'pnorm': 123.2648} (65.1s)
+[  662.2s] b16_1x   seed=0 B=16 acc@stop=0.607 esc=1600 steps=1800 nan=False travel@esc={'gate_W': 19.3594, 'gate_b': 4.4716, 'attn': 47.8765, 'backbone': 129.6353, 'pnorm': 118.0225} (57.9s)
+[  726.3s] b16_1x   seed=1 B=16 acc@stop=0.551 esc=1900 steps=2000 nan=False travel@esc={'gate_W': 21.9021, 'gate_b': 4.9639, 'attn': 50.4831, 'backbone': 137.8683, 'pnorm': 118.1785} (64.1s)
+[  787.9s] b16_1x   seed=2 B=16 acc@stop=0.404 esc=None steps=2000 nan=False travel@esc=None (61.6s)
+[ 1073.9s] b256_4x  seed=0 B=256 acc@stop=0.846 esc=300 steps=500 nan=False travel@esc={'gate_W': 24.0487, 'gate_b': 4.2045, 'attn': 66.9049, 'backbone': 172.0836, 'pnorm': 122.6267} (286.0s)
+[ 1361.2s] b256_4x  seed=1 B=256 acc@stop=0.907 esc=300 steps=500 nan=False travel@esc={'gate_W': 25.5805, 'gate_b': 4.2849, 'attn': 69.2809, 'backbone': 175.6545, 'pnorm': 123.9308} (287.3s)
+[ 1658.5s] b256_4x  seed=2 B=256 acc@stop=0.897 esc=300 steps=500 nan=False travel@esc={'gate_W': 26.6606, 'gate_b': 4.865, 'attn': 68.6445, 'backbone': 173.3458, 'pnorm': 123.6578} (297.4s)
+[ 1684.9s] b16_4x   seed=0 B=16 acc@stop=0.764 esc=700 steps=900 nan=False travel@esc={'gate_W': 27.2962, 'gate_b': 5.6491, 'attn': 72.2967, 'backbone': 186.2904, 'pnorm': 124.012} (26.4s)
+[ 1712.3s] b16_4x   seed=1 B=16 acc@stop=0.781 esc=700 steps=900 nan=False travel@esc={'gate_W': 26.7137, 'gate_b': 4.2261, 'attn': 72.626, 'backbone': 188.2153, 'pnorm': 124.4714} (27.4s)
+[ 1743.2s] b16_4x   seed=2 B=16 acc@stop=0.721 esc=800 steps=1000 nan=False travel@esc={'gate_W': 27.8122, 'gate_b': 5.5512, 'attn': 75.2642, 'backbone': 195.4306, 'pnorm': 124.6286} (30.9s)
+escape steps at N=8 (paired seeds): b64_1x [1200, 1000, 1100], b64_4x [400, 400, 400], b16_1x [1600, 1900, None], b256_4x [300, 300, 300], b16_4x [700, 700, 800]
+escape ratio means: {'b16_1x/b64_1x': 1.591, 'b64_4x/b256_4x': 1.333, 'b16_4x/b64_4x': 1.833, 'b64_1x/b64_4x': 2.75, 'b64_1x/b256_4x': 3.667, 'b16_1x/b64_4x': 4.375}
+drift units at escape: {'b64_1x': 1100.0, 'b64_4x': 1600.0, 'b16_1x': 1750.0, 'b256_4x': 1200.0, 'b16_4x': 2933.3}
+matched-noise pairs (noise account -> ~1.0): {'b16_1x/b64_4x_drift_ratio': 1.094, 'b64_1x/b256_4x_drift_ratio': 0.917}
+escape-step spread (determinism): {'b64_1x': 200, 'b64_4x': 0, 'b16_1x': None, 'b256_4x': 0, 'b16_4x': 100}

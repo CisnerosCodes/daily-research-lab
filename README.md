@@ -28,10 +28,11 @@ experiments/                one dated folder per experiment
 
 ## Index
 <!-- INDEX:START -->
-**60 experiments logged.**
+**61 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
+| 2026-09-01 | [MQAR escape sublinearity: gradient noise IS the residual — escape drift-time collapses onto lr/B within ~10% (matched pairs 0.917/1.094), B=256 at x4 restores the inverse to 300/300/300, and noise HURTS escape (anti-diffusion-folklore sign), where wd moved nothing](experiments/2026-09-01_mqar-escape-noise-vs-batch) | ✅ done |  |
 | 2026-08-31 | [The hd=4 key-norm cliff is a severed GRADIENT channel, not lost magnitude values: restoring the per-token k-RMS value recovers -2% while the undetached magnitude-gradient channel recovers 155% and beats the no-norm baseline (-0.070 bpc, 3/3 seeds, best hd=4 in the thread)](experiments/2026-08-31_hd4-kside-cliff-mechanism) | ✅ done | P1 refuted, decisively: knorm_magrestore has forward values identical to kgain_only (detac |
 | 2026-08-30 | [Is one-sided key-norm the strictly-better attention norm? k-norm-only vs QK-norm across the full head split](experiments/2026-08-30_knorm-only-head-sweep) | ✅ done | All three predictions miss: (P1) the tiny-head cliff swaps sides - at hd=4 k-norm-only pay |
 | 2026-08-26 | [Weight decay exonerated: the ~1.45x residual sublinearity of MQAR escape under joint x4 LR is NOT AdamW's LR-coupled decay term - escape timing is wd-invariant to the seed level (wd=0 is a per-seed exact no-op at 1x AND x4)](experiments/2026-08-26_mqar-joint-lr-wd-decouple) | ✅ done |  |
