@@ -39,6 +39,11 @@ ARMS = {
     "k_emascale":  ("violet",  ":",  "key / running scale (alpha fixed = 1)"),
     "qnorm_only":  ("yellow",  ":",  "query-only norm"),
     "qknorm_dynq": ("magenta", "-.", "QK-norm + query channel (08-11 composite)"),
+    # E4 arms (adaptive vs static key scale)
+    "k_static_init_scale": ("blue", "--", "key / first-batch scale (static)"),
+    "k_emascale_m09": ("aqua", ":", "key / running scale, momentum 0.9"),
+    "k_emascale_m0999": ("magenta", ":", "key / running scale, momentum 0.999"),
+    "q_emascale": ("yellow", "-.", "query / running scale"),
 }
 
 
@@ -327,6 +332,7 @@ def main():
     e1 = load("2026-09-01_knorm-dynk-head-sweep")
     e2 = load("2026-09-01_knorm-dynk-ptb-transfer")
     e3 = load("2026-09-01_knorm-dynk-longer-training")
+    e4 = load("2026-09-01_kscale-adaptive-vs-static")
     core = ["baseline", "qknorm", "knorm_only", "knorm_dynk", "k_emascale"]
     for theme in ("light", "dark"):
         if e1:
@@ -345,6 +351,9 @@ def main():
         if e3:
             fig_grouped_by_hd(theme, e3, "fig7_longer_training",
                               "3× longer training (1800 steps, 3 paired seeds)")
+        if e4:
+            fig_grouped_by_hd(theme, e4, "fig10_adaptive_vs_static",
+                              "Adaptive running scale vs static first-batch scale vs query side (600 steps, 3 paired seeds)")
         fig_mqar(theme)
         fig_loop(theme)
     print("figures written to", OUT, sorted(p.name for p in OUT.glob("*.png")))

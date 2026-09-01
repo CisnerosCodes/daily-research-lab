@@ -30,6 +30,8 @@ FIGURES = {
     "FIG8": ("fig8_mqar_recipe", "Figure 8. Left: only a dense per-channel gate leaves the MQAR guessing plateau at identical state size "
              "(registry 2026-07-28). Right: escape step against the gradient-noise scale lr/B; batch 256 at 4x learning rate escapes at step 300 "
              "in every seed (registry 2026-09-01)."),
+    "FIG10": ("fig10_adaptive_vs_static", "Figure 10. Is the win adaptive? Keys divided by a per-head running scale at three momenta, "
+              "the same scale frozen at its first-batch value, and the identical trick on the query side (registry 2026-09-01_kscale-adaptive-vs-static)."),
     "FIG9": ("fig9_loop_test_time_compute", "Figure 9. Test-time depth extrapolation on prefix parity (registry 2026-07-25): a weight-tied loop "
              "trained with a stochastic depth schedule keeps solving harder instances past its trained depth; fixed-depth training and untied depth do not."),
 }

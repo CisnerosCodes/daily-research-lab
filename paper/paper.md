@@ -136,6 +136,10 @@ Every earlier "strictly better" candidate in this thread died one head width awa
 
 <!-- E1_EMASCALE -->
 
+<!-- E4_SECTION -->
+
+<!-- FIG10 -->
+
 ### 7.3 A second corpus: character-level Penn Treebank
 
 <!-- E2_SECTION -->
@@ -268,6 +272,7 @@ Each item is an observation from the ledger, an inference, and the experiment th
 | 09-01 | knorm-dynk-head-sweep | full head split kill test, plus the alpha-fixed ablation | see Section 7 |
 | 09-01 | knorm-dynk-ptb-transfer | second corpus | see Section 7 |
 | 09-01 | knorm-dynk-longer-training | 3x training | see Section 7 |
+| 09-01 | kscale-adaptive-vs-static | adaptive running scale vs static init scale vs query side | see Section 7.2 |
 
 ## Appendix C. Reproduction
 
