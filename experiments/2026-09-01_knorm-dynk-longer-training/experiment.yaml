@@ -1,0 +1,49 @@
+# Config for 2026-09-01_knorm-dynk-longer-training. run.py reads it. No magic constants in code.
+id: "2026-09-01_knorm-dynk-longer-training"
+title: "Does the key-side magnitude channel survive 3x longer training? The four core norm arms at 1800 steps at the cliff and the wide split"
+hypothesis: >-
+  Every result in the thread is a 600-step early-training snapshot (the 08-30 README names
+  'does the hd>=64 k-only win survive longer training?' as the open question). Tonight the
+  four core arms (baseline / qknorm / knorm_only / knorm_dynk) train 3x longer (1800 steps,
+  same cosine schedule stretched) at hd=4 and hd=64 on 3 paired seeds. Predictions:
+  (P1) the hd=4 key-norm cliff shrinks but does not vanish with training (it is a
+  parametrisation defect, not a warm-up artefact); (P2) knorm_dynk still beats baseline at
+  hd=4; (P3) at hd=64 the k-only family still beats qknorm.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+params:
+  head_dims: [4, 64]
+  arms:
+    baseline:    [false, false, null, null]
+    qknorm:      [true,  true,  null, null]
+    knorm_only:  [false, true,  null, null]
+    knorm_dynk:  [false, true,  null, "undetached"]
+    k_emascale:  [false, true,  null, "alpha_fixed1"]
+  arm_order: ["baseline", "qknorm", "knorm_only", "knorm_dynk", "k_emascale"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 1800
+  lr: 0.003
+  warmup: 180
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  entropy_batches: 4
+  entropy_min_pos: 8
+  anchors: {}
+  rep_tol_bpc: 0.0005
+  tolerance_bpc: 0.015

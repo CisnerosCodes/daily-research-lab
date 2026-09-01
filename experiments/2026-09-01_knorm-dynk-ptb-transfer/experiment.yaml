@@ -1,0 +1,55 @@
+# Config for 2026-09-01_knorm-dynk-ptb-transfer. run.py reads it. No magic constants in code.
+id: "2026-09-01_knorm-dynk-ptb-transfer"
+title: "Does the key-side magnitude channel transfer to a second corpus? The six norm arms on character-level Penn Treebank at the cliff, the optimum and the wide split"
+hypothesis: >-
+  Every number in the nine-night attention-norm thread comes from tiny-shakespeare. If the
+  head-width phase diagram (tiny heads: norms hurt via the key side; mid: QK-norm best;
+  wide: key-only best) and the knorm_dynk rescue are properties of the parametrisation
+  rather than of one 1 MB corpus, they should reappear on character-level Penn Treebank
+  (5 MB, 50-char vocab, very different statistics: lower-case, tokenised, <unk> symbols,
+  N for numbers) with the identical recipe. Predictions: (P1) the hd=4 cliff replicates
+  for qknorm and knorm_only and knorm_dynk closes it; (P2) at hd=64 knorm_only and
+  knorm_dynk beat qknorm; (P3) the sign of every arm's delta vs baseline matches
+  tiny-shakespeare at each of the three head widths.
+seed: 0
+dataset:
+  name: "Penn Treebank, Mikolov preprocessing, character level (train/valid files)"
+  source_train: "https://raw.githubusercontent.com/wojzaremba/lstm/master/data/ptb.train.txt"
+  source_valid: "https://raw.githubusercontent.com/wojzaremba/lstm/master/data/ptb.valid.txt"
+  source: "https://github.com/wojzaremba/lstm (data/ptb.*.txt)"
+  license: "PTB text via the widely redistributed Mikolov preprocessing (LDC origin); wojzaremba/lstm repo Apache-2.0"
+  hash: "md5:f26c4b92c5fdc7b3f8c7cdcb991d8420 (train), md5:aa0affc06ff7c36e977d7cd49e3839bf (valid)"
+params:
+  head_dims: [4, 32, 64]
+  arms:
+    baseline:    [false, false, null, null]
+    qknorm:      [true,  true,  null, null]
+    qnorm_only:  [true,  false, null, null]
+    knorm_only:  [false, true,  null, null]
+    knorm_dynk:  [false, true,  null, "undetached"]
+    k_emascale:  [false, true,  null, "alpha_fixed1"]
+    qknorm_dynq: [true,  true,  "undetached", null]
+  arm_order: ["baseline", "qknorm", "qnorm_only", "knorm_only", "knorm_dynk", "qknorm_dynq", "k_emascale"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 1.0
+  char_vocab_size: 50
+  eval_batch: 32
+  max_eval_blocks: 480
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  entropy_batches: 4
+  entropy_min_pos: 8
+  anchors: {}
+  rep_tol_bpc: 0.0005
+  tolerance_bpc: 0.015
