@@ -1,0 +1,48 @@
+# Config for 2026-09-01_fractional-norm-both-sides. run.py reads it. No magic constants in code.
+id: "2026-09-01_fractional-norm-both-sides"
+title: "Is the fractional magnitude channel side-specific? Query-only fractional norm and both-sides fractional norm across the iso-parameter head split"
+hypothesis: >-
+  The 2026-09-01 head sweep found key-only fractional norm (FKN) beats the unnormalised baseline at every
+  head width, while the 08-11 composite (full QK-norm + an undetached query channel) is best at hd 16-32
+  yet fails at hd 4 and 128. Two cells complete the picture: (1) the query-side mirror of FKN, query-only
+  norm + undetached query channel (fqn) - the backlog's qnorm-dynq-overshoot-check; (2) fractional norm on
+  BOTH sides with independent exponents (fqkn). Predictions registered: P1 fqn is NOT side-symmetric - it
+  recovers less than FKN at hd 4 (08-30 localised the cliff to the key norm, and q-norm-only is nearly free
+  there so there is little to recover); P2 fqkn inherits the wide-head q x k interaction (+0.07 at hd 64-128)
+  and loses to FKN there while matching or beating the composite at hd 16-32; P3 no arm is strictly better
+  than FKN at every width.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+params:
+  head_dims: [4, 8, 16, 32, 64, 128]
+  arms:
+    fqn:  [true,  false, "undetached", null]
+    fqkn: [true,  true,  "undetached", "undetached"]
+  arm_order: ["fqn", "fqkn"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  entropy_batches: 4
+  entropy_min_pos: 8
+  anchors: {}
+  rep_tol_bpc: 0.0005
+  tolerance_bpc: 0.015
