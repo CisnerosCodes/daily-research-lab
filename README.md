@@ -27,12 +27,13 @@ experiments/                one dated folder per experiment
 ```
 
 ## Paper and drop-in module (2026-09-01)
-The attention-normalization thread (2026-07-26 to 2026-09-01) is written up as a paper with figures in
+The attention-normalization thread (2026-07-26 to 2026-09-02) is written up as a paper with figures in
 [`paper/`](paper/) (`paper/paper.md` is the source; `paper/index.html` is the rendered page; every figure is
-regenerated from `results.json` files by `paper/make_figures.py`). The surviving architecture,
-**Fractional Key Normalization**, ships as a tested nanoGPT drop-in in [`fkn/`](fkn/) with a benchmark
-that reproduces the lab's archived numbers to five decimals. The MQAR plateau-escape recipe and the
-rules for when weight-tied recursion pays are summarized in the same paper.
+regenerated from `results.json` files by `paper/make_figures.py`). The surviving result,
+a fix for the attention logit scale at initialization, ships as a tested nanoGPT drop-in in
+[`attnscale/`](attnscale/) with a benchmark that reproduces the lab's archived numbers to five
+decimals. The MQAR plateau-escape recipe and the rules for when weight-tied recursion pays are
+summarized in the same paper.
 
 ## Index
 <!-- INDEX:START -->

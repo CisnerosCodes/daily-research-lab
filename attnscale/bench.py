@@ -1,17 +1,22 @@
-"""Benchmark FKN against no-norm / QK-norm / key-only norm on any text file, on a CPU.
+"""Find the right attention logit scale for YOUR model and corpus, on a CPU.
 
 This reproduces the daily-research-lab char-LM recipe *through the drop-in module*
 (2-layer pre-norm GPT, d_model 128, block 96, batch 16, AdamW 3e-3 cosine, 600 steps),
 so the anchor numbers are checkable:
 
-    python -m fkn.bench --text data/tinyshakespeare.txt --norm none --head-dim 4 --seed 0   # 3.0930 bpc
-    python -m fkn.bench --text data/tinyshakespeare.txt --norm fkn  --head-dim 4 --seed 0   # 3.0167 bpc
+    python -m attnscale.bench --text data/tinyshakespeare.txt --key none --head-dim 4 --seed 0   # 3.0930 bpc
 
-Then point it at YOUR corpus and YOUR head split:
+THE MAIN THING: sweep the constant for your configuration. This is the measurement the paper
+says to make rather than copying our numbers.
 
-    python -m fkn.bench --text my_corpus.txt --norm fkn --head-dim 32 --steps 2000 --json out.json
+    python -m attnscale.bench --text my_corpus.txt --head-dim 16 --sweep-c 1 2 4 8 16
 
-Prints val bits-per-character, seed, wall time and (for fkn) the learned per-head exponents.
+It trains one short run per value, prints a table, and names the best c. Then use it:
+
+    from attnscale import KeyScale
+    k = KeyScale(n_head, c=BEST).cuda()(k)
+
+Single runs still work for any arm: --key none|kscale|qknorm|knorm|fkn (with --c for kscale).
 """
 import argparse, json, math, os, random, sys, time
 from pathlib import Path
@@ -26,7 +31,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from fkn import FKNCausalSelfAttention  # noqa: E402
+from attnscale import ScaledAttention, initial_logit_std  # noqa: E402
 
 torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "2")))
 LN2 = math.log(2.0)
@@ -44,11 +49,11 @@ def set_seeds(seed):
 class Block(nn.Module):
     """Same module registration order as the lab harness (ln1, ln2, attn[c_attn, c_proj], fc, out)."""
 
-    def __init__(self, cfg, norm, fkn_kwargs):
+    def __init__(self, cfg, key, key_kwargs):
         super().__init__()
         self.ln1 = nn.LayerNorm(cfg.n_embd)
         self.ln2 = nn.LayerNorm(cfg.n_embd)
-        self.attn = FKNCausalSelfAttention(cfg, norm=norm, fkn_kwargs=fkn_kwargs)
+        self.attn = ScaledAttention(cfg, key=key, key_kwargs=key_kwargs)
         self.fc = nn.Linear(cfg.n_embd, 4 * cfg.n_embd, bias=False)
         self.out = nn.Linear(4 * cfg.n_embd, cfg.n_embd, bias=False)
 
@@ -58,12 +63,12 @@ class Block(nn.Module):
 
 
 class GPT(nn.Module):
-    def __init__(self, vocab, cfg, n_layer, norm, fkn_kwargs):
+    def __init__(self, vocab, cfg, n_layer, key, key_kwargs):
         super().__init__()
         self.vocab, self.block_size = vocab, cfg.block_size
         self.tok = nn.Embedding(vocab, cfg.n_embd)
         self.pos = nn.Embedding(cfg.block_size, cfg.n_embd)
-        self.blocks = nn.ModuleList([Block(cfg, norm, fkn_kwargs) for _ in range(n_layer)])
+        self.blocks = nn.ModuleList([Block(cfg, key, key_kwargs) for _ in range(n_layer)])
         self.lnf = nn.LayerNorm(cfg.n_embd)
         self.head = nn.Linear(cfg.n_embd, vocab, bias=False)
         self.apply(self._init)
@@ -117,7 +122,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--text", required=True, help="path to a UTF-8 text file (char-level LM)")
     ap.add_argument("--val-text", default=None, help="optional separate validation file")
-    ap.add_argument("--norm", default="fkn", choices=["none", "qknorm", "knorm", "fkn"])
+    ap.add_argument("--key", default="kscale", choices=["none", "kscale", "qknorm", "knorm", "fkn"])
+    ap.add_argument("--c", type=float, default=1.0, help="the constant for --key kscale")
+    ap.add_argument("--sweep-c", type=float, nargs="*", default=None,
+                    help="train one run per value and report the best (the recommended workflow)")
     ap.add_argument("--head-dim", type=int, default=32)
     ap.add_argument("--d-model", type=int, default=128)
     ap.add_argument("--n-layer", type=int, default=2)
@@ -149,39 +157,79 @@ def main():
     assert a.d_model % a.head_dim == 0
     cfg = SimpleNamespace(n_embd=a.d_model, n_head=a.d_model // a.head_dim, block_size=a.block,
                           dropout=0.0, bias=False)
-    set_seeds(a.seed)
-    fkn_kwargs = {"alpha_init": a.alpha_init, "alpha_learnable": not a.alpha_frozen}
-    model = GPT(vocab, cfg, a.n_layer, a.norm, fkn_kwargs)
-    n_params = sum(p.numel() for p in model.parameters())
-    decay = [p for p in model.parameters() if p.requires_grad and p.dim() >= 2]
-    nodecay = [p for p in model.parameters() if p.requires_grad and p.dim() < 2]
-    opt = torch.optim.AdamW([{"params": decay, "weight_decay": a.wd},
-                             {"params": nodecay, "weight_decay": 0.0}], lr=a.lr, betas=(0.9, 0.95))
-    warm = a.warmup if a.warmup is not None else max(1, a.steps // 10)
-    rng = np.random.default_rng(a.seed)
-    t0 = time.time(); losses = []
-    for it in range(a.steps):
-        if it < warm:
-            lr = a.lr * (it + 1) / warm
-        else:
-            prog = (it - warm) / max(1, a.steps - warm)
-            lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + math.cos(math.pi * prog)))
-        for g in opt.param_groups:
-            g["lr"] = lr
-        x, y = get_batch(train_ids, rng, a.batch, a.block)
-        loss = F.cross_entropy(model(x).reshape(-1, vocab), y.reshape(-1))
-        opt.zero_grad(set_to_none=True); loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step()
-        losses.append(float(loss))
-        if (it + 1) % max(1, a.steps // 5) == 0:
-            print(f"  step {it + 1:5d}  train loss {np.mean(losses[-50:]):.4f}  ({time.time() - t0:.0f}s)", flush=True)
-    bpc = eval_bpc(model, val_ids, a.block)
-    res = {"norm": a.norm, "head_dim": a.head_dim, "n_head": cfg.n_head, "d_model": a.d_model,
-           "n_layer": a.n_layer, "steps": a.steps, "seed": a.seed, "n_params": n_params,
-           "vocab": vocab, "val_bpc": round(bpc, 5), "train_seconds": round(time.time() - t0, 1)}
-    if a.norm == "fkn":
-        res["alpha_per_layer"] = [[round(float(v), 4) for v in b.attn.k_norm.alpha] for b in model.blocks]
-        res["rms_ema_per_layer"] = [[round(float(v), 4) for v in b.attn.k_norm.rms_ema] for b in model.blocks]
+    def build_and_train(key, c, seed):
+        set_seeds(seed)
+        kw = {"c": c} if key == "kscale" else ({"alpha_init": a.alpha_init,
+                                                "alpha_learnable": not a.alpha_frozen} if key == "fkn" else {})
+        model = GPT(vocab, cfg, a.n_layer, key, kw)
+        n_params = sum(p.numel() for p in model.parameters())
+        # diagnostic: the logit scale this model STARTS from
+        with torch.no_grad():
+            xb, _ = get_batch(train_ids, np.random.default_rng(0), 8, a.block)
+            h = model.tok(xb) + model.pos(torch.arange(xb.shape[1]))
+            blk = model.blocks[0]
+            qq, kk, _ = blk.attn.c_attn(blk.ln1(h)).split(a.d_model, dim=2)
+            qq = qq.view(*qq.shape[:2], cfg.n_head, a.head_dim)
+            kk = kk.view(*kk.shape[:2], cfg.n_head, a.head_dim)
+            if key != "none":
+                kk = blk.attn.k_op(kk)
+            init_std = initial_logit_std(qq, kk, a.head_dim)
+        decay = [p for p in model.parameters() if p.requires_grad and p.dim() >= 2]
+        nodecay = [p for p in model.parameters() if p.requires_grad and p.dim() < 2]
+        opt = torch.optim.AdamW([{"params": decay, "weight_decay": a.wd},
+                                 {"params": nodecay, "weight_decay": 0.0}], lr=a.lr, betas=(0.9, 0.95))
+        warm = a.warmup if a.warmup is not None else max(1, a.steps // 10)
+        rng = np.random.default_rng(seed)
+        t0 = time.time()
+        for it in range(a.steps):
+            if it < warm:
+                lr = a.lr * (it + 1) / warm
+            else:
+                prog = (it - warm) / max(1, a.steps - warm)
+                lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + math.cos(math.pi * prog)))
+            for g in opt.param_groups:
+                g["lr"] = lr
+            x, y = get_batch(train_ids, rng, a.batch, a.block)
+            loss = F.cross_entropy(model(x).reshape(-1, vocab), y.reshape(-1))
+            opt.zero_grad(set_to_none=True)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            opt.step()
+        return {"val_bpc": round(eval_bpc(model, val_ids, a.block), 5), "n_params": n_params,
+                "init_logit_std": round(init_std, 4), "train_seconds": round(time.time() - t0, 1),
+                "model": model}
+
+    if a.sweep_c:
+        print(f"sweeping c over {a.sweep_c} at head_dim {a.head_dim} "
+              f"({cfg.n_head} heads, d_model {a.d_model}), {a.steps} steps, seed {a.seed}\n")
+        rows = []
+        for c in a.sweep_c:
+            r = build_and_train("kscale", c, a.seed)
+            r.pop("model")
+            r["c"] = c
+            rows.append(r)
+            print(f"  c = {c:<6g} val bpc {r['val_bpc']:.4f}   initial logit std {r['init_logit_std']:.3f}"
+                  f"   ({r['train_seconds']:.0f}s)", flush=True)
+        best = min(rows, key=lambda r: r["val_bpc"])
+        ref = next((r for r in rows if r["c"] == 1.0), None)
+        print(f"\n  best c = {best['c']:g}  at {best['val_bpc']:.4f} bpc" +
+              (f", {ref['val_bpc'] - best['val_bpc']:+.4f} better than the default c = 1" if ref else ""))
+        print(f"  use it:  from attnscale import KeyScale;  k = KeyScale({cfg.n_head}, c={best['c']:g})(k)")
+        if len(a.sweep_c) > 2 and best["c"] in (min(a.sweep_c), max(a.sweep_c)):
+            print("  NOTE the best value is at the edge of the sweep; widen the range.")
+        out = {"sweep": rows, "best_c": best["c"], "head_dim": a.head_dim, "n_head": cfg.n_head,
+               "d_model": a.d_model, "steps": a.steps, "seed": a.seed, "vocab": vocab}
+        if a.json:
+            Path(a.json).write_text(json.dumps(out, indent=1))
+        return
+
+    r = build_and_train(a.key, a.c, a.seed)
+    model = r.pop("model")
+    res = {"key": a.key, "c": a.c if a.key == "kscale" else None, "head_dim": a.head_dim,
+           "n_head": cfg.n_head, "d_model": a.d_model, "n_layer": a.n_layer, "steps": a.steps,
+           "seed": a.seed, "vocab": vocab, **r}
+    if a.key == "fkn":
+        res["alpha_per_layer"] = [[round(float(v), 4) for v in b.attn.k_op.alpha] for b in model.blocks]
     print(json.dumps(res, indent=1))
     if a.json:
         Path(a.json).write_text(json.dumps(res, indent=1))

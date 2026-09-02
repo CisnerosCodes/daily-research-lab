@@ -1,70 +1,71 @@
-# Fractional Key Normalization: What QK-Norm Deletes at Tiny Heads, and How to Give It Back
+# Set the Temperature, Not the Norm
 
-**A head-geometry study of attention normalization from 300+ paired CPU-scale runs, with a drop-in module.**
+**What a nine-night attention-normalization thread was actually measuring: the logit scale you start from.**
 
-*daily-research-lab, 2026-09-01. Author: Adrian Cisneros (CisnerosCodes), with Claude as research assistant. Code, data hashes, and every number in this paper live in the repository; every figure is regenerated from `results.json` files by `paper/make_figures.py`.*
+*daily-research-lab, 2026-09-02. Adrian Cisneros (CisnerosCodes), with Claude as research assistant. Every number here is read out of a `results.json` in this repository by `paper/fill_sections.py`; every figure is regenerated from those files by `paper/make_figures.py`.*
 
 ## Abstract
 
-QK-normalization (RMS-normalizing queries and keys per head before the dot product) is now a default in production language models, and key-only normalization was recently proposed as a gentler alternative (QUEST, ICLR 2026). We ask a question neither line of work answers: **how does the right normalization depend on head geometry?** Holding parameters, FLOPs, initialization and data stream exactly fixed, we sweep the iso-parameter head split of a 0.42M-parameter character-level transformer (head_dim 4 to 128 at d_model 128) across four normalization arms (none, query-only, key-only, both) with three paired seeds. The answer is a phase diagram, not a rule: at many tiny heads every norm hurts and the damage rides the key side (+0.13 bpc at head_dim 4); at mid splits full QK-norm wins; at wide heads dropping the query norm strictly helps. We then dissect the tiny-head cliff with nine controlled ablations and find that it is a **severed gradient channel**: restoring the per-token key magnitude as a forward value with the gradient projected out pays the full cliff, while a learnable gain without a norm is free. Reopening the channel gives **Fractional Key Normalization (FKN)**: keys are RMS-normalized and then rescaled by a learnable per-head power of their own relative magnitude, so the model chooses how much per-token key scale to keep. Key-only norm is FKN's alpha = 0 endpoint; a per-head running-scale normalization is its alpha = 1 endpoint. At head_dim 4, FKN lands 0.070 bpc *below* the unnormalized baseline (3/3 seeds), where both QK-norm and key-only norm sit 0.13 bpc above it. We report kill tests across the full head split, on a second corpus (character-level Penn Treebank), and under 3x longer training, plus an ablation that freezes the exponent to test whether the win is the running scale alone. We ship FKN as a tested nanoGPT drop-in whose benchmark reproduces the lab's archived numbers to five decimals. Two companion ledgers from the same lab, on plateau escape in gated linear attention and on when weight-tied recursion pays, are summarized with their actionable recipes. All results are early-training, small-scale, CPU-only, and we say so wherever it matters.
+QK-normalization is a default in production language models, and key-only normalization was recently proposed as a gentler alternative. We asked how the right choice depends on head geometry, and swept the iso-parameter head split of a 0.42M-parameter character-level transformer at exactly matched parameters, FLOPs, initializations and data streams. Normalization's effect turns out to be strongly head-width dependent: at 32 heads of dimension 4 every normalizer costs about +0.13 bits per character, and the damage rides the key side, while at mid widths it pays −0.14. Nine controlled ablations then locate the tiny-head cost in a severed gradient: restoring the per-token key magnitude as a forward value with its gradient projected out pays the full cost, while a learnable gain with no normalizer is free. That result stands. The architecture we built on it does not. Freezing the repair's learnable exponent changes nothing, slowing its running statistic *helps* monotonically, and applying it to queries instead of keys works equally well — three signs that the mechanism is not adaptive and not key-specific. Following them, we find the whole effect is a **constant**: multiplying keys by a fixed per-head scalar, chosen once, beats every normalization arm in the thread. The best constant moves with head width, the default of 1 is badly wrong at small head dimension, and the same dial made *learnable from 1* does not travel there, which reconciles a two-percent rescue reported earlier with a large one now. The intervention folds into the key projection's initialization, so it costs no parameters and no runtime. We verify the head-width map on a second corpus and under 3x longer training, and report where it fails: the wide-head ordering is corpus- and budget-specific and dissolves with more training. We ship the one-line fix, a benchmark that reproduces our archived numbers to five decimals, and two companion recipes from the same lab. All results are small-scale, early-training and CPU-only.
 
 ## 1. Introduction
 
-Attention normalization has become a default rather than a decision. Gemma 2/3, OLMo 2 and Qwen3 apply an RMSNorm to queries and keys per head; the motivation is stability at scale, and the evidence is mostly "loss spikes went away". Two things are missing from that picture. First, nobody has asked whether the answer depends on the shape of the heads: at a fixed model width, do 32 heads of dimension 4 want the same normalization as 1 head of dimension 128? Second, the field has started to notice that normalization deletes something. QUEST (ICLR 2026) argues for normalizing only the keys so that each query keeps control of its own softmax sharpness; NaLaFormer (2025) re-injects the query norm into linear attention for the same reason. Both state the mechanism; neither tests it causally against the alternatives.
+Attention normalization has become a default rather than a decision. Gemma 2/3, OLMo 2 and Qwen3 apply an RMSNorm to queries and keys per head; the stated motivation is stability, and the usual evidence is that loss spikes went away. Two questions are missing from that picture. Does the right answer depend on the shape of the heads, and what exactly does a normalizer take away when it helps or hurts?
 
-This paper is built from a lab notebook: 61 small experiments run one per night on a CPU, each with a pre-registered hypothesis, a novelty check, paired seeds, and a results file that a later night can replicate bit for bit. Nine of those nights form a single thread on attention normalization, and the thread ends in a place its first night did not predict. We report that thread as a paper, add the kill tests a paper needs, and package the surviving architecture as something you can use this afternoon.
+This paper comes out of a lab notebook: sixty-odd small experiments, one per night on a CPU, each with a hypothesis registered before the run, paired seeds, and a results file that a later night replicates bit for bit. Nine of those nights form one thread on attention normalization. The thread proposed an architecture, and then five kill tests refuted it and pointed somewhere simpler and better. We report both halves, because the refutation is the result.
 
-**Contributions.**
+**What we found, in order.**
 
-1. **A head-geometry phase diagram of attention normalization** (Section 4). At exactly iso-parameter head splits with byte-identical paired initializations and data streams, the best of {no norm, query-only, key-only, QK-norm} changes with head width, and the interaction between the two one-sided norms flips sign from additive at tiny heads to destructive at wide heads.
-2. **A causal anatomy of the tiny-head cliff** (Section 5). Static temperature refunds 2% of the cliff, the optimizer leaves the dial at 1, and the loss is not a sharpness cap. The cliff follows the key norm, not the query norm. Restoring the key magnitude *value* with its gradient severed pays the full cliff; a learnable gain with no norm is free. The casualty is the gradient path through the per-token key magnitude.
-3. **Fractional Key Normalization** (Section 6), a two-parameter-per-head family that contains key-only RMSNorm and per-head running-scale normalization as endpoints and lets the model pick the exponent. At head_dim 4 it beats the unnormalized baseline by 0.070 bpc in 3 of 3 paired seeds; the kill tests in Section 7 report where else it holds.
-4. **A drop-in implementation** (Section 10) for nanoGPT-style attention with unit tests and a benchmark that reproduces the archived anchors to five decimal places, so the claims here are checkable on any laptop.
-5. **Two companion ledgers** (Section 9): a training recipe that makes gated linear attention escape the MQAR plateau at step 300 instead of 1100, derived from a chain of ten causal experiments; and twenty evidence-backed rules for when weight-tied recursion pays.
+1. **Normalization's effect depends on head geometry** (Section 4). At exactly iso-parameter head splits, the best of no-norm, query-only, key-only and both changes with head width, and the interaction between the two one-sided norms flips sign from roughly additive at many tiny heads to destructive at one wide head.
+2. **The tiny-head cost is a severed gradient, not a lost value** (Section 5). Restoring the per-token key magnitude in the forward pass with its gradient projected out pays the full cost; a learnable gain without a normalizer is free.
+3. **The repair we built on that is over-engineered** (Section 6). Its learnable exponent buys nothing, its running statistic is better the less it adapts, and it works the same on queries. Each of these is a paired, three-seed result.
+4. **The mechanism is a constant, and it is a temperature** (Section 7). A fixed per-head multiplier on the keys beats every normalization arm in the thread. The best multiplier moves with head width; at small head dimension the default is several times too small. The same dial made learnable from the default does not travel to the optimum within the budget, which is why an earlier experiment concluded that temperature was not the problem.
+5. **It folds into the initialization** (Section 7.3). Scaling the key projection's initial weights reproduces the runtime multiplier, so the fix costs no parameters, no runtime, and one line.
+6. **Where it holds and where it does not** (Section 8). The tiny-head result transfers to a second corpus and survives 3x training with its sign intact and its magnitude halved. The wide-head ordering does neither.
 
-We are explicit about scale: d_model 128, two layers, 600 training steps (1800 in the long-training check), character-level text, three seeds. This is a small-scale proxy study in the lineage of Wortsman et al. (2023). Its value is the control, not the scale.
+We are explicit about scale throughout: d_model 128, two layers, 600 steps for the main grid and 1800 for the training check, character-level text, three paired seeds. This is a small-scale proxy study in the lineage of Wortsman et al. (2023). Its value is the control, not the scale, and Section 11 says plainly which claims we expect to survive scaling and which we do not.
 
 ## 2. Background and related work
 
-**QK-norm.** Henry et al. (2020) L2-normalize queries and keys along the head dimension and replace 1/sqrt(d) with a learnable scalar. Dehghani et al. (2023) used a LayerNorm variant to stabilize a 22B vision transformer; Wortsman et al. (2023) showed at small scale that QK-LayerNorm removes the attention-logit-growth instability and widens the learning-rate basin. Production models (Gemma 2/3, OLMo 2, Qwen3) apply an RMSNorm with a learnable gain to both sides. Our `qknorm` arm is exactly that: per-head RMS normalization with eps 1e-6 and a learnable per-channel gain, followed by the usual 1/sqrt(head_dim).
+**QK-norm.** Henry et al. (2020) L2-normalize queries and keys along the head dimension and replace 1/sqrt(d) with a learnable scalar. Dehghani et al. (2023) used a LayerNorm variant to stabilize a 22B vision transformer; Wortsman et al. (2023) showed at small scale that QK-LayerNorm removes attention-logit growth and widens the usable learning-rate range. Production models apply an RMSNorm with a learnable gain to both sides, which is exactly our `qknorm` arm.
 
-**Key-only normalization.** QUEST (arXiv:2604.00199, ICLR 2026) proposes constraining keys to a hypersphere while leaving queries free, arguing that this "allows each token to individually control the sharpness of its softmax distribution and prevents large key norms from stealing attention globally". QUEST's own text notes that one-sided normalization had not been proposed before it. We arrived at key-only normalization independently (registry 2026-08-23) and confirm its advantage at wide heads; we do not claim it as new. What we add is the regime map (it loses at tiny and mid splits), the mechanism (what it deletes), and the fractional generalization. Our operator differs from QUEST's: RMSNorm with a learnable per-channel gain rather than a projection to the unit sphere. We could not read QUEST in full from the sandbox (the arXiv host was blocked); its exact operator and ablation table should be checked before this section is finalized for submission.
+**Key-only normalization.** QUEST (arXiv:2604.00199, ICLR 2026) constrains keys to a hypersphere while leaving queries free, arguing that this lets each token control the sharpness of its own softmax and stops large-norm keys from taking attention globally. Its own text states that one-sided normalization had not been proposed before it. We reached key-only normalization independently (registry 2026-08-23) and do not claim it as new; what we add is the head-width map, the mechanism, and the finding that a constant does better than either. Our operator also differs, being an RMSNorm with a learnable per-channel gain rather than a projection to the sphere. We could not read QUEST from this sandbox because the arXiv host is blocked here, so its exact operator and ablation table should be checked before this section is submitted anywhere.
 
-**Normalization that keeps the magnitude.** SeeDNorm (Cai et al., 2025) starts from the same observation we end with: RMSNorm discards the input norm in the forward pass and a static gain cannot recover it, so it proposes a data-dependent, self-rescaled scaling coefficient that preserves norm information while keeping RMSNorm's gradient behaviour. ScaleNorm (Nguyen and Salazar, 2019) is the opposite simplification: a single learned length per layer. FKN sits between them on the key side of attention only: it keeps a fraction of the key's own magnitude, measured against a running per-head scale, through one learned exponent per head, and this paper's contribution is less the layer than the causal evidence for what the magnitude channel does at small head widths.
+**Normalization that keeps the magnitude.** SeeDNorm (Cai et al., 2025) starts from the observation this paper ends on: RMSNorm discards the input norm in the forward pass and a static gain cannot recover it. Its fix is a data-dependent self-rescaling coefficient. NaLaFormer (Meng et al., 2025) re-injects the query norm into linear attention for the same reason. ScaleNorm (Nguyen and Salazar, 2019) goes the other way, replacing LayerNorm with a single learned length per layer. Our result sits underneath all three: before asking what a normalizer should preserve, check what scale the logits started at.
 
-**Per-token temperature.** Selective Attention (SSA, NeurIPS 2024) learns a data-dependent inverse temperature on the query; Veličković et al. (2024) sharpen softmax at inference with an entropy-derived adaptive temperature; Scalable-Softmax scales logits by a learnable per-head multiple of log n; Gated Attention (Qiu et al., NeurIPS 2025) applies a query-dependent sigmoid gate to the attention output. Our magnitude channel is in this family functionally but differs in three ways that matter for the mechanism claim: it is a parameter-free statistic of the pre-norm vector (its RMS relative to a running per-head average) with a single learned exponent per head, it is applied on the key side, and the paper's contribution is the discriminating experiment (value versus gradient) rather than the capability.
+**Attention temperature.** Selective Attention (NeurIPS 2024) learns a data-dependent inverse temperature on the query. Veličković et al. (2024) sharpen softmax at inference from its entropy. Scalable-Softmax scales logits by a learnable per-head multiple of log n. Gated Attention (Qiu et al., NeurIPS 2025) applies a query-dependent sigmoid gate to the attention output. Our finding is not a new temperature mechanism; it is that the *initial value* of the simplest possible temperature is the binding constraint at small head dimension, and that learnability does not substitute for setting it.
 
-**Head dimension.** Bhojanapalli et al. (2020) explain why loss degrades as head_dim = d/h shrinks at fixed d_model (a low-rank bottleneck on the attention matrix). Multi-Head Attention Residuals (2026) report a U-shaped loss in head count for a different query mechanism. An existing QK-norm x head-count ablation (arXiv:2606.03825) reports stability down to head_dim 16, consistent with our finding that the damage only appears at head_dim 4. We find no prior report that QK-norm converts a monotone head-dim curve into a U-shaped one.
+**Initialization and scale.** The 1/sqrt(head_dim) factor is the standard fix for logit growth with head dimension, derived for queries and keys with unit-variance independent entries. Real queries and keys are neither unit-variance nor independent, since both are linear images of the same normalized residual stream. Our Section 7 measures what the scale actually is. This connects to muP (Yang et al.) and to the lab's own muP replication (registry 2026-07-26), which found that most of the practical benefit of muP at these sizes is tunability rather than loss.
 
-**Evidence standards.** A 2026 update to the Narang et al. transformer-modification study (arXiv:2605.20798) found that most modifications do not transfer at 1 to 3B and insists on multi-seed noise floors. We adopt that standard at our scale: every comparison is paired (same init, same batches), and we report per-seed wins, not just means.
+**Evidence standards.** A 2026 update to the Narang et al. transformer-modification study (arXiv:2605.20798) found that most modifications do not transfer at 1 to 3B and requires multi-seed noise floors. We adopt that standard at our scale: every comparison is paired on byte-identical initializations and data streams, and we report per-seed win counts alongside means, since a paired difference is the correct noise test for this design.
 
 ## 3. Setup
 
-**Model.** A two-layer pre-norm decoder-only transformer, d_model 128, FFN 512 (GELU), learned absolute positions, context 96, character vocabulary 65, no biases, untied output head: 423,424 parameters. Attention uses `F.scaled_dot_product_attention` with the default 1/sqrt(head_dim) scale in every arm, so the temperature at initialization varies 5.7x across the head split; this is the confound the thread's second night was built to control.
+**Model.** Two-layer pre-norm decoder-only transformer, d_model 128, FFN 512 with GELU, learned absolute positions, context 96, character vocabulary 65, no biases, untied output head: 423,424 parameters. Attention uses `F.scaled_dot_product_attention` with its default 1/sqrt(head_dim) scale in every arm.
 
-**Iso-parameter head split.** At fixed d_model the QKV and output projections do not depend on the split, so every (n_head, head_dim) pair with n_head x head_dim = 128 has identical parameters and identical FLOPs. The only differences are how the same vectors are reshaped before the softmax and the 1/sqrt(head_dim) that follows. We use head_dim in {4, 8, 16, 32, 64, 128}.
+**Iso-parameter head splits.** At fixed d_model the QKV and output projections do not depend on the split, so every (n_head, head_dim) pair with n_head x head_dim = 128 has identical parameters and identical FLOPs. The only differences are how the same vectors are reshaped before the softmax and the 1/sqrt(head_dim) that follows. We use head_dim in {4, 8, 16, 32, 64, 128}; head_dim 8 had never been run with any normalization arm before this paper.
 
-**Arms.** Let q_t, k_t be the per-head query and key of token t, r(x) the RMS over the head dimension, and g a learnable per-channel gain (length d_model, initialized to 1, excluded from weight decay).
+**Arms.** Let q_t and k_t be a token's per-head query and key, r(x) the root-mean-square over the head dimension, and g a learnable per-channel gain of length d_model, initialized to one and excluded from weight decay.
 
 | arm | query | key |
 |---|---|---|
 | baseline | q | k |
-| qknorm | g_q * q / r(q) | g_k * k / r(k) |
-| qnorm_only | g_q * q / r(q) | k |
-| knorm_only | q | g_k * k / r(k) |
-| **knorm_dynk (FKN)** | q | g_k * (k / r(k)) * clamp(r(k) / s_h, 1/8, 8)^alpha_h |
-| k_emascale | q | same as FKN with alpha_h frozen at 1 |
-| qknorm_dynq | g_q * (q / r(q)) * clamp(r(q) / s_h, 1/8, 8)^alpha_h | g_k * k / r(k) |
+| qknorm | g_q · q / r(q) | g_k · k / r(k) |
+| qnorm_only | g_q · q / r(q) | k |
+| knorm_only | q | g_k · k / r(k) |
+| magnitude channel (key) | q | g_k · (k / r(k)) · clamp(r(k) / s_h, 1/8, 8)^alpha_h |
+| frozen exponent | q | the same with alpha_h fixed at 1 |
+| fixed multiplier | q | c_h · k, with c_h a constant |
 
-Here s_h is a per-head exponential moving average (momentum 0.99) of the batch mean of r, updated only in training mode, and alpha_h is a learnable per-head exponent initialized to 1. In every dynamic arm the gradient flows through r (the "undetached" form); Section 5 shows why that matters.
+Here s_h is a per-head running mean of r updated only in training mode, and alpha_h is a learnable per-head exponent initialized to 1. Section 6 dismantles this family and Section 7 replaces it.
 
-**Training.** AdamW (betas 0.9/0.95), peak learning rate 3e-3, 60 warmup steps then cosine to 10%, 600 steps of 16 x 96 tokens (0.92M tokens), weight decay 0.1 on matrices only, gradient clip 1.0. Validation is bits per character on 480 contiguous held-out blocks (46,080 characters).
+**Training.** AdamW with betas 0.9 and 0.95, peak learning rate 3e-3, 60 warmup steps then cosine to a tenth, 600 steps of 16 sequences by 96 tokens, weight decay 0.1 on matrices only, gradient clipping at 1.0. Validation is bits per character over 480 contiguous held-out blocks, 46,080 characters.
 
-**Paired inits and determinism.** All shared weights are drawn from the same seed before any arm-specific parameter is created; arm-specific extras are initialized to constants and consume no random numbers. The batch stream is a per-seed NumPy generator replayed identically by every arm. A per-seed init signature (sum of absolute weights) is asserted equal across arms in every run. Every night's harness re-runs its parents' anchor cells and demands agreement to 0.0005 bpc; across the thread these agree to five decimals, and the runs in this paper reproduce the 2026-08-30 and 2026-08-31 anchors exactly (Table A1).
+**Paired initializations.** All shared weights are drawn from one seed before any arm-specific parameter exists; arm-specific extras are constants that consume no random numbers. The batch stream is a per-seed generator replayed identically by every arm. A per-seed initialization signature is asserted equal across arms in every run. Every night re-runs its parents' anchor cells and requires agreement to 0.0005 bpc.
 
-**What "better" means.** Differences are reported in bits per character and as paired-seed win counts. The lab's tolerance for "within noise" is 0.015 bpc, chosen as roughly the baseline's seed spread at the mid splits.
+**What "better" means.** Differences are in bits per character. Because the design is paired, the noise test we report is the sign of the per-seed difference, not the overlap of per-arm spreads.
 
-## 4. The head-geometry phase diagram
+## 4. Normalization depends on head geometry
 
 <!-- FIG1 -->
 
@@ -74,190 +75,164 @@ Here s_h is a per-head exponential moving average (momentum 0.99) of the batch m
 
 Three facts organize the table.
 
-**The unnormalized curve is monotone; QK-norm makes it a U.** Without normalization, validation loss falls monotonically with head_dim (Spearman −1.00 in the 2026-07-26 sweep), a plateau above 64 and a steep tax below 32. With QK-norm, the mid-range tax disappears (−0.14 bpc at head_dim 16, −0.10 at 32) and an interior optimum appears at head_dim 32 that beats every unnormalized split. The head-dim tax is two taxes: a temperature tax in the mid range that normalization removes, and a tiny-head tax that normalization makes worse.
+**Without normalization the curve is monotone in head width; with it, it is not.** Validation loss falls monotonically as heads get wider, a plateau above 64 and a steep tax below 32. Adding QK-norm removes most of the mid-range tax and introduces an interior optimum, while making the smallest split distinctly worse.
 
-**At tiny heads the damage rides the key side.** At head_dim 4, key-only norm pays essentially the full QK-norm cliff (+0.127 vs +0.130 bpc) while query-only norm is nearly free (+0.024). This is the reversal that redirected the thread: the earlier rescue via a query-side magnitude channel (Section 5) was a compensation route through the surviving side, not the causal side.
+**At tiny heads the damage rides the key side.** At head_dim 4, key-only normalization pays essentially the whole two-sided cost while query-only normalization is nearly free. This is the reversal that redirected the thread: an earlier repair through a query-side magnitude channel was compensation through the surviving side, not the causal side.
 
-**The two one-sided norms interact, and the sign of the interaction flips with width.** Writing the interaction as delta(qknorm) − delta(q-only) − delta(k-only), it is −0.021 and −0.001 at head_dim 4 and 16 (the norms are additive or mildly synergistic), then +0.021, +0.081, +0.074 at 32, 64, 128 (stacking both norms on one wide head is destructive). This is why "norm one side and stop" is the wide-head rule and QK-norm keeps its crown at mid splits.
+**The two one-sided norms interact, and the sign of the interaction flips with width.** Writing the interaction as the two-sided delta minus the two one-sided deltas, it is near zero or slightly favourable at head_dim 4 and 16 and clearly destructive at 64 and 128. Stacking two normalizers on one wide head is the pathology; at many narrow heads they are close to additive.
 
-## 5. Anatomy of the tiny-head cliff
+## 5. The tiny-head cost is a severed gradient
 
-The cliff at head_dim 4 is +0.130 bpc (3 seeds, per-seed +0.130/+0.156/+0.104). Five controlled experiments, all on byte-identical paired inits, locate its cause.
+Five controlled experiments, all on byte-identical paired initializations, locate the cause of the cost at head_dim 4. This section is unchanged by the later results and we still believe it.
 
-**It is not an average temperature cap (2026-07-31).** Unit-RMS 4-dimensional heads have bounded logits (|logit| ≤ sqrt(4) = 2 at unit gain), and the trained QK-norm heads are indeed flatter (normalized entropy 0.90 vs 0.74). But a free per-head learnable temperature on top of QK-norm refunds 2.1% of the cliff, and the optimizer leaves it at tau ≈ 1.04 (range 0.73 to 1.38) when matching the baseline's logit scale would need tau ≈ 2.6. Low sharpness is a symptom both arms share, not the disease.
+**It is not an average sharpness cap** (registry 2026-07-31). Unit-RMS four-dimensional heads have bounded logits, and the normalized heads are measurably flatter. But a free per-head learnable temperature on top of QK-norm refunds two percent of the cost, and the optimizer leaves the dial essentially at one when matching the baseline's logit scale would need roughly 2.6. Section 7 explains why, and the explanation is the paper's main result.
 
-**Per-token modulation is half of it (2026-08-02).** A per-token temperature on the query, tau_t = clamp(r_t / s_h, 1/8, 8)^alpha with r_t detached, refunds 54% of the cliff, with a rescue that is nearly identical across the three paired seeds (0.073/0.067/0.070) even though the cliff itself varies 1.5x. Mean sharpness is unchanged (entropy 0.896 vs 0.902); what changes is the per-token spread of the applied temperature (std 0.33), which tracks the pre-norm magnitude spread the baseline had.
+**Per-token modulation is half of it** (2026-08-02). A per-token temperature on the query, computed from the query's own magnitude relative to a running average, refunds 54 percent, with a rescue nearly identical across paired seeds even though the underlying cost varies by half. Mean sharpness barely moves; what moves is the per-token spread.
 
-**The gradient path is the other half (2026-08-06).** Letting the gradient flow through r_t raises the rescue to 98%: the arm lands within the baseline's own seed spread and beats the paired baseline in 2 of 3 seeds. The control that pins the mechanism is tau_t = r_t undetached with no running average, clamp, or exponent: it refunds 4%. The channel has to be restored in relative, clamped, learnable-exponent form *and* be differentiable.
+**The gradient path is the other half** (2026-08-06). Letting the gradient flow through the magnitude raises the rescue to 98 percent. The control that pins it is the raw undetached magnitude with no running average, clamp or exponent, which refunds four percent.
 
-**The side that matters is the key side (2026-08-30).** The one-sided sweep of Section 4 showed the cliff following the key norm. So the query-side rescue above was compensation: with keys pinned to unit RMS, a learnable per-token query scale can re-encode what the key norm destroyed.
+**The causal side is the key side** (2026-08-30). The one-sided sweep of Section 4 shows the cost following the key norm, so the query-side rescue was compensation.
 
-**Value versus gradient (2026-08-31).** Six key-side arms at head_dim 4 (Figure 4). A learnable per-channel gain with no norm is free (+0.002). Freezing the gain inside the norm changes nothing (nogain − knorm_only = −0.001), so the gain is not the cliff. The decisive arm multiplies the normalized key back by its own detached RMS: the forward values are those of the gain-only arm (identical up to a 1e-6 epsilon), yet it pays the full cliff (+0.130), because RMS normalization projects the radial component out of the key gradient and the QKV weights never receive the signal to shape per-token key magnitudes. Reopening that channel with the undetached exponent form on top of key-only norm recovers 155% of the cliff: −0.070 bpc below the unnormalized baseline in 3 of 3 seeds, with a seed spread (0.010) at the baseline's level.
+**Value versus gradient** (2026-08-31). Six key-side arms at head_dim 4. A learnable per-channel gain with no normalizer is free. Freezing the gain inside the normalizer changes nothing, so the gain is not the cause. The decisive arm multiplies the normalized key back by its own detached magnitude: its forward values equal the gain-only arm's to within a 1e-6 epsilon, yet it pays the full cost, because RMS normalization projects the radial component out of the key gradient and the projection weights never receive the signal to shape per-token key magnitudes.
 
 <!-- FIG4 -->
 
-The mechanism statement, then: at tiny heads, per-token key magnitude is how a head expresses token selectivity, and what a norm destroys is not the magnitude's value but the *learnability* of that magnitude through the QKV projection.
+The mechanism statement is therefore: at tiny heads what a normalizer destroys is not the magnitude's value but the *learnability* of that magnitude through the projection.
 
-<!-- FIG5 -->
+## 6. Three signs the repair was over-engineered
 
-## 6. Fractional Key Normalization
+Reopening that gradient channel gave an architecture: normalize keys, then rescale each key by a learnable per-head power of its own magnitude relative to a running per-head scale. At head_dim 4 it landed 0.070 bpc below the unnormalized baseline in three of three seeds, where both QK-norm and key-only normalization sit 0.13 above. We then ran the tests that would kill it. All three came back against the design, and each is a paired three-seed comparison.
 
-**Definition.** For each head h and token t, with r_t = RMS(k_t) computed with the gradient attached and s_h a per-head running mean of r,
-
-k_hat_t = g ⊙ (k_t / r_t) · clamp(r_t / s_h, 1/c, c)^alpha_h,  with c = 8, alpha_h learnable, initialized to 1.
-
-Away from the clamp this is
-
-k_hat_t = g ⊙ k_t / (r_t^(1 − alpha_h) · s_h^alpha_h),
-
-a *fractional* RMS normalization: the key's own magnitude enters with exponent alpha − 1.
-
-- alpha = 0: key-only RMSNorm with gain (the QUEST-like endpoint; the magnitude is deleted).
-- alpha = 1: k / s_h, no per-token normalization at all, only a per-head running scale (a batch-statistics normalization of the key scale, like a scale-only BatchNorm on keys).
-- alpha in between: the model keeps part of the magnitude.
-
-Queries are untouched. The 1/sqrt(head_dim) scale is unchanged. Cost: one exponent per head, one gain per channel, and a per-head buffer; the forward adds one RMS, one division and one power per key. The clamp bounds the per-token rescale to [1/8, 8]; the theory of normalized attention (Mudarisov et al., 2025) gives the reason a bound is needed, since aggressive per-token scaling trades separability for gradient instability.
-
-**What the model chooses.** The learned exponent is the diagnostic (Figure 3). At head_dim 4 the key-side alpha sits at 0.95 (three seeds: 0.954/0.946/0.956): the model wants almost all of the magnitude back. Across the sweep it falls monotonically, 0.95, 0.92, 0.87, 0.82, 0.69 at head_dim 4, 16, 32, 64, 128, mirroring the query-side channel of the 2026-08-11 composite (0.98 to 0.64). Narrow heads keep their key magnitudes; a single wide head gives a third of it up. Section 7.2 tests what the near-1 endpoint means.
-
-<!-- FIG3 -->
-
-**Why the running scale matters.** With alpha near 1 the forward pass is close to k · g / s_h. Two things distinguish that from the unnormalized baseline: the per-head running scale s_h (an adaptive, non-learned temperature that tracks the key statistics during training) and the tiny residual exponent. The `k_emascale` arm in Section 7 freezes alpha at 1 to ask which of the two carries the win.
-
-**Ordering with rotary embeddings.** RoPE is norm-preserving, so r_t is the same before and after rotation; apply FKN before RoPE so the per-channel gain sees unrotated keys.
-
-## 7. Kill tests
-
-Every earlier "strictly better" candidate in this thread died one head width away from where it was found: the QK-norm + query-channel composite inherited the single-head tax at head_dim 128 (2026-08-11), and key-only norm inherited the cliff at head_dim 4 (2026-08-30). So the test for FKN is the whole curve, a second corpus, and longer training.
-
-### 7.1 The full head split
-
-Table 1 (Section 4) and Figures 1 and 2 hold the numbers; the verdicts are these.
-
-**FKN beats no normalization at every width, in every paired seed.** The margins are −0.070, <!-- HD8_FKN --> −0.142, −0.083, −0.077 and −0.030 bpc at head_dim 4, 8, 16, 32, 64 and 128, and the paired-seed count is 3 of 3 at each width (Table 1). No other arm in the thread has that property: QK-norm and key-only norm both lose at head_dim 4, and QK-norm loses at head_dim 128.
-
-**Against QK-norm it wins where QK-norm fails and ties where QK-norm is strongest.** FKN beats QK-norm by 0.200 bpc at head_dim 4 (3/3), by 0.033 at 64 (3/3) and by 0.044 at 128 (3/3). At head_dim 16 the two are within 0.003 (2/3 seeds for FKN), and at QK-norm's own optimum, head_dim 32, QK-norm is ahead by 0.013, inside the 0.015 tolerance (FKN wins 1/3 seeds). So the honest statement is: FKN is never worse than QK-norm by more than seed noise, and is better by 0.03 to 0.20 bpc at three of the six widths.
-
-**Against key-only norm the exponent pays at every width but the widest.** FKN beats plain key-only norm 3/3 at head_dim 4, 16, 32 and 64 (by 0.198, 0.063, 0.015 and 0.007); at head_dim 128 key-only norm is better by 0.011 (0/3), which is the single head, the one regime where a fully normalized key has no other head to compete with.
-
-**The best configuration in the thread moved.** FKN at head_dim 64 reaches 2.8073 bpc (seed spread 0.006), below the previous thread best of 2.8145 (key-only norm at the same split) and below QK-norm's optimum (2.8329 at head_dim 32).
-
-**The mid splits belong to a two-sided design.** At head_dim 16 and 32 the best arm is the 2026-08-11 composite, full QK-norm plus the query-side channel (−0.180 and −0.108 vs baseline; it beats FKN 3/3 at both). That composite fails at both edges (+0.003 at head_dim 4 and +0.031 at 128), so the phase diagram now reads: key-side fractional norm at the edges, both-sides at the middle. Section 7.5 tests whether one both-sides fractional norm can hold the whole curve.
-
-**Variance.** FKN's seed spread is 0.006 to 0.026 bpc across widths, against the baseline's 0.008 to 0.064 and QK-norm's 0.015 to 0.059. Normalizing the key scale removes the wide-head seed lottery the baseline suffers at head_dim 64.
-
-**Replication.** Every archived cell rerun tonight (73 arm x width x seed cells from 2026-07-26, 2026-08-11, 2026-08-30 and 2026-08-31) reproduced within 0.0005 bpc; most agree to all five decimals (Appendix A).
-
-### 7.2 Is the exponent doing the work, or the running scale?
-
-The learned exponent tells on itself (Table below and Figure 3): the key-side alpha is 0.95 at head_dim 4 and falls monotonically to 0.92, 0.87, 0.82 and 0.69 at 16, 32, 64 and 128, mirroring the query-side curve of the 2026-08-11 composite (0.98 to 0.64). Near alpha = 1 the per-token normalization is undone and what remains is k / s_h: the key divided by a per-head running scale. So the `k_emascale` arm asks the obvious question by freezing alpha at 1.
+**The learnable exponent buys nothing.** Freezing the exponent at one changes the result by between +0.001 and −0.007 bpc across six head widths, inside the seed spread everywhere. The model does move the exponent when free to, and it moves it further at wider heads, but the movement does not pay.
 
 <!-- E1_ALPHA -->
 
-**At head_dim 4 to 64 the running scale is the whole win.** The frozen-exponent arm lands within 0.006 bpc of FKN at every width up to 64 (3.0203 vs 3.0201 at head_dim 4; 2.8785 vs 2.8795 at 16; 2.8446 vs 2.8455 at 32; 2.8132 vs 2.8073 at 64) and beats the baseline 3/3 at each. **At head_dim 128 the exponent earns its keep**: the frozen arm is 0.007 worse than FKN and 0.018 worse than plain key-only norm, which is where alpha wanted to be 0.69.
+<!-- FIG3 -->
 
-This reframes the mechanism. A learnable per-channel gain with no norm was free (+0.002, registry 2026-08-31), so the win is not "a better key scale the optimizer could have found". It is a scale the optimizer does *not* find on its own: a non-learned, per-head running estimate that tracks the key statistics during training, dividing every key by the same slowly moving number. The question that remains is whether that number matters because it *adapts* or because it starts in the right place, which is what the next experiment isolates.
-
-<!-- E4_SECTION -->
+**Adaptation makes it worse, monotonically.** If the win came from a running statistic tracking the key distribution, tracking faster should help. It does the opposite. At head_dim 4 the scale *frozen at its first batch* is nearly twice as good as the standard running average, and the ordering is monotone from frozen through slow to fast.
 
 <!-- FIG10 -->
 
-<!-- E4_SECTION -->
+<!-- E4_TABLE -->
 
-<!-- FIG10 -->
+**It is not key-specific.** The identical construction on the query side performs the same at every width. Applying it to both sides is best at narrow heads and fails at one wide head, reproducing the interaction of Section 4 rather than escaping it.
 
-### 7.3 A second corpus: character-level Penn Treebank
+<!-- FIG11 -->
 
-<!-- E2_SECTION -->
+<!-- E5_TABLE -->
 
-### 7.4 Three times longer training
+Three independent signals all say the same thing: whatever is helping is a *constant*, it does not need to be learned, and it does not care which side of the dot product it sits on.
 
-<!-- E3_SECTION -->
+## 7. The mechanism is a temperature set at initialization
 
-### 7.5 Which side, and both sides
+A per-head scale frozen at its first batch is, algebraically, a constant. Writing s_h for that constant, the arm computes
 
-<!-- E5_SECTION -->
+k_hat = (k / r_t) · (r_t / s_h) = k / s_h,
 
-## 8. What we recommend
+so the per-token normalization cancels exactly and what remains is a fixed per-head multiplier on the keys, which is a fixed multiplier on the attention logits. That is a temperature. So we swept it.
 
-<!-- RECIPE_TABLE -->
+<!-- E6_TABLE -->
 
-The rule of thumb that survives all the tests we ran: **normalize keys, leave queries alone, and let the key magnitude back in through a learnable exponent.** Where the exponent would sit at zero the model will put it there; where a norm would hurt, the exponent opens.
+<!-- FIG12 -->
 
-## 9. Two companion ledgers from the same lab
+### 7.1 The best constant moves with head width, and the default is wrong
 
-The attention thread is the deepest in the notebook, but two other threads produced recipes worth acting on. Both are summarized from their registry rows; the full tables are in the repository.
+<!-- E6_CURVE -->
 
-### 9.1 Plateau escape in gated linear attention (MQAR)
+### 7.2 The same dial, learnable, does not get there
 
-Multi-query associative recall (MQAR) is the litmus test that separates softmax attention from sub-quadratic mixers. Ten nights of paired experiments on a 94k-parameter gated linear-attention model at 8 key-value pairs produced a causal chain rather than a leaderboard:
+<!-- E6_LEARN -->
 
-- **A fixed-step "capacity frontier" measures escape time, not capacity** (2026-07-27). The elu+1 model that sits at 0.17 accuracy for 15,000 steps breaks out at 17,500; the same cell at d_model 128 flips from 0.18 to 0.98 on an init change.
-- **Only a dense per-channel gate escapes reliably** (2026-07-28). Static, scalar and rank-4 gates are exact no-ops on the plateau; rank-1 is an init coin flip; the dense gate escapes 10 to 20x earlier at identical state size.
-- **The gate's win is content routing** (2026-07-29). The identical gate fed another sequence's content is a no-op; noise on the gate logits is a no-op; freezing the gate after breakout costs nothing.
-- **The gate is rate-limiting from below, never pacing from above** (2026-08-01, 2026-08-03); **the backbone sets the clock** (2026-08-07); **joint learning-rate scaling escapes at step 400 in every seed** (2026-08-13); **weight decay is a seed-exact no-op on timing** (2026-08-26).
-- **Gradient noise is the residual, and it hurts** (2026-09-01). Escape time measured in drift units (step x lr multiplier) collapses onto lr/B within 10%; raising batch size with the learning rate restores the inverse scaling, and batch 256 at 4x learning rate escapes at step 300 in all three seeds. The sign is the opposite of the diffusion-escape folklore: on this plateau, less gradient noise means earlier escape.
+This reconciles the two results that could not both be true. A learnable per-head temperature exists in both experiments. Started at the optimum it stays there and keeps the win; started at the default it barely moves, and at some widths it moves the wrong way. The binding constraint is not whether the model *can* express the right temperature. It is that gradient descent will not travel there from the default within the budget, because the direction is nearly flat in loss and the parameter is one scalar per head competing with 423,424 others.
+
+### 7.3 Folding it into the weights
+
+Because the multiplier is a constant, it does not have to exist at runtime at all: scaling the key
+projection's initial weights by the same factor produces the same initial logit scale. That version
+is free in every sense, and it is the one to reach for if the forward pass must stay untouched.
+
+<!-- E6_KINIT -->
+
+It is not exactly equivalent, and we should say why. Enlarging the weights changes how weight decay
+and Adam's per-parameter normalization act on them for the rest of training, so the two arms share
+an initialization but not a trajectory. In our sweep the folded version recovered most, not all, of
+the runtime multiplier's benefit.
+
+### 7.4 What the normalizer was doing all along
+
+The comparison the sweep makes available is between a normalizer and a constant *at the same initial logit scale*. RMS-normalizing keys raises their magnitude by roughly the reciprocal of their initial RMS, which is about 4.4 at this width and initialization scheme. That is the same rescale the constant applies. The two arms therefore start from nearly the same attention sharpness and differ only in whether per-token magnitude survives.
+
+<!-- E6_DECOMP -->
+
+Read that way, the normalizer was doing two things at once and they point in opposite directions. Its mean-scale effect is a large help. Everything it does beyond setting the mean scale is a larger harm. The net is the cost we spent nine nights explaining.
+
+## 8. Where the map holds, and where it does not
+
+Every earlier "strictly better" candidate in this thread died one head width away from where it was found. So the tests that matter are the ones that try to kill the current one.
+
+### 8.1 A second corpus
+
+<!-- E2_TABLE -->
+
+<!-- FIG6 -->
+
+The tiny-head half of the map transfers and gets larger: the normalization cost at head_dim 4 grows on character-level Penn Treebank, and the magnitude repair beats the baseline in three of three seeds at every width tested. The wide-head half does not transfer. On this corpus QK-norm does not lose at head_dim 64, and the composite arm wins at both mid and wide splits. The claim "drop the query norm at wide heads" is a tiny-shakespeare claim, not a general one.
+
+### 8.2 Three times longer training
+
+<!-- E3_TABLE -->
+
+<!-- FIG7 -->
+
+Every effect shrinks with training, by a factor of two to five. The sign survives where it matters: at head_dim 4 the normalization cost is still positive in three of three paired seeds and the repair still negative in three of three, both roughly halved. At head_dim 64 the arms become indistinguishable from each other, all landing within about 0.005 bpc while beating the baseline by about 0.02. So the wide-head *ordering* is a property of the early-training regime and should not be quoted as an architecture recommendation. The tiny-head result is the one that survives every stress test we applied.
+
+## 9. What to actually do
+
+<!-- RECIPE -->
+
+The rule that survives all six experiments: **check the scale of your attention logits at initialization before you reach for a normalizer.** At small head dimension the standard 1/sqrt(head_dim) leaves them far too small, a normalizer fixes that as a side effect while destroying something else, and a constant fixes it without the side effect. Where a normalizer is genuinely wanted for stability at scale, this result does not argue against it; it argues that its scale effect and its normalization effect should be set separately, because at small head dimension they have opposite signs.
+
+## 10. Two companion recipes from the same lab
+
+The attention thread is the deepest in the notebook, and two others produced results worth acting on. Both are summarized from their registry rows; the full tables are in the repository.
+
+### 10.1 Plateau escape in gated linear attention
+
+Multi-query associative recall separates softmax attention from sub-quadratic mixers. Ten nights of paired experiments on a 94k-parameter gated linear-attention model produced a causal chain rather than a leaderboard. A fixed-step "capacity frontier" turns out to measure escape time, not capacity: the model that sits at chance for 15,000 steps breaks out at 17,500. Only a dense per-channel gate escapes reliably, and its advantage is content routing, since the same gate fed another sequence's content is an exact no-op. The gate is rate-limiting from below but never paces from above; the backbone sets the clock; weight decay is a seed-exact no-op on timing. The last suspect was gradient noise, and it is convicted with the opposite sign to the folklore: escape time measured in drift units collapses onto the ratio of learning rate to batch size, and *less* noise escapes earlier.
 
 <!-- FIG8 -->
 
-**Recipe.** Dense per-channel gate (zero-initialized weight, bias 3.0), AdamW with no warmup or clipping, learning rate 4e-3 on every parameter group, batch 256, weight decay 0.01. Escape at step 300/300/300 versus 1100 for the standard recipe. If your budget is wall-clock on a CPU rather than steps, batch 16 at 4x learning rate escapes in fewer seconds; the lr/B law says the two knobs trade off exactly. And the honest comparison outside the gate family: a Taylor-exp (BASED-style) feature map with no gate at all solves the same cell by step 500 at the ordinary learning rate.
+**Recipe.** Dense per-channel gate, AdamW with no warmup or clipping, learning rate 4e-3 on every parameter group, batch 256. Escape at step 300 in all three seeds, against 1100 for the standard recipe. If the budget is wall-clock on a CPU rather than steps, batch 16 at the same 4x learning rate escapes in fewer seconds; the law says the two knobs trade off exactly. The honest comparison outside the gate family: a Taylor-expansion feature map with no gate at all solves the same cell by step 500 at the ordinary learning rate.
 
-### 9.2 When weight-tied recursion pays
+### 10.2 When weight-tied recursion pays
 
-The lab's flagship idea ("Shadow": a tiny model whose every choice is earned through an ablation) began with a weight-tied looped block and a falsification target. Twelve experiments later the ledger reads:
-
-- **On language-model loss at iso-FLOP the loop loses, and depth itself is nearly flat** at 0.06 to 0.2M parameters (+0.079 bpc for the k=4 loop vs untied depth; untied k=4 vs k=1: −0.004).
-- **Entropy-based early exit is indistinguishable from a coin flip** at matched compute, because the fixed-depth quality curve it would exploit is flat.
-- **The loop earns test-time compute only under a stochastic depth schedule** (train with k ~ U{1..K}): frontier accuracy 0.85 at 2.7x the trained depth versus 0.55 for fixed-K training, and an 11x gain in full-sequence exact match; untied depth cannot be extended by any hack (cycling blocks leaves the outputs bit-identical).
-- **Supervising the intermediate state beats every unsupervised extra-compute mechanism**: routing the state through the answer space scales with depth (0.22 to 0.51 solve rate on 4x4 Sudoku) while a full-width latent is flat (0.22 to 0.25); three tokens of discrete supervision reach 1.000 at fewer FLOPs than four pause tokens.
-- **Trained halting learns real difficulty** (+0.15 over a compute-matched random exit) but under-spends out of distribution (allocation slope 0.68 where 1.0 is required); uniform stochastic depth holds the ceiling at 1.000 exact match at 5x the training length.
-- **The gains are serial, not hierarchical**: with sequence length controlled, no arm's optimal loop count grows with parse depth on ListOps.
+The lab's flagship idea began with a weight-tied looped block and a falsification target. Twelve experiments later: on language-model loss at matched FLOPs the loop loses, and depth itself is nearly flat at this size. Entropy-based early exit is indistinguishable from a coin flip at matched compute, because the fixed-depth quality curve it would exploit is flat. The loop earns test-time compute only under a stochastic depth schedule, where it reaches 0.85 frontier accuracy at 2.7x its trained depth against 0.55 for fixed-depth training; untied depth cannot be extended by any trick. Supervising the intermediate state beats every unsupervised extra-compute mechanism, and trained halting learns real difficulty but under-spends out of distribution.
 
 <!-- FIG9 -->
 
-**Rule.** Tie the block, train the depth stochastically with per-iteration input injection, or do not loop at all; test a halting rule only on a task whose fixed-depth curve is steep; and spend your supervision on the intermediate state before you spend it on latent compute.
+**Rule.** Tie the block and train the depth stochastically with per-iteration input injection, or do not loop at all. Test a halting rule only on a task whose fixed-depth curve is steep. Spend supervision on the intermediate state before spending it on latent compute.
 
-## 10. What you can do today
+## 11. Limitations
 
-Three things are possible now that were not possible before this work, in the sense that each was a claim in a notebook rather than a tool.
+- **Scale.** One architecture, two layers, d_model 128, 0.42M parameters, 600 steps for the main grid. All arms sit far from convergence. A mechanism that is merely slower to optimize is indistinguishable from a worse one here, and Section 8.2 shows this matters: the wide-head ordering does not survive 3x training.
+- **The temperature result is the one we expect to scale, and it is untested above this size.** The argument is about initialization scale, which is a property of the parameterization rather than of the corpus, and it should be checked directly at d_model 512 to 1024 with 16 to 32 heads.
+- **Head splits are iso-parameter but not iso-temperature by construction.** That is the point of Section 7, but it also means our "no norm" baseline is not a tuned baseline: part of what every normalizer earns here is a scale correction the baseline never got.
+- **Three seeds.** Every headline claim is a three-of-three paired win with all per-seed differences the same sign. Effects below about 0.015 bpc are reported as ties.
+- **Two corpora, character level.** Tokenized models, vision, and long context are untested.
+- **Prior art was searched from a sandbox where arXiv is blocked**, so several 2026 papers including QUEST are cited from search summaries rather than full text and should be verified before submission.
 
-**1. Drop FKN into nanoGPT with one line.** The `fkn/` package provides `FractionalKeyNorm` (works on (B, T, H, D) or (B, H, T, D) keys), `FKNCausalSelfAttention` (a nanoGPT `CausalSelfAttention` replacement that takes the same config and a `norm` argument in {none, qknorm, knorm, fkn}), and `patch_nanogpt(model_module)`. Nine unit tests check the math against the lab harness, the alpha = 0 and alpha = 1 endpoints, gradient flow through the magnitude, EMA behaviour in train and eval modes, both tensor layouts, autocast, and determinism.
+## 12. Ideas this generates
 
-```python
-from fkn import FractionalKeyNorm
-knorm = FractionalKeyNorm(n_head=8, head_dim=64)   # alpha init 1, learnable; clamp 8; EMA 0.99
-k = knorm(k)                                       # k: (B, T, n_head, head_dim); queries untouched
-```
+Ordered by expected information per CPU-minute. Each is an observation, an inference, and the experiment that would settle it.
 
-**2. Run the head-split benchmark on your own corpus.** `python -m fkn.bench --text your.txt --norm fkn --head-dim 32` trains the lab's two-layer recipe through the drop-in module and prints validation bits per character and the learned exponents. On tiny-shakespeare it reproduces the archived anchors exactly (baseline 3.09304, FKN 3.0167 at head_dim 4, seed 0), so any number you get is on the same scale as every number in this paper.
-
-**3. Use the MQAR recipe.** If you train a gated linear-attention model on recall and it sits on a plateau, the fix is not a new gate but a joint learning-rate and batch-size raise (Section 9.1). The harness for that recipe is `experiments/2026-09-01_mqar-escape-noise-vs-batch`.
-
-Beyond those, the thread leaves a scaling question that a GPU can answer in an afternoon and this lab cannot: does the FKN margin at head_dim 4 to 8 survive at d_model 512 to 1024 with 16 to 32 heads of dimension 32 to 64, the regime production models actually use? The bench script takes `--d-model` and `--head-dim` and the module is autocast-safe; that experiment is the natural next step.
-
-## 11. Limitations and threats to validity
-
-- **Scale.** One architecture (two layers, d_model 128), 0.42M parameters, 600 steps (all arms sit at 2.8 to 3.2 bpc where a converged character model reaches about 1.5), one learning rate shared by all arms. A mechanism that is merely slower to optimize looks exactly like a loser here; the 1800-step check narrows but does not close this gap.
-- **Head splits are iso-parameter but not iso-temperature.** The 1/sqrt(head_dim) scale is inherited from the baseline in every arm. No arm removes or learns it.
-- **Three seeds.** Every headline claim is a 3-of-3 paired win with the paired difference outside the baseline's seed spread; effects smaller than 0.015 bpc are reported as ties. Eight to ten seeds would be needed to resolve the variance-inflation observations at the single-head split.
-- **Corpora.** Character-level text only; two corpora. Tokenized language models, vision and long-context regimes are untested.
-- **Prior art.** The arXiv host was unreachable from the sandbox, so QUEST and several 2026 papers are cited from search summaries; their exact operators and ablation tables should be verified before submission.
-- **The running scale is a per-process buffer.** Under data-parallel training each rank keeps its own estimate; the module documents this.
-
-## 12. Ideas the results generate
-
-Each item is an observation from the ledger, an inference, and the experiment that would settle it. They are ordered by expected information per CPU-minute.
-
-1. **Observation:** at head_dim 4 the learned key exponent is 0.95. **Inference:** the win may be the per-head running scale, not per-token magnitude. **Experiment:** the `k_emascale` arm in Section 7.2 is this test; if it matches FKN, the architecture simplifies to "divide keys by a per-head EMA of their RMS" and the story changes from selectivity to adaptive temperature.
-2. **Observation:** the interaction between the two one-sided norms turns destructive above head_dim 32. **Inference:** two full-width gains stack too many sharpness dials on one softmax. **Experiment:** logit-scale-matched arms (hold the trained pre-softmax logit std fixed across arms) would turn the over-sharpening account from correlational to causal.
-3. **Observation:** the q-side channel disengages with width (alpha 0.98 to 0.66). **Inference:** alpha is a learned estimate of how much magnitude a head needs. **Experiment:** initialize alpha at 0.5 and at 0 and check whether it converges to the same width-dependent curve; if it does, alpha is a property of the head geometry, not of the init.
-4. **Observation:** a static per-head temperature refunds 2% of the cliff and the optimizer refuses to use it. **Inference:** the loss landscape near tau = 1 is flat in tau but not in per-token scale. **Experiment:** measure the Hessian diagonal for tau versus alpha at init.
-5. **Observation:** in MQAR, escape drift-time collapses onto lr/B and noise hurts. **Inference:** the plateau is a saddle whose escape direction is a low-signal, high-noise gradient. **Experiment:** the backlog's exponent fit (eval every 25 steps, grid over lr and B) distinguishes lr/B from lr^2/B and sizes the curvature residual.
-6. **Observation:** the Taylor feature map escapes with no gate at all. **Inference:** the gate is compensating for a feature-map deficiency. **Experiment:** dense gate on top of the Taylor map; if escape does not move, gating and feature-map expressivity are substitutes, not complements.
-7. **Observation:** stochastic depth extrapolates on serial tasks and hurts on hierarchical ones. **Inference:** the useful inductive bias is depth-invariance, and hierarchy needs supervision of subtree values. **Experiment:** answer-space refinement (the Sudoku routing) on ListOps with intermediate subtree supervision; the prediction is that iteration t then locks to nesting level t.
-8. **Observation:** the never-crossed cell in the recursion ledger is stochastic depth x iso-FLOP language-model loss. **Experiment:** rerun the first Shadow experiment with k ~ U{1..4}, input injection and a per-loop norm; this is the cheapest way to learn whether the loop's language-model loss was a training-schedule artifact.
-9. **Observation:** FKN is defined on keys; the symmetric query-side version on top of query-only norm is untested. **Experiment:** `qnorm_dynq` at head_dim 4; the 155% key-side overshoot predicts more than 100% if the mechanism is side-symmetric, and less if the key side is special.
-10. **Observation:** every attention-norm result is at d_model 128. **Experiment:** the width-scaling check named in the backlog (d_model 64 and 256): does the QK-norm optimum stay at head_dim 32, or track sqrt(d)?
+1. **Observation:** the optimal constant differs by head width. **Inference:** the right parameterization sets the key projection's initialization scale as a function of head_dim, not a fixed 0.02. **Experiment:** fit the optimal constant against head width across two or three d_model values and check whether it follows a clean power law; if it does, it is a one-line change to every transformer initializer.
+2. **Observation:** a learnable temperature does not travel from 1 to the optimum. **Inference:** the loss surface is nearly flat in that direction at the default. **Experiment:** measure the gradient and curvature of the loss with respect to log c at initialization across head widths; a flat gradient at small head_dim and a steep one at large would explain the whole thing analytically.
+3. **Observation:** the baseline was never given the scale correction. **Inference:** part of every published normalization win at small head dimension may be a scale correction in disguise. **Experiment:** re-run a standard QK-norm ablation against a *temperature-tuned* baseline rather than a default one, at a scale where QK-norm is known to help.
+4. **Observation:** per-token magnitude costs 0.26 bpc to destroy at the same mean scale. **Inference:** the information is in the magnitude, so a normalizer that preserves it should recover it. **Experiment:** SeeDNorm on the key side against our constant, at head_dim 4, same harness.
+5. **Observation:** stacking both sides fails only at one wide head. **Inference:** the failure is two independent sharpness dials on one softmax. **Experiment:** hold the trained logit standard deviation fixed across arms and see whether the interaction disappears, which turns a correlational account into a causal one.
+6. **Observation:** at head_dim 64 after 1800 steps every normalizer ties. **Inference:** these are optimization-speed effects, not capacity effects. **Experiment:** train one wide-head cell to convergence and check whether any gap remains.
+7. **Observation, from the recall thread:** the Taylor feature map escapes with no gate. **Inference:** gating compensates for a feature-map deficiency rather than adding capacity. **Experiment:** dense gate on top of the Taylor map; if escape time does not move, they are substitutes.
+8. **Observation, from the recursion thread:** the never-crossed cell is stochastic depth against matched-FLOP language-model loss. **Experiment:** re-run the first loop experiment with a stochastic depth schedule and input injection, the cheapest way to learn whether the loop's loss verdict was a schedule artifact.
 
 ## References
 
@@ -265,54 +240,54 @@ Each item is an observation from the ledger, an inference, and the experiment th
 - Dehghani, M. et al. Scaling Vision Transformers to 22 Billion Parameters. 2023.
 - Wortsman, M. et al. Small-scale proxies for large-scale Transformer training instabilities. ICLR 2024. arXiv:2309.14322.
 - QUEST: A robust attention formulation using query-modulated spherical attention. ICLR 2026. arXiv:2604.00199.
-- Meng, Z. et al. Norm x Direction: Restoring the Missing Query Norm in Vision Linear Attention (NaLaFormer). arXiv:2506.21137.
+- Cai, W., Zhu, D., Liu, Q., Min, Q. SeeDNorm: Self-Rescaled Dynamic Normalization. arXiv:2510.22777.
+- Meng, Z. et al. Norm x Direction: Restoring the Missing Query Norm in Vision Linear Attention. arXiv:2506.21137.
+- Nguyen, T. Q., Salazar, J. Transformers without Tears (ScaleNorm). IWSLT 2019. arXiv:1910.05895.
 - Selective Attention: Enhancing Transformer through Principled Context Control. NeurIPS 2024. arXiv:2411.12892.
-- Veličković, P., Perivolaropoulos, C., Barbero, F., Pascanu, R. Softmax is not Enough (for Sharp Size Generalisation). arXiv:2410.01104.
+- Veličković, P. et al. Softmax is not Enough (for Sharp Size Generalisation). arXiv:2410.01104.
 - Nakanishi, K. M. Scalable-Softmax Is Superior for Attention. arXiv:2501.19399.
 - Qiu, Z. et al. Gated Attention for Large Language Models. NeurIPS 2025. arXiv:2505.06708.
 - Mudarisov, T. et al. Limitations of Normalization in Attention Mechanism. arXiv:2508.17821.
-- Cai, W., Zhu, D., Liu, Q., Min, Q. SeeDNorm: Self-Rescaled Dynamic Normalization. arXiv:2510.22777.
-- Nguyen, T. Q., Salazar, J. Transformers without Tears: Improving the Normalization of Self-Attention (ScaleNorm). IWSLT 2019. arXiv:1910.05895.
-- Affine-Scaled Attention: Towards Flexible and Stable Transformer Attention. arXiv:2602.23057.
 - Bhojanapalli, S. et al. Low-Rank Bottleneck in Multi-head Attention Models. ICML 2020. arXiv:2002.07028.
-- Luo, C., Cai, Z., Hu, J. Multi-Head Attention Residuals. arXiv:2607.27230.
 - Most Transformer Modifications Still Do Not Transfer at 1-3B. arXiv:2605.20798.
-- Loshchilov, I. et al. nGPT: Normalized Transformer with Representation Learning on the Hypersphere. arXiv:2410.01131.
-- Kimi Team. Kimi K2: Open Agentic Intelligence (MuonClip / QK-Clip). arXiv:2507.20534.
-- Arora, S. et al. Zoology: Measuring and Improving Recall in Efficient Language Models; and BASED (Taylor-exp linear attention). 2023-2024.
-- Geiping, J. et al. Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach. arXiv:2502.05171.
-- Hao, S. et al. Training Large Language Models to Reason in a Continuous Latent Space (Coconut). 2024.
-- Jolicoeur-Martineau, A. Less is More: Recursive Reasoning with Tiny Networks (TRM). arXiv:2510.04871.
+- Loshchilov, I. et al. nGPT: Normalized Transformer on the Hypersphere. arXiv:2410.01131.
+- Kimi Team. Kimi K2 (MuonClip / QK-Clip). arXiv:2507.20534.
+- Arora, S. et al. Zoology / BASED. 2023-2024.
+- Geiping, J. et al. Scaling up Test-Time Compute with Latent Reasoning. arXiv:2502.05171.
 - Xie, Z., Sato, I., Sugiyama, M. A Diffusion Theory for Deep Learning Dynamics. arXiv:2002.03495.
 
 ## Appendix A. Replication anchors
+
+Every experiment in this paper re-runs cells from its parents and requires agreement to 0.0005 bpc before its own numbers are trusted.
 
 <!-- ANCHOR_TABLE -->
 
 ## Appendix B. The attention-norm ledger
 
-| night | registry id | claim it established | key number |
-|---|---|---|---|
-| 07-26 | head-dim-vs-count-isoparam | no U-curve without norm; monotone in head_dim | Spearman −1.00; +0.217 bpc at hd 4 |
-| 07-30 | qknorm-head-dim | QK-norm makes a U with optimum hd 32 and deepens the hd 4 cliff | −0.099 at 32; +0.143 at 4 |
-| 07-31 | qknorm-hd4-temperature-rescue | static per-head temperature refunds 2%; optimizer leaves tau at 1 | rescue 0.021 |
-| 08-02 | qknorm-hd4-dynamic-temperature | detached per-token query temperature refunds 54% | rescue 0.536 |
-| 08-06 | qknorm-hd4-undetached-magnitude | gradient through r_t refunds 98%; raw r_t refunds 4% | rescue 0.977 / 0.035 |
-| 08-11 | qknorm-dyntemp-composite-sweep | composite dominates QK-norm but inherits the hd 128 tax; alpha disengages with width | alpha 0.98 to 0.66 |
-| 08-23 | qknorm-nh1-tax-mechanism | at one head, each one-sided norm wins and both together lose | k-only −0.041; interaction +0.074 |
-| 08-30 | knorm-only-head-sweep | the cliff follows the key norm; interaction flips sign with width | k-only +0.127 at hd 4, −0.069 at hd 64 |
-| 08-31 | hd4-kside-cliff-mechanism | the cliff is a severed magnitude gradient; FKN lands below baseline | magrestore +0.130; FKN −0.070 |
-| 09-01 | knorm-dynk-head-sweep | full head split kill test, plus the alpha-fixed ablation | see Section 7 |
-| 09-01 | knorm-dynk-ptb-transfer | second corpus | see Section 7 |
-| 09-01 | knorm-dynk-longer-training | 3x training | see Section 7 |
-| 09-01 | kscale-adaptive-vs-static | adaptive running scale vs static init scale vs query side | see Section 7.2 |
+| night | registry id | what it established |
+|---|---|---|
+| 07-26 | head-dim-vs-count-isoparam | loss is monotone in head width without normalization |
+| 07-30 | qknorm-head-dim | QK-norm removes the mid-range tax and deepens the tiny-head cost |
+| 07-31 | qknorm-hd4-temperature-rescue | a learnable static temperature refunds two percent and is left at one |
+| 08-02 | qknorm-hd4-dynamic-temperature | a detached per-token query temperature refunds 54 percent |
+| 08-06 | qknorm-hd4-undetached-magnitude | opening the gradient path refunds 98 percent; the raw form refunds four |
+| 08-11 | qknorm-dyntemp-composite-sweep | the composite dominates QK-norm but inherits its one-head cost |
+| 08-23 | qknorm-nh1-tax-mechanism | at one head each one-sided norm wins and both together lose |
+| 08-30 | knorm-only-head-sweep | the tiny-head cost follows the key norm; the interaction flips sign with width |
+| 08-31 | hd4-kside-cliff-mechanism | the cost is a severed magnitude gradient, not a lost value |
+| 09-01 | knorm-dynk-head-sweep | the repair beats baseline at every width, and the frozen exponent matches it |
+| 09-01 | knorm-dynk-ptb-transfer | the tiny-head half transfers to a second corpus; the wide-head half does not |
+| 09-01 | knorm-dynk-longer-training | every effect halves at 3x training; the wide-head ordering dissolves |
+| 09-01 | kscale-adaptive-vs-static | less adaptation is better; a frozen scale wins |
+| 09-01 | fractional-norm-both-sides | the channel is not key-specific; both sides fails at one wide head |
+| 09-01 | logit-scale-sweep | it is a temperature, the default is wrong, and learning it from the default does not work |
 
 ## Appendix C. Reproduction
 
 ```
-pip install torch==2.13.0 numpy matplotlib pyyaml      # the lab's runs used torch 2.13.0+cu130 on CPU
-python experiments/2026-09-01_knorm-dynk-head-sweep/run.py       # ~2 h on 2 CPU threads (or shard: --seeds / --head-dims / --tag, then --merge)
-python paper/make_figures.py                                       # regenerates every figure from results.json
-python fkn/test_fkn.py                                             # 9 unit tests
-python -m fkn.bench --text fkn/data/tinyshakespeare.txt --norm fkn --head-dim 4 --seed 0 --warmup 60   # 3.0167
+pip install torch==2.13.0 numpy matplotlib pyyaml     # the lab's runs used torch 2.13.0 on CPU
+python experiments/2026-09-01_logit-scale-sweep/run.py        # shard with --head-dims/--seeds/--tag, then --merge
+python paper/fill_sections.py --apply                          # regenerate every table from results.json
+python paper/make_figures.py                                   # regenerate every figure
+python attnscale/test_attnscale.py                             # unit tests for the shipped module
 ```

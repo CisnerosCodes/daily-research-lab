@@ -253,6 +253,144 @@ def fig_grouped_by_hd(theme, res, name, title, ylabel="val bits per character", 
     save(fig, name, theme)
 
 
+
+# ----------------------------------------------------------------- E4: adaptation speed
+def fig_adaptation_speed(theme, res, name="fig10_adaptation_speed"):
+    """Delta vs baseline against how fast the per-head key scale tracks the data."""
+    t = style(theme)
+    by = res["metrics"]["by_arm_hd"]
+    per = res["metrics"]["per_head_dim"]
+    # ordered slowest-adapting first; x is "effective averaging window" 1/(1-m), static = infinity
+    speed = [("k_static_init_scale", "frozen at\nfirst batch"), ("k_emascale_m0999", "m = 0.999"),
+             ("k_emascale", "m = 0.99"), ("k_emascale_m09", "m = 0.9")]
+    speed = [(a, lab) for a, lab in speed if a in by]
+    hds = [int(h) for h in res["config"]["params"]["head_dims"] if str(h) in per]
+    x = np.arange(len(speed))
+    cols = {4: t["orange"], 64: t["blue"], 16: t["aqua"]}
+    fig, ax = plt.subplots(figsize=(7.0, 4.3))
+    for hd in hds:
+        ys = [per[str(hd)]["arms"][a]["delta_vs_baseline"] for a, _ in speed]
+        ax.plot(x, ys, "-o", color=cols.get(hd, t["neutral"]), lw=2.2,
+                label=f"head_dim {hd} ({128 // hd} heads)")
+        for i, (a, _) in enumerate(speed):
+            ss = list(by[a][str(hd)]["val_bpc_per_seed"].values())
+            b = by["baseline"][str(hd)]["val_bpc_per_seed"]
+            ds = [ss[j] - list(b.values())[j] for j in range(len(ss))]
+            ax.plot([i] * len(ds), ds, ".", color=cols.get(hd, t["neutral"]), ms=4, alpha=0.5)
+    # query-side control as a reference band
+    if "q_emascale" in by:
+        for hd in hds:
+            q = per[str(hd)]["arms"]["q_emascale"]["delta_vs_baseline"]
+            ax.axhline(q, color=cols.get(hd, t["neutral"]), lw=0.9, ls=":", alpha=0.8)
+        ax.text(len(speed) - 0.55, per[str(hds[0])]["arms"]["q_emascale"]["delta_vs_baseline"],
+                " same trick on queries", fontsize=8, color=t["text2"], va="bottom", ha="right")
+    ax.axhline(0, color=t["text2"], lw=0.9)
+    ax.text(0.02, 0.004, "unnormalized baseline", fontsize=8, color=t["muted"])
+    ax.set_xticks(x)
+    ax.set_xticklabels([lab for _, lab in speed], fontsize=9)
+    ax.set_xlabel("how fast the per-head key scale tracks the data  (slower to the left)")
+    ax.set_ylabel("Δ val bpc vs baseline  (negative = better)")
+    ax.set_title("Less adaptation is better: the win is a constant, not a running statistic")
+    ax.legend(loc="lower right")
+    save(fig, name, theme)
+
+
+# ----------------------------------------------------------------- E5: which side
+def fig_side_symmetry(theme, res, name="fig11_side_symmetry"):
+    t = style(theme)
+    per = res["metrics"]["per_head_dim"]
+    hds = [int(h) for h in res["config"]["params"]["head_dims"] if str(h) in per]
+    series = [("knorm_dynk", "orange", "keys only"), ("fqn", "blue", "queries only"),
+              ("fqkn", "magenta", "both sides")]
+    x = np.arange(len(hds))
+    fig, ax = plt.subplots(figsize=(7.4, 4.3))
+    for a, col, lab in series:
+        if a not in per[str(hds[0])]["arms"]:
+            continue
+        ys = [per[str(hd)]["arms"][a]["delta_vs_baseline"] for hd in hds]
+        ax.plot(x, ys, "-o", color=t[col], lw=2.2, label=lab)
+    ax.axhline(0, color=t["text2"], lw=0.9)
+    ax.text(0.02, 0.004, "unnormalized baseline", fontsize=8, color=t["muted"])
+    # mark where both-sides breaks
+    if "fqkn" in per[str(hds[-1])]["arms"]:
+        v = per[str(hds[-1])]["arms"]["fqkn"]["delta_vs_baseline"]
+        if v > 0:
+            ax.annotate("both sides breaks\nat one wide head", (len(hds) - 1, v),
+                        textcoords="offset points", xytext=(-8, 6), ha="right",
+                        fontsize=8.5, color=t["magenta"])
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"hd {hd}" for hd in hds])
+    ax.set_ylabel("Δ val bpc vs baseline  (negative = better)")
+    ax.set_title("The magnitude channel is not key-specific, but stacking both sides is")
+    ax.legend(loc="lower left")
+    save(fig, name, theme)
+
+
+# ----------------------------------------------------------------- E6: temperature curve
+def fig_temperature(theme, res, name="fig12_temperature_curve"):
+    t = style(theme)
+    per = res["metrics"]["per_head_dim"]
+    by = res["metrics"]["by_arm_hd"]
+    hds = [int(h) for h in res["config"]["params"]["head_dims"] if str(h) in per]
+    cols = {4: t["orange"], 16: t["aqua"], 64: t["blue"]}
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(12.4, 4.5))
+
+    for hd in hds:
+        curve = per[str(hd)].get("fixed_c_curve", {})
+        if not curve:
+            continue
+        cs = sorted(float(c) for c in curve)
+        ys = [curve[str(c)] for c in cs]
+        base = per[str(hd)]["arms"]["baseline"]["bpc"]
+        ax.plot(cs, [y - base for y in ys], "-o", color=cols.get(hd, t["neutral"]), lw=2.2,
+                label=f"head_dim {hd} ({128 // hd} heads)")
+        bc = per[str(hd)]["best_fixed_c"]
+        bb = per[str(hd)]["best_fixed_c_bpc"] - base
+        ax.plot([bc], [bb], "*", ms=17, color=cols.get(hd, t["neutral"]),
+                mec=t["ground"] if "ground" in t else "none", mew=0)
+        ax.annotate(f"c = {bc:g}", (bc, bb), textcoords="offset points", xytext=(0, -15),
+                    ha="center", fontsize=8.5, color=t["text2"])
+    ax.axhline(0, color=t["text2"], lw=0.9)
+    ax.set_xscale("log", base=2)
+    ax.set_xticks([1, 2, 4, 8, 16])
+    ax.set_xticklabels(["1\n(default)", "2", "4", "8", "16"])
+    ax.set_xlabel("fixed per-head key multiplier c")
+    ax.set_ylabel("Δ val bpc vs baseline")
+    ax.set_title("The best attention temperature moves with head width", fontsize=10.5)
+    ax.legend(loc="upper left")
+
+    order = [("c_learn1", "blue", "learnable, starts at 1"),
+             ("c_learn4", "orange", "learnable, starts at 4"),
+             ("kinit_x4", "aqua", "folded into the weight init")]
+    labels, vals, colors_ = [], [], []
+    hd0 = hds[0]
+    best_c = per[str(hd0)].get("best_fixed_c")
+    for a, col, lab in order:
+        if a in per[str(hd0)]["arms"]:
+            labels.append(lab)
+            vals.append(per[str(hd0)]["arms"][a]["delta_vs_baseline"])
+            colors_.append(t[col])
+    if best_c is not None:
+        labels.append(f"best fixed c = {best_c:g}")
+        vals.append(per[str(hd0)]["best_fixed_c_bpc"] - per[str(hd0)]["arms"]["baseline"]["bpc"])
+        colors_.append(t["neutral"])
+    xi = np.arange(len(labels))
+    ax2.barh(xi, vals, 0.55, color=colors_, edgecolor="none")
+    for i, v in enumerate(vals):
+        ax2.annotate(f"{v:+.3f}", (v, i), textcoords="offset points",
+                     xytext=(6 if v >= 0 else -6, 0), va="center",
+                     ha="left" if v >= 0 else "right", fontsize=9, color=t["text2"])
+    ax2.axvline(0, color=t["text2"], lw=0.9)
+    ax2.set_yticks(xi)
+    ax2.set_yticklabels(labels, fontsize=9)
+    ax2.invert_yaxis()
+    ax2.set_xlabel(f"Δ val bpc vs baseline at head_dim {hd0}")
+    ax2.set_title("A dial the optimizer will not travel to on its own", fontsize=10.5)
+    ax2.margins(x=0.22)
+    fig.tight_layout(w_pad=3)
+    save(fig, name, theme)
+
+
 # ----------------------------------------------------------------------------- MQAR
 def fig_mqar(theme, name="fig8_mqar_recipe"):
     r28 = load("2026-07-28_mqar-min-selectivity")
@@ -335,6 +473,8 @@ def main():
     e2 = load("2026-09-01_knorm-dynk-ptb-transfer")
     e3 = load("2026-09-01_knorm-dynk-longer-training")
     e4 = load("2026-09-01_kscale-adaptive-vs-static")
+    e5 = load("2026-09-01_fractional-norm-both-sides")
+    e6 = load("2026-09-01_logit-scale-sweep")
     core = ["baseline", "qknorm", "knorm_only", "knorm_dynk", "k_emascale"]
     for theme in ("light", "dark"):
         if e1:
@@ -354,8 +494,11 @@ def main():
             fig_grouped_by_hd(theme, e3, "fig7_longer_training",
                               "3× longer training (1800 steps, 3 paired seeds)")
         if e4:
-            fig_grouped_by_hd(theme, e4, "fig10_adaptive_vs_static",
-                              "Adaptive running scale vs static first-batch scale vs query side (600 steps, 3 paired seeds)")
+            fig_adaptation_speed(theme, e4)
+        if e5:
+            fig_side_symmetry(theme, e5)
+        if e6:
+            fig_temperature(theme, e6)
         fig_mqar(theme)
         fig_loop(theme)
     print("figures written to", OUT, sorted(p.name for p in OUT.glob("*.png")))
