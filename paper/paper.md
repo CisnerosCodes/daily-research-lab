@@ -99,6 +99,8 @@ Five controlled experiments, all on byte-identical paired initializations, locat
 
 The mechanism statement is therefore: at tiny heads what a normalizer destroys is not the magnitude's value but the *learnability* of that magnitude through the projection.
 
+That is what this thread concluded, and the experiments behind it are sound. It is also incomplete, in a way we only saw two sections later. Every arm in this section shares one property that none of them varies: they all leave the *average* key scale roughly where the normalizer puts it, or roughly where the baseline puts it, and none of them asks whether that average is right in the first place. Section 7 asks, and the answer accounts for more of the effect than anything measured here.
+
 ## 6. Three signs the repair was over-engineered
 
 Reopening that gradient channel gave an architecture: normalize keys, then rescale each key by a learnable per-head power of its own magnitude relative to a running per-head scale. At head_dim 4 it landed 0.070 bpc below the unnormalized baseline in three of three seeds, where both QK-norm and key-only normalization sit 0.13 above. We then ran the tests that would kill it. All three came back against the design, and each is a paired three-seed comparison.
@@ -165,6 +167,8 @@ The comparison the sweep makes available is between a normalizer and a constant 
 <!-- E6_DECOMP -->
 
 Read that way, the normalizer was doing two things at once and they point in opposite directions. Its mean-scale effect is a large help. Everything it does beyond setting the mean scale is a larger harm. The net is the cost we spent nine nights explaining.
+
+Section 5 identified part of that harm as the severed gradient: an arm whose forward values match a plain learnable gain, but whose gradient is radially projected, pays about +0.13 bpc. If the three effects were additive, the mean-scale help, the severed gradient and the destruction of the forward magnitude values would sum to roughly the observed cost, and they do. We report that as arithmetic that is consistent rather than as a measured decomposition, because additivity across two experiments is an assumption we did not test. The direct, single-experiment claim is the one in the table above: at a matched starting scale, a constant beats the normalizer, and the gap is large.
 
 ## 8. Where the map holds, and where it does not
 

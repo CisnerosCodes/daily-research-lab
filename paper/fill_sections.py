@@ -37,7 +37,7 @@ def master_table(res, arms=None, caption=""):
     per = res["metrics"]["per_head_dim"]
     hds = [int(h) for h in res["config"]["params"]["head_dims"] if str(h) in per]
     arms = arms or [a for a in LABEL if a in by]
-    head = "| arm | " + " | ".join(f"hd {hd} ({128 // hd} heads)" for hd in hds) + " |"
+    head = "| arm | " + " | ".join(f"hd {hd} ({128 // hd} head{'s' if 128 // hd > 1 else ''})" for hd in hds) + " |"
     sep = "|---|" + "---|" * len(hds)
     rows = [head, sep]
     for a in arms:
@@ -65,10 +65,21 @@ def master_table(res, arms=None, caption=""):
         cells = []
         for hd in hds:
             x = per[str(hd)]["arms"].get(a)
-            cells.append(f"{x['beats_baseline_seeds']} / {x['beats_qknorm_seeds']}" if x else "—")
+            if not x:
+                cells.append("—")
+            elif a == "qknorm":
+                cells.append(f"{x['beats_baseline_seeds']} / —")
+            elif x.get("beats_qknorm_seeds") is not None:
+                cells.append(f"{x['beats_baseline_seeds']} / {x['beats_qknorm_seeds']}")
+            else:
+                cells.append(f"{x['beats_baseline_seeds']}")
         rows.append(f"| {LABEL[a]} | " + " | ".join(cells) + " |")
     rows.append("")
-    rows.append("*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical inits and batches.*")
+    has_qk = any(per[str(hd)]["arms"].get(a, {}).get("beats_qknorm_seeds") is not None
+                 for a in arms for hd in hds)
+    rows.append("*Paired-seed wins: seeds where the arm beats no norm"
+                + (" / seeds where it beats QK-norm" if has_qk else "")
+                + ", at identical initializations and batches.*")
     return "\n".join(rows)
 
 
@@ -77,8 +88,11 @@ def alpha_table(res):
     hds = [int(h) for h in res["config"]["params"]["head_dims"]]
     ak, aq = P2["k_alpha_knorm_dynk"], P2["q_alpha_qknorm_dynq"]
     rows = ["| exponent | " + " | ".join(f"hd {hd}" for hd in hds) + " |", "|---|" + "---|" * len(hds)]
-    rows.append("| key alpha (FKN) | " + " | ".join(fmt(ak.get(str(hd)), 2) for hd in hds) + " |")
-    rows.append("| query alpha (QK-norm + query channel) | " + " | ".join(fmt(aq.get(str(hd)), 2) for hd in hds) + " |")
+    rows.append("| key-side exponent, learnable arm | " + " | ".join(fmt(ak.get(str(hd)), 2) for hd in hds) + " |")
+    rows.append("| query-side exponent, QK-norm + query channel | " + " | ".join(fmt(aq.get(str(hd)), 2) for hd in hds) + " |")
+    rows.append("")
+    rows.append("*The model does move the exponent, and further at wider heads. Freezing it at 1 costs nothing "
+                "(Table 1), so the movement does not pay.*")
     return "\n".join(rows)
 
 
