@@ -168,8 +168,8 @@ def e6_learn(res):
         rows.append(f"| head_dim {hd} | {A['c_learn1']['delta_vs_baseline']:+.3f} "
                     f"({A['c_learn1']['beats_baseline_seeds']}) | {A['c_learn4']['delta_vs_baseline']:+.3f} "
                     f"({A['c_learn4']['beats_baseline_seeds']}) | {per[str(hd)]['best_fixed_c_bpc'] - A['baseline']['bpc']:+.3f} "
-                    f"at c = {per[str(hd)]['best_fixed_c']:g} | {c_reached if c_reached is not None else '—'} | "
-                    f"{c_reached4 if c_reached4 is not None else '—'} |")
+                    f"at c = {per[str(hd)]['best_fixed_c']:g} | {c_reached:.2f} | {c_reached4:.2f} |"
+                    if c_reached is not None and c_reached4 is not None else "| — |")
     rows.append("")
     rows.append("*Change in val bpc vs the default, with paired-seed wins in brackets. The same one-scalar-per-head "
                 "dial, started in two places. The last two columns are where the dial actually ended up.*")
@@ -223,12 +223,11 @@ def recipe(res6, res1):
     for hd in hds:
         c = per[str(hd)]["best_fixed_c"]
         g = per[str(hd)]["best_fixed_c_bpc"] - per[str(hd)]["arms"]["baseline"]["bpc"]
-        act = ("no change needed" if c == 1 else
-               f"scale the key projection init by about {c:g}, or multiply keys by {c:g}")
+        act = ("no change needed" if c == 1 else f"multiply keys by {c:g}")
         rows.append(f"| {hd} ({128 // hd} heads at d_model 128) | {act} | {g:+.3f} bpc |")
     rows.append("")
     rows.append("*The constant is not universal: it depends on the initialization scheme and the head width. "
-                "Measure it once for your configuration with `python -m fkn.bench --sweep-c`, which takes a few "
+                "Measure it once for your configuration with `python -m attnscale.bench --sweep-c`, which takes a few "
                 "minutes on a CPU, rather than copying these values.*")
     return "\n".join(rows)
 

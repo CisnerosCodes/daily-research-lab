@@ -238,9 +238,9 @@ so the per-token normalization cancels exactly and what remains is a fixed per-h
 
 | head width | learnable from 1 | learnable from 4 | best fixed c | c reached from 1 | c reached from 4 |
 |---|---|---|---|---|---|
-| head_dim 4 | +0.002 (1/3) | -0.126 (3/3) | -0.166 at c = 8 | 0.9768 | 3.5489 |
-| head_dim 16 | +0.013 (0/3) | -0.170 (3/3) | -0.215 at c = 8 | 0.9586 | 3.3431 |
-| head_dim 64 | +0.009 (0/3) | -0.077 (3/3) | -0.083 at c = 4 | 0.9474 | 3.1544 |
+| head_dim 4 | +0.002 (1/3) | -0.126 (3/3) | -0.166 at c = 8 | 0.98 | 3.55 |
+| head_dim 16 | +0.013 (0/3) | -0.170 (3/3) | -0.215 at c = 8 | 0.96 | 3.34 |
+| head_dim 64 | +0.009 (0/3) | -0.077 (3/3) | -0.083 at c = 4 | 0.95 | 3.15 |
 
 *Change in val bpc vs the default, with paired-seed wins in brackets. The same one-scalar-per-head dial, started in two places. The last two columns are where the dial actually ended up.*
 
@@ -350,11 +350,11 @@ Every effect shrinks with training, by a factor of two to five. The sign survive
 
 | if your head_dim is | do this | measured here |
 |---|---|---|
-| 4 (32 heads at d_model 128) | scale the key projection init by about 8, or multiply keys by 8 | -0.166 bpc |
-| 16 (8 heads at d_model 128) | scale the key projection init by about 8, or multiply keys by 8 | -0.215 bpc |
-| 64 (2 heads at d_model 128) | scale the key projection init by about 4, or multiply keys by 4 | -0.083 bpc |
+| 4 (32 heads at d_model 128) | multiply keys by 8 | -0.166 bpc |
+| 16 (8 heads at d_model 128) | multiply keys by 8 | -0.215 bpc |
+| 64 (2 heads at d_model 128) | multiply keys by 4, or fold the same factor into the key init | -0.083 bpc |
 
-*The constant is not universal: it depends on the initialization scheme and the head width. Measure it once for your configuration with `python -m fkn.bench --sweep-c`, which takes a few minutes on a CPU, rather than copying these values.*
+*The constant is not universal: it depends on the initialization scheme and the head width, so measure it once for your configuration with `python -m attnscale.bench --sweep-c` rather than copying these values. The runtime multiplier is the primary recommendation at every width; folding the same factor into the key projection's initialization is equivalent at head_dim 64 but recovers only about half the benefit at head_dim 4 (Section 7.3).*
 
 The rule that survives all six experiments: **check the scale of your attention logits at initialization before you reach for a normalizer.** At small head dimension the standard 1/sqrt(head_dim) leaves them far too small, a normalizer fixes that as a side effect while destroying something else, and a constant fixes it without the side effect. Where a normalizer is genuinely wanted for stability at scale, this result does not argue against it; it argues that its scale effect and its normalization effect should be set separately, because at small head dimension they have opposite signs.
 

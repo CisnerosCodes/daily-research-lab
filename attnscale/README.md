@@ -50,8 +50,9 @@ kscale = KeyScale(n_head=8, c=8.0)          # or c=[...] per head
 k = kscale(k)                                # then softmax(q k^T / sqrt(d)) v as usual
 ```
 
-Or fold it into the weights so the forward pass is untouched (slightly weaker in our sweep, because
-enlarging the weights changes how weight decay and Adam act on them):
+Or fold it into the weights so the forward pass is untouched. In our sweep this was equivalent at
+head_dim 64 but recovered only about half the benefit at head_dim 4, because enlarging the weights
+also changes how weight decay and Adam act on them for the rest of training:
 
 ```python
 from attnscale import scale_key_projection_

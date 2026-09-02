@@ -810,24 +810,24 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 <td>+0.002 (1/3)</td>
 <td>-0.126 (3/3)</td>
 <td>-0.166 at c = 8</td>
-<td>0.9768</td>
-<td>3.5489</td>
+<td>0.98</td>
+<td>3.55</td>
 </tr>
 <tr>
 <td>head_dim 16</td>
 <td>+0.013 (0/3)</td>
 <td>-0.170 (3/3)</td>
 <td>-0.215 at c = 8</td>
-<td>0.9586</td>
-<td>3.3431</td>
+<td>0.96</td>
+<td>3.34</td>
 </tr>
 <tr>
 <td>head_dim 64</td>
 <td>+0.009 (0/3)</td>
 <td>-0.077 (3/3)</td>
 <td>-0.083 at c = 4</td>
-<td>0.9474</td>
-<td>3.1544</td>
+<td>0.95</td>
+<td>3.15</td>
 </tr>
 </tbody>
 </table></div>
@@ -1128,22 +1128,22 @@ the runtime multiplier's benefit.</p>
 <tbody>
 <tr>
 <td>4 (32 heads at d_model 128)</td>
-<td>scale the key projection init by about 8, or multiply keys by 8</td>
+<td>multiply keys by 8</td>
 <td>-0.166 bpc</td>
 </tr>
 <tr>
 <td>16 (8 heads at d_model 128)</td>
-<td>scale the key projection init by about 8, or multiply keys by 8</td>
+<td>multiply keys by 8</td>
 <td>-0.215 bpc</td>
 </tr>
 <tr>
 <td>64 (2 heads at d_model 128)</td>
-<td>scale the key projection init by about 4, or multiply keys by 4</td>
+<td>multiply keys by 4, or fold the same factor into the key init</td>
 <td>-0.083 bpc</td>
 </tr>
 </tbody>
 </table></div>
-<p><em>The constant is not universal: it depends on the initialization scheme and the head width. Measure it once for your configuration with <code>python -m fkn.bench --sweep-c</code>, which takes a few minutes on a CPU, rather than copying these values.</em></p>
+<p><em>The constant is not universal: it depends on the initialization scheme and the head width, so measure it once for your configuration with <code>python -m attnscale.bench --sweep-c</code> rather than copying these values. The runtime multiplier is the primary recommendation at every width; folding the same factor into the key projection's initialization is equivalent at head_dim 64 but recovers only about half the benefit at head_dim 4 (Section 7.3).</em></p>
 <p>The rule that survives all six experiments: <strong>check the scale of your attention logits at initialization before you reach for a normalizer.</strong> At small head dimension the standard 1/sqrt(head_dim) leaves them far too small, a normalizer fixes that as a side effect while destroying something else, and a constant fixes it without the side effect. Where a normalizer is genuinely wanted for stability at scale, this result does not argue against it; it argues that its scale effect and its normalization effect should be set separately, because at small head dimension they have opposite signs.</p>
 <h3 id="91-three-things-this-makes-possible">9.1 Three things this makes possible</h3>
 <p>The repository ships <code>attnscale/</code>, a small tested package that turns the above into three steps you can run today. None of them needed new mathematics; what they needed was knowing which number to look at.</p>
