@@ -197,6 +197,39 @@ Every effect shrinks with training, by a factor of two to five. The sign survive
 
 The rule that survives all six experiments: **check the scale of your attention logits at initialization before you reach for a normalizer.** At small head dimension the standard 1/sqrt(head_dim) leaves them far too small, a normalizer fixes that as a side effect while destroying something else, and a constant fixes it without the side effect. Where a normalizer is genuinely wanted for stability at scale, this result does not argue against it; it argues that its scale effect and its normalization effect should be set separately, because at small head dimension they have opposite signs.
 
+### 9.1 Three things this makes possible
+
+The repository ships `attnscale/`, a small tested package that turns the above into three steps you can run today. None of them needed new mathematics; what they needed was knowing which number to look at.
+
+**Diagnose the scale you start from.** One line on an untrained model reports the standard deviation of the pre-softmax attention logits. In our runs it was about 0.05 at head_dim 4 against a trained value near 3, which is the whole problem in one number, and it is not something the loss curve tells you.
+
+```python
+from attnscale import initial_logit_std, suggest_key_scale
+print(initial_logit_std(q, k, head_dim))   # q, k from an untrained model
+print(suggest_key_scale(k))                 # a per-head starting point for the sweep
+```
+
+**Measure the right constant for your own configuration.** The optimum depends on head width, initialization scheme and corpus, so the paper's values are a demonstration and not a recommendation. The sweep is a few CPU-minutes:
+
+```
+python -m attnscale.bench --text my_corpus.txt --head-dim 16 --sweep-c 1 2 4 8 16
+```
+
+The same benchmark reproduces this lab's archived unnormalized baseline (3.09304 bits per character) to five decimal places, so whatever you measure is on the same scale as every number in this paper.
+
+**Apply it.** Zero parameters and one broadcast multiply, or fold it into the weights and change nothing at runtime:
+
+```python
+from attnscale import KeyScale
+k = KeyScale(n_head=8, c=8.0)(k)            # then softmax(q k^T / sqrt(d)) v as usual
+```
+
+Nothing here is expensive, which is the point. The reason it was not available before is that the thread it came from spent nine nights measuring normalizers against each other and never varied the one quantity that mattered most.
+
+### 9.2 The experiment we would run next, and cannot
+
+Everything above is measured at d_model 128 on a CPU. The argument for why it should scale is that initial logit scale is a property of the parameterization rather than of the corpus, and the head widths where it bites hardest, 4 to 16, are exactly the ones large models use once d_model is divided across many heads. The argument against is that large models train far longer, and Section 8.2 shows these effects shrink with training. That question needs one afternoon on a GPU at d_model 512 to 1024, and it is the single most valuable follow-up: the sweep is cheap, the fix is one line, and the outcome decides whether this is a small-scale curiosity or a default worth changing.
+
 ## 10. Two companion recipes from the same lab
 
 The attention thread is the deepest in the notebook, and two others produced results worth acting on. Both are summarized from their registry rows; the full tables are in the repository.
