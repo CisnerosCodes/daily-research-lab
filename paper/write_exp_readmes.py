@@ -68,6 +68,12 @@ def readme_for(exp_id):
     s = SUM.get(exp_id, {})
     rep = m["replication_vs_parents"]
     ds = cfg["dataset"]
+    own = [r for r in res["runs"] if not r.get("imported_from")]
+    imported = [r for r in res["runs"] if r.get("imported_from")]
+    run_line = (f"{len(own)} runs trained here, {sum(r.get('train_seconds', 0) for r in own) / 60:.0f} min CPU"
+                + (f"; {len(imported)} comparison cells imported from "
+                   f"`{imported[0]['imported_from']}` (byte-identical harness, seeds and batch stream)."
+                   if imported else "."))
     body = f"""# {cfg['title']}
 
 **Date:** {exp_id[:10]} · **Status:** done · **Part of** [the attention-scale paper](../../paper/paper.md)
@@ -83,7 +89,7 @@ def readme_for(exp_id):
   weight decay {p['weight_decay']} on matrices only, grad clip {p['grad_clip']}.
 - Data: {ds['name']} ({ds.get('hash', 'n/a')}).
 - Metric: validation bits per character over {p['max_eval_blocks']} contiguous held-out blocks.
-- {len(res['runs'])} runs, {res['duration_sec'] / 60:.0f} min CPU total across shards.
+- {run_line}
 - Replication: {rep['n_ok']}/{rep['n_checked']} archived cells from parent nights reproduced within
   {rep['tol']} bpc{' (all exact)' if rep['n_checked'] and rep['n_ok'] == rep['n_checked'] else ''}.
 

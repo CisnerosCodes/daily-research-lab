@@ -13,7 +13,7 @@ Every number in the nine-night attention-norm thread comes from tiny-shakespeare
   weight decay 0.1 on matrices only, grad clip 1.0.
 - Data: Penn Treebank, Mikolov preprocessing, character level (train/valid files) (md5:f26c4b92c5fdc7b3f8c7cdcb991d8420 (train), md5:aa0affc06ff7c36e977d7cd49e3839bf (valid)).
 - Metric: validation bits per character over 480 contiguous held-out blocks.
-- 54 runs, 0 min CPU total across shards.
+- 54 runs trained here, 40 min CPU.
 - Replication: 0/0 archived cells from parent nights reproduced within
   0.0005 bpc.
 

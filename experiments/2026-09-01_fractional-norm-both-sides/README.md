@@ -13,7 +13,7 @@ The 2026-09-01 head sweep found key-only fractional norm (FKN) beats the unnorma
   weight decay 0.1 on matrices only, grad clip 1.0.
 - Data: tiny-shakespeare (character level) (md5:6fb458f1232090904fb40fe944165e91).
 - Metric: validation bits per character over 480 contiguous held-out blocks.
-- 144 runs, 0 min CPU total across shards.
+- 36 runs trained here, 26 min CPU; 108 comparison cells imported from `2026-09-01_knorm-dynk-head-sweep` (byte-identical harness, seeds and batch stream).
 - Replication: 0/0 archived cells from parent nights reproduced within
   0.0005 bpc.
 

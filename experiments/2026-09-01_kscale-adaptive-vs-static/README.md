@@ -13,7 +13,7 @@ In the 2026-09-01 head sweep, dividing keys by a per-head EMA of their RMS with 
   weight decay 0.1 on matrices only, grad clip 1.0.
 - Data: tiny-shakespeare (character level) (md5:6fb458f1232090904fb40fe944165e91).
 - Metric: validation bits per character over 480 contiguous held-out blocks.
-- 36 runs, 0 min CPU total across shards.
+- 36 runs trained here, 28 min CPU.
 - Replication: 6/6 archived cells from parent nights reproduced within
   0.0005 bpc (all exact).
 
