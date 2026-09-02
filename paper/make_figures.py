@@ -350,8 +350,7 @@ def fig_temperature(theme, res, name="fig12_temperature_curve"):
         bb = per[str(hd)]["best_fixed_c_bpc"] - base
         ax.plot([bc], [bb], "*", ms=17, color=cols.get(hd, t["neutral"]),
                 mec=t["ground"] if "ground" in t else "none", mew=0)
-        ax.annotate(f"c = {bc:g}", (bc, bb), textcoords="offset points", xytext=(0, -15),
-                    ha="center", fontsize=8.5, color=t["text2"])
+
     ax.axhline(0, color=t["text2"], lw=0.9)
     ax.set_xscale("log", base=2)
     ax.set_xticks([1, 2, 4, 8, 16])
@@ -359,6 +358,8 @@ def fig_temperature(theme, res, name="fig12_temperature_curve"):
     ax.set_xlabel("fixed per-head key multiplier c")
     ax.set_ylabel("Δ val bpc vs baseline")
     ax.set_title("The best attention temperature moves with head width", fontsize=10.5)
+    ax.annotate("stars mark the best constant", xy=(0.98, 0.06), xycoords="axes fraction",
+                ha="right", fontsize=8.5, color=t["muted"])
     ax.legend(loc="upper left")
 
     order = [("c_learn1", "blue", "learnable, starts at 1"),
@@ -388,7 +389,7 @@ def fig_temperature(theme, res, name="fig12_temperature_curve"):
     ax2.invert_yaxis()
     ax2.set_xlabel(f"Δ val bpc vs baseline at head_dim {hd0}")
     ax2.set_title("A dial the optimizer will not travel to on its own", fontsize=10.5)
-    ax2.margins(x=0.22)
+    ax2.margins(x=0.30)
     fig.tight_layout(w_pad=3)
     save(fig, name, theme)
 

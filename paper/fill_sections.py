@@ -163,8 +163,8 @@ def e6_learn(res):
     by = res["metrics"]["by_arm_hd"]
     for hd in hds:
         A = per[str(hd)]["arms"]
-        c_reached = by.get("c_learn1", {}).get(hd, {}).get("c_mean")
-        c_reached4 = by.get("c_learn4", {}).get(hd, {}).get("c_mean")
+        c_reached = by.get("c_learn1", {}).get(str(hd), {}).get("c_mean")
+        c_reached4 = by.get("c_learn4", {}).get(str(hd), {}).get("c_mean")
         rows.append(f"| head_dim {hd} | {A['c_learn1']['delta_vs_baseline']:+.3f} "
                     f"({A['c_learn1']['beats_baseline_seeds']}) | {A['c_learn4']['delta_vs_baseline']:+.3f} "
                     f"({A['c_learn4']['beats_baseline_seeds']}) | {per[str(hd)]['best_fixed_c_bpc'] - A['baseline']['bpc']:+.3f} "
@@ -202,11 +202,11 @@ def e6_decomp(res):
     for hd in hds:
         A = per[str(hd)]["arms"]
         # the fixed-c arm whose initial logit scale is closest to the normalizer's
-        kn = by["knorm_only"][hd]["init_logit_std_mean"]
+        kn = by["knorm_only"][str(hd)]["init_logit_std_mean"]
         cands = [a for a in ("c2", "c4", "c8", "c16") if a in A]
-        near = min(cands, key=lambda a: abs(by[a][hd]["init_logit_std_mean"] - kn))
+        near = min(cands, key=lambda a: abs(by[a][str(hd)]["init_logit_std_mean"] - kn))
         for a, lab in ((near, f"constant, {LABEL[near].split(' ')[-1]}"), ("knorm_only", "key-only RMS-norm")):
-            rows.append(f"| head_dim {hd} | {lab} | {by[a][hd]['init_logit_std_mean']:.3f} | "
+            rows.append(f"| head_dim {hd} | {lab} | {by[a][str(hd)]['init_logit_std_mean']:.3f} | "
                         f"{A[a]['delta_vs_baseline']:+.3f} |")
         gap = A["knorm_only"]["delta_vs_baseline"] - A[near]["delta_vs_baseline"]
         rows.append(f"| head_dim {hd} | **cost of the normalizer at matched scale** | | **{gap:+.3f}** |")

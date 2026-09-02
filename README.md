@@ -37,11 +37,17 @@ summarized in the same paper.
 
 ## Index
 <!-- INDEX:START -->
-**61 experiments logged.**
+**67 experiments logged.**
 
 | Date | Experiment | Status | Result |
 |---|---|---|---|
 | 2026-09-01 | [MQAR escape sublinearity: gradient noise IS the residual — escape drift-time collapses onto lr/B within ~10% (matched pairs 0.917/1.094), B=256 at x4 restores the inverse to 300/300/300, and noise HURTS escape (anti-diffusion-folklore sign), where wd moved nothing](experiments/2026-09-01_mqar-escape-noise-vs-batch) | ✅ done |  |
+| 2026-09-01 | [Does the key-side magnitude channel survive the head split? knorm_dynk vs every parent across the full iso-parameter head-dim family](experiments/2026-09-01_knorm-dynk-head-sweep) | ✅ done | Half-confirmed and then undercut by its own control arm. knorm_dynk beats the unnormalised |
+| 2026-09-01 | [Does the key-side magnitude channel transfer to a second corpus? The six norm arms on character-level Penn Treebank at the cliff, the optimum and the wide split](experiments/2026-09-01_knorm-dynk-ptb-transfer) | ✅ done | The tiny-head half transfers and gets LARGER; the wide-head half does not transfer at all. |
+| 2026-09-01 | [Does the key-side magnitude channel survive 3x longer training? The four core norm arms at 1800 steps at the cliff and the wide split](experiments/2026-09-01_knorm-dynk-longer-training) | ✅ done | Every effect shrinks by 2-4.6x at 1800 steps, and the wide-head ORDERING dissolves entirel |
+| 2026-09-01 | [Is the running-scale key win adaptive normalization or a better key scale? Static first-batch scale vs EMA at three momenta vs the query side, at the cliff and the wide split](experiments/2026-09-01_kscale-adaptive-vs-static) | ✅ done | NOT adaptive - and the ordering is monotone in the opposite direction to the hypothesis. A |
+| 2026-09-01 | [Is the fractional magnitude channel side-specific? Query-only fractional norm and both-sides fractional norm across the iso-parameter head split](experiments/2026-09-01_fractional-norm-both-sides) | ✅ done | Not side-specific, and both sides is a trap at wide heads. The query-side mirror (fqn) tra |
+| 2026-09-01 | [Is the tiny-head cliff a mis-set attention temperature? Sweeping a fixed per-head key multiplier against a learnable one and against the weight init](experiments/2026-09-01_logit-scale-sweep) | ✅ done | CONFIRMED on all three predictions, and it reframes the whole nine-night thread. (P1) A fi |
 | 2026-08-31 | [The hd=4 key-norm cliff is a severed GRADIENT channel, not lost magnitude values: restoring the per-token k-RMS value recovers -2% while the undetached magnitude-gradient channel recovers 155% and beats the no-norm baseline (-0.070 bpc, 3/3 seeds, best hd=4 in the thread)](experiments/2026-08-31_hd4-kside-cliff-mechanism) | ✅ done | P1 refuted, decisively: knorm_magrestore has forward values identical to kgain_only (detac |
 | 2026-08-30 | [Is one-sided key-norm the strictly-better attention norm? k-norm-only vs QK-norm across the full head split](experiments/2026-08-30_knorm-only-head-sweep) | ✅ done | All three predictions miss: (P1) the tiny-head cliff swaps sides - at hd=4 k-norm-only pay |
 | 2026-08-26 | [Weight decay exonerated: the ~1.45x residual sublinearity of MQAR escape under joint x4 LR is NOT AdamW's LR-coupled decay term - escape timing is wd-invariant to the seed level (wd=0 is a per-seed exact no-op at 1x AND x4)](experiments/2026-08-26_mqar-joint-lr-wd-decouple) | ✅ done |  |

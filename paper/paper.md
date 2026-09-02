@@ -69,7 +69,28 @@ Here s_h is a per-head running mean of r updated only in training mode, and alph
 
 <!-- FIG1 -->
 
-<!-- E1_TABLE -->
+| arm | hd 4 (32 heads) | hd 8 (16 heads) | hd 16 (8 heads) | hd 32 (4 heads) | hd 64 (2 heads) | hd 128 (1 head) |
+|---|---|---|---|---|---|---|
+| no norm | 3.0904 (±0.004) | 3.0579 (±0.011) | 3.0219 (±0.004) | 2.9281 (±0.015) | 2.8839 (±0.032) | 2.8807 (±0.012) |
+| QK-norm | 3.2205 (+0.130; ±0.030) | 2.9953 (-0.063; ±0.004) | 2.8825 (-0.139; ±0.008) | 2.8329 (-0.095; ±0.011) | 2.8399 (-0.044; ±0.014) | 2.8951 (+0.014; ±0.025) |
+| query-only norm | 3.1144 (+0.024; ±0.009) | 3.0496 (-0.008; ±0.020) | 2.9628 (-0.059; ±0.015) | 2.8799 (-0.048; ±0.023) | 2.8282 (-0.056; ±0.005) | 2.8621 (-0.019; ±0.002) |
+| key-only norm | 3.2178 (+0.127; ±0.020) | 3.0781 (+0.020; ±0.005) | 2.9423 (-0.080; ±0.025) | 2.8604 (-0.068; ±0.006) | 2.8145 (-0.069; ±0.008) | **2.8401** (-0.041; ±0.003) |
+| **magnitude channel** (learnable exponent) | **3.0201** (-0.070; ±0.005) | 2.9554 (-0.102; ±0.020) | 2.8795 (-0.142; ±0.013) | 2.8455 (-0.083; ±0.010) | **2.8073** (-0.077; ±0.003) | 2.8511 (-0.030; ±0.005) |
+| magnitude channel (exponent frozen at 1) | 3.0203 (-0.070; ±0.007) | 2.9552 (-0.103; ±0.020) | 2.8785 (-0.143; ±0.000) | 2.8446 (-0.084; ±0.007) | 2.8132 (-0.071; ±0.007) | 2.8579 (-0.023; ±0.003) |
+| QK-norm + query channel | 3.0934 (+0.003; ±0.024) | **2.9274** (-0.131; ±0.014) | **2.8419** (-0.180; ±0.009) | **2.8203** (-0.108; ±0.013) | 2.8264 (-0.058; ±0.034) | 2.9119 (+0.031; ±0.003) |
+
+*Table 1. Head-split sweep on tiny-shakespeare, 600 steps, three paired seeds (registry 2026-09-01_knorm-dynk-head-sweep). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 8 | hd 16 | hd 32 | hd 64 | hd 128 |
+|---|---|---|---|---|---|---|
+| QK-norm | 0/3 / — | 3/3 / — | 3/3 / — | 3/3 / — | 3/3 / — | 1/3 / — |
+| query-only norm | 0/3 / 3/3 | 3/3 / 0/3 | 3/3 / 0/3 | 3/3 / 0/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| key-only norm | 0/3 / 1/3 | 0/3 / 0/3 | 3/3 / 0/3 | 3/3 / 0/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 1/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| magnitude channel (exponent frozen at 1) | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 1/3 | 3/3 / 0/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| QK-norm + query channel | 2/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 2/3 | 0/3 / 1/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
 
 <!-- FIG2 -->
 
@@ -107,7 +128,12 @@ Reopening that gradient channel gave an architecture: normalize keys, then resca
 
 **The learnable exponent buys nothing.** Freezing the exponent at one changes the result by between +0.001 and −0.007 bpc across six head widths, inside the seed spread everywhere. The model does move the exponent when free to, and it moves it further at wider heads, but the movement does not pay.
 
-<!-- E1_ALPHA -->
+| exponent | hd 4 | hd 8 | hd 16 | hd 32 | hd 64 | hd 128 |
+|---|---|---|---|---|---|---|
+| key-side exponent, learnable arm | 0.95 | 0.96 | 0.92 | 0.87 | 0.82 | 0.69 |
+| query-side exponent, QK-norm + query channel | 0.98 | 0.96 | 0.93 | 0.89 | 0.79 | 0.64 |
+
+*The model does move the exponent, and further at wider heads. Freezing it at 1 costs nothing (Table 1), so the movement does not pay.*
 
 <!-- FIG3 -->
 
@@ -115,13 +141,49 @@ Reopening that gradient channel gave an architecture: normalize keys, then resca
 
 <!-- FIG10 -->
 
-<!-- E4_TABLE -->
+| arm | hd 4 (32 heads) | hd 64 (2 heads) |
+|---|---|---|
+| no norm | 3.0904 (±0.004) | 2.8839 (±0.032) |
+| magnitude channel (exponent frozen at 1) | 3.0203 (-0.070; ±0.007) | 2.8132 (-0.071; ±0.007) |
+| key / first-batch scale (static) | **2.9568** (-0.134; ±0.014) | 2.8078 (-0.076; ±0.014) |
+| key / running scale, m 0.9 | 3.0566 (-0.034; ±0.002) | 2.8289 (-0.055; ±0.005) |
+| key / running scale, m 0.999 | 2.9706 (-0.120; ±0.013) | **2.8001** (-0.084; ±0.016) |
+| query / running scale | 3.0159 (-0.075; ±0.012) | 2.8157 (-0.068; ±0.007) |
+
+*Table 4. Adaptive vs static key scale, 600 steps, three paired seeds (registry 2026-09-01_kscale-adaptive-vs-static). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 64 |
+|---|---|---|
+| magnitude channel (exponent frozen at 1) | 3/3 | 3/3 |
+| key / first-batch scale (static) | 3/3 | 3/3 |
+| key / running scale, m 0.9 | 3/3 | 3/3 |
+| key / running scale, m 0.999 | 3/3 | 3/3 |
+| query / running scale | 3/3 | 3/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm, at identical initializations and batches.*
 
 **It is not key-specific.** The identical construction on the query side performs the same at every width. Applying it to both sides is best at narrow heads and fails at one wide head, reproducing the interaction of Section 4 rather than escaping it.
 
 <!-- FIG11 -->
 
-<!-- E5_TABLE -->
+| arm | hd 4 (32 heads) | hd 8 (16 heads) | hd 16 (8 heads) | hd 32 (4 heads) | hd 64 (2 heads) | hd 128 (1 head) |
+|---|---|---|---|---|---|---|
+| no norm | 3.0904 (±0.004) | 3.0579 (±0.011) | 3.0219 (±0.004) | 2.9281 (±0.015) | 2.8839 (±0.032) | 2.8807 (±0.012) |
+| **magnitude channel** (learnable exponent) | 3.0201 (-0.070; ±0.005) | 2.9554 (-0.102; ±0.020) | 2.8795 (-0.142; ±0.013) | 2.8455 (-0.083; ±0.010) | **2.8073** (-0.077; ±0.003) | 2.8511 (-0.030; ±0.005) |
+| magnitude channel, queries | 3.0156 (-0.075; ±0.008) | 2.9454 (-0.113; ±0.016) | 2.8785 (-0.143; ±0.005) | 2.8506 (-0.077; ±0.008) | 2.8222 (-0.062; ±0.006) | 2.8469 (-0.034; ±0.004) |
+| magnitude channel, both sides | **2.9961** (-0.094; ±0.006) | **2.8975** (-0.160; ±0.008) | **2.8367** (-0.185; ±0.017) | 2.8372 (-0.091; ±0.015) | 2.8588 (-0.025; ±0.006) | 2.9460 (+0.065; ±0.017) |
+| QK-norm + query channel | 3.0934 (+0.003; ±0.024) | 2.9274 (-0.131; ±0.014) | 2.8419 (-0.180; ±0.009) | **2.8203** (-0.108; ±0.013) | 2.8264 (-0.058; ±0.034) | 2.9119 (+0.031; ±0.003) |
+
+*Table 5. Which side carries the magnitude channel (registry 2026-09-01_fractional-norm-both-sides); comparison arms imported from the same-night head sweep. Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 8 | hd 16 | hd 32 | hd 64 | hd 128 |
+|---|---|---|---|---|---|---|
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 1/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| magnitude channel, queries | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 0/3 | 3/3 / 2/3 | 3/3 / 3/3 |
+| magnitude channel, both sides | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 0/3 | 0/3 / 0/3 |
+| QK-norm + query channel | 2/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 2/3 | 0/3 / 1/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
 
 Three independent signals all say the same thing: whatever is helping is a *constant*, it does not need to be learned, and it does not care which side of the dot product it sits on.
 
@@ -133,17 +195,54 @@ k_hat = (k / r_t) · (r_t / s_h) = k / s_h,
 
 so the per-token normalization cancels exactly and what remains is a fixed per-head multiplier on the keys, which is a fixed multiplier on the attention logits. That is a temperature. So we swept it.
 
-<!-- E6_TABLE -->
+| arm | hd 4 (32 heads) | hd 16 (8 heads) | hd 64 (2 heads) |
+|---|---|---|---|
+| no norm | 3.0904 (±0.004) | 3.0219 (±0.004) | 2.8839 (±0.032) |
+| key-only norm | 3.2178 (+0.127; ±0.020) | 2.9423 (-0.080; ±0.025) | 2.8145 (-0.069; ±0.008) |
+| fixed multiplier c = 2 | 3.0212 (-0.069; ±0.005) | 2.8960 (-0.126; ±0.003) | 2.8448 (-0.039; ±0.018) |
+| fixed multiplier c = 4 | 2.9581 (-0.132; ±0.006) | 2.8458 (-0.176; ±0.008) | **2.8011** (-0.083; ±0.022) |
+| fixed multiplier c = 8 | **2.9245** (-0.166; ±0.010) | **2.8068** (-0.215; ±0.017) | 2.8418 (-0.042; ±0.014) |
+| fixed multiplier c = 16 | 2.9410 (-0.149; ±0.000) | 2.8470 (-0.175; ±0.016) | 3.0376 (+0.154; ±0.057) |
+| learnable c, starts at 1 | 3.0925 (+0.002; ±0.006) | 3.0348 (+0.013; ±0.007) | 2.8927 (+0.009; ±0.033) |
+| learnable c, starts at 4 | 2.9639 (-0.126; ±0.007) | 2.8518 (-0.170; ±0.003) | 2.8067 (-0.077; ±0.013) |
+| key init scaled x4 (no runtime op) | 3.0193 (-0.071; ±0.017) | 2.8809 (-0.141; ±0.008) | 2.8144 (-0.070; ±0.020) |
+
+*Table 6. Fixed key multiplier against learnable and against the weight init (registry 2026-09-01_logit-scale-sweep). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 16 | hd 64 |
+|---|---|---|---|
+| key-only norm | 0/3 | 3/3 | 3/3 |
+| fixed multiplier c = 2 | 3/3 | 3/3 | 3/3 |
+| fixed multiplier c = 4 | 3/3 | 3/3 | 3/3 |
+| fixed multiplier c = 8 | 3/3 | 3/3 | 3/3 |
+| fixed multiplier c = 16 | 3/3 | 3/3 | 0/3 |
+| learnable c, starts at 1 | 1/3 | 0/3 | 0/3 |
+| learnable c, starts at 4 | 3/3 | 3/3 | 3/3 |
+| key init scaled x4 (no runtime op) | 3/3 | 3/3 | 3/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm, at identical initializations and batches.*
 
 <!-- FIG12 -->
 
 ### 7.1 The best constant moves with head width, and the default is wrong
 
-<!-- E6_CURVE -->
+| head width | c = 1 | c = 2 | c = 4 | c = 8 | c = 16 | best c | gain at best c |
+|---|---|---|---|---|---|---|---|
+| head_dim 4 (32 heads) | +0.000 | -0.069 | -0.132 | **-0.166** | -0.149 | **8** | -0.166 |
+| head_dim 16 (8 heads) | +0.000 | -0.126 | -0.176 | **-0.215** | -0.175 | **8** | -0.215 |
+| head_dim 64 (2 heads) | +0.000 | -0.039 | **-0.083** | -0.042 | +0.154 | **4** | -0.083 |
+
+*Change in val bpc against the same arm at c = 1 (the default), three paired seeds. Bold marks the best constant at each width.*
 
 ### 7.2 The same dial, learnable, does not get there
 
-<!-- E6_LEARN -->
+| head width | learnable from 1 | learnable from 4 | best fixed c | c reached from 1 | c reached from 4 |
+|---|---|---|---|---|---|
+| head_dim 4 | +0.002 (1/3) | -0.126 (3/3) | -0.166 at c = 8 | 0.9768 | 3.5489 |
+| head_dim 16 | +0.013 (0/3) | -0.170 (3/3) | -0.215 at c = 8 | 0.9586 | 3.3431 |
+| head_dim 64 | +0.009 (0/3) | -0.077 (3/3) | -0.083 at c = 4 | 0.9474 | 3.1544 |
+
+*Change in val bpc vs the default, with paired-seed wins in brackets. The same one-scalar-per-head dial, started in two places. The last two columns are where the dial actually ended up.*
 
 This reconciles the two results that could not both be true. The same one-scalar-per-head dial exists in both arms. Started near the optimum it stays there and keeps almost the whole win; started at the default it does not travel — and the direction it does move is the telling part. At every head width the dial started at 1 ends *below* 1, drifting away from an optimum several times larger, and the arm finishes at or slightly worse than doing nothing.
 
@@ -156,7 +255,13 @@ projection's initial weights by the same factor produces the same initial logit 
 is free in every sense, and it is the one to reach for if the forward pass must stay untouched — at the
 cost, as the numbers below show, of part of the benefit.
 
-<!-- E6_KINIT -->
+| head width | multiplier at runtime (c = 4) | same factor folded into the key init | difference |
+|---|---|---|---|
+| head_dim 4 | -0.132 | -0.071 | +0.061 |
+| head_dim 16 | -0.176 | -0.141 | +0.035 |
+| head_dim 64 | -0.083 | -0.070 | +0.013 |
+
+*Change in val bpc vs the default, three paired seeds. Both arms start from the same attention logit scale; only the runtime version keeps the factor out of the weights.*
 
 It is not exactly equivalent, and we should say why. Enlarging the weights changes how weight decay
 and Adam's per-parameter normalization act on them for the rest of training, so the two arms share
@@ -167,7 +272,19 @@ the runtime multiplier's benefit.
 
 The comparison the sweep makes available is between a normalizer and a constant *at the same initial logit scale*. RMS-normalizing keys raises their magnitude by roughly the reciprocal of their initial RMS, which is about 4.4 at this width and initialization scheme. That is the same rescale the constant applies. The two arms therefore start from nearly the same attention sharpness and differ only in whether per-token magnitude survives.
 
-<!-- E6_DECOMP -->
+| head width | arm | initial logit std | Δ val bpc vs default |
+|---|---|---|---|
+| head_dim 4 | constant, 4 | 0.202 | -0.132 |
+| head_dim 4 | key-only RMS-norm | 0.224 | +0.127 |
+| head_dim 4 | **cost of the normalizer at matched scale** | | **+0.260** |
+| head_dim 16 | constant, 4 | 0.203 | -0.176 |
+| head_dim 16 | key-only RMS-norm | 0.225 | -0.080 |
+| head_dim 16 | **cost of the normalizer at matched scale** | | **+0.097** |
+| head_dim 64 | constant, 4 | 0.203 | -0.083 |
+| head_dim 64 | key-only RMS-norm | 0.225 | -0.069 |
+| head_dim 64 | **cost of the normalizer at matched scale** | | **+0.013** |
+
+*At a matched initial logit scale the only remaining difference is whether per-token key magnitude survives. The last row of each block is what destroying it costs.*
 
 Read that way, the normalizer was doing two things at once and they point in opposite directions. Its mean-scale effect is a large help. Everything it does beyond setting the mean scale is a larger harm. The net is the cost we spent nine nights explaining.
 
@@ -179,7 +296,26 @@ Every earlier "strictly better" candidate in this thread died one head width awa
 
 ### 8.1 A second corpus
 
-<!-- E2_TABLE -->
+| arm | hd 4 (32 heads) | hd 32 (4 heads) | hd 64 (2 heads) |
+|---|---|---|---|
+| no norm | 2.8230 (±0.027) | 2.6360 (±0.010) | 2.5651 (±0.017) |
+| QK-norm | 2.9813 (+0.158; ±0.027) | 2.5005 (-0.135; ±0.017) | 2.4673 (-0.098; ±0.013) |
+| key-only norm | 3.0106 (+0.188; ±0.028) | 2.5412 (-0.095; ±0.044) | 2.4996 (-0.065; ±0.013) |
+| **magnitude channel** (learnable exponent) | 2.7233 (-0.100; ±0.016) | 2.4852 (-0.151; ±0.009) | 2.4469 (-0.118; ±0.012) |
+| magnitude channel (exponent frozen at 1) | **2.7179** (-0.105; ±0.012) | 2.4836 (-0.152; ±0.001) | 2.4450 (-0.120; ±0.009) |
+| QK-norm + query channel | 2.8678 (+0.045; ±0.025) | **2.4433** (-0.193; ±0.009) | **2.4200** (-0.145; ±0.020) |
+
+*Table 2. Character-level Penn Treebank, 600 steps, three paired seeds (registry 2026-09-01_knorm-dynk-ptb-transfer). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 32 | hd 64 |
+|---|---|---|---|
+| QK-norm | 0/3 / — | 3/3 / — | 3/3 / — |
+| key-only norm | 0/3 / 1/3 | 3/3 / 1/3 | 3/3 / 0/3 |
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 3/3 |
+| magnitude channel (exponent frozen at 1) | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 3/3 |
+| QK-norm + query channel | 1/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
 
 <!-- FIG6 -->
 
@@ -187,7 +323,24 @@ The tiny-head half of the map transfers and gets larger: the normalization cost 
 
 ### 8.2 Three times longer training
 
-<!-- E3_TABLE -->
+| arm | hd 4 (32 heads) | hd 64 (2 heads) |
+|---|---|---|
+| no norm | 2.4841 (±0.015) | 2.4009 (±0.015) |
+| QK-norm | 2.5491 (+0.065; ±0.036) | **2.3802** (-0.021; ±0.004) |
+| key-only norm | 2.5420 (+0.058; ±0.033) | 2.3845 (-0.016; ±0.008) |
+| **magnitude channel** (learnable exponent) | **2.4571** (-0.027; ±0.014) | 2.3841 (-0.017; ±0.012) |
+| magnitude channel (exponent frozen at 1) | 2.4610 (-0.023; ±0.018) | 2.3845 (-0.016; ±0.013) |
+
+*Table 3. 1800 steps on tiny-shakespeare, three paired seeds (registry 2026-09-01_knorm-dynk-longer-training). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 64 |
+|---|---|---|
+| QK-norm | 0/3 / — | 3/3 / — |
+| key-only norm | 0/3 / 2/3 | 3/3 / 1/3 |
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 1/3 |
+| magnitude channel (exponent frozen at 1) | 3/3 / 3/3 | 3/3 / 1/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
 
 <!-- FIG7 -->
 
@@ -195,7 +348,13 @@ Every effect shrinks with training, by a factor of two to five. The sign survive
 
 ## 9. What to actually do
 
-<!-- RECIPE -->
+| if your head_dim is | do this | measured here |
+|---|---|---|
+| 4 (32 heads at d_model 128) | scale the key projection init by about 8, or multiply keys by 8 | -0.166 bpc |
+| 16 (8 heads at d_model 128) | scale the key projection init by about 8, or multiply keys by 8 | -0.215 bpc |
+| 64 (2 heads at d_model 128) | scale the key projection init by about 4, or multiply keys by 4 | -0.083 bpc |
+
+*The constant is not universal: it depends on the initialization scheme and the head width. Measure it once for your configuration with `python -m fkn.bench --sweep-c`, which takes a few minutes on a CPU, rather than copying these values.*
 
 The rule that survives all six experiments: **check the scale of your attention logits at initialization before you reach for a normalizer.** At small head dimension the standard 1/sqrt(head_dim) leaves them far too small, a normalizer fixes that as a side effect while destroying something else, and a constant fixes it without the side effect. Where a normalizer is genuinely wanted for stability at scale, this result does not argue against it; it argues that its scale effect and its normalization effect should be set separately, because at small head dimension they have opposite signs.
 
@@ -302,7 +461,109 @@ Ordered by expected information per CPU-minute. Each is an observation, an infer
 
 Every experiment in this paper re-runs cells from its parents and requires agreement to 0.0005 bpc before its own numbers are trusted.
 
-<!-- ANCHOR_TABLE -->
+| source night | arm | hd | seed | archived | this run | delta |
+|---|---|---|---|---|---|---|
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 0 | 3.09304 | 3.09304 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 1 | 3.09277 | 3.09277 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 2 | 3.08542 | 3.08542 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 0 | 3.02645 | 3.02645 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 1 | 3.02092 | 3.02092 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 2 | 3.01838 | 3.01838 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 32 | 0 | 2.91031 | 2.91031 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 32 | 1 | 2.94042 | 2.94042 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 32 | 2 | 2.93368 | 2.93368 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 0 | 2.85489 | 2.85489 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 1 | 2.91863 | 2.91863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 2 | 2.87814 | 2.87814 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 128 | 0 | 2.86663 | 2.86663 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 128 | 1 | 2.88507 | 2.88507 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 128 | 2 | 2.89028 | 2.89028 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 4 | 0 | 3.22297 | 3.22297 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 4 | 1 | 3.24883 | 3.24883 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 4 | 2 | 3.18966 | 3.18966 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 16 | 0 | 2.87788 | 2.87788 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 16 | 1 | 2.87707 | 2.87707 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 16 | 2 | 2.89246 | 2.89246 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 32 | 0 | 2.83013 | 2.83013 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 32 | 1 | 2.82343 | 2.82343 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 32 | 2 | 2.84518 | 2.84518 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 64 | 0 | 2.83668 | 2.83668 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 64 | 1 | 2.85546 | 2.85546 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 64 | 2 | 2.82758 | 2.82758 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 128 | 0 | 2.91841 | 2.91841 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 128 | 1 | 2.89892 | 2.89892 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 128 | 2 | 2.86797 | 2.86797 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 4 | 0 | 3.11738 | 3.11738 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 4 | 1 | 3.12213 | 3.12213 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 4 | 2 | 3.10377 | 3.10377 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 16 | 0 | 2.94690 | 2.94690 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 16 | 1 | 2.97744 | 2.97744 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 16 | 2 | 2.96415 | 2.96415 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 32 | 0 | 2.85171 | 2.85171 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 32 | 1 | 2.89793 | 2.89793 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 32 | 2 | 2.88995 | 2.88995 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 64 | 0 | 2.82553 | 2.82553 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 64 | 1 | 2.83500 | 2.83500 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 64 | 2 | 2.82420 | 2.82420 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 128 | 0 | 2.85981 | 2.85981 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 128 | 1 | 2.86213 | 2.86213 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 128 | 2 | 2.86425 | 2.86425 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 0 | 3.22604 | 3.22604 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 1 | 3.23392 | 3.23392 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 2 | 3.19338 | 3.19338 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 0 | 2.91334 | 2.91334 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 1 | 2.96255 | 2.96255 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 2 | 2.95101 | 2.95101 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 32 | 0 | 2.85342 | 2.85342 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 32 | 1 | 2.86528 | 2.86528 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 32 | 2 | 2.86262 | 2.86262 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 0 | 2.81085 | 2.81085 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 1 | 2.82401 | 2.82401 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 2 | 2.80863 | 2.80863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 128 | 0 | 2.84339 | 2.84339 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 128 | 1 | 2.83746 | 2.83746 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 128 | 2 | 2.83958 | 2.83958 | +0.00000 |
+| 2026-07-26_head-dim-vs-count-isoparam | baseline | 8 | 0 | 3.05388 | 3.05387 | -0.00001 |
+| 2026-07-26_head-dim-vs-count-isoparam | baseline | 8 | 1 | 3.07081 | 3.07081 | +0.00000 |
+| 2026-08-31_hd4-kside-cliff-mechanism | knorm_dynk | 4 | 0 | 3.01670 | 3.01670 | +0.00000 |
+| 2026-08-31_hd4-kside-cliff-mechanism | knorm_dynk | 4 | 1 | 3.01687 | 3.01687 | +0.00000 |
+| 2026-08-31_hd4-kside-cliff-mechanism | knorm_dynk | 4 | 2 | 3.02665 | 3.02665 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 4 | 0 | 3.07885 | 3.07885 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 4 | 1 | 3.12452 | 3.12452 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 16 | 0 | 2.85141 | 2.85141 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 16 | 1 | 2.84026 | 2.84026 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 32 | 0 | 2.82899 | 2.82899 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 32 | 1 | 2.82844 | 2.82844 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 64 | 0 | 2.79641 | 2.79641 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 64 | 1 | 2.86352 | 2.86352 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 128 | 0 | 2.91126 | 2.91126 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 128 | 1 | 2.91511 | 2.91511 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 0 | 3.09304 | 3.09304 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 1 | 3.09277 | 3.09277 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 2 | 3.08542 | 3.08542 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 0 | 2.85489 | 2.85489 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 1 | 2.91863 | 2.91863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 2 | 2.87814 | 2.87814 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 0 | 3.09304 | 3.09304 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 1 | 3.09277 | 3.09277 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 2 | 3.08542 | 3.08542 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 0 | 3.02645 | 3.02645 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 1 | 3.02092 | 3.02092 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 2 | 3.01838 | 3.01838 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 0 | 2.85489 | 2.85489 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 1 | 2.91863 | 2.91863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 2 | 2.87814 | 2.87814 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 0 | 3.22604 | 3.22604 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 1 | 3.23392 | 3.23392 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 2 | 3.19338 | 3.19338 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 0 | 2.91334 | 2.91334 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 1 | 2.96255 | 2.96255 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 2 | 2.95101 | 2.95101 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 0 | 2.81085 | 2.81085 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 1 | 2.82401 | 2.82401 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 2 | 2.80863 | 2.80863 | +0.00000 |
+
+*99 of 99 archived cells reproduced within 0.0005 bpc (torch 2.13.0+cu130, CPU, 2 threads).*
 
 ## Appendix B. The attention-norm ledger
 
