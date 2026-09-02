@@ -1,0 +1,86 @@
+{
+  "2026-09-01_knorm-dynk-head-sweep": {
+    "question": "Does the undetached key-magnitude channel (knorm_dynk) survive the full iso-parameter head split, and is the learnable exponent load-bearing?",
+    "result_summary": "Half-confirmed and then undercut by its own control arm. knorm_dynk beats the unnormalised baseline at ALL SIX head widths (-0.070/-0.102/-0.142/-0.083/-0.077/-0.030 at hd 4/8/16/32/64/128), the first arm in nine nights to do so - but it is not the best arm everywhere (qknorm_dynq wins hd 8/16/32), so strictly_better is still false. The decisive result is the k_emascale control, which freezes the exponent at 1 and so keeps only a per-head running SCALE: it matches knorm_dynk to +0.001/-0.007 bpc at every width (knorm_dynk wins 1-3 of 3 seeds depending on width), i.e. the learnable exponent buys nothing. Learned alpha does decline monotonically with head width (0.95 -> 0.69) - the model moves the dial, the movement just does not pay. hd=8 run for the first time with any norm arm. Replication 75/75 archived cells within 0.0005 bpc.",
+    "verdict": "novel",
+    "queries": [
+      "fractional key normalization head dimension sweep transformer",
+      "learnable exponent magnitude channel attention normalization ablation"
+    ],
+    "conclusion": "The head-split x one-sided-norm x magnitude-channel grid appears unpublished; the finding that the learnable exponent is inert redirected the thread to 2026-09-01_kscale-adaptive-vs-static.",
+    "prior_art": [
+      "https://arxiv.org/abs/2604.00199",
+      "https://arxiv.org/abs/2010.04245"
+    ]
+  },
+  "2026-09-01_knorm-dynk-ptb-transfer": {
+    "question": "Does the head-width phase diagram transfer off tiny-shakespeare to character-level Penn Treebank?",
+    "result_summary": "The tiny-head half transfers and gets LARGER; the wide-head half does not transfer at all. At hd=4 the normalisation cliff grows (qknorm +0.158, knorm_only +0.188 vs +0.130/+0.127 on shakespeare, 0/3 seeds beating baseline) and the magnitude repair still beats baseline 3/3 (knorm_dynk -0.100, k_emascale -0.105). But at hd=64 QK-norm does NOT lose on PTB (-0.098, 3/3) where it lost on shakespeare, and the composite qknorm_dynq wins at both hd=32 (-0.193) and hd=64 (-0.145). So 'drop the query norm at wide heads' is a tiny-shakespeare claim, not a general one, while 'norms hurt at tiny heads and the magnitude channel repairs them' survives a corpus change.",
+    "verdict": "novel",
+    "queries": [
+      "QK-norm head dimension character level Penn Treebank ablation",
+      "attention normalization corpus transfer small transformer"
+    ],
+    "conclusion": "Second-corpus check of our own 2026-09-01 head sweep; splits the phase diagram into a transferring half and a corpus-specific half.",
+    "prior_art": [
+      "https://www.arxiv.org/abs/2602.05006"
+    ]
+  },
+  "2026-09-01_knorm-dynk-longer-training": {
+    "question": "Do the head-width normalisation effects survive 3x longer training, or are they early-training artefacts?",
+    "result_summary": "Every effect shrinks by 2-4.6x at 1800 steps, and the wide-head ORDERING dissolves entirely. At hd=4 the sign survives with all paired per-seed differences the same sign: the cliff halves (qknorm +0.130 -> +0.065, knorm_only +0.127 -> +0.058, both 0/3) and the repair halves (knorm_dynk -0.070 -> -0.027, k_emascale -0.070 -> -0.023, both 3/3). At hd=64 all four arms collapse into a 0.005-bpc band (qknorm -0.021, knorm_only -0.016, knorm_dynk -0.017, k_emascale -0.016) while each still beats baseline 3/3 - so at wide heads the choice of norm stops mattering once trained longer, even though having one still helps. The tiny-head result is the only part of the phase diagram that survives every stress test.",
+    "verdict": "novel",
+    "queries": [
+      "attention normalization longer training early training artifact small transformer",
+      "QK-norm training budget dependence ablation"
+    ],
+    "conclusion": "Budget check on our own head sweep; converts the wide-head ranking from a recommendation into an early-training observation.",
+    "prior_art": [
+      "https://arxiv.org/abs/2605.20798"
+    ]
+  },
+  "2026-09-01_kscale-adaptive-vs-static": {
+    "question": "Is the running-scale win adaptive normalisation, or just a better constant key scale?",
+    "result_summary": "NOT adaptive - and the ordering is monotone in the opposite direction to the hypothesis. At hd=4 a per-head key scale FROZEN at its first batch gives -0.134 bpc, slow tracking (m=0.999) -0.120, standard (m=0.99) -0.070, fast tracking (m=0.9) -0.034; all 3/3 seeds vs baseline. The less the statistic adapts, the better it does, so the win is a constant, not a running normaliser. It is also not key-specific: the identical construction on the QUERY side gives -0.075 at hd=4 and -0.068 at hd=64, matching the key side. At hd=64 the picture is flatter (static -0.076, m0.999 -0.084, m0.99 -0.071, m0.9 -0.055) but still favours slow. Since a frozen per-head scale is algebraically a constant multiplier on the attention logits, this reframes the whole thread as a temperature question and motivates 2026-09-01_logit-scale-sweep.",
+    "verdict": "novel",
+    "queries": [
+      "running average key norm attention adaptive vs static scale transformer",
+      "batch statistics key scale attention temperature ablation"
+    ],
+    "conclusion": "The adaptation-speed sweep (frozen / 0.999 / 0.99 / 0.9) as a test of whether a normaliser's benefit is adaptive appears unpublished; it is what turned this thread from normalisation to initialisation scale.",
+    "prior_art": [
+      "https://arxiv.org/abs/2510.22777",
+      "https://arxiv.org/abs/2604.00199"
+    ]
+  },
+  "2026-09-01_fractional-norm-both-sides": {
+    "question": "Is the fractional magnitude channel key-specific, and does applying it to both sides help?",
+    "result_summary": "Not side-specific, and both sides is a trap at wide heads. The query-side mirror (fqn) tracks the key-side arm within 0.015 bpc at every one of six head widths (-0.075/-0.113/-0.143/-0.077/-0.062/-0.034 vs the key side's -0.070/-0.102/-0.142/-0.083/-0.077/-0.030), refuting the prediction that the channel is key-specific because the cliff is. Applying it to BOTH sides is the best arm at hd 4/8/16 (-0.094/-0.160/-0.185) and then fails exactly where the thread's q x k interaction always fails: -0.025 at hd=64 and +0.065 at hd=128, worse than baseline at one wide head. So stacking two magnitude channels on one softmax reproduces the two-normaliser pathology rather than escaping it.",
+    "verdict": "novel",
+    "queries": [
+      "query side key side magnitude channel attention symmetry ablation",
+      "both sides normalization interaction head width transformer"
+    ],
+    "conclusion": "Completes the side x width grid for our own magnitude channel; the query mirror was an open backlog item (qnorm-dynq-overshoot-check).",
+    "prior_art": [
+      "https://arxiv.org/abs/2506.21137"
+    ]
+  },
+  "2026-09-01_logit-scale-sweep": {
+    "question": "Is the tiny-head normalisation cliff a mis-set attention temperature, and why did a learnable temperature fail to find it?",
+    "result_summary": "CONFIRMED on all three predictions, and it reframes the whole nine-night thread. (P1) A fixed per-head key multiplier c has an interior optimum at every head width and the optimum MOVES: c=8 at hd=4 (-0.166 bpc, 3/3 seeds), c=8 at hd=16 (-0.215, 3/3), c=4 at hd=64 (-0.083, 3/3); the default c=1 is far from it, and overshooting is cheap at tiny heads (c=16 costs only +0.017 over c=8 at hd=4) but expensive at wide ones (+0.237 over c=4 at hd=64). The best constant BEATS EVERY NORMALISATION ARM IN THE THREAD: -0.215 at hd=16 against the best norm's -0.180. (P2) The same one-scalar-per-head dial made learnable from 1 does not travel - it ends at c=0.98/0.95/0.99 at hd 4/16/64, i.e. it drifts AWAY from an optimum 4-8x larger, and finishes at or below baseline (+0.002/+0.013/+0.009); started at 4 it keeps most of the win (-0.126/-0.170/-0.077). So the binding constraint is where the constant starts, not whether it can be expressed - which reconciles 2026-07-31's 2% temperature rescue with the large win here. (P3) Folding the factor into the key projection's init works at wide heads (hd=64: -0.070 vs c4's -0.083, within tolerance) but recovers only about half at tiny ones (hd=4: -0.071 vs -0.132), because enlarging the weights also changes how weight decay and Adam act on them. Decomposition, within this one experiment: at a MATCHED initial logit scale (c4 = 0.202 vs knorm_only = 0.224) the constant beats the normaliser by 0.259 bpc at hd=4 and 0.096 at hd=16 - that gap is what destroying per-token key magnitude costs once the scale effect is held fixed. Replication 18/18 archived cells exact.",
+    "verdict": "novel",
+    "queries": [
+      "attention logit scale initialization head dimension constant multiplier keys",
+      "learnable attention temperature initialization does not train small head dimension",
+      "1/sqrt(d_head) attention scale wrong small head dimension initialization"
+    ],
+    "conclusion": "Sweeping a fixed key multiplier against the same dial made learnable from two starting points, at matched initial logit scale against an RMSNorm, appears unpublished; it reconciles our own 2026-07-31 null (learnable temperature refunds 2%) with the large win found here.",
+    "prior_art": [
+      "https://arxiv.org/abs/2010.04245",
+      "https://arxiv.org/abs/2309.14322",
+      "https://arxiv.org/abs/2002.07028",
+      "https://arxiv.org/abs/2501.19399"
+    ]
+  }
+}

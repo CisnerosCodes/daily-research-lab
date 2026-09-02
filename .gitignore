@@ -13,6 +13,10 @@ __pycache__/
 venv/
 .DS_Store
 .ipynb_checkpoints/
+# intermediate experiment shards (the merged results.json is the artifact)
+**/results_part_*.json
+**/shard_*.log
+
 # keep figures (they are small and are the deliverable)
 !**/*.png
 !**/*.svg

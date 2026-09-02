@@ -1,0 +1,80 @@
+# Config for 2026-09-01_knorm-dynk-head-sweep. run.py reads it. No magic constants in code.
+id: "2026-09-01_knorm-dynk-head-sweep"
+title: "Does the key-side magnitude channel survive the head split? knorm_dynk vs every parent across the full iso-parameter head-dim family"
+hypothesis: >-
+  2026-08-31 found that reopening the per-token key-magnitude GRADIENT channel on top of
+  key-only RMS-norm (knorm_dynk) recovers 155% of the hd=4 cliff and lands 0.070 bpc BELOW
+  the unnormalised baseline (3/3 seeds). Every earlier "strictly better" candidate in this
+  thread died at a different head width (08-11 composite at hd=128, 08-23 k-only at hd=4).
+  Tonight is the kill test: six arms (baseline / qknorm / qnorm_only / knorm_only /
+  knorm_dynk / qknorm_dynq) x head_dim {4,16,32,64,128} x 3 byte-identical paired seeds.
+  Predictions registered up front: (P1) knorm_dynk is within tolerance of the best arm at
+  EVERY head width (the first strictly-better-than-both-parents arm in the thread);
+  (P2) the k-side alpha disengages with head width like the q-side channel did on 08-11
+  (0.98 -> 0.66), so knorm_dynk converges to knorm_only at hd >= 64; (P3) the two undetached
+  channels are NOT interchangeable: knorm_dynk beats qknorm_dynq at hd=4 (where the cliff is
+  key-side) and at hd=128 (where the query norm is the tax).
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+# --- hyperparameters (identical training recipe to 2026-07-30 ... 2026-08-31) ---
+params:
+  # iso-parameter head-split family: n_head x head_dim = d_model = 128
+  head_dims: [4, 8, 16, 32, 64, 128]
+  # arm -> [norm_q, norm_k, dyn_q, dyn_k]; dyn_* in {null, "undetached"}
+  #   the dyn channel on side s is tau_s = clamp(r_s / EMA(r_s), 1/c, c)^alpha_s applied to
+  #   the RMS-normalised vector, with r_s the PRE-norm per-token per-head RMS keeping its
+  #   gradient (the 08-06 / 08-31 machinery); q-side ordering follows 08-11 (gain then tau),
+  #   k-side ordering follows 08-31 (tau then gain) so both anchors replicate bit-exactly.
+  arms:
+    baseline:    [false, false, null, null]
+    qknorm:      [true,  true,  null, null]
+    qnorm_only:  [true,  false, null, null]
+    knorm_only:  [false, true,  null, null]
+    knorm_dynk:  [false, true,  null, "undetached"]
+    k_emascale:  [false, true,  null, "alpha_fixed1"]
+    qknorm_dynq: [true,  true,  "undetached", null]
+  arm_order: ["baseline", "qknorm", "qnorm_only", "knorm_only", "knorm_dynk", "qknorm_dynq", "k_emascale"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  # dyn machinery (same constants as 08-02/06/11/31)
+  ema_momentum: 0.99
+  ratio_clamp: 8.0
+  # attention probes
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # replication anchors: per-seed val bpc from the deterministic parents (identical harness
+  # math; env py 3.11.15 / torch 2.13.0+cu130 / numpy 2.4.4). Tonight's env: numpy 2.4.6.
+  # Every (arm, hd, seed) below is rerun fresh tonight and compared at rep_tol_bpc.
+  anchors:
+    "2026-08-30_knorm-only-head-sweep":
+      baseline:   {4: {0: 3.09304, 1: 3.09277, 2: 3.08542}, 16: {0: 3.02645, 1: 3.02092, 2: 3.01838}, 32: {0: 2.91031, 1: 2.94042, 2: 2.93368}, 64: {0: 2.85489, 1: 2.91863, 2: 2.87814}, 128: {0: 2.86663, 1: 2.88507, 2: 2.89028}}
+      qknorm:     {4: {0: 3.22297, 1: 3.24883, 2: 3.18966}, 16: {0: 2.87788, 1: 2.87707, 2: 2.89246}, 32: {0: 2.83013, 1: 2.82343, 2: 2.84518}, 64: {0: 2.83668, 1: 2.85546, 2: 2.82758}, 128: {0: 2.91841, 1: 2.89892, 2: 2.86797}}
+      qnorm_only: {4: {0: 3.11738, 1: 3.12213, 2: 3.10377}, 16: {0: 2.9469, 1: 2.97744, 2: 2.96415}, 32: {0: 2.85171, 1: 2.89793, 2: 2.88995}, 64: {0: 2.82553, 1: 2.835, 2: 2.8242}, 128: {0: 2.85981, 1: 2.86213, 2: 2.86425}}
+      knorm_only: {4: {0: 3.22604, 1: 3.23392, 2: 3.19338}, 16: {0: 2.91334, 1: 2.96255, 2: 2.95101}, 32: {0: 2.85342, 1: 2.86528, 2: 2.86262}, 64: {0: 2.81085, 1: 2.82401, 2: 2.80863}, 128: {0: 2.84339, 1: 2.83746, 2: 2.83958}}
+    "2026-07-26_head-dim-vs-count-isoparam":
+      baseline:   {8: {0: 3.05388, 1: 3.07081}}
+    "2026-08-31_hd4-kside-cliff-mechanism":
+      knorm_dynk: {4: {0: 3.0167, 1: 3.01687, 2: 3.02665}}
+    "2026-08-11_qknorm-dyntemp-composite-sweep":
+      qknorm_dynq: {4: {0: 3.07885, 1: 3.12452}, 16: {0: 2.85141, 1: 2.84026}, 32: {0: 2.82899, 1: 2.82844}, 64: {0: 2.79641, 1: 2.86352}, 128: {0: 2.91126, 1: 2.91511}}
+  rep_tol_bpc: 0.0005
+  # do-no-harm / strictly-better tolerance, same as 07-30/08-11/08-23/08-30
+  tolerance_bpc: 0.015

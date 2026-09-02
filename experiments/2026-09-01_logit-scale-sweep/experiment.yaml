@@ -1,0 +1,63 @@
+# Config for 2026-09-01_logit-scale-sweep. run.py reads it. No magic constants in code.
+id: "2026-09-01_logit-scale-sweep"
+title: "Is the tiny-head cliff a mis-set attention temperature? Sweeping a fixed per-head key multiplier against a learnable one and against the weight init"
+hypothesis: >-
+  2026-09-01_kscale-adaptive-vs-static found that a per-head key scale FROZEN at its first-batch value
+  beats the same scale tracked by an EMA (-0.134 vs -0.070 bpc at hd=4), monotone in adaptation speed
+  (static > m0.999 > m0.99 > m0.9). A frozen per-head scale is algebraically a constant multiplier on the
+  attention logits, i.e. a temperature - yet 2026-07-31 found a LEARNABLE per-head temperature on top of
+  QK-norm refunds only 2% of the cliff, with the optimizer leaving it at tau ~ 1.04 when ~2.6 was needed.
+  Both results can hold only if the binding constraint is where the constant STARTS, not whether it
+  exists. Tonight sweeps a fixed key multiplier c in {1,2,4,8,16} at three head widths and contrasts it
+  with the same dial made learnable from 1 and from 4, and with the intervention folded into the key
+  projection's initialization (zero runtime cost). Predictions registered up front: P1 the fixed-c curve
+  has an interior optimum that moves with head width (large c at hd=4, near 1 at hd=64); P2 learning c
+  from 1 recovers far less than the best fixed c while learning it from 4 keeps most of the win - the
+  constraint is the starting point, not learnability; P3 scaling the key projection at init matches the
+  runtime multiplier within tolerance.
+seed: 0
+dataset:
+  name: "tiny-shakespeare (character level)"
+  source: "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+  license: "public domain text; char-rnn repo MIT"
+  hash: "md5:6fb458f1232090904fb40fe944165e91"
+params:
+  head_dims: [4, 16, 64]
+  # arm -> spec dict. norm_k: RMS-norm+gain on keys. k_mult: fixed per-head key multiplier.
+  # c_learnable: make log(k_mult) learnable. k_init_mult: scale the KEY third of qkv at init.
+  arms:
+    baseline:   {}
+    c2:         {k_mult: 2.0}
+    c4:         {k_mult: 4.0}
+    c8:         {k_mult: 8.0}
+    c16:        {k_mult: 16.0}
+    c_learn1:   {k_mult: 1.0, c_learnable: true}
+    c_learn4:   {k_mult: 4.0, c_learnable: true}
+    kinit_x4:   {k_init_mult: 4.0}
+    knorm_only: {norm_k: true}
+  arm_order: ["baseline", "c2", "c4", "c8", "c16", "c_learn1", "c_learn4", "kinit_x4", "knorm_only"]
+  seeds: [0, 1, 2]
+  d_model: 128
+  n_layer: 2
+  d_ff_mult: 4
+  block_size: 96
+  batch_size: 16
+  steps: 600
+  lr: 0.003
+  warmup: 60
+  lr_min_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  train_frac: 0.9
+  char_vocab_size: 65
+  eval_batch: 32
+  max_eval_blocks: 480
+  entropy_batches: 4
+  entropy_min_pos: 8
+  # replication anchors from the deterministic parents (identical recipe and seeds)
+  anchors:
+    "2026-08-30_knorm-only-head-sweep":
+      baseline:   {4: {0: 3.09304, 1: 3.09277, 2: 3.08542}, 16: {0: 3.02645, 1: 3.02092, 2: 3.01838}, 64: {0: 2.85489, 1: 2.91863, 2: 2.87814}}
+      knorm_only: {4: {0: 3.22604, 1: 3.23392, 2: 3.19338}, 16: {0: 2.91334, 1: 2.96255, 2: 2.95101}, 64: {0: 2.81085, 1: 2.82401, 2: 2.80863}}
+  rep_tol_bpc: 0.0005
+  tolerance_bpc: 0.015

@@ -1,0 +1,596 @@
+# Set the Temperature, Not the Norm
+
+**What a nine-night attention-normalization thread was actually measuring: the logit scale you start from.**
+
+*daily-research-lab, 2026-09-02. Adrian Cisneros (CisnerosCodes), with Claude as research assistant. Every number here is read out of a `results.json` in this repository by `paper/fill_sections.py`; every figure is regenerated from those files by `paper/make_figures.py`.*
+
+## Abstract
+
+QK-normalization is a default in production language models, and key-only normalization was recently proposed as a gentler alternative. We asked how the right choice depends on head geometry, and swept the iso-parameter head split of a 0.42M-parameter character-level transformer at exactly matched parameters, FLOPs, initializations and data streams. Normalization's effect turns out to be strongly head-width dependent: at 32 heads of dimension 4 the two-sided and key-side normalizers each cost about +0.13 bits per character while the query-side one is nearly free, and at 8 heads of dimension 16 the two-sided normalizer instead pays −0.14. Nine controlled ablations then locate the tiny-head cost in a severed gradient: restoring the per-token key magnitude as a forward value with its gradient projected out pays the full cost, while a learnable gain with no normalizer is free. That result stands. The architecture we built on it does not. Freezing the repair's learnable exponent changes nothing, slowing its running statistic *helps* monotonically, and applying it to queries instead of keys works equally well — three signs that the mechanism is not adaptive and not key-specific. Following them, we find the whole effect is a **constant**: multiplying keys by a fixed per-head scalar, chosen once, beats every normalization arm in the thread. The best constant moves with head width, the default of 1 is badly wrong at small head dimension, and the same dial made *learnable from 1* does not travel there, which reconciles a two-percent rescue reported earlier with a large one now. The intervention costs no parameters and one broadcast multiply, and most of it can be folded into the key projection's initialization so the forward pass is untouched. We verify the head-width map on a second corpus and under 3x longer training, and report where it fails: the wide-head ordering is corpus- and budget-specific and dissolves with more training. We ship the one-line fix, a benchmark that reproduces our archived numbers to five decimals, and two companion recipes from the same lab. All results are small-scale, early-training and CPU-only.
+
+## 1. Introduction
+
+Attention normalization has become a default rather than a decision. Gemma 2/3, OLMo 2 and Qwen3 apply an RMSNorm to queries and keys per head; the stated motivation is stability, and the usual evidence is that loss spikes went away. Two questions are missing from that picture. Does the right answer depend on the shape of the heads, and what exactly does a normalizer take away when it helps or hurts?
+
+This paper comes out of a lab notebook: sixty-odd small experiments, one per night on a CPU, each with a hypothesis registered before the run, paired seeds, and a results file that a later night replicates bit for bit. Nine of those nights form one thread on attention normalization. The thread proposed an architecture, and then five kill tests refuted it and pointed somewhere simpler and better. We report both halves, because the refutation is the result.
+
+**What we found, in order.**
+
+1. **Normalization's effect depends on head geometry** (Section 4). At exactly iso-parameter head splits, the best of no-norm, query-only, key-only and both changes with head width, and the interaction between the two one-sided norms flips sign from roughly additive at many tiny heads to destructive at one wide head.
+2. **The tiny-head cost is a severed gradient, not a lost value** (Section 5). Restoring the per-token key magnitude in the forward pass with its gradient projected out pays the full cost; a learnable gain without a normalizer is free.
+3. **The repair we built on that is over-engineered** (Section 6). Its learnable exponent buys nothing, its running statistic is better the less it adapts, and it works the same on queries. Each of these is a paired, three-seed result.
+4. **The mechanism is a constant, and it is a temperature** (Section 7). A fixed per-head multiplier on the keys beats every normalization arm in the thread. The best multiplier moves with head width; at small head dimension the default is several times too small. The same dial made learnable from the default does not travel to the optimum within the budget, which is why an earlier experiment concluded that temperature was not the problem.
+5. **Most of it folds into the initialization** (Section 7.3). Scaling the key projection's initial weights recovers much of the runtime multiplier's benefit with no forward-pass change at all, though not all of it, because enlarging the weights also changes how weight decay and Adam act on them.
+6. **Where it holds and where it does not** (Section 8). The tiny-head result transfers to a second corpus and survives 3x training with its sign intact and its magnitude halved. The wide-head ordering does neither.
+
+We are explicit about scale throughout: d_model 128, two layers, 600 steps for the main grid and 1800 for the training check, character-level text, three paired seeds. This is a small-scale proxy study in the lineage of Wortsman et al. (2023). Its value is the control, not the scale, and Section 11 says plainly which claims we expect to survive scaling and which we do not.
+
+## 2. Background and related work
+
+**QK-norm.** Henry et al. (2020) L2-normalize queries and keys along the head dimension and replace 1/sqrt(d) with a learnable scalar. Dehghani et al. (2023) used a LayerNorm variant to stabilize a 22B vision transformer; Wortsman et al. (2023) showed at small scale that QK-LayerNorm removes attention-logit growth and widens the usable learning-rate range. Production models apply an RMSNorm with a learnable gain to both sides, which is exactly our `qknorm` arm.
+
+**Key-only normalization.** QUEST (arXiv:2604.00199, ICLR 2026) constrains keys to a hypersphere while leaving queries free, arguing that this lets each token control the sharpness of its own softmax and stops large-norm keys from taking attention globally. Its own text states that one-sided normalization had not been proposed before it. We reached key-only normalization independently (registry 2026-08-23) and do not claim it as new; what we add is the head-width map, the mechanism, and the finding that a constant does better than either. Our operator also differs, being an RMSNorm with a learnable per-channel gain rather than a projection to the sphere. We could not read QUEST from this sandbox because the arXiv host is blocked here, so its exact operator and ablation table should be checked before this section is submitted anywhere.
+
+**Normalization that keeps the magnitude.** SeeDNorm (Cai et al., 2025) starts from the observation this paper ends on: RMSNorm discards the input norm in the forward pass and a static gain cannot recover it. Its fix is a data-dependent self-rescaling coefficient. NaLaFormer (Meng et al., 2025) re-injects the query norm into linear attention for the same reason. ScaleNorm (Nguyen and Salazar, 2019) goes the other way, replacing LayerNorm with a single learned length per layer. Our result sits underneath all three: before asking what a normalizer should preserve, check what scale the logits started at.
+
+**Attention temperature.** Selective Attention (NeurIPS 2024) learns a data-dependent inverse temperature on the query. Veličković et al. (2024) sharpen softmax at inference from its entropy. Scalable-Softmax scales logits by a learnable per-head multiple of log n. Gated Attention (Qiu et al., NeurIPS 2025) applies a query-dependent sigmoid gate to the attention output. Our finding is not a new temperature mechanism; it is that the *initial value* of the simplest possible temperature is the binding constraint at small head dimension, and that learnability does not substitute for setting it.
+
+**Initialization and scale.** The 1/sqrt(head_dim) factor is the standard fix for logit growth with head dimension, derived for queries and keys with unit-variance independent entries. Real queries and keys are neither unit-variance nor independent, since both are linear images of the same normalized residual stream. Our Section 7 measures what the scale actually is. This connects to muP (Yang et al.) and to the lab's own muP replication (registry 2026-07-26), which found that most of the practical benefit of muP at these sizes is tunability rather than loss.
+
+**Evidence standards.** A 2026 update to the Narang et al. transformer-modification study (arXiv:2605.20798) found that most modifications do not transfer at 1 to 3B and requires multi-seed noise floors. We adopt that standard at our scale: every comparison is paired on byte-identical initializations and data streams, and we report per-seed win counts alongside means, since a paired difference is the correct noise test for this design.
+
+## 3. Setup
+
+**Model.** Two-layer pre-norm decoder-only transformer, d_model 128, FFN 512 with GELU, learned absolute positions, context 96, character vocabulary 65, no biases, untied output head: 423,424 parameters. Attention uses `F.scaled_dot_product_attention` with its default 1/sqrt(head_dim) scale in every arm.
+
+**Iso-parameter head splits.** At fixed d_model the QKV and output projections do not depend on the split, so every (n_head, head_dim) pair with n_head x head_dim = 128 has identical parameters and identical FLOPs. The only differences are how the same vectors are reshaped before the softmax and the 1/sqrt(head_dim) that follows. We use head_dim in {4, 8, 16, 32, 64, 128}; head_dim 8 had never been run with any normalization arm before this paper.
+
+**Arms.** Let q_t and k_t be a token's per-head query and key, r(x) the root-mean-square over the head dimension, and g a learnable per-channel gain of length d_model, initialized to one and excluded from weight decay.
+
+| arm | query | key |
+|---|---|---|
+| baseline | q | k |
+| qknorm | g_q · q / r(q) | g_k · k / r(k) |
+| qnorm_only | g_q · q / r(q) | k |
+| knorm_only | q | g_k · k / r(k) |
+| magnitude channel (key) | q | g_k · (k / r(k)) · clamp(r(k) / s_h, 1/8, 8)^alpha_h |
+| frozen exponent | q | the same with alpha_h fixed at 1 |
+| fixed multiplier | q | c_h · k, with c_h a constant |
+
+Here s_h is a per-head running mean of r updated only in training mode, and alpha_h is a learnable per-head exponent initialized to 1. Section 6 dismantles this family and Section 7 replaces it.
+
+**Training.** AdamW with betas 0.9 and 0.95, peak learning rate 3e-3, 60 warmup steps then cosine to a tenth, 600 steps of 16 sequences by 96 tokens, weight decay 0.1 on matrices only, gradient clipping at 1.0. Validation is bits per character over 480 contiguous held-out blocks, 46,080 characters.
+
+**Paired initializations.** All shared weights are drawn from one seed before any arm-specific parameter exists; arm-specific extras are constants that consume no random numbers. The batch stream is a per-seed generator replayed identically by every arm. A per-seed initialization signature is asserted equal across arms in every run. Every night re-runs its parents' anchor cells and requires agreement to 0.0005 bpc.
+
+**What "better" means.** Differences are in bits per character. Because the design is paired, the noise test we report is the sign of the per-seed difference, not the overlap of per-arm spreads.
+
+## 4. Normalization depends on head geometry
+
+<!-- FIG1 -->
+
+| arm | hd 4 (32 heads) | hd 8 (16 heads) | hd 16 (8 heads) | hd 32 (4 heads) | hd 64 (2 heads) | hd 128 (1 head) |
+|---|---|---|---|---|---|---|
+| no norm | 3.0904 (±0.004) | 3.0579 (±0.011) | 3.0219 (±0.004) | 2.9281 (±0.015) | 2.8839 (±0.032) | 2.8807 (±0.012) |
+| QK-norm | 3.2205 (+0.130; ±0.030) | 2.9953 (-0.063; ±0.004) | 2.8825 (-0.139; ±0.008) | 2.8329 (-0.095; ±0.011) | 2.8399 (-0.044; ±0.014) | 2.8951 (+0.014; ±0.025) |
+| query-only norm | 3.1144 (+0.024; ±0.009) | 3.0496 (-0.008; ±0.020) | 2.9628 (-0.059; ±0.015) | 2.8799 (-0.048; ±0.023) | 2.8282 (-0.056; ±0.005) | 2.8621 (-0.019; ±0.002) |
+| key-only norm | 3.2178 (+0.127; ±0.020) | 3.0781 (+0.020; ±0.005) | 2.9423 (-0.080; ±0.025) | 2.8604 (-0.068; ±0.006) | 2.8145 (-0.069; ±0.008) | **2.8401** (-0.041; ±0.003) |
+| **magnitude channel** (learnable exponent) | **3.0201** (-0.070; ±0.005) | 2.9554 (-0.102; ±0.020) | 2.8795 (-0.142; ±0.013) | 2.8455 (-0.083; ±0.010) | **2.8073** (-0.077; ±0.003) | 2.8511 (-0.030; ±0.005) |
+| magnitude channel (exponent frozen at 1) | 3.0203 (-0.070; ±0.007) | 2.9552 (-0.103; ±0.020) | 2.8785 (-0.143; ±0.000) | 2.8446 (-0.084; ±0.007) | 2.8132 (-0.071; ±0.007) | 2.8579 (-0.023; ±0.003) |
+| QK-norm + query channel | 3.0934 (+0.003; ±0.024) | **2.9274** (-0.131; ±0.014) | **2.8419** (-0.180; ±0.009) | **2.8203** (-0.108; ±0.013) | 2.8264 (-0.058; ±0.034) | 2.9119 (+0.031; ±0.003) |
+
+*Table 1. Head-split sweep on tiny-shakespeare, 600 steps, three paired seeds (registry 2026-09-01_knorm-dynk-head-sweep). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 8 | hd 16 | hd 32 | hd 64 | hd 128 |
+|---|---|---|---|---|---|---|
+| QK-norm | 0/3 / — | 3/3 / — | 3/3 / — | 3/3 / — | 3/3 / — | 1/3 / — |
+| query-only norm | 0/3 / 3/3 | 3/3 / 0/3 | 3/3 / 0/3 | 3/3 / 0/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| key-only norm | 0/3 / 1/3 | 0/3 / 0/3 | 3/3 / 0/3 | 3/3 / 0/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 1/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| magnitude channel (exponent frozen at 1) | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 1/3 | 3/3 / 0/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| QK-norm + query channel | 2/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 2/3 | 0/3 / 1/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
+
+<!-- FIG2 -->
+
+Three facts organize the table.
+
+**Without normalization the curve is monotone in head width; with it, it is not.** Validation loss falls monotonically as heads get wider, a plateau above 64 and a steep tax below 32. Adding QK-norm removes most of the mid-range tax and introduces an interior optimum, while making the smallest split distinctly worse.
+
+**At tiny heads the damage rides the key side.** At head_dim 4, key-only normalization pays essentially the whole two-sided cost while query-only normalization is nearly free. This is the reversal that redirected the thread: an earlier repair through a query-side magnitude channel was compensation through the surviving side, not the causal side.
+
+**The two one-sided norms interact, and the sign of the interaction flips with width.** Writing the interaction as the two-sided delta minus the two one-sided deltas, it is near zero or slightly favourable at head_dim 4 and 16 and clearly destructive at 64 and 128. Stacking two normalizers on one wide head is the pathology; at many narrow heads they are close to additive.
+
+## 5. The tiny-head cost is a severed gradient
+
+Five controlled experiments, all on byte-identical paired initializations, locate the cause of the cost at head_dim 4. This section is unchanged by the later results and we still believe it.
+
+**It is not an average sharpness cap** (registry 2026-07-31). Unit-RMS four-dimensional heads have bounded logits, and the normalized heads are measurably flatter. But a free per-head learnable temperature on top of QK-norm refunds two percent of the cost, and the optimizer leaves the dial essentially at one when matching the baseline's logit scale would need roughly 2.6. Section 7 explains why, and the explanation is the paper's main result.
+
+**Per-token modulation is half of it** (2026-08-02). A per-token temperature on the query, computed from the query's own magnitude relative to a running average, refunds 54 percent, with a rescue nearly identical across paired seeds even though the underlying cost varies by half. Mean sharpness barely moves; what moves is the per-token spread.
+
+**The gradient path is the other half** (2026-08-06). Letting the gradient flow through the magnitude raises the rescue to 98 percent. The control that pins it is the raw undetached magnitude with no running average, clamp or exponent, which refunds four percent.
+
+**The causal side is the key side** (2026-08-30). The one-sided sweep of Section 4 shows the cost following the key norm, so the query-side rescue was compensation.
+
+**Value versus gradient** (2026-08-31). Six key-side arms at head_dim 4. A learnable per-channel gain with no normalizer is free. Freezing the gain inside the normalizer changes nothing, so the gain is not the cause. The decisive arm multiplies the normalized key back by its own detached magnitude: its forward values equal the gain-only arm's to within a 1e-6 epsilon, yet it pays the full cost, because RMS normalization projects the radial component out of the key gradient and the projection weights never receive the signal to shape per-token key magnitudes.
+
+<!-- FIG4 -->
+
+The mechanism statement is therefore: at tiny heads what a normalizer destroys is not the magnitude's value but the *learnability* of that magnitude through the projection.
+
+That is what this thread concluded, and the experiments behind it are sound. It is also incomplete, in a way we only saw two sections later. Every arm in this section shares one property that none of them varies: they all leave the *average* key scale roughly where the normalizer puts it, or roughly where the baseline puts it, and none of them asks whether that average is right in the first place. Section 7 asks, and the answer accounts for more of the effect than anything measured here.
+
+## 6. Three signs the repair was over-engineered
+
+Reopening that gradient channel gave an architecture: normalize keys, then rescale each key by a learnable per-head power of its own magnitude relative to a running per-head scale. At head_dim 4 it landed 0.070 bpc below the unnormalized baseline in three of three seeds, where both QK-norm and key-only normalization sit 0.13 above. We then ran the tests that would kill it. All three came back against the design, and each is a paired three-seed comparison.
+
+**The learnable exponent buys nothing.** Freezing the exponent at one changes the result by between +0.001 and −0.007 bpc across six head widths, inside the seed spread everywhere. The model does move the exponent when free to, and it moves it further at wider heads, but the movement does not pay.
+
+| exponent | hd 4 | hd 8 | hd 16 | hd 32 | hd 64 | hd 128 |
+|---|---|---|---|---|---|---|
+| key-side exponent, learnable arm | 0.95 | 0.96 | 0.92 | 0.87 | 0.82 | 0.69 |
+| query-side exponent, QK-norm + query channel | 0.98 | 0.96 | 0.93 | 0.89 | 0.79 | 0.64 |
+
+*The model does move the exponent, and further at wider heads. Freezing it at 1 costs nothing (Table 1), so the movement does not pay.*
+
+<!-- FIG3 -->
+
+**Adaptation makes it worse, monotonically.** If the win came from a running statistic tracking the key distribution, tracking faster should help. It does the opposite. At head_dim 4 the scale *frozen at its first batch* is nearly twice as good as the standard running average, and the ordering is monotone from frozen through slow to fast.
+
+<!-- FIG10 -->
+
+| arm | hd 4 (32 heads) | hd 64 (2 heads) |
+|---|---|---|
+| no norm | 3.0904 (±0.004) | 2.8839 (±0.032) |
+| magnitude channel (exponent frozen at 1) | 3.0203 (-0.070; ±0.007) | 2.8132 (-0.071; ±0.007) |
+| key / first-batch scale (static) | **2.9568** (-0.134; ±0.014) | 2.8078 (-0.076; ±0.014) |
+| key / running scale, m 0.9 | 3.0566 (-0.034; ±0.002) | 2.8289 (-0.055; ±0.005) |
+| key / running scale, m 0.999 | 2.9706 (-0.120; ±0.013) | **2.8001** (-0.084; ±0.016) |
+| query / running scale | 3.0159 (-0.075; ±0.012) | 2.8157 (-0.068; ±0.007) |
+
+*Table 4. Adaptive vs static key scale, 600 steps, three paired seeds (registry 2026-09-01_kscale-adaptive-vs-static). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 64 |
+|---|---|---|
+| magnitude channel (exponent frozen at 1) | 3/3 | 3/3 |
+| key / first-batch scale (static) | 3/3 | 3/3 |
+| key / running scale, m 0.9 | 3/3 | 3/3 |
+| key / running scale, m 0.999 | 3/3 | 3/3 |
+| query / running scale | 3/3 | 3/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm, at identical initializations and batches.*
+
+**It is not key-specific.** The identical construction on the query side performs the same at every width. Applying it to both sides is best at narrow heads and fails at one wide head, reproducing the interaction of Section 4 rather than escaping it.
+
+<!-- FIG11 -->
+
+| arm | hd 4 (32 heads) | hd 8 (16 heads) | hd 16 (8 heads) | hd 32 (4 heads) | hd 64 (2 heads) | hd 128 (1 head) |
+|---|---|---|---|---|---|---|
+| no norm | 3.0904 (±0.004) | 3.0579 (±0.011) | 3.0219 (±0.004) | 2.9281 (±0.015) | 2.8839 (±0.032) | 2.8807 (±0.012) |
+| **magnitude channel** (learnable exponent) | 3.0201 (-0.070; ±0.005) | 2.9554 (-0.102; ±0.020) | 2.8795 (-0.142; ±0.013) | 2.8455 (-0.083; ±0.010) | **2.8073** (-0.077; ±0.003) | 2.8511 (-0.030; ±0.005) |
+| magnitude channel, queries | 3.0156 (-0.075; ±0.008) | 2.9454 (-0.113; ±0.016) | 2.8785 (-0.143; ±0.005) | 2.8506 (-0.077; ±0.008) | 2.8222 (-0.062; ±0.006) | 2.8469 (-0.034; ±0.004) |
+| magnitude channel, both sides | **2.9961** (-0.094; ±0.006) | **2.8975** (-0.160; ±0.008) | **2.8367** (-0.185; ±0.017) | 2.8372 (-0.091; ±0.015) | 2.8588 (-0.025; ±0.006) | 2.9460 (+0.065; ±0.017) |
+| QK-norm + query channel | 3.0934 (+0.003; ±0.024) | 2.9274 (-0.131; ±0.014) | 2.8419 (-0.180; ±0.009) | **2.8203** (-0.108; ±0.013) | 2.8264 (-0.058; ±0.034) | 2.9119 (+0.031; ±0.003) |
+
+*Table 5. Which side carries the magnitude channel (registry 2026-09-01_fractional-norm-both-sides); comparison arms imported from the same-night head sweep. Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 8 | hd 16 | hd 32 | hd 64 | hd 128 |
+|---|---|---|---|---|---|---|
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 1/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+| magnitude channel, queries | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 0/3 | 3/3 / 2/3 | 3/3 / 3/3 |
+| magnitude channel, both sides | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 0/3 | 0/3 / 0/3 |
+| QK-norm + query channel | 2/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 2/3 | 0/3 / 1/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
+
+Three independent signals all say the same thing: whatever is helping is a *constant*, it does not need to be learned, and it does not care which side of the dot product it sits on.
+
+## 7. The mechanism is a temperature set at initialization
+
+A per-head scale frozen at its first batch is, algebraically, a constant. Writing s_h for that constant, the arm computes
+
+k_hat = (k / r_t) · (r_t / s_h) = k / s_h,
+
+so the per-token normalization cancels exactly and what remains is a fixed per-head multiplier on the keys, which is a fixed multiplier on the attention logits. That is a temperature. So we swept it.
+
+| arm | hd 4 (32 heads) | hd 16 (8 heads) | hd 64 (2 heads) |
+|---|---|---|---|
+| no norm | 3.0904 (±0.004) | 3.0219 (±0.004) | 2.8839 (±0.032) |
+| key-only norm | 3.2178 (+0.127; ±0.020) | 2.9423 (-0.080; ±0.025) | 2.8145 (-0.069; ±0.008) |
+| fixed multiplier c = 2 | 3.0212 (-0.069; ±0.005) | 2.8960 (-0.126; ±0.003) | 2.8448 (-0.039; ±0.018) |
+| fixed multiplier c = 4 | 2.9581 (-0.132; ±0.006) | 2.8458 (-0.176; ±0.008) | **2.8011** (-0.083; ±0.022) |
+| fixed multiplier c = 8 | **2.9245** (-0.166; ±0.010) | **2.8068** (-0.215; ±0.017) | 2.8418 (-0.042; ±0.014) |
+| fixed multiplier c = 16 | 2.9410 (-0.149; ±0.000) | 2.8470 (-0.175; ±0.016) | 3.0376 (+0.154; ±0.057) |
+| learnable c, starts at 1 | 3.0925 (+0.002; ±0.006) | 3.0348 (+0.013; ±0.007) | 2.8927 (+0.009; ±0.033) |
+| learnable c, starts at 4 | 2.9639 (-0.126; ±0.007) | 2.8518 (-0.170; ±0.003) | 2.8067 (-0.077; ±0.013) |
+| key init scaled x4 (no runtime op) | 3.0193 (-0.071; ±0.017) | 2.8809 (-0.141; ±0.008) | 2.8144 (-0.070; ±0.020) |
+
+*Table 6. Fixed key multiplier against learnable and against the weight init (registry 2026-09-01_logit-scale-sweep). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 16 | hd 64 |
+|---|---|---|---|
+| key-only norm | 0/3 | 3/3 | 3/3 |
+| fixed multiplier c = 2 | 3/3 | 3/3 | 3/3 |
+| fixed multiplier c = 4 | 3/3 | 3/3 | 3/3 |
+| fixed multiplier c = 8 | 3/3 | 3/3 | 3/3 |
+| fixed multiplier c = 16 | 3/3 | 3/3 | 0/3 |
+| learnable c, starts at 1 | 1/3 | 0/3 | 0/3 |
+| learnable c, starts at 4 | 3/3 | 3/3 | 3/3 |
+| key init scaled x4 (no runtime op) | 3/3 | 3/3 | 3/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm, at identical initializations and batches.*
+
+<!-- FIG12 -->
+
+### 7.1 The best constant moves with head width, and the default is wrong
+
+| head width | c = 1 | c = 2 | c = 4 | c = 8 | c = 16 | best c | gain at best c |
+|---|---|---|---|---|---|---|---|
+| head_dim 4 (32 heads) | +0.000 | -0.069 | -0.132 | **-0.166** | -0.149 | **8** | -0.166 |
+| head_dim 16 (8 heads) | +0.000 | -0.126 | -0.176 | **-0.215** | -0.175 | **8** | -0.215 |
+| head_dim 64 (2 heads) | +0.000 | -0.039 | **-0.083** | -0.042 | +0.154 | **4** | -0.083 |
+
+*Change in val bpc against the same arm at c = 1 (the default), three paired seeds. Bold marks the best constant at each width.*
+
+### 7.2 The same dial, learnable, does not get there
+
+| head width | learnable from 1 | learnable from 4 | best fixed c | c reached from 1 | c reached from 4 |
+|---|---|---|---|---|---|
+| head_dim 4 | +0.002 (1/3) | -0.126 (3/3) | -0.166 at c = 8 | 0.98 | 3.55 |
+| head_dim 16 | +0.013 (0/3) | -0.170 (3/3) | -0.215 at c = 8 | 0.96 | 3.34 |
+| head_dim 64 | +0.009 (0/3) | -0.077 (3/3) | -0.083 at c = 4 | 0.95 | 3.15 |
+
+*Change in val bpc vs the default, with paired-seed wins in brackets. The same one-scalar-per-head dial, started in two places. The last two columns are where the dial actually ended up.*
+
+This reconciles the two results that could not both be true. The same one-scalar-per-head dial exists in both arms. Started near the optimum it stays there and keeps almost the whole win; started at the default it does not travel — and the direction it does move is the telling part. At every head width the dial started at 1 ends *below* 1, drifting away from an optimum several times larger, and the arm finishes at or slightly worse than doing nothing.
+
+So the obstacle is not expressiveness, and it is not simply that the loss is flat in that direction. The local gradient at the default points the wrong way. A model that could express the right temperature, and would keep it if handed it, instead spends its budget moving away from it. That is why an experiment which gave the model a free temperature dial and watched it sit at one (registry 2026-07-31) correctly concluded that the dial was not being used, and incorrectly concluded that temperature was not the problem.
+
+### 7.3 Folding it into the weights
+
+Because the multiplier is a constant, it does not have to exist at runtime at all: scaling the key
+projection's initial weights by the same factor produces the same initial logit scale. That version
+is free in every sense, and it is the one to reach for if the forward pass must stay untouched — at the
+cost, as the numbers below show, of part of the benefit.
+
+| head width | multiplier at runtime (c = 4) | same factor folded into the key init | difference |
+|---|---|---|---|
+| head_dim 4 | -0.132 | -0.071 | +0.061 |
+| head_dim 16 | -0.176 | -0.141 | +0.035 |
+| head_dim 64 | -0.083 | -0.070 | +0.013 |
+
+*Change in val bpc vs the default, three paired seeds. Both arms start from the same attention logit scale; only the runtime version keeps the factor out of the weights.*
+
+It is not exactly equivalent, and we should say why. Enlarging the weights changes how weight decay
+and Adam's per-parameter normalization act on them for the rest of training, so the two arms share
+an initialization but not a trajectory. In our sweep the folded version recovered most, not all, of
+the runtime multiplier's benefit.
+
+### 7.4 What the normalizer was doing all along
+
+The comparison the sweep makes available is between a normalizer and a constant *at the same initial logit scale*. RMS-normalizing keys raises their magnitude by roughly the reciprocal of their initial RMS, which is about 4.4 at this width and initialization scheme. That is the same rescale the constant applies. The two arms therefore start from nearly the same attention sharpness and differ only in whether per-token magnitude survives.
+
+| head width | arm | initial logit std | Δ val bpc vs default |
+|---|---|---|---|
+| head_dim 4 | constant, 4 | 0.202 | -0.132 |
+| head_dim 4 | key-only RMS-norm | 0.224 | +0.127 |
+| head_dim 4 | **cost of the normalizer at matched scale** | | **+0.260** |
+| head_dim 16 | constant, 4 | 0.203 | -0.176 |
+| head_dim 16 | key-only RMS-norm | 0.225 | -0.080 |
+| head_dim 16 | **cost of the normalizer at matched scale** | | **+0.097** |
+| head_dim 64 | constant, 4 | 0.203 | -0.083 |
+| head_dim 64 | key-only RMS-norm | 0.225 | -0.069 |
+| head_dim 64 | **cost of the normalizer at matched scale** | | **+0.013** |
+
+*At a matched initial logit scale the only remaining difference is whether per-token key magnitude survives. The last row of each block is what destroying it costs.*
+
+Read that way, the normalizer was doing two things at once and they point in opposite directions. Its mean-scale effect is a large help. Everything it does beyond setting the mean scale is a larger harm. The net is the cost we spent nine nights explaining.
+
+Section 5 identified part of that harm as the severed gradient: an arm whose forward values match a plain learnable gain, but whose gradient is radially projected, pays about +0.13 bpc. If the three effects were additive, the mean-scale help, the severed gradient and the destruction of the forward magnitude values would sum to roughly the observed cost, and they do. We report that as arithmetic that is consistent rather than as a measured decomposition, because additivity across two experiments is an assumption we did not test. The direct, single-experiment claim is the one in the table above: at a matched starting scale, a constant beats the normalizer, and the gap is large.
+
+## 8. Where the map holds, and where it does not
+
+Every earlier "strictly better" candidate in this thread died one head width away from where it was found. So the tests that matter are the ones that try to kill the current one.
+
+### 8.1 A second corpus
+
+| arm | hd 4 (32 heads) | hd 32 (4 heads) | hd 64 (2 heads) |
+|---|---|---|---|
+| no norm | 2.8230 (±0.027) | 2.6360 (±0.010) | 2.5651 (±0.017) |
+| QK-norm | 2.9813 (+0.158; ±0.027) | 2.5005 (-0.135; ±0.017) | 2.4673 (-0.098; ±0.013) |
+| key-only norm | 3.0106 (+0.188; ±0.028) | 2.5412 (-0.095; ±0.044) | 2.4996 (-0.065; ±0.013) |
+| **magnitude channel** (learnable exponent) | 2.7233 (-0.100; ±0.016) | 2.4852 (-0.151; ±0.009) | 2.4469 (-0.118; ±0.012) |
+| magnitude channel (exponent frozen at 1) | **2.7179** (-0.105; ±0.012) | 2.4836 (-0.152; ±0.001) | 2.4450 (-0.120; ±0.009) |
+| QK-norm + query channel | 2.8678 (+0.045; ±0.025) | **2.4433** (-0.193; ±0.009) | **2.4200** (-0.145; ±0.020) |
+
+*Table 2. Character-level Penn Treebank, 600 steps, three paired seeds (registry 2026-09-01_knorm-dynk-ptb-transfer). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 32 | hd 64 |
+|---|---|---|---|
+| QK-norm | 0/3 / — | 3/3 / — | 3/3 / — |
+| key-only norm | 0/3 / 1/3 | 3/3 / 1/3 | 3/3 / 0/3 |
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 3/3 |
+| magnitude channel (exponent frozen at 1) | 3/3 / 3/3 | 3/3 / 2/3 | 3/3 / 3/3 |
+| QK-norm + query channel | 1/3 / 3/3 | 3/3 / 3/3 | 3/3 / 3/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
+
+<!-- FIG6 -->
+
+The tiny-head half of the map transfers and gets larger: the normalization cost at head_dim 4 grows on character-level Penn Treebank, and the magnitude repair beats the baseline in three of three seeds at every width tested. The wide-head half does not transfer. On this corpus QK-norm does not lose at head_dim 64, and the composite arm wins at both mid and wide splits. The claim "drop the query norm at wide heads" is a tiny-shakespeare claim, not a general one.
+
+### 8.2 Three times longer training
+
+| arm | hd 4 (32 heads) | hd 64 (2 heads) |
+|---|---|---|
+| no norm | 2.4841 (±0.015) | 2.4009 (±0.015) |
+| QK-norm | 2.5491 (+0.065; ±0.036) | **2.3802** (-0.021; ±0.004) |
+| key-only norm | 2.5420 (+0.058; ±0.033) | 2.3845 (-0.016; ±0.008) |
+| **magnitude channel** (learnable exponent) | **2.4571** (-0.027; ±0.014) | 2.3841 (-0.017; ±0.012) |
+| magnitude channel (exponent frozen at 1) | 2.4610 (-0.023; ±0.018) | 2.3845 (-0.016; ±0.013) |
+
+*Table 3. 1800 steps on tiny-shakespeare, three paired seeds (registry 2026-09-01_knorm-dynk-longer-training). Cells: mean val bpc (delta vs no norm; ± half the seed spread). Bold = best arm at that width.*
+
+| arm | hd 4 | hd 64 |
+|---|---|---|
+| QK-norm | 0/3 / — | 3/3 / — |
+| key-only norm | 0/3 / 2/3 | 3/3 / 1/3 |
+| **magnitude channel** (learnable exponent) | 3/3 / 3/3 | 3/3 / 1/3 |
+| magnitude channel (exponent frozen at 1) | 3/3 / 3/3 | 3/3 / 1/3 |
+
+*Paired-seed wins: seeds where the arm beats no norm / seeds where it beats QK-norm, at identical initializations and batches.*
+
+<!-- FIG7 -->
+
+Every effect shrinks with training, by a factor of two to five. The sign survives where it matters: at head_dim 4 the normalization cost is still positive in three of three paired seeds and the repair still negative in three of three, both roughly halved. At head_dim 64 the arms become indistinguishable from each other, all landing within about 0.005 bpc while beating the baseline by about 0.02. So the wide-head *ordering* is a property of the early-training regime and should not be quoted as an architecture recommendation. The tiny-head result is the one that survives every stress test we applied.
+
+## 9. What to actually do
+
+| if your head_dim is | do this | measured here |
+|---|---|---|
+| 4 (32 heads at d_model 128) | multiply keys by 8 | -0.166 bpc |
+| 16 (8 heads at d_model 128) | multiply keys by 8 | -0.215 bpc |
+| 64 (2 heads at d_model 128) | multiply keys by 4, or fold the same factor into the key init | -0.083 bpc |
+
+*The constant is not universal: it depends on the initialization scheme and the head width, so measure it once for your configuration with `python -m attnscale.bench --sweep-c` rather than copying these values. The runtime multiplier is the primary recommendation at every width; folding the same factor into the key projection's initialization is equivalent at head_dim 64 but recovers only about half the benefit at head_dim 4 (Section 7.3).*
+
+The rule that survives all six experiments: **check the scale of your attention logits at initialization before you reach for a normalizer.** At small head dimension the standard 1/sqrt(head_dim) leaves them far too small, a normalizer fixes that as a side effect while destroying something else, and a constant fixes it without the side effect. Where a normalizer is genuinely wanted for stability at scale, this result does not argue against it; it argues that its scale effect and its normalization effect should be set separately, because at small head dimension they have opposite signs.
+
+### 9.1 Three things this makes possible
+
+The repository ships `attnscale/`, a small tested package that turns the above into three steps you can run today. None of them needed new mathematics; what they needed was knowing which number to look at.
+
+**Diagnose the scale you start from.** One line on an untrained model reports the standard deviation of the pre-softmax attention logits. In our runs it was about 0.05 at head_dim 4 against a trained value near 3, which is the whole problem in one number, and it is not something the loss curve tells you.
+
+```python
+from attnscale import initial_logit_std, suggest_key_scale
+print(initial_logit_std(q, k, head_dim))   # q, k from an untrained model
+print(suggest_key_scale(k))                 # a per-head starting point for the sweep
+```
+
+**Measure the right constant for your own configuration.** The optimum depends on head width, initialization scheme and corpus, so the paper's values are a demonstration and not a recommendation. The sweep is a few CPU-minutes:
+
+```
+python -m attnscale.bench --text my_corpus.txt --head-dim 16 --sweep-c 1 2 4 8 16
+```
+
+The same benchmark reproduces this lab's archived unnormalized baseline (3.09304 bits per character) to five decimal places, so whatever you measure is on the same scale as every number in this paper.
+
+**Apply it.** Zero parameters and one broadcast multiply, or fold it into the weights and change nothing at runtime:
+
+```python
+from attnscale import KeyScale
+k = KeyScale(n_head=8, c=8.0)(k)            # then softmax(q k^T / sqrt(d)) v as usual
+```
+
+Nothing here is expensive, which is the point. The reason it was not available before is that the thread it came from spent nine nights measuring normalizers against each other and never varied the one quantity that mattered most.
+
+### 9.2 The experiment we would run next, and cannot
+
+Everything above is measured at d_model 128 on a CPU. The argument for why it should scale is that initial logit scale is a property of the parameterization rather than of the corpus, and the head widths where it bites hardest, 4 to 16, are exactly the ones large models use once d_model is divided across many heads. The argument against is that large models train far longer, and Section 8.2 shows these effects shrink with training. That question needs one afternoon on a GPU at d_model 512 to 1024, and it is the single most valuable follow-up: the sweep is cheap, the fix is one line, and the outcome decides whether this is a small-scale curiosity or a default worth changing.
+
+## 10. Two companion recipes from the same lab
+
+The attention thread is the deepest in the notebook, and two others produced results worth acting on. Both are summarized from their registry rows; the full tables are in the repository.
+
+### 10.1 Plateau escape in gated linear attention
+
+Multi-query associative recall separates softmax attention from sub-quadratic mixers. Ten nights of paired experiments on a 94k-parameter gated linear-attention model produced a causal chain rather than a leaderboard. A fixed-step "capacity frontier" turns out to measure escape time, not capacity: the model that sits at chance for 15,000 steps breaks out at 17,500. Only a dense per-channel gate escapes reliably, and its advantage is content routing, since the same gate fed another sequence's content is an exact no-op. The gate is rate-limiting from below but never paces from above; the backbone sets the clock; weight decay is a seed-exact no-op on timing. The last suspect was gradient noise, and it is convicted with the opposite sign to the folklore: escape time measured in drift units collapses onto the ratio of learning rate to batch size, and *less* noise escapes earlier.
+
+<!-- FIG8 -->
+
+**Recipe.** Dense per-channel gate, AdamW with no warmup or clipping, learning rate 4e-3 on every parameter group, batch 256. Escape at step 300 in all three seeds, against 1100 for the standard recipe. If the budget is wall-clock on a CPU rather than steps, batch 16 at the same 4x learning rate escapes in fewer seconds; the law says the two knobs trade off exactly. The honest comparison outside the gate family: a Taylor-expansion feature map with no gate at all solves the same cell by step 500 at the ordinary learning rate.
+
+### 10.2 When weight-tied recursion pays
+
+The lab's flagship idea began with a weight-tied looped block and a falsification target. Twelve experiments later: on language-model loss at matched FLOPs the loop loses, and depth itself is nearly flat at this size. Entropy-based early exit is indistinguishable from a coin flip at matched compute, because the fixed-depth quality curve it would exploit is flat. The loop earns test-time compute only under a stochastic depth schedule, where it reaches 0.85 frontier accuracy at 2.7x its trained depth against 0.55 for fixed-depth training; untied depth cannot be extended by any trick. Supervising the intermediate state beats every unsupervised extra-compute mechanism, and trained halting learns real difficulty but under-spends out of distribution.
+
+<!-- FIG9 -->
+
+**Rule.** Tie the block and train the depth stochastically with per-iteration input injection, or do not loop at all. Test a halting rule only on a task whose fixed-depth curve is steep. Spend supervision on the intermediate state before spending it on latent compute.
+
+## 11. Limitations
+
+- **Scale.** One architecture, two layers, d_model 128, 0.42M parameters, 600 steps for the main grid. All arms sit far from convergence. A mechanism that is merely slower to optimize is indistinguishable from a worse one here, and Section 8.2 shows this matters: the wide-head ordering does not survive 3x training.
+- **The temperature result is the one we expect to scale, and it is untested above this size.** The argument is about initialization scale, which is a property of the parameterization rather than of the corpus, and it should be checked directly at d_model 512 to 1024 with 16 to 32 heads.
+- **Head splits are iso-parameter but not iso-temperature by construction.** That is the point of Section 7, but it also means our "no norm" baseline is not a tuned baseline: part of what every normalizer earns here is a scale correction the baseline never got.
+- **Three seeds.** Every headline claim is a three-of-three paired win with all per-seed differences the same sign. Effects below about 0.015 bpc are reported as ties.
+- **Two corpora, character level.** Tokenized models, vision, and long context are untested.
+- **The constant is grid-resolved and configuration-specific.** We swept powers of two, so the optimum is located only to within a factor of two, and it is tied to this initialization scheme (normal, standard deviation 0.02) and this parameterization. It is a quantity to measure, not a number to copy, which is why the shipped tool sweeps rather than hard-codes it.
+- **We did not test additivity.** Section 7.4 notes that the mean-scale help, the severed gradient and the destruction of forward magnitude values sum to about the observed cost. That is consistent arithmetic across two experiments, not a measured decomposition.
+- **Prior art was searched from a sandbox where arXiv is blocked**, so several 2026 papers including QUEST are cited from search summaries rather than full text and should be verified before submission.
+
+## 12. Ideas this generates
+
+Ordered by expected information per CPU-minute. Each is an observation, an inference, and the experiment that would settle it.
+
+1. **Observation:** the optimal constant differs by head width. **Inference:** the right parameterization sets the key projection's initialization scale as a function of head_dim, not a fixed 0.02. **Experiment:** fit the optimal constant against head width across two or three d_model values and check whether it follows a clean power law; if it does, it is a one-line change to every transformer initializer.
+2. **Observation:** a learnable temperature does not travel from 1 to the optimum. **Inference:** the loss surface is nearly flat in that direction at the default. **Experiment:** measure the gradient and curvature of the loss with respect to log c at initialization across head widths; a flat gradient at small head_dim and a steep one at large would explain the whole thing analytically.
+3. **Observation:** the baseline was never given the scale correction. **Inference:** part of every published normalization win at small head dimension may be a scale correction in disguise. **Experiment:** re-run a standard QK-norm ablation against a *temperature-tuned* baseline rather than a default one, at a scale where QK-norm is known to help.
+4. **Observation:** per-token magnitude costs 0.26 bpc to destroy at the same mean scale. **Inference:** the information is in the magnitude, so a normalizer that preserves it should recover it. **Experiment:** SeeDNorm on the key side against our constant, at head_dim 4, same harness.
+5. **Observation:** stacking both sides fails only at one wide head. **Inference:** the failure is two independent sharpness dials on one softmax. **Experiment:** hold the trained logit standard deviation fixed across arms and see whether the interaction disappears, which turns a correlational account into a causal one.
+6. **Observation:** at head_dim 64 after 1800 steps every normalizer ties. **Inference:** these are optimization-speed effects, not capacity effects. **Experiment:** train one wide-head cell to convergence and check whether any gap remains.
+7. **Observation, from the recall thread:** the Taylor feature map escapes with no gate. **Inference:** gating compensates for a feature-map deficiency rather than adding capacity. **Experiment:** dense gate on top of the Taylor map; if escape time does not move, they are substitutes.
+8. **Observation, from the recursion thread:** the never-crossed cell is stochastic depth against matched-FLOP language-model loss. **Experiment:** re-run the first loop experiment with a stochastic depth schedule and input injection, the cheapest way to learn whether the loop's loss verdict was a schedule artifact.
+
+## References
+
+- Henry, A., Dachapally, P. R., Pawar, S., Chen, Y. Query-Key Normalization for Transformers. Findings of EMNLP 2020. arXiv:2010.04245.
+- Dehghani, M. et al. Scaling Vision Transformers to 22 Billion Parameters. 2023.
+- Wortsman, M. et al. Small-scale proxies for large-scale Transformer training instabilities. ICLR 2024. arXiv:2309.14322.
+- QUEST: A robust attention formulation using query-modulated spherical attention. ICLR 2026. arXiv:2604.00199.
+- Cai, W., Zhu, D., Liu, Q., Min, Q. SeeDNorm: Self-Rescaled Dynamic Normalization. arXiv:2510.22777.
+- Meng, Z. et al. Norm x Direction: Restoring the Missing Query Norm in Vision Linear Attention. arXiv:2506.21137.
+- Nguyen, T. Q., Salazar, J. Transformers without Tears (ScaleNorm). IWSLT 2019. arXiv:1910.05895.
+- Selective Attention: Enhancing Transformer through Principled Context Control. NeurIPS 2024. arXiv:2411.12892.
+- Veličković, P. et al. Softmax is not Enough (for Sharp Size Generalisation). arXiv:2410.01104.
+- Nakanishi, K. M. Scalable-Softmax Is Superior for Attention. arXiv:2501.19399.
+- Qiu, Z. et al. Gated Attention for Large Language Models. NeurIPS 2025. arXiv:2505.06708.
+- Mudarisov, T. et al. Limitations of Normalization in Attention Mechanism. arXiv:2508.17821.
+- Bhojanapalli, S. et al. Low-Rank Bottleneck in Multi-head Attention Models. ICML 2020. arXiv:2002.07028.
+- Most Transformer Modifications Still Do Not Transfer at 1-3B. arXiv:2605.20798.
+- Loshchilov, I. et al. nGPT: Normalized Transformer on the Hypersphere. arXiv:2410.01131.
+- Kimi Team. Kimi K2 (MuonClip / QK-Clip). arXiv:2507.20534.
+- Arora, S. et al. Zoology / BASED. 2023-2024.
+- Geiping, J. et al. Scaling up Test-Time Compute with Latent Reasoning. arXiv:2502.05171.
+- Xie, Z., Sato, I., Sugiyama, M. A Diffusion Theory for Deep Learning Dynamics. arXiv:2002.03495.
+
+## Appendix A. Replication anchors
+
+Every experiment in this paper re-runs cells from its parents and requires agreement to 0.0005 bpc before its own numbers are trusted.
+
+| source night | arm | hd | seed | archived | this run | delta |
+|---|---|---|---|---|---|---|
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 0 | 3.09304 | 3.09304 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 1 | 3.09277 | 3.09277 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 2 | 3.08542 | 3.08542 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 0 | 3.02645 | 3.02645 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 1 | 3.02092 | 3.02092 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 2 | 3.01838 | 3.01838 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 32 | 0 | 2.91031 | 2.91031 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 32 | 1 | 2.94042 | 2.94042 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 32 | 2 | 2.93368 | 2.93368 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 0 | 2.85489 | 2.85489 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 1 | 2.91863 | 2.91863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 2 | 2.87814 | 2.87814 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 128 | 0 | 2.86663 | 2.86663 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 128 | 1 | 2.88507 | 2.88507 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 128 | 2 | 2.89028 | 2.89028 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 4 | 0 | 3.22297 | 3.22297 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 4 | 1 | 3.24883 | 3.24883 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 4 | 2 | 3.18966 | 3.18966 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 16 | 0 | 2.87788 | 2.87788 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 16 | 1 | 2.87707 | 2.87707 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 16 | 2 | 2.89246 | 2.89246 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 32 | 0 | 2.83013 | 2.83013 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 32 | 1 | 2.82343 | 2.82343 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 32 | 2 | 2.84518 | 2.84518 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 64 | 0 | 2.83668 | 2.83668 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 64 | 1 | 2.85546 | 2.85546 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 64 | 2 | 2.82758 | 2.82758 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 128 | 0 | 2.91841 | 2.91841 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 128 | 1 | 2.89892 | 2.89892 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qknorm | 128 | 2 | 2.86797 | 2.86797 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 4 | 0 | 3.11738 | 3.11738 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 4 | 1 | 3.12213 | 3.12213 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 4 | 2 | 3.10377 | 3.10377 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 16 | 0 | 2.94690 | 2.94690 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 16 | 1 | 2.97744 | 2.97744 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 16 | 2 | 2.96415 | 2.96415 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 32 | 0 | 2.85171 | 2.85171 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 32 | 1 | 2.89793 | 2.89793 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 32 | 2 | 2.88995 | 2.88995 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 64 | 0 | 2.82553 | 2.82553 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 64 | 1 | 2.83500 | 2.83500 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 64 | 2 | 2.82420 | 2.82420 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 128 | 0 | 2.85981 | 2.85981 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 128 | 1 | 2.86213 | 2.86213 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | qnorm_only | 128 | 2 | 2.86425 | 2.86425 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 0 | 3.22604 | 3.22604 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 1 | 3.23392 | 3.23392 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 2 | 3.19338 | 3.19338 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 0 | 2.91334 | 2.91334 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 1 | 2.96255 | 2.96255 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 2 | 2.95101 | 2.95101 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 32 | 0 | 2.85342 | 2.85342 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 32 | 1 | 2.86528 | 2.86528 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 32 | 2 | 2.86262 | 2.86262 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 0 | 2.81085 | 2.81085 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 1 | 2.82401 | 2.82401 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 2 | 2.80863 | 2.80863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 128 | 0 | 2.84339 | 2.84339 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 128 | 1 | 2.83746 | 2.83746 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 128 | 2 | 2.83958 | 2.83958 | +0.00000 |
+| 2026-07-26_head-dim-vs-count-isoparam | baseline | 8 | 0 | 3.05388 | 3.05387 | -0.00001 |
+| 2026-07-26_head-dim-vs-count-isoparam | baseline | 8 | 1 | 3.07081 | 3.07081 | +0.00000 |
+| 2026-08-31_hd4-kside-cliff-mechanism | knorm_dynk | 4 | 0 | 3.01670 | 3.01670 | +0.00000 |
+| 2026-08-31_hd4-kside-cliff-mechanism | knorm_dynk | 4 | 1 | 3.01687 | 3.01687 | +0.00000 |
+| 2026-08-31_hd4-kside-cliff-mechanism | knorm_dynk | 4 | 2 | 3.02665 | 3.02665 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 4 | 0 | 3.07885 | 3.07885 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 4 | 1 | 3.12452 | 3.12452 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 16 | 0 | 2.85141 | 2.85141 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 16 | 1 | 2.84026 | 2.84026 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 32 | 0 | 2.82899 | 2.82899 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 32 | 1 | 2.82844 | 2.82844 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 64 | 0 | 2.79641 | 2.79641 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 64 | 1 | 2.86352 | 2.86352 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 128 | 0 | 2.91126 | 2.91126 | +0.00000 |
+| 2026-08-11_qknorm-dyntemp-composite-sweep | qknorm_dynq | 128 | 1 | 2.91511 | 2.91511 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 0 | 3.09304 | 3.09304 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 1 | 3.09277 | 3.09277 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 2 | 3.08542 | 3.08542 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 0 | 2.85489 | 2.85489 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 1 | 2.91863 | 2.91863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 2 | 2.87814 | 2.87814 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 0 | 3.09304 | 3.09304 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 1 | 3.09277 | 3.09277 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 4 | 2 | 3.08542 | 3.08542 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 0 | 3.02645 | 3.02645 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 1 | 3.02092 | 3.02092 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 16 | 2 | 3.01838 | 3.01838 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 0 | 2.85489 | 2.85489 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 1 | 2.91863 | 2.91863 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | baseline | 64 | 2 | 2.87814 | 2.87814 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 0 | 3.22604 | 3.22604 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 1 | 3.23392 | 3.23392 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 4 | 2 | 3.19338 | 3.19338 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 0 | 2.91334 | 2.91334 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 1 | 2.96255 | 2.96255 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 16 | 2 | 2.95101 | 2.95101 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 0 | 2.81085 | 2.81085 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 1 | 2.82401 | 2.82401 | +0.00000 |
+| 2026-08-30_knorm-only-head-sweep | knorm_only | 64 | 2 | 2.80863 | 2.80863 | +0.00000 |
+
+*99 of 99 archived cells reproduced within 0.0005 bpc (torch 2.13.0+cu130, CPU, 2 threads).*
+
+## Appendix B. The attention-norm ledger
+
+| night | registry id | what it established |
+|---|---|---|
+| 07-26 | head-dim-vs-count-isoparam | loss is monotone in head width without normalization |
+| 07-30 | qknorm-head-dim | QK-norm removes the mid-range tax and deepens the tiny-head cost |
+| 07-31 | qknorm-hd4-temperature-rescue | a learnable static temperature refunds two percent and is left at one |
+| 08-02 | qknorm-hd4-dynamic-temperature | a detached per-token query temperature refunds 54 percent |
+| 08-06 | qknorm-hd4-undetached-magnitude | opening the gradient path refunds 98 percent; the raw form refunds four |
+| 08-11 | qknorm-dyntemp-composite-sweep | the composite dominates QK-norm but inherits its one-head cost |
+| 08-23 | qknorm-nh1-tax-mechanism | at one head each one-sided norm wins and both together lose |
+| 08-30 | knorm-only-head-sweep | the tiny-head cost follows the key norm; the interaction flips sign with width |
+| 08-31 | hd4-kside-cliff-mechanism | the cost is a severed magnitude gradient, not a lost value |
+| 09-01 | knorm-dynk-head-sweep | the repair beats baseline at every width, and the frozen exponent matches it |
+| 09-01 | knorm-dynk-ptb-transfer | the tiny-head half transfers to a second corpus; the wide-head half does not |
+| 09-01 | knorm-dynk-longer-training | every effect halves at 3x training; the wide-head ordering dissolves |
+| 09-01 | kscale-adaptive-vs-static | less adaptation is better; a frozen scale wins |
+| 09-01 | fractional-norm-both-sides | the channel is not key-specific; both sides fails at one wide head |
+| 09-01 | logit-scale-sweep | it is a temperature, the default is wrong, and learning it from the default does not work |
+
+## Appendix C. Reproduction
+
+```
+pip install torch==2.13.0 numpy matplotlib pyyaml     # the lab's runs used torch 2.13.0 on CPU
+python experiments/2026-09-01_logit-scale-sweep/run.py        # shard with --head-dims/--seeds/--tag, then --merge
+python paper/fill_sections.py --apply                          # regenerate every table from results.json
+python paper/make_figures.py                                   # regenerate every figure
+python attnscale/test_attnscale.py                             # unit tests for the shipped module
+```
