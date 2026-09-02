@@ -162,7 +162,7 @@ def build():
     html = html.replace("<table>", '<div class="tablewrap"><table>').replace("</table>", "</table></div>")
     toc = md.toc
 
-    page = f"""<title>Fractional Key Normalization</title>
+    page = f"""<title>Set the Temperature, Not the Norm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>{CSS}</style>
