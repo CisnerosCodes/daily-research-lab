@@ -35,8 +35,8 @@ ARMS = {
     "baseline":    ("neutral", "--", "no norm (baseline)"),
     "qknorm":      ("blue",    "-",  "QK-norm (both sides)"),
     "knorm_only":  ("aqua",    "-",  "key-only norm"),
-    "knorm_dynk":  ("orange",  "-",  "FKN (key-only norm + magnitude channel)"),
-    "k_emascale":  ("violet",  ":",  "key / running scale (alpha fixed = 1)"),
+    "knorm_dynk":  ("orange",  "-",  "magnitude channel, learnable exponent"),
+    "k_emascale":  ("violet",  "--", "magnitude channel, exponent frozen at 1"),
     "qnorm_only":  ("yellow",  ":",  "query-only norm"),
     "qknorm_dynq": ("magenta", "-.", "QK-norm + query channel (08-11 composite)"),
     # E4 arms (adaptive vs static key scale)
@@ -85,24 +85,26 @@ def fig_phase_diagram(theme, res, name="fig1_phase_diagram", arms=None,
     for a in arms:
         col, ls, lab = ARMS[a]
         ys = [by[a][str(hd)]["val_bpc_mean"] if str(hd) in by[a] else np.nan for hd in hds]
-        lw = 2.6 if a == "knorm_dynk" else 1.7
-        ax.plot(x, ys, ls, color=t[col], lw=lw, marker="o", ms=6 if a == "knorm_dynk" else 5,
-                mec="none" if theme == "dark" else "none", label=lab, zorder=3 if a == "knorm_dynk" else 2)
+        lw = 3.2 if a == "knorm_dynk" else (1.9 if a == "k_emascale" else 1.7)
+        z = 3 if a == "knorm_dynk" else (4 if a == "k_emascale" else 2)
+        kw = {"dashes": (4, 3)} if a == "k_emascale" else {}
+        ax.plot(x, ys, ls, color=t[col], lw=lw, marker="o", ms=6 if a == "knorm_dynk" else 4,
+                mec="none", label=lab, zorder=z, **kw)
         for i, hd in enumerate(hds):
             if str(hd) in by[a]:
                 ss = list(by[a][str(hd)]["val_bpc_per_seed"].values())
                 ax.plot([i] * len(ss), ss, ".", color=t[col], ms=3.5, alpha=0.55, zorder=1)
-    # selective direct labels: FKN at the first split and at its own best split
+    # selective direct labels: the magnitude-channel arm at the first split and at its best
     if "knorm_dynk" in by:
         avail = [hd for hd in hds if str(hd) in by["knorm_dynk"]]
         best = min(avail, key=lambda hd: by["knorm_dynk"][str(hd)]["val_bpc_mean"]) if avail else None
         for hd in {avail[0] if avail else None, best} - {None}:
             i = hds.index(hd)
             v = by["knorm_dynk"][str(hd)]["val_bpc_mean"]
-            ax.annotate(f"FKN {v:.3f}", (i, v), textcoords="offset points", xytext=(0, -15),
+            ax.annotate(f"{v:.3f}", (i, v), textcoords="offset points", xytext=(16, -13),
                         ha="center", fontsize=8.5, color=t["text2"])
     ax.set_xticks(x)
-    ax.set_xticklabels([f"hd {hd}\n({128 // hd} heads)" for hd in hds])
+    ax.set_xticklabels([f"hd {hd}\n({128 // hd} head{'s' if 128 // hd > 1 else ''})" for hd in hds])
     ax.set_ylabel("val bits per character  (lower is better)")
     ax.set_title(title)
     ax.legend(loc="upper right", ncol=1)
@@ -147,7 +149,7 @@ def fig_alpha(theme, res, name="fig3_alpha_vs_headdim"):
     aq = {int(k): v for k, v in P2["q_alpha_qknorm_dynq"].items() if v is not None}
     if ak:
         ax.plot([hds.index(h) for h in ak], [ak[h] for h in ak], "-o", color=t["orange"], lw=2.4,
-                label="key exponent α (FKN)")
+                label="key exponent α (learnable arm)")
     if aq:
         ax.plot([hds.index(h) for h in aq], [aq[h] for h in aq], "-.s", color=t["magenta"], lw=1.6,
                 label="query exponent α (QK-norm + query channel)")
@@ -176,7 +178,7 @@ def fig_cliff_decomp(theme, name="fig4_cliff_decomposition"):
     order = ["baseline", "kgain_only", "knorm_only", "knorm_nogain", "knorm_magrestore", "knorm_dynk"]
     labels = {"baseline": "no norm", "kgain_only": "gain only\n(no norm)", "knorm_only": "key norm\n+ gain",
               "knorm_nogain": "key norm\n(gain frozen)", "knorm_magrestore": "key norm ×\nmagnitude value\n(grad severed)",
-              "knorm_dynk": "FKN: key norm ×\nmagnitude channel\n(grad open)"}
+              "knorm_dynk": "key norm ×\nmagnitude channel\n(gradient open)"}
     cols = {"baseline": "neutral", "kgain_only": "muted", "knorm_only": "aqua", "knorm_nogain": "aqua",
             "knorm_magrestore": "blue", "knorm_dynk": "orange"}
     base = by["baseline"]["val_bpc_mean"]
@@ -207,7 +209,7 @@ def fig_timeline(theme, name="fig5_thread_timeline"):
         ("08-02", "+ per-token τ (detached)", 3.15076, "magenta"),
         ("08-06", "+ per-token τ (grad open)", 3.09340, "magenta"),
         ("08-30", "key-only norm", 3.21778, "aqua"),
-        ("08-31", "FKN", 3.02007, "orange"),
+        ("08-31", "magnitude channel", 3.02007, "orange"),
     ]
     fig, ax = plt.subplots(figsize=(8.2, 4.0))
     xs = np.arange(len(nights))
@@ -271,7 +273,7 @@ def fig_adaptation_speed(theme, res, name="fig10_adaptation_speed"):
     for hd in hds:
         ys = [per[str(hd)]["arms"][a]["delta_vs_baseline"] for a, _ in speed]
         ax.plot(x, ys, "-o", color=cols.get(hd, t["neutral"]), lw=2.2,
-                label=f"head_dim {hd} ({128 // hd} heads)")
+                label=f"head_dim {hd} ({128 // hd} head{'s' if 128 // hd > 1 else ''})")
         for i, (a, _) in enumerate(speed):
             ss = list(by[a][str(hd)]["val_bpc_per_seed"].values())
             b = by["baseline"][str(hd)]["val_bpc_per_seed"]
@@ -316,7 +318,7 @@ def fig_side_symmetry(theme, res, name="fig11_side_symmetry"):
         v = per[str(hds[-1])]["arms"]["fqkn"]["delta_vs_baseline"]
         if v > 0:
             ax.annotate("both sides breaks\nat one wide head", (len(hds) - 1, v),
-                        textcoords="offset points", xytext=(-8, 6), ha="right",
+                        textcoords="offset points", xytext=(-10, -26), ha="right",
                         fontsize=8.5, color=t["magenta"])
     ax.set_xticks(x)
     ax.set_xticklabels([f"hd {hd}" for hd in hds])
@@ -343,7 +345,7 @@ def fig_temperature(theme, res, name="fig12_temperature_curve"):
         ys = [curve[str(c)] for c in cs]
         base = per[str(hd)]["arms"]["baseline"]["bpc"]
         ax.plot(cs, [y - base for y in ys], "-o", color=cols.get(hd, t["neutral"]), lw=2.2,
-                label=f"head_dim {hd} ({128 // hd} heads)")
+                label=f"head_dim {hd} ({128 // hd} head{'s' if 128 // hd > 1 else ''})")
         bc = per[str(hd)]["best_fixed_c"]
         bb = per[str(hd)]["best_fixed_c_bpc"] - base
         ax.plot([bc], [bb], "*", ms=17, color=cols.get(hd, t["neutral"]),

@@ -40,8 +40,18 @@ def row_for(exp_id, dataset_key, tags, related):
                "best_arm_by_hd": {hd: per[hd]["best_arm"] for hd in per},
                "replication_ok": m["replication_vs_parents"]["ok"],
                "replication_checked": m["replication_vs_parents"]["n_checked"]}
-    if "verdicts" in m:
-        metrics["strictly_better_than_both_parents"] = {a: v["strictly_better_than_both_parents"] for a, v in m["verdicts"].items()}
+    v = m.get("verdicts", {})
+    if v and all(isinstance(x, dict) and "strictly_better_than_both_parents" in x for x in v.values()):
+        metrics["strictly_better_than_both_parents"] = {a: x["strictly_better_than_both_parents"] for a, x in v.items()}
+    elif v:
+        metrics["verdicts_by_head_dim"] = v
+    for k in ("global_best", "P2_alpha_vs_head_dim", "P3_dynk_vs_dynq"):
+        if k in m:
+            metrics[k] = m[k]
+    for hd, row in per.items():
+        if "best_fixed_c" in row:
+            metrics.setdefault("best_fixed_c_by_head_dim", {})[hd] = row["best_fixed_c"]
+            metrics.setdefault("fixed_c_curve_by_head_dim", {})[hd] = row["fixed_c_curve"]
     s = SUMMARIES.get(exp_id, {})
     slug = exp_id.split("_", 1)[1]
     return {
@@ -78,6 +88,13 @@ ROWS = [
     ("2026-09-01_kscale-adaptive-vs-static", "shakespeare",
      ["attention-norm", "running-scale", "mechanism", "cpu-only"],
      ["2026-09-01_knorm-dynk-head-sweep", "2026-08-31_hd4-kside-cliff-mechanism"]),
+    ("2026-09-01_fractional-norm-both-sides", "shakespeare",
+     ["attention-norm", "side-symmetry", "head-dim", "cpu-only"],
+     ["2026-09-01_knorm-dynk-head-sweep", "2026-08-30_knorm-only-head-sweep"]),
+    ("2026-09-01_logit-scale-sweep", "shakespeare",
+     ["attention-temperature", "initialization", "logit-scale", "mechanism", "cpu-only"],
+     ["2026-09-01_kscale-adaptive-vs-static", "2026-07-31_qknorm-hd4-temperature-rescue",
+      "2026-09-01_knorm-dynk-head-sweep"]),
 ]
 
 

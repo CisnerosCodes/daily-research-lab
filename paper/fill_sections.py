@@ -11,11 +11,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 EXP = ROOT / "experiments"
 LABEL = {"baseline": "no norm", "qknorm": "QK-norm", "qnorm_only": "query-only norm",
-         "knorm_only": "key-only norm", "knorm_dynk": "**FKN**", "k_emascale": "key / running scale (alpha = 1 fixed)",
+         "knorm_only": "key-only norm", "knorm_dynk": "**magnitude channel** (learnable exponent)", "k_emascale": "magnitude channel (exponent frozen at 1)",
          "qknorm_dynq": "QK-norm + query channel",
          "k_static_init_scale": "key / first-batch scale (static)", "k_emascale_m09": "key / running scale, m 0.9",
          "k_emascale_m0999": "key / running scale, m 0.999", "q_emascale": "query / running scale",
-         "fqn": "magnitude channel on queries", "fqkn": "magnitude channel on both sides",
+         "fqn": "magnitude channel, queries", "fqkn": "magnitude channel, both sides",
          "c2": "fixed multiplier c = 2", "c4": "fixed multiplier c = 4", "c8": "fixed multiplier c = 8",
          "c16": "fixed multiplier c = 16", "c_learn1": "learnable c, starts at 1",
          "c_learn4": "learnable c, starts at 4", "kinit_x4": "key init scaled x4 (no runtime op)"}
@@ -93,7 +93,7 @@ def verdict_lines(res):
     out.append(f"- Global best: {LABEL[gb['arm']]} at hd {gb['head_dim']} = {gb['bpc']:.4f} bpc.")
     p3 = res["metrics"].get("P3_dynk_vs_dynq", {})
     if p3:
-        out.append("- FKN minus (QK-norm + query channel): " + ", ".join(
+        out.append("- Magnitude channel minus (QK-norm + query channel): " + ", ".join(
             f"hd {hd}: {d['dynk_minus_dynq']:+.3f} ({d['dynk_beats_dynq_seeds']})" for hd, d in p3.items()) + ".")
     return "\n".join(out)
 
