@@ -145,7 +145,9 @@ so the per-token normalization cancels exactly and what remains is a fixed per-h
 
 <!-- E6_LEARN -->
 
-This reconciles the two results that could not both be true. A learnable per-head temperature exists in both experiments. Started at the optimum it stays there and keeps the win; started at the default it barely moves, and at some widths it moves the wrong way. The binding constraint is not whether the model *can* express the right temperature. It is that gradient descent will not travel there from the default within the budget, because the direction is nearly flat in loss and the parameter is one scalar per head competing with 423,424 others.
+This reconciles the two results that could not both be true. The same one-scalar-per-head dial exists in both arms. Started near the optimum it stays there and keeps almost the whole win; started at the default it does not travel — and the direction it does move is the telling part. At every head width the dial started at 1 ends *below* 1, drifting away from an optimum several times larger, and the arm finishes at or slightly worse than doing nothing.
+
+So the obstacle is not expressiveness, and it is not simply that the loss is flat in that direction. The local gradient at the default points the wrong way. A model that could express the right temperature, and would keep it if handed it, instead spends its budget moving away from it. That is why an experiment which gave the model a free temperature dial and watched it sit at one (registry 2026-07-31) correctly concluded that the dial was not being used, and incorrectly concluded that temperature was not the problem.
 
 ### 7.3 Folding it into the weights
 

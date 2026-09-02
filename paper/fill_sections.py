@@ -158,19 +158,21 @@ def e6_curve(res):
 def e6_learn(res):
     per = res["metrics"]["per_head_dim"]
     hds = [int(h) for h in res["config"]["params"]["head_dims"] if str(h) in per]
-    rows = ["| head width | learnable from 1 | learnable from 4 | best fixed c | c the model reached, starting from 1 |",
-            "|---|---|---|---|---|"]
+    rows = ["| head width | learnable from 1 | learnable from 4 | best fixed c | c reached from 1 | c reached from 4 |",
+            "|---|---|---|---|---|---|"]
     by = res["metrics"]["by_arm_hd"]
     for hd in hds:
         A = per[str(hd)]["arms"]
         c_reached = by.get("c_learn1", {}).get(hd, {}).get("c_mean")
+        c_reached4 = by.get("c_learn4", {}).get(hd, {}).get("c_mean")
         rows.append(f"| head_dim {hd} | {A['c_learn1']['delta_vs_baseline']:+.3f} "
                     f"({A['c_learn1']['beats_baseline_seeds']}) | {A['c_learn4']['delta_vs_baseline']:+.3f} "
                     f"({A['c_learn4']['beats_baseline_seeds']}) | {per[str(hd)]['best_fixed_c_bpc'] - A['baseline']['bpc']:+.3f} "
-                    f"at c = {per[str(hd)]['best_fixed_c']:g} | {c_reached if c_reached is not None else '—'} |")
+                    f"at c = {per[str(hd)]['best_fixed_c']:g} | {c_reached if c_reached is not None else '—'} | "
+                    f"{c_reached4 if c_reached4 is not None else '—'} |")
     rows.append("")
     rows.append("*Change in val bpc vs the default, with paired-seed wins in brackets. The same one-scalar-per-head "
-                "dial, started in two places.*")
+                "dial, started in two places. The last two columns are where the dial actually ended up.*")
     return "\n".join(rows)
 
 
